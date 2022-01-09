@@ -89,3 +89,32 @@ jar {
 deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
+
+task gitInfo(dependsOn: build) {
+    description = 'Logs git branch and version to build'
+    def cmd = 'git rev-parse --abbrev-ref HEAD'
+    project.ext.branch = cmd.execute().text.trim()
+    cmd = 'git rev-parse --short HEAD'
+    project.ext.revision = cmd.execute().text.trim()
+
+    println '[branch] ' + project.branch
+    println '[commit] ' + project.revision
+}
+
+task gitLog {
+    description = 'Logs git branch and version to log file when deploy'
+    def logFile = new File('src/main/java/org/frc5687/rapidreact/util/Version.java')
+
+    def cmd = 'git diff HEAD --shortstat'
+    def mod = cmd.execute().text.trim()
+    def modified = (mod != null && mod.length() != 0) ? ' *' : ''
+    def br = '\n\n'
+    def reader = 'package org.frc5687.rapidreact.util;' + br
+    reader += '/**\n * A version class to read current Git information from deployed robot code\n * @author wilstenholme\n */' + br
+    reader += 'public class Version {\n'
+    reader += '    public static final String BRANCH = \"' + project.branch + '\";\n'
+    reader += '    public static final String REVISION = \"' + project.revision + '\";\n'
+    reader += '    public static final String MODIFIED = \"' +  modified + '\";\n'
+    reader += '}'
+    logFile.text = reader
+}

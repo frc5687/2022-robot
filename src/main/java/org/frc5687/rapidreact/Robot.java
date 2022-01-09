@@ -49,7 +49,11 @@ public class Robot extends OutliersRobot implements ILoggingSource {
         DriverStation.silenceJoystickConnectionWarning(true);
 
         metric("Identity", _identityMode.toString());
+        metric("Commit", Version.REVISION);
+        metric("Branch", Version.BRANCH);
+
         info("Robot " + _name + " running in " + _identityMode.toString() + " mode");
+        info("Running commit " + Version.REVISION + " of branch " + Version.BRANCH);
 
         _robotContainer = new RobotContainer(this, _identityMode);
         _timer = new Timer();
