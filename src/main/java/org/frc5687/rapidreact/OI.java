@@ -6,6 +6,8 @@ import static org.frc5687.rapidreact.util.Helpers.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import org.frc5687.rapidreact.commands.ShootSetpoint;
+import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.util.AxisButton;
 import org.frc5687.rapidreact.util.Gamepad;
@@ -17,11 +19,6 @@ public class OI extends OutliersProxy {
     protected Joystick _rightJoystick;
 
     protected Button _driverRightStickButton;
-
-    private JoystickButton _trigger;
-    private JoystickButton _thumbButton;
-    private JoystickButton _shootButton;
-    private JoystickButton _resetYawButton;
 
     private Button _driverAButton;
     private Button _driverBButton;
@@ -41,11 +38,6 @@ public class OI extends OutliersProxy {
         _driverRightStickButton =
                 new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_STICK.getNumber());
 
-        _trigger = new JoystickButton(_rightJoystick, 1);
-        _thumbButton = new JoystickButton(_rightJoystick, 2);
-        _shootButton = new JoystickButton(_leftJoystick, 1);
-        _resetYawButton = new JoystickButton(_rightJoystick, 4);
-
         _driverAButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.A.getNumber());
         _driverBButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.B.getNumber());
         _driverYButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.Y.getNumber());
@@ -54,7 +46,10 @@ public class OI extends OutliersProxy {
                 new AxisButton(_driverGamepad, Gamepad.Axes.RIGHT_TRIGGER.getNumber(), 0.2);
     }
 
-    public void initializeButtons(DriveTrain driveTrain) {}
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult) {
+        // when A button is pressed set heuristic control to try PI/4 rad(45 deg) and ball velocity of 20 m/s.
+        _driverAButton.whenPressed(new ShootSetpoint(catapult, Math.PI / 4.0, 20.0));
+    }
 
     public double getDriveY() {
         //        yIn = getSpeedFromAxis(_leftJoystick, _leftJoystick.getYChannel());

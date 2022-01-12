@@ -89,4 +89,27 @@ public class Constants {
         public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double CONTROL_EFFORT = VOLTAGE;
     }
+
+    public static class Catapult {
+        public static final boolean INVERTED = false;
+        public static final boolean VOLTAGE_COMPENSATION = true;
+
+        // Physical Characteristics
+        public static final double ARM_LENGTH = 0.6; // m
+
+        // State space stuff
+        public static final double kDt = 0.02; // seconds
+        public static final double MOMENT_OF_INERTIA = 0.2; // kg/m^2
+        public static final double GEAR_RATIO = 25.0;
+        public static final double MODEL_ANGLE_NOISE = 0.015; // rad
+        public static final double MODEL_ANGULAR_VELOCITY_NOISE = 0.17; // rad/s
+        public static final double SENSOR_ANGLE_NOISE = 0.015; // rad
+        // LQR stuff
+        public static final double ANGLE_TOLERANCE = 0.01; // rad
+        public static final double ANGULAR_VELOCITY_TOLERANCE = 0.1; // rad/s
+        public static final double CONTROL_EFFORT = 12.0; // volts
+
+        // Control
+        public static final double CONTROL_TOLERANCE = 0.1; // rad
+    }
 }

@@ -5,7 +5,9 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.rapidreact.commands.Drive;
+import org.frc5687.rapidreact.commands.IdleCatapult;
 import org.frc5687.rapidreact.commands.OutliersCommand;
+import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.OutliersContainer;
@@ -16,6 +18,7 @@ public class RobotContainer extends OutliersContainer {
     private AHRS _imu;
 
     private Robot _robot;
+    private Catapult _catapult;
     private DriveTrain _driveTrain;
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
@@ -24,12 +27,20 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void init() {
+        // initialize peripherals. Do this before subsystems.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
 
+        // initialize subsystems.
+        _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _imu);
 
+        //setup default commands.
+        setDefaultCommand(_catapult, new IdleCatapult(_catapult));
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+
+        // initialize OI after subsystems.
+        _oi.initializeButtons(_driveTrain, _catapult);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
     }
