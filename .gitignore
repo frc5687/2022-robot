@@ -159,3 +159,8 @@ imgui.ini
 
 
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
+
+# FRC 5687 Outliers
+
+# # Version.java is auto added when you clone repo
+Version.java
