@@ -20,10 +20,10 @@ public class OI extends OutliersProxy {
     private double xIn = 0;
 
     public OI() {
-        _gamepad = new Gamepad(0);
+        // _gamepad = new Gamepad(0);
 
-        _rotation = new Joystick(0);
-        _translation = new Joystick(1);
+        _translation = new Joystick(0);
+        _rotation = new Joystick(1);
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
@@ -32,7 +32,7 @@ public class OI extends OutliersProxy {
 
     public double getDriveY() {
         //Comment for gamepad control
-        yIn = getSpeedFromAxis(_rotation, _rotation.getYChannel());
+        yIn = getSpeedFromAxis(_translation, _translation.getYChannel());
         //Uncomment for gamepad control
         // yIn = getSpeedFromAxis(Gamepad, Gamepad.getYChannel());
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
@@ -44,7 +44,7 @@ public class OI extends OutliersProxy {
 
     public double getDriveX() {
         //Comment for gamepad control
-        xIn = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
+        xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
         //Uncomment for gamepad control
         //xIn = -getSpeedFromAxis(Gamepad, Gamepad.getXChannel());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
@@ -54,7 +54,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getRotationX() {
-        double speed = getSpeedFromAxis(_translation, _translation.getXChannel());
+        double speed = getSpeedFromAxis(_rotation, _rotation.getXChannel());
         speed = applyDeadband(speed, 0.2);
         return speed;
     }

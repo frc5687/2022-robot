@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "OI/#8-DualJSSupport";
-    public static final String REVISION = "7a37a6e";
+    public static final String REVISION = "17fbeb0";
     public static final String MODIFIED = " *";
 }
