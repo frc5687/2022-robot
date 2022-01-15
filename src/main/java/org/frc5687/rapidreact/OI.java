@@ -12,18 +12,18 @@ import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
 public class OI extends OutliersProxy {
-    protected Gamepad Gamepad;
-    protected Joystick Rotation;
-    protected Joystick Translation;
+    protected Gamepad _gamepad;
+    protected Joystick _rotation;
+    protected Joystick _translation;
 
     private double yIn = 0;
     private double xIn = 0;
 
     public OI() {
-        Gamepad = new Gamepad(0);
+        _gamepad = new Gamepad(0);
 
-        Rotation = new Joystick(1);
-        Translation = new Joystick(2);
+        _rotation = new Joystick(0);
+        _translation = new Joystick(1);
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
@@ -32,7 +32,7 @@ public class OI extends OutliersProxy {
 
     public double getDriveY() {
         //Comment for gamepad control
-        yIn = getSpeedFromAxis(Rotation, Rotation.getYChannel());
+        yIn = getSpeedFromAxis(_rotation, _rotation.getYChannel());
         //Uncomment for gamepad control
         // yIn = getSpeedFromAxis(Gamepad, Gamepad.getYChannel());
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
@@ -44,18 +44,17 @@ public class OI extends OutliersProxy {
 
     public double getDriveX() {
         //Comment for gamepad control
-        xIn = -getSpeedFromAxis(Rotation, Rotation.getXChannel());
+        xIn = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
         //Uncomment for gamepad control
         //xIn = -getSpeedFromAxis(Gamepad, Gamepad.getXChannel());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
-
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0;
         return xOut;
     }
 
     public double getRotationX() {
-        double speed = getSpeedFromAxis(Translation, Translation.getZChannel());
+        double speed = getSpeedFromAxis(_translation, _translation.getXChannel());
         speed = applyDeadband(speed, 0.2);
         return speed;
     }
