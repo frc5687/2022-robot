@@ -12,6 +12,14 @@ public class Constants {
 
     public static class DriveTrain {
 
+        /* 
+        
+        Gabe please fix the naming of the drive modules.
+        Instead of FRONT_LEFT_, etc. we are using NE_, NW_, SE_ and SW_.
+        Thanks! -Fred
+
+        */
+
         public static final double WIDTH = 0.6223;
         public static final double LENGTH = 0.6223;
         public static final Translation2d FRONT_LEFT_POSITION =
