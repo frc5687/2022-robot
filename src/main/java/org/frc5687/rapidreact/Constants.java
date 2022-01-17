@@ -14,7 +14,7 @@ public class Constants {
 
         public static final double WIDTH = 0.6223;
         public static final double LENGTH = 0.6223;
-        public static final Translation2d FRONT_LEFT_POSITION =
+        public static final Translation2d NORTH_WEST =
                 new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
         public static final double FRONT_LEFT_ENCODER_OFFSET = 0; // radians
         public static final Translation2d FRONT_RIGHT_POSITION =
