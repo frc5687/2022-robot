@@ -45,34 +45,33 @@ public class DriveTrain extends OutliersSubsystem {
 
             _frontRight =
                     new DiffSwerveModule(
-                            Constants.DriveTrain.FRONT_RIGHT_POSITION,
+                            Constants.DriveTrain.NORTH_WEST,
                             RobotMap.CAN.TALONFX.FR_LEFT_FALCON,
                             RobotMap.CAN.TALONFX.FR_RIGHT_FALCON,
                             RobotMap.DIO.ENCODER_FR,
-                            Constants.DriveTrain.FRONT_RIGHT_ENCODER_OFFSET);
+                            Constants.DriveTrain.NORTH_WEST_OFFSET);
             _frontLeft =
                     new DiffSwerveModule(
-                            Constants.DriveTrain.FRONT_LEFT_POSITION,
+                            Constants.DriveTrain.NORTH_EAST,
                             RobotMap.CAN.TALONFX.FL_LEFT_FALCON,
                             RobotMap.CAN.TALONFX.FL_RIGHT_FALCON,
                             RobotMap.DIO.ENCODER_FL,
-                            Constants.DriveTrain.FRONT_LEFT_ENCODER_OFFSET);
+                            Constants.DriveTrain. NORTH_EAST_OFFSET);
             _backRight =
                     new DiffSwerveModule(
-                            Constants.DriveTrain.BACK_RIGHT_POSITION,
+                            Constants.DriveTrain.SOUTH_WEST,
                             RobotMap.CAN.TALONFX.BR_LEFT_FALCON,
                             RobotMap.CAN.TALONFX.BR_RIGHT_FALCON,
                             RobotMap.DIO.ENCODER_BR,
-                            Constants.DriveTrain.BACK_RIGHT_ENCODER_OFFSET);
+                            Constants.DriveTrain.SOUTH_WEST_OFFSET);
             _backLeft =
                     new DiffSwerveModule(
-                            Constants.DriveTrain.BACK_LEFT_POSITION,
+                            Constants.DriveTrain.SOUTH_EAST,
                             RobotMap.CAN.TALONFX.BL_RIGHT_FALCON,
                             RobotMap.CAN.TALONFX.BL_LEFT_FALCON,
                             RobotMap.DIO.ENCODER_BL,
-                            Constants.DriveTrain.BACK_LEFT_ENCODER_OFFSET);
-
-            _kinematics =
+                            Constants.DriveTrain.SOUTH_EAST_OFFSET);
+           _kinematics =
                     new SwerveDriveKinematics(
                             _frontLeft.getModulePosition(),
                             _frontRight.getModulePosition(),
@@ -177,6 +176,9 @@ public class DriveTrain extends OutliersSubsystem {
      * @param fieldRelative forward is always forward no mater orientation of robot.
      */
     public void drive(double vx, double vy, double omega, boolean fieldRelative) {
+        metric("VX", vx);
+        metric("VY", vx);
+        metric("Theta?", omega);
         if (Math.abs(vx) < Constants.DriveTrain.DEADBAND && Math.abs(vy) < Constants.DriveTrain.DEADBAND && Math.abs(omega) < Constants.DriveTrain.DEADBAND) {
             setFrontRightModuleState(
                     new SwerveModuleState(0, new Rotation2d(_frontRight.getModuleAngle())));
