@@ -33,7 +33,7 @@ public class Constants {
         public static final double BACK_RIGHT_ENCODER_OFFSET = 0; // radians
         public static final Translation2d BACK_RIGHT_POSITION =
                 new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
-        public static final double BACK_LEFT_ENCODER_OFFSET = Math.PI; // radians
+        public static final double BACK_LEFT_ENCODER_OFFSET = 0; // radians
 
         public static final double DEADBAND = 0.2;
 
