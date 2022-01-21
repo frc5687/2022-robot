@@ -22,9 +22,9 @@ public class Constants {
         public static final Translation2d NORTH_WEST = new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
         public static final double NORTH_WEST_OFFSET = 0; // radians
         public static final Translation2d SOUTH_EAST = new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
-        public static final double SOUTH_EAST_OFFSET = Math.PI; // radians
+        public static final double SOUTH_EAST_OFFSET = 0; // radians
         public static final Translation2d SOUTH_WEST = new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
-        public static final double SOUTH_WEST_OFFSET = Math.PI; // radians
+        public static final double SOUTH_WEST_OFFSET = 0; // radians
 
         public static final double DEADBAND = 0.2;
 
