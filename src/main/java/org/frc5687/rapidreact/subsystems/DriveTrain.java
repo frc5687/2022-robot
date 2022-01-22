@@ -15,6 +15,9 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
@@ -134,7 +137,7 @@ public class DriveTrain extends OutliersSubsystem {
 
         metric("BR/Encoder Wheel Vel", _backRight.getWheelVelocity());
         metric("BR/Predicted Wheel Vel", _backRight.getPredictedWheelVelocity());
-
+        DriverStation.reportWarning("Odometry Pose" + getOdometryPose().toString(), false);
         metric("Odometry Pose", getOdometryPose().toString());
     }
 
@@ -176,9 +179,6 @@ public class DriveTrain extends OutliersSubsystem {
      * @param fieldRelative forward is always forward no mater orientation of robot.
      */
     public void drive(double vx, double vy, double omega, boolean fieldRelative) {
-        metric("VX", vx);
-        metric("VY", vx);
-        metric("Theta?", omega);
         if (Math.abs(vx) < Constants.DriveTrain.DEADBAND && Math.abs(vy) < Constants.DriveTrain.DEADBAND && Math.abs(omega) < Constants.DriveTrain.DEADBAND) {
             setFrontRightModuleState(
                     new SwerveModuleState(0, new Rotation2d(_frontRight.getModuleAngle())));
