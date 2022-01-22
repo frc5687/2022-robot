@@ -166,7 +166,8 @@ public class DriveTrain extends OutliersSubsystem {
         return Rotation2d.fromDegrees(-getYaw());
     }
 
-    public void resetYaw() {
+    public void resetNavX() {
+        // Reset the NavX IMU
         _imu.reset();
     }
 
