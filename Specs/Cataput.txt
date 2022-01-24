@@ -1,0 +1,7 @@
+A cataput to shoot the balls into the high goal
+
+Needs a mathmatical model of the arm for better control
+Needs to be able to make consitent high goal shots,
+from anyplace on the field
+Needs a button command for reseting arm and reloading,
+as well as shooting
