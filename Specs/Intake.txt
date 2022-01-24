@@ -3,3 +3,5 @@ intake is lowering it should spin up the roller so called the wacker.
 To intake the balls. 
 
 Needs to intake the balls quickly and conistenly
+With a method of dejaming caught balls
+Mapped to a joystick button
