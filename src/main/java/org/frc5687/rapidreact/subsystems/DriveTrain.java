@@ -137,8 +137,8 @@ public class DriveTrain extends OutliersSubsystem {
 
         metric("BR/Encoder Wheel Vel", _backRight.getWheelVelocity());
         metric("BR/Predicted Wheel Vel", _backRight.getPredictedWheelVelocity());
-        DriverStation.reportWarning("Odometry Pose" + getOdometryPose().toString(), false);
         metric("Odometry Pose", getOdometryPose().toString());
+        error("Odometry Pose" + getOdometryPose().toString());
     }
 
     public void setFrontRightModuleState(SwerveModuleState state) {
@@ -169,6 +169,7 @@ public class DriveTrain extends OutliersSubsystem {
     public void resetNavX() {
         // Reset the NavX IMU
         _imu.reset();
+        error("NavX reset");
     }
 
     /**
