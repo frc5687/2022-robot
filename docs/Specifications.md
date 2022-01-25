@@ -1,4 +1,7 @@
-Speficiations:
+# Functional Specifications
+
+Why do we write out our functional specifications? So no one says two days before the first match, "No one told me the robot had to be able to do *that*!"
+
 Robot actions are initiated by operator input ei. button press.
 # Robot Specific:
   ## Movement
