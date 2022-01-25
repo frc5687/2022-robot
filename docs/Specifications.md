@@ -52,3 +52,12 @@ Robot actions are initiated by operator input ei. button press.
     - Piviot center of mass under traversal rung.
     - Release right arm.
   
+## Will Do / Can Do Table
+
+As we write our specification and code we will fill out this table.
+
+Category | Specification | Will Do | Can Do
+---------|---------------|---------|-------
+Move | Move responding to remote human manual control | YES | YES
+Shoot | Shoot cargo into high goal | YES | NO
+Fly | Levitate in place | NO | NO
