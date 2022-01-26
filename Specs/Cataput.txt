@@ -7,3 +7,36 @@ Needs a button command for reseting arm and reloading,
 as well as shooting
 A way to remove enemies balls
 Needs a to drop intake before shooting
+
+
+Catapult:
+Actuators: 
+Spring tension motor: neo 550 with a 64:1 gearbox, 1” dia winch
+Pull down motor: neo 550 with a 64:1 gearbox, 2” dia winch
+Trigger: 0.5” pneumatic cylinder 
+Sensors:
+2, Hall effect - one on the pull down, one on spring tension
+
+Intake:
+Actuators: 
+Intake rollers: neo 550 with a 72:12  belt drive
+Open: two 4” pneumatic cylinder 
+Sensors:
+None
+
+Climber:
+Actuators: 
+Winch motor:two: neo 550 with a 64:1 gearbox, 1” dia winch
+rocker: 6” pneumatic cylinder 
+Sensors:
+4, two Hall effect on each climber - top and bottom of stroke
+
+Swerves:
+Actuators: 
+Motors: 2 per module: Falcon 500 with 9.2:1 rotation, 6.47:1 translation 
+
+Sensors:
+Absolute encoder - rev through bore
+
+
+
