@@ -9,8 +9,8 @@ A way to remove enemies balls
 Needs a to drop intake before shooting
 
 
-##Catapult:
-#Actuators: 
+Catapult:
+Actuators: 
 - Spring tension motor: neo 550 with a 64:1 gearbox, 1” dia winch
 - Pull down motor: neo 550 with a 64:1 gearbox, 2” dia winch
 - Trigger: 0.5” pneumatic cylinder 
