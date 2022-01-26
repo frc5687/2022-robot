@@ -63,4 +63,7 @@ Category | Specification | Will Do | Can Do
 ---------|---------------|---------|-------
 Move | Move responding to remote human manual control | YES | YES
 Shoot | Shoot cargo into high goal | YES | NO
+Shoot | Shoot and Move | NO | NO
+Climb | Climb to Top Bar | YES | NO
+V-SLAM | Localize Ourself on the field | YES | NO
 Fly | Levitate in place | NO | NO
