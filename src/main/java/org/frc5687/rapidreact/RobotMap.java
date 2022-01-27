@@ -12,15 +12,28 @@ public class RobotMap {
     public static class CAN {
 
         public static class TALONFX {
-            public static final int BL_RIGHT_FALCON = 3;
-            public static final int BL_LEFT_FALCON = 4;
-            public static final int BR_RIGHT_FALCON = 1;
-            public static final int BR_LEFT_FALCON = 2;
-            public static final int FL_RIGHT_FALCON = 5;
-            public static final int FL_LEFT_FALCON = 6;
-            public static final int FR_RIGHT_FALCON = 7;
-            public static final int FR_LEFT_FALCON = 8;
-            public static final int ARM_MOTOR = 9;
+            /**
+             * Pulled in from 2021-Proto-Bot
+             *          N
+             *          |
+             *      E -- -- W
+             *          |
+             *          S
+             */
+            public static final int BL_RIGHT_FALCON = 4;
+            public static final int BL_LEFT_FALCON = 3;
+            public static final int BR_RIGHT_FALCON = 6;
+            public static final int BR_LEFT_FALCON = 5;
+            public static final int FL_RIGHT_FALCON = 1;
+            public static final int FL_LEFT_FALCON = 2;
+            public static final int FR_RIGHT_FALCON = 8;
+            public static final int FR_LEFT_FALCON = 7;
+        }
+
+        public static class SPARKMAX {
+            public static final int SPRING_BABY_NEO = 1;
+            public static final int WINCH_BABY_NEO = 2;
+
         }
     }
 
@@ -53,10 +66,9 @@ public class RobotMap {
      * for DIO only one device can connect to each port, so the numbers should be unique.
      */
     public static class DIO {
-        public static final int ENCODER_FR = 4;
-        public static final int ENCODER_FL = 3;
-        public static final int ENCODER_BR = 5;
-        public static final int ENCODER_BL = 2;
-        public static final int ENCODER_ARM = 2;
+        public static final int ENCODER_FR = 4; //DIO 4
+        public static final int ENCODER_FL = 3; //DIO 3
+        public static final int ENCODER_BR = 1; //DIO 1
+        public static final int ENCODER_BL = 2; //DIO 2
     }
 }

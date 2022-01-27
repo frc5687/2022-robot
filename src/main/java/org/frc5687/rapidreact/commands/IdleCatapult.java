@@ -1,24 +1,31 @@
 package org.frc5687.rapidreact.commands;
 
+import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.subsystems.Catapult;
-import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 public class IdleCatapult extends OutliersCommand {
-    private Catapult _catapult;
 
-    public IdleCatapult(Catapult catapult) {
+    private Catapult _catapult;
+    private OI _oi;
+
+    public IdleCatapult(Catapult catapult, OI oi) {
         _catapult = catapult;
+        _oi = oi;
         addRequirements(_catapult);
     }
 
     @Override
     public void initialize() {
-        
+        super.initialize();
     }
 
     @Override
     public void execute() {
         super.execute();
+        double speed = _oi.getWinchMotorSpeed();
+        _catapult.setWinchMotorSpeed(speed);
+        double speedSpring = _oi.getSpringMotorSpeed();
+        _catapult.setSpringMotorSpeed(speedSpring);
     }
 
     @Override

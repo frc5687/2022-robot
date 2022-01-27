@@ -9,25 +9,24 @@ public class Constants {
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
     public static final double EPSILON = 0.00001;
+    public static final double DEADBAND = 0.1;
 
     public static class DriveTrain {
 
         public static final double WIDTH = 0.6223;
         public static final double LENGTH = 0.6223;
-        public static final Translation2d FRONT_LEFT_POSITION =
-                new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
-        public static final double FRONT_LEFT_ENCODER_OFFSET = -0.071; // radians
-        public static final Translation2d FRONT_RIGHT_POSITION =
-                new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
-        public static final double FRONT_RIGHT_ENCODER_OFFSET = -1.01; // radians
-        public static final Translation2d BACK_LEFT_POSITION =
-                new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
-        public static final double BACK_RIGHT_ENCODER_OFFSET = -0.122; // radians
-        public static final Translation2d BACK_RIGHT_POSITION =
-                new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
-        public static final double BACK_LEFT_ENCODER_OFFSET = 0.585 + Math.PI; // radians
 
-        public static final double DEADBAND = 0.1;
+        //Swerve modules renamed from positions to directions
+        public static final Translation2d NORTH_EAST = new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
+        public static final double NORTH_EAST_OFFSET = 0; // radians
+        public static final Translation2d NORTH_WEST = new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
+        public static final double NORTH_WEST_OFFSET = 0; // radians
+        public static final Translation2d SOUTH_EAST = new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
+        public static final double SOUTH_EAST_OFFSET = 0; // radians
+        public static final Translation2d SOUTH_WEST = new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
+        public static final double SOUTH_WEST_OFFSET = 0; // radians
+
+        public static final double DEADBAND = 0.2;
 
         public static final double MAX_MPS = 3.5; // Max speed of robot (m/s) .
 
@@ -91,25 +90,21 @@ public class Constants {
     }
 
     public static class Catapult {
-        public static final boolean INVERTED = false;
-        public static final boolean VOLTAGE_COMPENSATION = true;
+        public static final boolean SPRING_MOTOR_INVERTED = false;
+        public static final boolean WINCH_MOTOR_INVERTED = false;
 
-        // Physical Characteristics
-        public static final double ARM_LENGTH = 0.6; // m
+        public static final double GEAR_REDUCTION_SPRING = 64.0;
+        public static final double ROTATIONS_TO_POSITION = 0.02; // meters
 
-        // State space stuff
-        public static final double kDt = 0.02; // seconds
-        public static final double MOMENT_OF_INERTIA = 0.2; // kg/m^2
-        public static final double GEAR_RATIO = 25.0;
-        public static final double MODEL_ANGLE_NOISE = 0.015; // rad
-        public static final double MODEL_ANGULAR_VELOCITY_NOISE = 0.17; // rad/s
-        public static final double SENSOR_ANGLE_NOISE = 0.015; // rad
-        // LQR stuff
-        public static final double ANGLE_TOLERANCE = 0.01; // rad
-        public static final double ANGULAR_VELOCITY_TOLERANCE = 0.1; // rad/s
-        public static final double CONTROL_EFFORT = 12.0; // volts
+        // Controller Parameters
+        public static final double kP = 0.1; // Always start with kP
+        public static final double kI = 0.0; // If possible avoid kI
+        public static final double kD = 0.01; // 2nd Kd
 
-        // Control
-        public static final double CONTROL_TOLERANCE = 0.1; // rad
+        public static final double MAX_SPRING_VELOCITY = 1.0; // m/s
+        public static final double MAX_SPRING_ACCELERATION = 0.5; // m/s^2
+
+        public static final double SPRING_TOLERANCE = 0.1; // m/s^2
     }
+
 }

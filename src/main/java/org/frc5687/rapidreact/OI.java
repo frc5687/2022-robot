@@ -1,59 +1,53 @@
-/* Team 5687 (C)2020-2021 */
+/** Team 5687 (C)2021-2022
+ * Joystick and gamepad control for the robot.
+ * Also has button inits.
+ * Has some instructions on how to switch controls.
+*/
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
+
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import org.ejml.ops.MatrixFeatures_D;
 import org.frc5687.rapidreact.commands.ShootSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
-import org.frc5687.rapidreact.util.AxisButton;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
 public class OI extends OutliersProxy {
-    protected Gamepad _driverGamepad;
-    protected Joystick _leftJoystick;
-    protected Joystick _rightJoystick;
 
-    protected Button _driverRightStickButton;
+    protected Joystick _translation;
+    protected Joystick _rotation;
 
-    private Button _driverAButton;
-    private Button _driverBButton;
-    private Button _driverXButton;
-    private Button _driverYButton;
-    private Button _driverRightTrigger;
+    private Gamepad _debug;
+
+    private Button _shootButton;
+
 
     private double yIn = 0;
     private double xIn = 0;
 
     public OI() {
-        _driverGamepad = new Gamepad(0);
+        _translation = new Joystick(0);
+        _rotation = new Joystick(1);
 
-        _leftJoystick = new Joystick(1);
-        _rightJoystick = new Joystick(2);
+        _debug = new Gamepad(2);
 
-        _driverRightStickButton =
-                new JoystickButton(_driverGamepad, Gamepad.Buttons.RIGHT_STICK.getNumber());
-
-        _driverAButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.A.getNumber());
-        _driverBButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.B.getNumber());
-        _driverYButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.Y.getNumber());
-        _driverXButton = new JoystickButton(_driverGamepad, Gamepad.Buttons.X.getNumber());
-        _driverRightTrigger =
-                new AxisButton(_driverGamepad, Gamepad.Axes.RIGHT_TRIGGER.getNumber(), 0.2);
+        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult) {
-        // when A button is pressed set heuristic control to try PI/4 rad(45 deg) and ball velocity of 20 m/s.
-        _driverAButton.whenPressed(new ShootSetpoint(catapult, Math.PI / 4.0, 20.0));
+        //There's nothing to init here
+        _shootButton.whenPressed(new ShootSetpoint(catapult, 20.0));
     }
 
     public double getDriveY() {
-        //        yIn = getSpeedFromAxis(_leftJoystick, _leftJoystick.getYChannel());
-        yIn = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_Y.getNumber());
+        //Comment for gamepad control
+        yIn = getSpeedFromAxis(_translation, _translation.getYChannel());
+        // yIn = getSpeedFromAxis(Gamepad, Gamepad.getYChannel());
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
 
         double yOut = yIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
@@ -62,18 +56,30 @@ public class OI extends OutliersProxy {
     }
 
     public double getDriveX() {
-        //        xIn = -getSpeedFromAxis(_leftJoystick, _leftJoystick.getXChannel());
-        xIn = -getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_X.getNumber());
+        //Comment for gamepad control
+        xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
+        //xIn = -getSpeedFromAxis(Gamepad, Gamepad.getXChannel());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
-
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
-        xOut = (xOut + (xIn * 2)) / 3.0;
+        xOut = (xOut + (xIn * 2)) / 3.0; // numbers from empirical testing.
         return xOut;
     }
 
     public double getRotationX() {
-        double speed = getSpeedFromAxis(_rightJoystick, _rightJoystick.getZChannel());
-        speed = applyDeadband(speed, 0.2);
+        double speed = getSpeedFromAxis(_rotation, _rotation.getXChannel());
+        speed = applyDeadband(speed, Constants.DEADBAND);
+        return speed;
+    }
+
+    public double getSpringMotorSpeed() {
+        double speed = -getSpeedFromAxis(_debug, _debug.getYChannel());
+        speed = applyDeadband(speed, Constants.DEADBAND);
+        return speed;
+    }
+
+    public double getWinchMotorSpeed() {
+        double speed = -getSpeedFromAxis(_debug, _debug.getXChannel());
+        speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }
 
