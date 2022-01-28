@@ -12,11 +12,11 @@ Move | Move responding to remote human manual control | YES | NO | NO
 Move | Translate and rotate at the same time | YES | NO | NO
 Shoot | Shoot cargo into high goal | YES | NO | NO
 Shoot | Shoot and Move | NO | NO | NO
-Shoot | Eject opponent cargo | YES | NO | NO
+Shoot | Check color using color sensor | YES | NO | NO 
+Shoot | Eject opponent cargo at low power| YES | NO | NO
 Auto | Complete an autonomous routine, scoring one to four cargo | YES | NO | NO
 Climb | Climb to Top Bar | YES | NO | NO
 V-SLAM | Localize Ourself on the field | YES | NO | NO
-Color check | Check color using color sensor | YES | NO | NO 
 Fly | Levitate in place | NO | NO | NO 
 
 
