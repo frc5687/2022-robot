@@ -2,9 +2,24 @@
 
 Why do we write out our functional specifications? So no one says two days before the first match, "No one told me the robot had to be able to do *that*!"
 
+## Will Do / Can Do Table
+
+As we write our specification and code we will fill out this table.
+
+Category | Specification | Will Do | Chassis Can Do | Comp Can Do
+---------|---------------|---------|----------------|------------
+Move | Move responding to remote human manual control | YES | NO | NO
+Shoot | Shoot cargo into high goal | YES | NO | NO
+Shoot | Shoot and Move | NO | NO | NO
+Climb | Climb to Top Bar | YES | NO | MO
+V-SLAM | Localize Ourself on the field | YES | NO | NO
+Fly | Levitate in place | NO | NO | NO
+
+
 Robot actions are initiated by operator input ei. button press.
-# Robot Specific:
-  ## Movement
+# Categories
+
+  ## Move
   
     - Translate left, right, up, down.
     - Rotate.
@@ -25,19 +40,18 @@ Robot actions are initiated by operator input ei. button press.
     - Realese pin, to fire cargo.
     - Pull arm down for reloading.
     
-  ## Intaking
+  ## Intake
   
     - Put intake out / release intake
     - Intake balls by rotating rollers.
     - Pull intake in / retract intake.  
-  ## Information lights
+  ## Display Information
     - Climbing = Fun patteren.  
     - Shooting fail = red flashing (we didn't shoot the ball).
     - Shooting success = Yellow flashing light(we shot the ball).
     - Intake = purple parterns. 
     - If centered with target = green flashing.
   
-    
   ## Climb
   Start climbing at 45 seconds or more.
   
@@ -55,15 +69,3 @@ Robot actions are initiated by operator input ei. button press.
     - Piviot center of mass under traversal rung.
     - Release right arm.
   
-## Will Do / Can Do Table
-
-As we write our specification and code we will fill out this table.
-
-Category | Specification | Will Do | Can Do
----------|---------------|---------|-------
-Move | Move responding to remote human manual control | YES | YES
-Shoot | Shoot cargo into high goal | YES | NO
-Shoot | Shoot and Move | NO | NO
-Climb | Climb to Top Bar | YES | NO
-V-SLAM | Localize Ourself on the field | YES | NO
-Fly | Levitate in place | NO | NO
