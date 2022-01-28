@@ -45,9 +45,14 @@ public class RobotMap {
 
     /**
      * There should be an entry here for each PCM port, preferrably in numerical order. Note that
-     * for PCM only one device can connect to each port, so the numbers should be unique.
+     * for PCH only one device can connect to each port, so the numbers should be unique.
+     * This is the REVRobotics Pneumatic Control Hub.
      */
-    public static class PCM {}
+    public static class PCH {
+        public static int RELEASE_PIN_HIGH = 0;
+        public static int RELEASE_PIN_LOW = 1;
+
+    }
 
     /**
      * There should be an entry here for each PDP breaker, preferrably in numerical order. Note that

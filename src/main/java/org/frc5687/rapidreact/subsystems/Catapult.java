@@ -6,6 +6,8 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.OutliersContainer;
@@ -21,12 +23,19 @@ public class Catapult extends OutliersSubsystem {
     private final ProfiledPIDController _springController;
     private final ProfiledPIDController _winchController;
 
+    private final DoubleSolenoid _releasePin;
+
     public Catapult(OutliersContainer container) {
         super(container);
 
         // Create Motor controllers.
         _springMotor = new CANSparkMax(RobotMap.CAN.SPARKMAX.SPRING_BABY_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
         _winchMotor = new CANSparkMax(RobotMap.CAN.SPARKMAX.WINCH_BABY_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
+
+        // create Pneumatics stuff
+        _releasePin = new DoubleSolenoid(PneumaticsModuleType.REVPH,
+                RobotMap.PCH.RELEASE_PIN_HIGH,
+                RobotMap.PCH.RELEASE_PIN_LOW);
 
         // setup controllers
         _springMotor.restoreFactoryDefaults();
@@ -107,10 +116,57 @@ public class Catapult extends OutliersSubsystem {
         return _springController.atGoal();
     }
 
+    public boolean isWinchAtRotation() {
+        return _winchController.atGoal();
+    }
+
+    public void releasePinOut() {
+        _releasePin.set(PinPosition.OUT.getSolenoidValue());
+    }
+
+    public void releasePinIn() {
+        _releasePin.set(PinPosition.IN.getSolenoidValue());
+    }
+
+    public boolean isReleasePinOut() {
+        return _releasePin.get() == PinPosition.OUT.getSolenoidValue();
+    }
+
+    public boolean isReleasePinIn() {
+        return _releasePin.get() == PinPosition.IN.getSolenoidValue();
+    }
+
+
+
+    public PinPosition getPinPosition() {
+        //Get the release pins position
+        DoubleSolenoid.Value current = _releasePin.get();
+        if (current == PinPosition.OUT.getSolenoidValue()) {
+            return PinPosition.OUT;
+        } else if (current == PinPosition.IN.getSolenoidValue()) {
+            return PinPosition.IN;
+        }
+        return PinPosition.UNKNOWN;
+    }
 
     @Override
     public void updateDashboard() {
         metric("Spring Encoder Rail Rotations", getSpringRailPosition());
     }
 
+    private enum PinPosition {
+        UNKNOWN(DoubleSolenoid.Value.kOff),
+        OUT(DoubleSolenoid.Value.kReverse),
+        IN(DoubleSolenoid.Value.kForward);
+
+        private DoubleSolenoid.Value solenoidValue;
+
+        PinPosition(DoubleSolenoid.Value solenoidValue) {
+            this.solenoidValue = solenoidValue;
+        }
+
+        public DoubleSolenoid.Value getSolenoidValue() {
+            return solenoidValue;
+        }
+    }
 }
