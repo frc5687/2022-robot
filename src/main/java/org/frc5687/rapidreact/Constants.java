@@ -93,18 +93,23 @@ public class Constants {
         public static final boolean SPRING_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = false;
 
-        public static final double GEAR_REDUCTION_SPRING = 64.0;
+        public static final double GEAR_REDUCTION = 64.0;
         public static final double ROTATIONS_TO_POSITION = 0.02; // meters
 
         // Controller Parameters
-        public static final double kP = 0.1; // Always start with kP
-        public static final double kI = 0.0; // If possible avoid kI
-        public static final double kD = 0.01; // 2nd Kd
-
+        public static final double SPRING_kP = 0.1; // Always start with kP
+        public static final double SPRING_kI = 0.0; // If possible avoid kI
+        public static final double SPRING_kD = 0.01; // 2nd Kd
         public static final double MAX_SPRING_VELOCITY = 1.0; // m/s
         public static final double MAX_SPRING_ACCELERATION = 0.5; // m/s^2
-
         public static final double SPRING_TOLERANCE = 0.1; // m/s^2
+        // winch
+        public static final double WINCH_kP= 0.1; // Always start with kP
+        public static final double WINCH_kI = 0.0; // If possible avoid kI
+        public static final double WINCH_kD = 0.01; // 2nd Kd
+        public static final double MAX_WINCH_VELOCITY = 1.0; // m/s
+        public static final double MAX_WINCH_ACCELERATION = 0.5; // m/s^2
+        public static final double WINCH_TOLERANCE = 0.1; // m/s^2
     }
 
 }
