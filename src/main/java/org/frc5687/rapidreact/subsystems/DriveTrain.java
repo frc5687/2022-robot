@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
+import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class DriveTrain extends OutliersSubsystem {
@@ -28,7 +29,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     private SwerveDriveKinematics _kinematics;
     private SwerveDriveOdometry _odomerty;
-
+    private Limelight _limelight;
     private double _PIDAngle;
 
     private AHRS _imu;
@@ -42,7 +43,6 @@ public class DriveTrain extends OutliersSubsystem {
         try {
             _oi = oi;
             _imu = imu;
-
             _frontRight =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
@@ -126,9 +126,7 @@ public class DriveTrain extends OutliersSubsystem {
         metric("BL/Encoder Angle", _backLeft.getModuleAngle());
         metric("FL/Encoder Angle", _frontLeft.getModuleAngle());
         metric("FR/Encoder Angle", _frontRight.getModuleAngle());
-
         metric("BR/Predicted Angle", _backRight.getPredictedAzimuthAngle());
-
         metric("BR/Encoder Azimuth Vel", _backRight.getAzimuthAngularVelocity());
         metric("BR/Predicted Azimuth Vel", _backRight.getPredictedAzimuthAngularVelocity());
 

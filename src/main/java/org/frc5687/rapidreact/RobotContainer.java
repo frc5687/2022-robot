@@ -2,19 +2,22 @@
 package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
+import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
 
     private OI _oi;
     private AHRS _imu;
-
+    private Limelight _limelight;
     private Robot _robot;
     private DriveTrain _driveTrain;
 
@@ -33,6 +36,7 @@ public class RobotContainer extends OutliersContainer {
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
         _oi.initializeButtons(_driveTrain);
+        _limelight = new Limelight("limelight");
     }
 
     public void periodic() {
@@ -70,6 +74,8 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void updateDashboard() {
         //Updates the driver station
+        _limelight.update();
+        DriverStation.reportWarning(Double.toString(_limelight.yaw), false);
         _driveTrain.updateDashboard();
     }
 

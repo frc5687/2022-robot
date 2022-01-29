@@ -28,7 +28,6 @@ public class Robot extends OutliersRobot implements ILoggingSource {
     private String _name;
 
     private RobotContainer _robotContainer;
-
     private boolean _fmsConnected;
 
     private Command _autoCommand;
