@@ -89,10 +89,4 @@ public class Constants {
         public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double CONTROL_EFFORT = VOLTAGE;
     }
-
-    public static class Climber{
-        public static final int LEFT_ARM = 4;
-        public static final int RIGHT_ARM = 5;
-        public static final int ROCKER = 6;
-    }
 }
