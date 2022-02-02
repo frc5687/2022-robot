@@ -6,12 +6,8 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
-
-import org.frc5687.rapidreact.commands.ResetNavX;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
@@ -36,7 +32,7 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
-        resetNavX.whenPressed(driveTrain::resetNavX);   
+        resetNavX.whenReleased(driveTrain::resetNavX);   
     }
 
     public double getDriveY() {
