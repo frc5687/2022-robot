@@ -36,7 +36,7 @@ public class RobotContainer extends OutliersContainer {
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
         _oi.initializeButtons(_driveTrain);
-        _limelight = new Limelight("limelight");
+        _limelight = new Limelight("gloworm");
     }
 
     public void periodic() {
