@@ -1,5 +1,0 @@
-Localize ourself on the field using a camera
-
-Needs relocalization
-Needs a method of denoising the recived data
-Needs to be accuate within a half millimeter

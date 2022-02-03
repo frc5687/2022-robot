@@ -1,5 +1,0 @@
-A method of climbing up to the top bar of the hanger
-
-Needs to be able to climb to the transversal bar of the hanger
-Needs to be the drivers put the hook on the bar,
-and one button climbs the whole way up.

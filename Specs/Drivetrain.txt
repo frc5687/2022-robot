@@ -1,5 +1,0 @@
-The method for movinmg the robot around the field using swerve drives
-
-Need top be able to move from side to side forward and back based
-off of joystick input. 
-Needs to be able to be easily configured (etc... the accel, max mps)

@@ -1,5 +1,0 @@
-A method of moving the balls from the indexer to the cataput
-
-Needs to move the balls from the intake to the cataput quickly
-Needs a dejammer
-Needs a colour sensor to id the colour of the ball being indexed
