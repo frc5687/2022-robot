@@ -134,8 +134,11 @@ public class DriveTrain extends OutliersSubsystem {
 
         metric("BR/Encoder Wheel Vel", _backRight.getWheelVelocity());
         metric("BR/Predicted Wheel Vel", _backRight.getPredictedWheelVelocity());
-
-        metric("Odometry Pose", getOdometryPose().toString());
+        Pose2d odometry=getOdometryPose();
+        metric("Odometry/x",odometry.getX());
+        metric("Odometry/y",odometry.getY());
+        metric("Odometry/angle",odometry.getRotation().getDegrees());
+        metric("Odometry/Pose", getOdometryPose().toString());
     }
 
     public void setFrontRightModuleState(SwerveModuleState state) {
