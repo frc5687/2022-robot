@@ -30,13 +30,13 @@ public class RobotContainer extends OutliersContainer {
         _oi = new OI();
         //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
-        _driveTrain = new DriveTrain(this, _oi, _imu);
+        _limelight = new Limelight("gloworm");
+        _driveTrain = new DriveTrain(this, _oi, _imu, _limelight);
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
         _oi.initializeButtons(_driveTrain);
-        _limelight = new Limelight("gloworm");
     }
 
     public void periodic() {
@@ -74,8 +74,6 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void updateDashboard() {
         //Updates the driver station
-        _limelight.update();
-        DriverStation.reportWarning(Double.toString(_limelight.yaw), false);
         _driveTrain.updateDashboard();
     }
 

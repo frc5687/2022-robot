@@ -38,11 +38,12 @@ public class DriveTrain extends OutliersSubsystem {
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
 
-    public DriveTrain(OutliersContainer container, OI oi, AHRS imu) {
+    public DriveTrain(OutliersContainer container, OI oi, AHRS imu, Limelight limelight) {
         super(container);
         try {
             _oi = oi;
             _imu = imu;
+            _limelight = limelight;
             _frontRight =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
@@ -129,7 +130,7 @@ public class DriveTrain extends OutliersSubsystem {
         metric("BR/Predicted Angle", _backRight.getPredictedAzimuthAngle());
         metric("BR/Encoder Azimuth Vel", _backRight.getAzimuthAngularVelocity());
         metric("BR/Predicted Azimuth Vel", _backRight.getPredictedAzimuthAngularVelocity());
-
+        metric("Limelight Yaw", _limelight.getYaw());
         metric("BR/Encoder Wheel Vel", _backRight.getWheelVelocity());
         metric("BR/Predicted Wheel Vel", _backRight.getPredictedWheelVelocity());
 
