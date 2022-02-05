@@ -6,7 +6,7 @@ package org.frc5687.rapidreact.util;
  */
 
 public class Version {
-    public static final String BRANCH = "OI/#8-DualJSSupport";
-    public static final String REVISION = "90b0268";
-    public static final String MODIFIED = " *";
+    public static final String BRANCH = "Drivetrain/#27-Odometrylogging";
+    public static final String REVISION = "8d9795f";
+    public static final String MODIFIED = "";
 }
