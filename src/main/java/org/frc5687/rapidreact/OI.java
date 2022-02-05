@@ -6,24 +6,39 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
+
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.Joystick;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
 public class OI extends OutliersProxy {
-    protected Gamepad _gamepad;
-    protected Joystick _rotation;
-    protected Joystick _translation;
 
     private double yIn = 0;
     private double xIn = 0;
 
-    public OI() {
-        // _gamepad = new Gamepad(0);
+    private ArrayList<Joystick> _joysticks = new ArrayList<Joystick>(10); 
 
-        _translation = new Joystick(0);
-        _rotation = new Joystick(1);
+    public OI() {
+
+        addJoystick(ButtonMap.Controllers.DRIVER_JOYSTICK);
+        addJoystick(ButtonMap.Controllers.OPERATOR_JOYSTICK);
+        addGamepad(ButtonMap.Controllers.OPERATOR_GAMEPAD);
+    }
+
+    private void addJoystick(int port) {
+        _joysticks.add(port, new Joystick(port));
+    }
+
+    private void addGamepad(int port) {
+        _joysticks.add(port, new Gamepad(port));
+    }
+
+
+    private Joystick getJoystick(int port) {
+        return _joysticks.get(port);
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
@@ -31,8 +46,11 @@ public class OI extends OutliersProxy {
     }
 
     public double getDriveY() {
+        Joystick translation = getJoystick(ButtonMap.Axes.Translation.Controller);
+
         //Comment for gamepad control
-        yIn = getSpeedFromAxis(_translation, _translation.getYChannel());
+        yIn = getSpeedFromAxis(translation, ButtonMap.Axes.Translation.Y);
+        
         //Uncomment for gamepad control
         // yIn = getSpeedFromAxis(Gamepad, Gamepad.getYChannel());
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
@@ -43,8 +61,9 @@ public class OI extends OutliersProxy {
     }
 
     public double getDriveX() {
+        Joystick translation = getJoystick(ButtonMap.Axes.Translation.Controller);
         //Comment for gamepad control
-        xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
+        xIn = -getSpeedFromAxis(translation, ButtonMap.Axes.Translation.Y);
         //Uncomment for gamepad control
         //xIn = -getSpeedFromAxis(Gamepad, Gamepad.getXChannel());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
@@ -54,13 +73,15 @@ public class OI extends OutliersProxy {
     }
 
     public double getRotationX() {
-        double speed = getSpeedFromAxis(_rotation, _rotation.getXChannel());
+        Joystick rotation = getJoystick(ButtonMap.Axes.Rotation.Controller);
+
+        double speed = getSpeedFromAxis(rotation, ButtonMap.Axes.Rotation.Twist);
         speed = applyDeadband(speed, 0.2);
         return speed;
     }
 
-    protected double getSpeedFromAxis(Joystick gamepad, int axisNumber) {
-        return gamepad.getRawAxis(axisNumber);
+    protected double getSpeedFromAxis(Joystick joystick, int axisNumber) {
+        return joystick.getRawAxis(axisNumber);
     }
 
     @Override
