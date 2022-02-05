@@ -7,8 +7,6 @@ package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
 
-import java.util.ArrayList;
-
 import edu.wpi.first.wpilibj.Joystick;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.util.Gamepad;
@@ -19,26 +17,12 @@ public class OI extends OutliersProxy {
     private double yIn = 0;
     private double xIn = 0;
 
-    private ArrayList<Joystick> _joysticks = new ArrayList<Joystick>(10); 
+    private Joystick[] _joysticks = new Joystick[10]; 
 
     public OI() {
-
         addJoystick(ButtonMap.Controllers.DRIVER_JOYSTICK);
         addJoystick(ButtonMap.Controllers.OPERATOR_JOYSTICK);
         addGamepad(ButtonMap.Controllers.OPERATOR_GAMEPAD);
-    }
-
-    private void addJoystick(int port) {
-        _joysticks.add(port, new Joystick(port));
-    }
-
-    private void addGamepad(int port) {
-        _joysticks.add(port, new Gamepad(port));
-    }
-
-
-    private Joystick getJoystick(int port) {
-        return _joysticks.get(port);
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
@@ -86,4 +70,35 @@ public class OI extends OutliersProxy {
 
     @Override
     public void updateDashboard() {}
+
+    /**
+     * Instantiates a Joystick on the specified port and adds it to the _joysticks array.
+     * 
+     * @param port Pass -1 to skip this joystick.
+     */
+    private void addJoystick(int port) {
+        if (port < 0) { return; }
+        _joysticks[port] = new Joystick(port);
+    }
+
+    /**
+     * Instantiates Gamepad on the specified port and adds it to the _joysticks array.
+     * 
+     * @param port Pass -1 to skip this gamepad.
+     */
+    private void addGamepad(int port) {
+        if (port < 0) { return; }
+        _joysticks[port] = new Gamepad(port);
+    }
+
+    /**
+     * Returns the joystick assigned to a specific port.  Returns null is no joystick assigned or port is -1.
+     * @param port
+     * @return
+     */
+    private Joystick getJoystick(int port) {
+        if (port < 0) { return null; }
+        return _joysticks[port];
+    }
+
 }
