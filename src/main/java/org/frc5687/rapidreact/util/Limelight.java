@@ -22,12 +22,10 @@ public class Limelight {
 
     public double getYaw() {
         //Gets the realitive yaw of the target
-        try{
+        if(hasTarget()){
             return _camera.getLatestResult().getBestTarget().getYaw();
         }
-        catch(Exception e){
-            return 0.0;
-        }
+        return 0.0;
     }
 
     public double getArea(){
