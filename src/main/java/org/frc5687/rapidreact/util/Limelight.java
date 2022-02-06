@@ -1,6 +1,7 @@
 package org.frc5687.rapidreact.util;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
 
 public class Limelight {
 
@@ -45,6 +46,27 @@ public class Limelight {
     public boolean hasTarget() {
         //Does the limelight have a target
         return _camera.getLatestResult().hasTargets();
+    }
+
+    public void LEDOn(){
+        _camera.setLED(VisionLEDMode.kOn);
+    }
+
+    public void LEDOff(){
+        _camera.setLED(VisionLEDMode.kOff);
+    }
+
+    public void LEDBlink(){
+        _camera.setLED(VisionLEDMode.kBlink);
+    }
+
+    public void setDriverMode(boolean mode){
+        _camera.setDriverMode(mode);
+        _inDriverMode = mode;
+    }
+
+    public boolean getMode(){
+        return _inDriverMode;
     }
 }
 //Kilroy Was Here

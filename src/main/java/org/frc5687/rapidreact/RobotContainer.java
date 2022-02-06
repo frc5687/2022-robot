@@ -30,7 +30,7 @@ public class RobotContainer extends OutliersContainer {
         _oi = new OI();
         //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
-        _limelight = new Limelight("gloworm");
+        _limelight = new Limelight("limelight");
         _driveTrain = new DriveTrain(this, _oi, _imu, _limelight);
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
@@ -44,6 +44,7 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void disabledPeriodic() {
+        _limelight.LEDOff();
         //Runs every 20ms during disabled
     }
 
@@ -54,6 +55,7 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void teleopInit() {
+        _limelight.LEDOn();
         //Runs at the start of teleop
     }
 
@@ -74,6 +76,7 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void updateDashboard() {
         //Updates the driver station
+        metric("LL yaw",_limelight.getYaw());
         _driveTrain.updateDashboard();
     }
 
