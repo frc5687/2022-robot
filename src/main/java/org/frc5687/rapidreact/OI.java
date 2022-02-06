@@ -5,6 +5,8 @@
 */
 package org.frc5687.rapidreact;
 
+import static org.frc5687.rapidreact.ButtonMap.Buttons.SHOOT.SHOOT;
+import static org.frc5687.rapidreact.ButtonMap.Controllers.DRIVER_JOYSTICK;
 import static org.frc5687.rapidreact.util.Helpers.*;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -50,23 +52,24 @@ public class OI extends OutliersProxy {
     private double yIn = 0;
     private double xIn = 0;
 
-    private Joystick[] _joysticks = new Joystick[10]; 
+    private Joystick[] _joysticks = new Joystick[10];
+    private ButtonMap.Button[] _buttons = new ButtonMap.Button[_joysticks.length * 10];
 
     // private JoystickButton _shootButton;
 
     public OI() {
-        addJoystick(ButtonMap.Controllers.DRIVER_JOYSTICK);
+        addJoystick(DRIVER_JOYSTICK);
         addJoystick(ButtonMap.Controllers.OPERATOR_JOYSTICK);
         addGamepad(ButtonMap.Controllers.OPERATOR_GAMEPAD);
 
-        // shootButton = addJoystickButton(ButtonMap.Buttons.SHOOT.Controller, ButtonMap.Buttons.SHOOT.Button);
+        addJoystickButton(ButtonMap.Buttons.SHOOT.Button);
     }
 
     public void initializeButtons(DriveTrain driveTrain/*, Shooter shooter*/) {
         //There's nothing to init here
 
-        // shootButton.whenHeld(new Shoot(shooter));
-
+        // example of creating shoot button.
+        //getButton(SHOOT).whenHeld(new Shoot(shooter));
     }
 
     public double getDriveY() {
@@ -132,6 +135,15 @@ public class OI extends OutliersProxy {
     }
 
     /**
+     * Instantiates Button on the specific controller and adds it to the _buttons array.
+     * first "number of buttons" is for the first controller, seconds "number of buttons" is for the 2nd controller, etc.
+     * @param button
+     */
+    private void addJoystickButton(ButtonMap.Button button) {
+        int index = (button.getController() * 10) + button.getButton();
+        _buttons[index] = button;
+    }
+    /**
      * Returns the joystick assigned to a specific port.  Returns null is no joystick assigned or port is -1.
      * @param port
      * @return
@@ -141,9 +153,8 @@ public class OI extends OutliersProxy {
         return _joysticks[port];
     }
 
-    private JoystickButton addJoystickButton(int port, int buttonNumber) {
-        Joystick joystick = getJoystick(port);
-        return new JoystickButton(joystick, buttonNumber);
+    private JoystickButton getButton(ButtonMap.Button button) {
+        return new JoystickButton(getJoystick(button.getController()), button.getButton());
     }
 
     private AxisButton addAxisButton(int port, int buttonNumber, double threshold) {
