@@ -26,8 +26,12 @@ public class Catapult extends OutliersSubsystem {
 
     private final DoubleSolenoid _releasePin;
 
-    private final HallEffect _bottomHall;
     private final HallEffect _topHall;
+    private final HallEffect _bottomHall;
+    private final HallEffect _armHall;
+
+    private boolean _springEncoderZeroed = false;
+    private boolean _winchEncoderZeroed = false;
 
     public Catapult(OutliersContainer container) {
         super(container);
@@ -42,8 +46,9 @@ public class Catapult extends OutliersSubsystem {
                 RobotMap.PCH.RELEASE_PIN_LOW);
 
         // create hall effects.
-        _topHall = new HallEffect(RobotMap.DIO.ARM_BOTTOM_HALL_EFFECT);
-        _bottomHall = new HallEffect(RobotMap.DIO.ARM_TOP_HALL_EFFECT);
+        _topHall = new HallEffect(RobotMap.DIO.SPRING_TOP_HALL_EFFECT);
+        _bottomHall = new HallEffect(RobotMap.DIO.SPRING_BOTTOM_HALL_EFFECT);
+        _armHall = new HallEffect(RobotMap.DIO.ARM_HALL_EFFECT);
 
         // setup controllers
         _springMotor.restoreFactoryDefaults();
@@ -78,12 +83,31 @@ public class Catapult extends OutliersSubsystem {
 
         _springController.setTolerance(Constants.Catapult.SPRING_TOLERANCE);
         _winchController.setTolerance(Constants.Catapult.WINCH_TOLERANCE);
+        _springEncoderZeroed = false;
+        _winchEncoderZeroed = false;
     }
 
 
     @Override
     public void periodic() {
         super.periodic();
+        if (isTopHallTriggered() && !_springEncoderZeroed) {
+            _springEncoder.setPosition(Constants.Catapult.SPRING_TOP_LIMIT);
+            _springEncoderZeroed = true;
+        } else if (isBottomHallTriggered() && !_springEncoderZeroed) {
+            _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
+            _springEncoderZeroed = true;
+        } else {
+            _springEncoderZeroed = false;
+        }
+
+        if (isArmLowered() && !_winchEncoderZeroed) {
+            _winchEncoder.setPosition(Constants.Catapult.WINCH_BOTTOM_LIMIT);
+            _winchEncoderZeroed = true;
+        } else {
+            _winchEncoderZeroed = false;
+        }
+
     }
 
     public void setSpringMotorSpeed(double speed) {
@@ -144,7 +168,9 @@ public class Catapult extends OutliersSubsystem {
         return _releasePin.get() == PinPosition.IN.getSolenoidValue();
     }
 
-
+    public boolean isTopHallTriggered() { return _topHall.get(); }
+    public boolean isBottomHallTriggered() { return _bottomHall.get(); }
+    public boolean isArmLowered() { return _armHall.get(); }
 
     public PinPosition getPinPosition() {
         //Get the release pins position

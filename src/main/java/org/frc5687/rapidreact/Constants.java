@@ -16,7 +16,6 @@ public class Constants {
         public static final double WIDTH = 0.6223;
         public static final double LENGTH = 0.6223;
 
-        //Swerve modules renamed from positions to directions
         public static final Translation2d NORTH_EAST = new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
         public static final double NORTH_EAST_OFFSET = 0; // radians
         public static final Translation2d NORTH_WEST = new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
@@ -28,11 +27,12 @@ public class Constants {
 
         public static final double DEADBAND = 0.2;
 
-        public static final double MAX_MPS = 3.5; // Max speed of robot (m/s) .
+        public static final double MAX_MPS = 1.5; // Max speed of robot (m/s) .
 
-        public static final double MAX_ANG_VEL =
-                Math.PI * 2.0; // Max rotation rate of robot (rads/s)
+        public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
+
+
 
         public static final double ANGLE_kP = 3.5;
         public static final double ANGLE_kI = 0.0;
@@ -95,6 +95,13 @@ public class Constants {
 
         public static final double GEAR_REDUCTION = 64.0;
         public static final double ROTATIONS_TO_POSITION = 0.02; // meters
+
+        // Spring Linear actuator limits
+        public static final double SPRING_TOP_LIMIT = 10; //TODO: Real values
+        public static final double SPRING_BOTTOM_LIMIT = 0; //TODO: Real values
+
+        // Winch actuator limits
+        public static final double WINCH_BOTTOM_LIMIT = 0;
 
         // Controller Parameters
         public static final double SPRING_kP = 0.1; // Always start with kP

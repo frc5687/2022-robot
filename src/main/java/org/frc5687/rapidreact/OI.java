@@ -8,9 +8,7 @@ package org.frc5687.rapidreact;
 import static org.frc5687.rapidreact.util.Helpers.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
-
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.ejml.ops.MatrixFeatures_D;
 import org.frc5687.rapidreact.commands.ShootSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -18,15 +16,18 @@ import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
 public class OI extends OutliersProxy {
-
-    protected Joystick _translation;
+    // Joysticks and XBox controller
+    protected Gamepad _gamepad;
     protected Joystick _rotation;
+    protected Joystick _translation;
 
     private Gamepad _debug;
 
     private Button _shootButton;
 
 
+    private JoystickButton resetNavX;
+    // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
 
@@ -43,6 +44,7 @@ public class OI extends OutliersProxy {
         //There's nothing to init here
         _shootButton.whenPressed(new ShootSetpoint(catapult, 20.0));
     }
+
 
     public double getDriveY() {
         //Comment for gamepad control
