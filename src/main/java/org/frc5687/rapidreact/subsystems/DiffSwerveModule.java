@@ -45,6 +45,7 @@ public class DiffSwerveModule {
             double encoderOffset) {
         // setup azimuth bore encoder.
         _boreEncoder = new DutyCycleEncoder(encoderNum);
+
         _boreEncoder.setDistancePerRotation(2.0 * Math.PI);
         _encoderOffset = encoderOffset;
 
@@ -266,7 +267,7 @@ public class DiffSwerveModule {
 
     public double getModuleAngle() {
         return Helpers.boundHalfAngle(
-                (_boreEncoder.getDistance() % (2.0 * Math.PI)) - _encoderOffset, true);
+                (-_boreEncoder.getDistance() % (2.0 * Math.PI)) - _encoderOffset, true);
     }
 
     public double getWheelAngularVelocity() {

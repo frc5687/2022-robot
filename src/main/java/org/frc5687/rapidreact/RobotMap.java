@@ -21,13 +21,13 @@ public class RobotMap {
 
         public static class TALONFX {
             public static final int SOUTH_WEST_OUTER = 6; // SOUTH WEST
-            public static final int SOUTH_WEST_INTER = 5; // SOUTH WEST
-            public static final int SOUTH_EAST_OUTER = 3; // SOUTH EAST
-            public static final int SOUTH_EAST_INTER = 4; // SOUTH EAST
-            public static final int NORTH_WEST_OUTER = 7; // NORHT WEST
-            public static final int NORTH_WEST_INER = 8; // NORHT WEST
+            public static final int SOUTH_WEST_INNER = 5; // SOUTH WEST
+            public static final int SOUTH_EAST_OUTER = 4; // SOUTH EAST
+            public static final int SOUTH_EAST_INNER = 3; // SOUTH EAST
+            public static final int NORTH_WEST_OUTER = 8; // NORHT WEST
+            public static final int NORTH_WEST_INNER = 7; // NORHT WEST
             public static final int NORHT_EAST_OUTER = 2; // NORTH EAST
-            public static final int NORTH_EAST_INER = 1; // NORTH EAST
+            public static final int NORTH_EAST_INNER = 1; // NORTH EAST
         }
     }
 
