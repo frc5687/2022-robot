@@ -66,7 +66,7 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(DriveTrain driveTrain/*, Shooter shooter*/) {
-        _resetNavX.whenReleased(driveTrain::resetNavX);   
+        // _resetNavX.whenReleased(driveTrain::resetNavX);   
 
         // example of creating shoot button.
         // _shootButton.whenHeld(new Shoot(shooter));
