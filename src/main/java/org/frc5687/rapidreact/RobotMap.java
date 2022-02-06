@@ -1,6 +1,8 @@
 /* Team 5687 (C)2020-2021 */
 package org.frc5687.rapidreact;
 
+import com.revrobotics.SparkMaxAlternateEncoder;
+
 public class RobotMap {
 
     /**
@@ -21,6 +23,10 @@ public class RobotMap {
             public static final int FR_RIGHT_FALCON = 7;
             public static final int FR_LEFT_FALCON = 8;
         }
+
+        public static class SPARKMAX{
+            public static final int INTAKE_ROLLER = 13;
+        }
     }
 
     /**
@@ -33,7 +39,10 @@ public class RobotMap {
      * There should be an entry here for each PCM port, preferrably in numerical order. Note that
      * for PCM only one device can connect to each port, so the numbers should be unique.
      */
-    public static class PCM {}
+    public static class PCM {
+        public static final int INTAKE_HIGH = 0;
+        public static final int INTAKE_LOW = 1;
+    }
 
     /**
      * There should be an entry here for each PDP breaker, preferrably in numerical order. Note that
