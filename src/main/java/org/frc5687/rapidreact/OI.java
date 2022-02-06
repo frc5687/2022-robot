@@ -32,7 +32,6 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
-        resetNavX.whenReleased(driveTrain::resetNavX);   
     }
 
     public double getDriveY() {

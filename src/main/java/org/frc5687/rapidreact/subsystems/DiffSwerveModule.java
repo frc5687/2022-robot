@@ -36,17 +36,20 @@ public class DiffSwerveModule {
 
     private final double _encoderOffset;
     private boolean _running;
+    private boolean _encoderInverted;
 
     public DiffSwerveModule(
             Translation2d positionVector,
             int leftMotorID,
             int rightMotorID,
             int encoderNum,
-            double encoderOffset) {
+            double encoderOffset,
+            boolean encoderInverted) {
         // setup azimuth bore encoder.
         _boreEncoder = new DutyCycleEncoder(encoderNum);
         _boreEncoder.setDistancePerRotation(2.0 * Math.PI);
         _encoderOffset = encoderOffset;
+        _encoderInverted = encoderInverted;
 
         _reference = Matrix.mat(Nat.N3(), Nat.N1()).fill(0, 0, 0);
         _positionVector = positionVector;
@@ -266,7 +269,9 @@ public class DiffSwerveModule {
 
     public double getModuleAngle() {
         return Helpers.boundHalfAngle(
-                (_boreEncoder.getDistance() % (2.0 * Math.PI)) - _encoderOffset, true);
+                ((_encoderInverted ? (-1.0) : 1.0)
+                        * _boreEncoder.getDistance() % (2.0 * Math.PI)) - _encoderOffset,
+                true);
     }
 
     public double getWheelAngularVelocity() {
