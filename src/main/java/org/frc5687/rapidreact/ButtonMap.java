@@ -43,8 +43,19 @@ public class ButtonMap {
 
     public static class Buttons {
         public static class SHOOT {
-            public static int Controller = Controllers.DRIVER_JOYSTICK;
-            public static int Button = 0;
+            public static int SHOOT = 0;
+            public static Button Button = new Button(Controllers.DRIVER_JOYSTICK, SHOOT);
         }
+    }
+
+    public static class Button {
+        private final int _button;
+        private final int _controller;
+        Button(int controller, int button) {
+            _controller = controller;
+            _button = button;
+        }
+        public int getController() {return _controller;}
+        public int getButton() {return _button;}
     }
 }
