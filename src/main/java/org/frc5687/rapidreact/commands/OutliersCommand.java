@@ -4,7 +4,6 @@ package org.frc5687.rapidreact.commands;
 import org.frc5687.rapidreact.util.ILoggingSource;
 import org.frc5687.rapidreact.util.MetricTracker;
 import org.frc5687.rapidreact.util.RioLogger;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
