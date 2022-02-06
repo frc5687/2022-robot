@@ -46,6 +46,12 @@ public class ButtonMap {
             public static int SHOOT = 0;
             public static Button Button = new Button(Controllers.DRIVER_JOYSTICK, SHOOT);
         }
+
+        public static class RESET_NAVX {
+            public static int Controller = Controllers.DRIVER_JOYSTICK;
+            public static int Button = 5;
+        }
+
     }
 
     public static class Button {
