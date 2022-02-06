@@ -27,7 +27,7 @@ public class DriveTrain extends OutliersSubsystem {
     private DiffSwerveModule _southEast;
 
     private SwerveDriveKinematics _kinematics;
-    private SwerveDriveOdometry _odomerty;
+    private SwerveDriveOdometry _odometry;
 
     private double _PIDAngle;
 
@@ -49,35 +49,39 @@ public class DriveTrain extends OutliersSubsystem {
                             RobotMap.CAN.TALONFX.NORTH_WEST_OUTER,
                             RobotMap.CAN.TALONFX.NORTH_WEST_INNER,
                             RobotMap.DIO.NORTH_WEST,
-                            Constants.DriveTrain.NORTH_WEST_OFFSET);
+                            Constants.DriveTrain.NORTH_WEST_OFFSET,
+                            Constants.DriveTrain.NORTH_WEST_ENCODER_INVERTED);
             _northEast =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_EAST,
                             RobotMap.CAN.TALONFX.NORTH_EAST_INNER,
                             RobotMap.CAN.TALONFX.NORHT_EAST_OUTER,
                             RobotMap.DIO.NORTH_EAST,
-                            Constants.DriveTrain. NORTH_EAST_OFFSET);
+                            Constants.DriveTrain.NORTH_EAST_OFFSET,
+                            Constants.DriveTrain.NORTH_EAST_ENCODER_INVERTED);
             _southWest =
                     new DiffSwerveModule(
                             Constants.DriveTrain.SOUTH_WEST,
                             RobotMap.CAN.TALONFX.SOUTH_WEST_OUTER,
                             RobotMap.CAN.TALONFX.SOUTH_WEST_INNER,
                             RobotMap.DIO.SOUTH_WEST,
-                            Constants.DriveTrain.SOUTH_WEST_OFFSET);
+                            Constants.DriveTrain.SOUTH_WEST_OFFSET,
+                            Constants.DriveTrain.SOUTH_WEST_ENCODER_INVERTED);
             _southEast =
                     new DiffSwerveModule(
                             Constants.DriveTrain.SOUTH_EAST,
                             RobotMap.CAN.TALONFX.SOUTH_EAST_INNER,
                             RobotMap.CAN.TALONFX.SOUTH_EAST_OUTER,
                             RobotMap.DIO.SOUTH_EAST,
-                            Constants.DriveTrain.SOUTH_EAST_OFFSET);
+                            Constants.DriveTrain.SOUTH_EAST_OFFSET,
+                            Constants.DriveTrain.SOUTH_EAST_ENCODER_INVERTED);
            _kinematics =
                     new SwerveDriveKinematics(
                             _northEast.getModulePosition(),
                             _northWest.getModulePosition(),
                             _southEast.getModulePosition(),
                             _southWest.getModulePosition());
-            _odomerty = new SwerveDriveOdometry(_kinematics, getHeading());
+            _odometry = new SwerveDriveOdometry(_kinematics, getHeading());
 
             _controller =
                     new HolonomicDriveController(
@@ -112,7 +116,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void periodic() {
-        _odomerty.update(
+        _odometry.update(
                 getHeading(),
                 _northEast.getState(),
                 _northWest.getState(),
@@ -233,7 +237,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void trajectoryFollower(Trajectory.State goal, Rotation2d heading) {
         ChassisSpeeds adjustedSpeeds =
-                _controller.calculate(_odomerty.getPoseMeters(), goal, heading);
+                _controller.calculate(_odometry.getPoseMeters(), goal, heading);
         SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DifferentialSwerveModule.MAX_MODULE_SPEED_MPS);
         setFrontLeftModuleState(moduleStates[0]);
@@ -243,7 +247,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public Pose2d getOdometryPose() {
-        return _odomerty.getPoseMeters();
+        return _odometry.getPoseMeters();
     }
 
     public void startModules() {
