@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.util.AxisButton;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -144,5 +145,11 @@ public class OI extends OutliersProxy {
         Joystick joystick = getJoystick(port);
         return new JoystickButton(joystick, buttonNumber);
     }
+
+    private AxisButton addAxisButton(int port, int buttonNumber, double threshold) {
+        Joystick joystick = getJoystick(port);
+        return new AxisButton(joystick, buttonNumber, threshold);
+    }
+
 
 }
