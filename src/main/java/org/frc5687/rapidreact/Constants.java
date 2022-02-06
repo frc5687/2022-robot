@@ -88,4 +88,7 @@ public class Constants {
         public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double CONTROL_EFFORT = VOLTAGE;
     }
+    public static class UDPJetson {
+        public static final int BUFFER = 1024;
+    }
 }
