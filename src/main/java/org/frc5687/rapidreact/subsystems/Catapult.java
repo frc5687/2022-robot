@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class Catapult extends OutliersSubsystem {
@@ -25,6 +26,9 @@ public class Catapult extends OutliersSubsystem {
 
     private final DoubleSolenoid _releasePin;
 
+    private final HallEffect _bottomHall;
+    private final HallEffect _topHall;
+
     public Catapult(OutliersContainer container) {
         super(container);
 
@@ -36,6 +40,10 @@ public class Catapult extends OutliersSubsystem {
         _releasePin = new DoubleSolenoid(PneumaticsModuleType.REVPH,
                 RobotMap.PCH.RELEASE_PIN_HIGH,
                 RobotMap.PCH.RELEASE_PIN_LOW);
+
+        // create hall effects.
+        _topHall = new HallEffect(RobotMap.DIO.ARM_BOTTOM_HALL_EFFECT);
+        _bottomHall = new HallEffect(RobotMap.DIO.ARM_TOP_HALL_EFFECT);
 
         // setup controllers
         _springMotor.restoreFactoryDefaults();

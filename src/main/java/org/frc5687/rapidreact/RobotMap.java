@@ -75,5 +75,8 @@ public class RobotMap {
         public static final int ENCODER_FL = 3; //DIO 3
         public static final int ENCODER_BR = 1; //DIO 1
         public static final int ENCODER_BL = 2; //DIO 2
+
+        public static final int ARM_TOP_HALL_EFFECT = 5;
+        public static final int ARM_BOTTOM_HALL_EFFECT = 5;
     }
 }
