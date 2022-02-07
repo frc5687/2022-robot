@@ -7,15 +7,19 @@ package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
 public class OI extends OutliersProxy {
+    // Joysticks and XBox controller
     protected Gamepad _gamepad;
     protected Joystick _rotation;
     protected Joystick _translation;
 
+    private JoystickButton resetNavX;
+    // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
 
@@ -24,10 +28,10 @@ public class OI extends OutliersProxy {
 
         _translation = new Joystick(0);
         _rotation = new Joystick(1);
+        resetNavX = new JoystickButton(_translation, 5);
     }
 
     public void initializeButtons(DriveTrain driveTrain) {
-        //There's nothing to init here
     }
 
     public double getDriveY() {

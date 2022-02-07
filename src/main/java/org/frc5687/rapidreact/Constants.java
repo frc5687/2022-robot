@@ -15,24 +15,27 @@ public class Constants {
         public static final double WIDTH = 0.6223;
         public static final double LENGTH = 0.6223;
 
-        //Swerve modules renamed from positions to directions
-        //I did it ya'll happy? :) Where's my golden star?
         public static final Translation2d NORTH_EAST = new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
         public static final double NORTH_EAST_OFFSET = 0; // radians
+        public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
         public static final Translation2d NORTH_WEST = new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
         public static final double NORTH_WEST_OFFSET = 0; // radians
+        public static final boolean NORTH_WEST_ENCODER_INVERTED = true;
         public static final Translation2d SOUTH_EAST = new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
-        public static final double SOUTH_EAST_OFFSET = Math.PI; // radians
+        public static final double SOUTH_EAST_OFFSET = 0; // radians
+        public static final boolean SOUTH_EAST_ENCODER_INVERTED = true;
         public static final Translation2d SOUTH_WEST = new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
-        public static final double SOUTH_WEST_OFFSET = Math.PI; // radians
+        public static final double SOUTH_WEST_OFFSET = 0; // radians
+        public static final boolean SOUTH_WEST_ENCODER_INVERTED = true;
 
         public static final double DEADBAND = 0.2;
 
-        public static final double MAX_MPS = 3.5; // Max speed of robot (m/s) .
+        public static final double MAX_MPS = 1.5; // Max speed of robot (m/s) .
 
-        public static final double MAX_ANG_VEL =
-                Math.PI * 2.0; // Max rotation rate of robot (rads/s)
+        public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
+
+
 
         public static final double ANGLE_kP = 3.5;
         public static final double ANGLE_kI = 0.0;
