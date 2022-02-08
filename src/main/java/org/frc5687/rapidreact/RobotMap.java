@@ -12,7 +12,6 @@ public class RobotMap {
      * SparkMax with Id 0 and a TalonSRX with Id 0.
      */
     public static class CAN {
-
         /**
          *          N
          *          |
