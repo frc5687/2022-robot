@@ -40,6 +40,7 @@ public class Intake extends OutliersSubsystem{
     public void stowe(){
         //Stowe the intake
         _solenoid.set(Value.kReverse);
+        spinDownRoller();
     }
 
     public void deploy(){

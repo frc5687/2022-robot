@@ -38,6 +38,7 @@ public class RobotContainer extends OutliersContainer {
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
         _pch = new PCH();
+        _oi.initializeButtons(_driveTrain, _intake);
     }
 
     public void periodic() {}
