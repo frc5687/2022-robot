@@ -12,6 +12,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.OutliersContainer;
+import org.frc5687.rapidreact.util.PCH;
 
 public class RobotContainer extends OutliersContainer {
 
@@ -20,6 +21,7 @@ public class RobotContainer extends OutliersContainer {
     private Robot _robot;
     private Intake _intake;
     private DriveTrain _driveTrain;
+    private PCH _pch;
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
@@ -35,6 +37,7 @@ public class RobotContainer extends OutliersContainer {
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
+        _pch = new PCH();
     }
 
     public void periodic() {}

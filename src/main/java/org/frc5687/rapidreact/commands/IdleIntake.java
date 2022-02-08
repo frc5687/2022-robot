@@ -14,16 +14,17 @@ public class IdleIntake extends OutliersCommand{
     @Override
     public void initialize(){
         super.initialize();
+        _intake.stowe();
     }
 
     @Override
     public void execute(){
         super.execute();
+        _intake.stowe();
     }
 
     @Override
-    public boolean isFinished(){
-        super.isFinished();
-        return true;
+    public void end(boolean interrupted) {
+        super.end(interrupted);
     }
 }

@@ -2,9 +2,7 @@ package org.frc5687.rapidreact.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-
 import org.frc5687.rapidreact.Constants;
-import org.frc5687.rapidreact.Robot;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.OutliersContainer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -21,6 +19,12 @@ public class Intake extends OutliersSubsystem{
         //Construct the roller and solenoids
         super(container);
         _roller = new CANSparkMax(RobotMap.CAN.SPARKMAX.INTAKE_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
+        _roller.restoreFactoryDefaults();
+        _roller.setInverted(Constants.Intake.INVERTED);
+        _roller.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        _roller.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
+        _roller.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 1000);
+        _roller.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 1000);
         _solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCM.INTAKE_HIGH, RobotMap.PCM.INTAKE_LOW);
     }
 
@@ -41,7 +45,7 @@ public class Intake extends OutliersSubsystem{
     public void deploy(){
         //Deploy the intake
         _solenoid.set(Value.kForward);
-        //spinUpRoller();
+        spinUpRoller();
     }
 
     @Override

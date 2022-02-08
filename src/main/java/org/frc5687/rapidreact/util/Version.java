@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Intake/#11-CreateSubsystemIvan";
-    public static final String REVISION = "0dab320";
+    public static final String REVISION = "717c7f5";
     public static final String MODIFIED = " *";
 }

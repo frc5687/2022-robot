@@ -1,7 +1,6 @@
 /* Team 5687 (C)2020-2021 */
 package org.frc5687.rapidreact;
 
-import com.revrobotics.SparkMaxAlternateEncoder;
 
 public class RobotMap {
 
