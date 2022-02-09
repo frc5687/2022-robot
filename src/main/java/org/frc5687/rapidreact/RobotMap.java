@@ -49,8 +49,8 @@ public class RobotMap {
      * This is the REVRobotics Pneumatic Control Hub.
      */
     public static class PCH {
-        public static int RELEASE_PIN_HIGH = 0;
-        public static int RELEASE_PIN_LOW = 1;
+        public static int RELEASE_PIN_HIGH = 7;
+        public static int RELEASE_PIN_LOW = 8;
 
     }
 
