@@ -73,6 +73,11 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
+        _proxy.setData(
+                new JetsonProxy.Data(System.currentTimeMillis()),
+                new JetsonProxy.Data(0),
+                new JetsonProxy.Data(0),
+                new JetsonProxy.Data(0));
         if (_proxy.getLatestFrame() != null) {
             metric("Millis", _proxy.getLatestFrame().getMillis());
             metric("Object Distance", _proxy.getLatestFrame().getGoalDistance());
