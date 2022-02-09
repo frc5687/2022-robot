@@ -6,22 +6,25 @@ public class ShootSetpoint extends OutliersCommand {
 
     private Catapult _catapult;
     private double _position;
+    private double _angle;
 
-    public ShootSetpoint(Catapult catapult, double position) {
+    public ShootSetpoint(Catapult catapult, double position, double angle) {
         _catapult = catapult;
         _position = position;
+        _angle = angle;
         addRequirements(_catapult);
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        _catapult.setSpringPosition(_position);
+        _catapult.setWinchPosition(_angle);
     }
 
     @Override
     public void execute() {
         super.execute();
-        _catapult.setSpringPosition(_position);
     }
 
     @Override

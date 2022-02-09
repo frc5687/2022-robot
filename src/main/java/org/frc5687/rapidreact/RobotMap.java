@@ -76,8 +76,7 @@ public class RobotMap {
         public static final int SOUTH_WEST = 3;
         public static final int SOUTH_EAST = 2;
 
-        public static final int SPRING_TOP_HALL_EFFECT = 5;
-        public static final int SPRING_BOTTOM_HALL_EFFECT = 6;
+        public static final int SPRING_HALL_EFFECT = 5;
         public static final int ARM_HALL_EFFECT = 6;
     }
 }

@@ -26,8 +26,7 @@ public class Catapult extends OutliersSubsystem {
 
     private final DoubleSolenoid _releasePin;
 
-    private final HallEffect _topHall;
-    private final HallEffect _bottomHall;
+    private final HallEffect _springHall;
     private final HallEffect _armHall;
 
     private boolean _springEncoderZeroed = false;
@@ -46,8 +45,7 @@ public class Catapult extends OutliersSubsystem {
                 RobotMap.PCH.RELEASE_PIN_LOW);
 
         // create hall effects.
-        _topHall = new HallEffect(RobotMap.DIO.SPRING_TOP_HALL_EFFECT);
-        _bottomHall = new HallEffect(RobotMap.DIO.SPRING_BOTTOM_HALL_EFFECT);
+        _springHall = new HallEffect(RobotMap.DIO.SPRING_HALL_EFFECT);
         _armHall = new HallEffect(RobotMap.DIO.ARM_HALL_EFFECT);
 
         // setup controllers
@@ -91,10 +89,7 @@ public class Catapult extends OutliersSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        if (isTopHallTriggered() && !_springEncoderZeroed) {
-            _springEncoder.setPosition(Constants.Catapult.SPRING_TOP_LIMIT);
-            _springEncoderZeroed = true;
-        } else if (isBottomHallTriggered() && !_springEncoderZeroed) {
+        if (isSpringHallTriggered() && !_springEncoderZeroed) {
             _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
             _springEncoderZeroed = true;
         } else {
@@ -144,6 +139,7 @@ public class Catapult extends OutliersSubsystem {
         setWinchMotorSpeed(_winchController.calculate(getWinchRotation(), rotation));
     }
 
+
     public boolean isSpringAtPosition() {
         return _springController.atGoal();
     }
@@ -168,9 +164,11 @@ public class Catapult extends OutliersSubsystem {
         return _releasePin.get() == PinPosition.IN.getSolenoidValue();
     }
 
-    public boolean isTopHallTriggered() { return _topHall.get(); }
-    public boolean isBottomHallTriggered() { return _bottomHall.get(); }
+    public boolean isSpringHallTriggered() { return _springHall.get(); }
+
     public boolean isArmLowered() { return _armHall.get(); }
+
+
 
     public PinPosition getPinPosition() {
         //Get the release pins position
