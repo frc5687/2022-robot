@@ -14,7 +14,7 @@ public class RobotMap {
         /**
          *          N
          *          |
-         *      E -- -- W
+         *      W -- -- E
          *          |
          *          S
          */

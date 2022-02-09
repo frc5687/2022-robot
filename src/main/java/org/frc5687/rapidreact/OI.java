@@ -2,6 +2,7 @@
  * Joystick and gamepad control for the robot.
  * Also has button inits.
  * Has some instructions on how to switch controls.
+ * See ButtonMap for configuration of joystick and gamepad.
 */
 package org.frc5687.rapidreact;
 
@@ -16,7 +17,7 @@ import org.frc5687.rapidreact.util.OutliersProxy;
 
 /**
  * To add a button to control a subsystem there are a number of steps needed.  I'll use SHOOT as an example:
- * 1) Define the button in the ButtonMap.Buttons class:
+ * 1) Define the button in the ButtonMap.Buttons class (in ButtonMap.java):
  * 
  *         public static class SHOOT {
  *           public static int Controller = Controllers.DRIVER_JOYSTICK;
@@ -51,7 +52,9 @@ public class OI extends OutliersProxy {
     private double yIn = 0;
     private double xIn = 0;
 
-    private Joystick[] _joysticks = new Joystick[10];
+    private static final int MAX_NUMBER_JOYSTICKS = 10;
+
+    private Joystick[] _joysticks = new Joystick[MAX_NUMBER_JOYSTICKS];
 
     // private JoystickButton _shootButton;
     private JoystickButton _resetNavX;

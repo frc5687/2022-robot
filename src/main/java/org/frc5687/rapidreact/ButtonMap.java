@@ -17,7 +17,12 @@ import edu.wpi.first.wpilibj.Joystick.AxisType;
  *   which controller it's mapped to and a constant for the button number itself.
  */
 public class ButtonMap {
+
     public static class Controllers {
+        /** 
+         * USB ports of joysticks or gamepads.
+         * -1 means not in use.
+        */
         public static final int DRIVER_JOYSTICK = 0;
         public static final int OPERATOR_JOYSTICK = 1;
         public static final int OPERATOR_GAMEPAD = -1;
@@ -33,11 +38,18 @@ public class ButtonMap {
 
         /*  To move the Rotation control from the operator joystick to a gamepad, you'd need to change the
          *  OPERATOR_GAMEPAD constant above to a valid port and change Rotation.Controller to reference Controllers.OPERATOR_GAMEPAD.
-         *  You could also change Rotation.Twist to a different axis number if needed. 
+         *  You could also change Rotation.Twist to a different axis number if needed.
+         * 
+         *  See commented code below. NOTE: Twist for gamepad is using Y axis instead of X axis.
          */
         public static class Rotation {
+            // Joystick control of rotation
             public static int Controller = Controllers.OPERATOR_JOYSTICK;
             public static int Twist = AxisType.kX.value;
+
+            // Gamepad control of rotation
+            // public static int Controller = Controllers.OPERATOR_GAMEPAD;
+            // public static int Twist = AxisType.kY.value;
         }
     }
 
