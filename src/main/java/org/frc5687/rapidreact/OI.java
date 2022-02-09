@@ -9,6 +9,7 @@ import static org.frc5687.rapidreact.util.Helpers.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import org.frc5687.rapidreact.commands.LowerCatapult;
 import org.frc5687.rapidreact.commands.ShootSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -42,7 +43,7 @@ public class OI extends OutliersProxy {
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult) {
         //There's nothing to init here
-        _shootButton.whenPressed(new ShootSetpoint(catapult, 20.0, 0.0));
+        _shootButton.whenPressed(new LowerCatapult(catapult));
     }
 
 

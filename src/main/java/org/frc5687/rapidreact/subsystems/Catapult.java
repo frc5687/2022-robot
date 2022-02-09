@@ -32,6 +32,8 @@ public class Catapult extends OutliersSubsystem {
     private boolean _springEncoderZeroed = false;
     private boolean _winchEncoderZeroed = false;
 
+    private double _winchGoal;
+
     public Catapult(OutliersContainer container) {
         super(container);
 
@@ -53,6 +55,8 @@ public class Catapult extends OutliersSubsystem {
         _winchMotor.restoreFactoryDefaults();
         _springMotor.setInverted(Constants.Catapult.SPRING_MOTOR_INVERTED);
         _winchMotor.setInverted(Constants.Catapult.WINCH_MOTOR_INVERTED);
+        _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
+        _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
 
         // setup encoder.
         _springEncoder = _springMotor.getEncoder();
@@ -83,6 +87,7 @@ public class Catapult extends OutliersSubsystem {
         _winchController.setTolerance(Constants.Catapult.WINCH_TOLERANCE);
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
+        _winchGoal = 0;
     }
 
 
@@ -98,8 +103,9 @@ public class Catapult extends OutliersSubsystem {
 
         if (isArmLowered() && !_winchEncoderZeroed) {
             _winchEncoder.setPosition(Constants.Catapult.WINCH_BOTTOM_LIMIT);
+            _winchGoal = Constants.Catapult.WINCH_BOTTOM_LIMIT;
             _winchEncoderZeroed = true;
-        } else {
+        } else if (!isArmLowered() && _winchEncoderZeroed) {
             _winchEncoderZeroed = false;
         }
 
@@ -135,9 +141,14 @@ public class Catapult extends OutliersSubsystem {
         setSpringMotorSpeed(_springController.calculate(getSpringRailPosition(), position));
     }
 
-    public void setWinchPosition(double rotation) {
-        setWinchMotorSpeed(_winchController.calculate(getWinchRotation(), rotation));
+    public void setWinchGoal(double rotation) {
+        _winchController.setGoal(rotation);
     }
+
+    public void runWinchController() {
+        setWinchMotorSpeed(_winchController.calculate(getWinchRotation()));
+    }
+
 
 
     public boolean isSpringAtPosition() {
@@ -165,7 +176,6 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public boolean isSpringHallTriggered() { return _springHall.get(); }
-
     public boolean isArmLowered() { return _armHall.get(); }
 
 
@@ -184,6 +194,12 @@ public class Catapult extends OutliersSubsystem {
     @Override
     public void updateDashboard() {
         metric("Spring Encoder Rail Rotations", getSpringRailPosition());
+        metric("Winch rotation", getWinchRotation());
+        metric("Controller Winch output", _winchMotor.getAppliedOutput());
+        metric("Controller Winch goal", _winchController.getGoal().toString());
+        metric("Encoder Winch Zeroed", _winchEncoderZeroed);
+        metric("Arm Hall Effect", isArmLowered());
+        metric("Spring Hall Effect", isSpringHallTriggered());
     }
 
     private enum PinPosition {

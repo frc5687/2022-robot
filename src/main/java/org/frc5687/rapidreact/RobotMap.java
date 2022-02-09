@@ -31,8 +31,8 @@ public class RobotMap {
         }
 
         public static class SPARKMAX {
-            public static final int SPRING_BABY_NEO = 1;
-            public static final int WINCH_BABY_NEO = 2;
+            public static final int SPRING_BABY_NEO = 9;
+            public static final int WINCH_BABY_NEO = 10;
 
         }
     }
@@ -71,12 +71,12 @@ public class RobotMap {
      * for DIO only one device can connect to each port, so the numbers should be unique.
      */
     public static class DIO {
-        public static final int NORTH_WEST = 4;
-        public static final int NORTH_EAST = 1;
-        public static final int SOUTH_WEST = 3;
-        public static final int SOUTH_EAST = 2;
+        public static final int NORTH_WEST = 3;
+        public static final int NORTH_EAST = 0;
+        public static final int SOUTH_WEST = 2;
+        public static final int SOUTH_EAST = 1;
 
-        public static final int SPRING_HALL_EFFECT = 5;
-        public static final int ARM_HALL_EFFECT = 6;
+        public static final int SPRING_HALL_EFFECT = 4;
+        public static final int ARM_HALL_EFFECT = 5;
     }
 }

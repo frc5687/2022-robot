@@ -80,6 +80,7 @@ public class RobotContainer extends OutliersContainer {
     public void updateDashboard() {
         //Updates the driver station
         _driveTrain.updateDashboard();
+        _catapult.updateDashboard();
     }
 
     public void controllerPeriodic() {
