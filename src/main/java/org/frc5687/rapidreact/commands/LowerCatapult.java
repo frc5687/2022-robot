@@ -26,6 +26,11 @@ public class LowerCatapult extends OutliersCommand {
 
     @Override
     public boolean isFinished() {
-        return _catapult.isArmLowered();
+        if (_catapult.isArmLowered()) {
+            error("exiting command");
+            _catapult.releasePinOut();// latch ;
+            return true;
+        }
+        return false;
     }
 }

@@ -50,12 +50,14 @@ public class Catapult extends OutliersSubsystem {
         _springHall = new HallEffect(RobotMap.DIO.SPRING_HALL_EFFECT);
         _armHall = new HallEffect(RobotMap.DIO.ARM_HALL_EFFECT);
 
+
         // setup controllers
         _springMotor.restoreFactoryDefaults();
         _winchMotor.restoreFactoryDefaults();
         _springMotor.setInverted(Constants.Catapult.SPRING_MOTOR_INVERTED);
         _winchMotor.setInverted(Constants.Catapult.WINCH_MOTOR_INVERTED);
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
+        _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
 
         // setup encoder.
@@ -102,7 +104,8 @@ public class Catapult extends OutliersSubsystem {
         }
 
         if (isArmLowered() && !_winchEncoderZeroed) {
-            _winchEncoder.setPosition(Constants.Catapult.WINCH_BOTTOM_LIMIT);
+            error("Resetting winch");
+            _winchEncoder.setPosition(Constants.Catapult.WINCH_BOTTOM_LIMIT); // conversion is weird
             _winchGoal = Constants.Catapult.WINCH_BOTTOM_LIMIT;
             _winchEncoderZeroed = true;
         } else if (!isArmLowered() && _winchEncoderZeroed) {
@@ -196,6 +199,7 @@ public class Catapult extends OutliersSubsystem {
         metric("Spring Encoder Rail Rotations", getSpringRailPosition());
         metric("Winch rotation", getWinchRotation());
         metric("Controller Winch output", _winchMotor.getAppliedOutput());
+        metric("Winch encoder conversion", _winchEncoder.getPositionConversionFactor());
         metric("Controller Winch goal", _winchController.getGoal().toString());
         metric("Encoder Winch Zeroed", _winchEncoderZeroed);
         metric("Arm Hall Effect", isArmLowered());

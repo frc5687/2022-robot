@@ -102,10 +102,10 @@ public class Constants {
 
         // Spring Linear actuator limits
         public static final double SPRING_TOP_LIMIT = 10; //TODO: Real values
-        public static final double SPRING_BOTTOM_LIMIT = 0; //TODO: Real values
+        public static final double SPRING_BOTTOM_LIMIT = 1; //TODO: Real values
 
         // Winch actuator limits
-        public static final double WINCH_BOTTOM_LIMIT = 1;
+        public static final double WINCH_BOTTOM_LIMIT = 0;
 
         // Controller Parameters
         public static final double SPRING_kP = 0.01; // Always start with kP
