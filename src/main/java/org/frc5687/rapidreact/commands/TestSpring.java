@@ -14,7 +14,7 @@ public class TestSpring extends OutliersCommand{
 
     @Override
     public void initialize() {
-        _catapult.setWinchGoal(-3.0);
+        _catapult.setWinchGoal(_catapult.ca);
         _catapult.setSpringGoal(100);
     }
 

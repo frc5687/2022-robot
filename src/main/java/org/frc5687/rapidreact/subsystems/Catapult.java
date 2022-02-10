@@ -147,13 +147,18 @@ public class Catapult extends OutliersSubsystem {
         return getWinchEncoderRotation() / GEAR_REDUCTION;
     }
 
-    // currently, angle is 0 all the way down not referencing a plane.
+    // currently, angle is STOWED_ANGLE all the way down not referencing a plane.
     public double getArmAngle() {
-        return stringLengthToAngle(getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE);
+        return STOWED_ANGLE - (getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE);
     }
 
+    //meters and radians.
     protected double stringLengthToAngle(double stringLength) {
         return LINEAR_REGRESSION_SLOPE * stringLength + LINEAR_REGRESSION_OFFSET;
+    }
+    // radians
+    protected double angleToStringLength(double angle) {
+        return 
     }
 
     public void runSpringController() {

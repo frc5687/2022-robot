@@ -104,7 +104,6 @@ public class Constants {
         public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
         public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
         public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.375) * Math.PI; // meters
-        public static final double STRING_LENGTH_TO_ANGLE = 1.0;
 
         // Physical characteristics
         public static final double POUND_PER_IN_TO_NEWTON_PER_METER = 0.0057101471627692;
@@ -116,9 +115,12 @@ public class Constants {
         public static final double ROD_INERTIA = (1.0 / 3.0) * ARM_MASS * (ARM_LENGTH * ARM_LENGTH);
         public static final double INERTIA_OF_ARM = ROD_INERTIA + BALL_INERTIA;
 
+        public static final double STOWED_ANGLE = Units.degreesToRadians(90 + 24.724);
+
         //Linear regression constants
-        public static final double LINEAR_REGRESSION_SLOPE = 5.2498;
-        public static final double LINEAR_REGRESSION_OFFSET = -1.2459;
+        public static final double LINEAR_REGRESSION_SLOPE = 3.6073; // meters and radians
+        public static final double LINEAR_REGRESSION_OFFSET = -0.0217; //meters and radians
+
 
         // Spring Linear actuator limits
         public static final double SPRING_BOTTOM_LIMIT = 0; //TODO: Real values
