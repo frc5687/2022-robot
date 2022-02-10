@@ -1,7 +1,6 @@
 package org.frc5687.rapidreact.commands;
 
 
-import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.subsystems.Catapult;
 
 public class TestSpring extends OutliersCommand{
@@ -22,9 +21,8 @@ public class TestSpring extends OutliersCommand{
     @Override
     public void execute() {
         super.execute();
-//        _catapult.setWinchMotorSpeed(-1.0);
         _catapult.runWinchController();
-        _catapult.setSpringPosition();
+        _catapult.runSpringController();
     }
 
     @Override

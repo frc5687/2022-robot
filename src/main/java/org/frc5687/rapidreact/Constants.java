@@ -94,11 +94,31 @@ public class Constants {
     }
 
     public static class Catapult {
+
         public static final boolean SPRING_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = false;
 
         public static final double GEAR_REDUCTION = 64.0;
-        public static final double ROTATIONS_TO_POSITION = 0.02; // meters
+
+        public static final double BABY_NEO_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(11710);
+        public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
+        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
+        public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.375) * Math.PI; // meters
+        public static final double STRING_LENGTH_TO_ANGLE = 1.0;
+
+        // Physical characteristics
+        public static final double POUND_PER_IN_TO_NEWTON_PER_METER = 0.0057101471627692;
+        public static final double SPRING_RATE = 11.2 * POUND_PER_IN_TO_NEWTON_PER_METER; // Newtons per meter.
+        public static final double ARM_LENGTH = Units.inchesToMeters(20.9);
+        public static final double LEVER_ARM_LENGTH = Units.inchesToMeters(6.0);
+        public static final double ARM_MASS = 1.2; //kg
+        public static final double BALL_INERTIA = 0.0432;
+        public static final double ROD_INERTIA = (1.0 / 3.0) * ARM_MASS * (ARM_LENGTH * ARM_LENGTH);
+        public static final double INERTIA_OF_ARM = ROD_INERTIA + BALL_INERTIA;
+
+        //Linear regression constants
+        public static final double LINEAR_REGRESSION_SLOPE = 5.2498;
+        public static final double LINEAR_REGRESSION_OFFSET = -1.2459;
 
         // Spring Linear actuator limits
         public static final double SPRING_BOTTOM_LIMIT = 0; //TODO: Real values
@@ -110,16 +130,16 @@ public class Constants {
         public static final double SPRING_kP = 0.1; // Always start with kP
         public static final double SPRING_kI = 0.0; // If possible avoid kI
         public static final double SPRING_kD = 0.0; // 2nd Kd
-        public static final double MAX_SPRING_VELOCITY = 200; // m/s
-        public static final double MAX_SPRING_ACCELERATION = 100; // m/s^2
-        public static final double SPRING_TOLERANCE = 0.1; // m/s^2
+        public static final double MAX_SPRING_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * SPRING_WINCH_DRUM_CIRCUMFERENCE; // divide by 2 PI as that is one rotation.
+        public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS / 2.0; // heuristic.
+        public static final double SPRING_TOLERANCE = 0.1; // m
         // winch
-        public static final double WINCH_kP = 0.25; // Always start with kP
+        public static final double WINCH_kP = 0.1; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
         public static final double WINCH_kD = 0.0; // 2nd Kd
-        public static final double MAX_WINCH_VELOCITY = 18; // rad/s
-        public static final double MAX_WINCH_ACCELERATION = 7; // rad/s^2
-        public static final double WINCH_TOLERANCE = 0.05; // m/s^2
+        public static final double MAX_WINCH_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
+        public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS / 2.0; // heuristic.
+        public static final double WINCH_TOLERANCE = 0.05; // m
     }
 
 }

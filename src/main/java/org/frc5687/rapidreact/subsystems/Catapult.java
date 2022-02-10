@@ -13,6 +13,8 @@ import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
+import static org.frc5687.rapidreact.Constants.Catapult.*;
+
 public class Catapult extends OutliersSubsystem {
 
     private final CANSparkMax _springMotor;
@@ -52,8 +54,8 @@ public class Catapult extends OutliersSubsystem {
         // setup controllers
         _springMotor.restoreFactoryDefaults();
         _winchMotor.restoreFactoryDefaults();
-        _springMotor.setInverted(Constants.Catapult.SPRING_MOTOR_INVERTED);
-        _winchMotor.setInverted(Constants.Catapult.WINCH_MOTOR_INVERTED);
+        _springMotor.setInverted(SPRING_MOTOR_INVERTED);
+        _winchMotor.setInverted(WINCH_MOTOR_INVERTED);
         _springMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         _winchMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
@@ -67,28 +69,32 @@ public class Catapult extends OutliersSubsystem {
         _springEncoder = _springMotor.getEncoder();
         _winchEncoder = _winchMotor.getEncoder();
 
+        //Save changes into flash memory of spark maxes
+        _winchMotor.burnFlash();
+        _springMotor.burnFlash();
+
         // setup controllers
         _springController = new ProfiledPIDController(
-                Constants.Catapult.SPRING_kP,
-                Constants.Catapult.SPRING_kI,
-                Constants.Catapult.SPRING_kD,
+                SPRING_kP,
+                SPRING_kI,
+                SPRING_kD,
                 new TrapezoidProfile.Constraints(
-                        Constants.Catapult.MAX_SPRING_VELOCITY,
-                        Constants.Catapult.MAX_SPRING_ACCELERATION
+                        MAX_SPRING_VELOCITY_MPS,
+                        MAX_SPRING_ACCELERATION_MPSS
                 )
         );
 
         _winchController = new ProfiledPIDController(
-                Constants.Catapult.WINCH_kP,
-                Constants.Catapult.WINCH_kI,
-                Constants.Catapult.WINCH_kD,
+                WINCH_kP,
+                WINCH_kI,
+                WINCH_kD,
                 new TrapezoidProfile.Constraints(
-                        Constants.Catapult.MAX_WINCH_VELOCITY,
-                        Constants.Catapult.MAX_WINCH_ACCELERATION
+                        MAX_WINCH_VELOCITY_MPS,
+                        MAX_WINCH_ACCELERATION_MPSS
                 )
         );
 
-        _springController.setTolerance(Constants.Catapult.SPRING_TOLERANCE);
+        _springController.setTolerance(SPRING_TOLERANCE);
         _winchController.setTolerance(Constants.Catapult.WINCH_TOLERANCE);
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
@@ -99,7 +105,7 @@ public class Catapult extends OutliersSubsystem {
     public void periodic() {
         super.periodic();
         if (isSpringHallTriggered()) {
-            error("Resetting Srping");
+//            error("Resetting Spring");
             _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
             _springEncoderZeroed = true;
         } else if(!isSpringHallTriggered() && _springEncoderZeroed) {
@@ -108,7 +114,7 @@ public class Catapult extends OutliersSubsystem {
 
         if (isArmLowered() && !_winchEncoderZeroed) {
             error("Resetting winch");
-            _winchEncoder.setPosition(Constants.Catapult.WINCH_BOTTOM_LIMIT); // conversion is weird
+            _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT); // conversion is weird
             _winchEncoderZeroed = true;
         } else if (!isArmLowered() && _winchEncoderZeroed) {
             _winchEncoderZeroed = false;
@@ -134,15 +140,23 @@ public class Catapult extends OutliersSubsystem {
 
     // meters
     public double getSpringRailPosition() {
-        return (getSpringEncoderRotation() / Constants.Catapult.GEAR_REDUCTION)
-                * Constants.Catapult.ROTATIONS_TO_POSITION;
+        return (getSpringEncoderRotation() / GEAR_REDUCTION) * SPRING_WINCH_DRUM_CIRCUMFERENCE;
     }
 
     public double getWinchRotation() {
-        return getWinchEncoderRotation() / Constants.Catapult.GEAR_REDUCTION;
+        return getWinchEncoderRotation() / GEAR_REDUCTION;
     }
 
-    public void setSpringPosition() {
+    // currently, angle is 0 all the way down not referencing a plane.
+    public double getArmAngle() {
+        return stringLengthToAngle(getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE);
+    }
+
+    protected double stringLengthToAngle(double stringLength) {
+        return LINEAR_REGRESSION_SLOPE * stringLength + LINEAR_REGRESSION_OFFSET;
+    }
+
+    public void runSpringController() {
         setSpringMotorSpeed(_springController.calculate(getSpringEncoderRotation()));
     }
 
@@ -158,8 +172,6 @@ public class Catapult extends OutliersSubsystem {
         setWinchMotorSpeed(_winchController.calculate(getWinchRotation()));
     }
 
-
-
     public boolean isSpringAtPosition() {
         return _springController.atGoal();
     }
@@ -174,6 +186,21 @@ public class Catapult extends OutliersSubsystem {
 
     public void releasePinIn() {
         _releasePin.set(PinPosition.IN.getSolenoidValue());
+    }
+
+    // calculate the spring displacement based on angle displacement.
+    public double calculateSpringDisplacement(double angleDisplacement, double velocity) {
+        return ((velocity * velocity) * 2.0 * INERTIA_OF_ARM) /
+                ((ARM_LENGTH * ARM_LENGTH) * angleDisplacement * SPRING_RATE * LEVER_ARM_LENGTH);
+    }
+    // calculated the ball exit velocity in meters per sec from the angle displacement.
+    public double calculateExitVelocity(double angleDisplacement, double springDisplacement) {
+        double force = springDisplacement * Constants.Catapult.SPRING_RATE;
+        double torque = Constants.Catapult.LEVER_ARM_LENGTH * force;
+        double angularAcceleration = torque / Constants.Catapult.INERTIA_OF_ARM;
+        double time = Math.sqrt((2.0 / angularAcceleration) * angleDisplacement);
+        double angularVelocity = angleDisplacement / time;
+        return angularVelocity * Constants.Catapult.ARM_LENGTH;
     }
 
     public boolean isReleasePinOut() {
@@ -206,11 +233,11 @@ public class Catapult extends OutliersSubsystem {
         metric("Get spring setpoint", _springController.getGoal().position);
         metric("Spring encoder", _springMotor.getAppliedOutput());
         metric("Winch rotation", getWinchRotation());
-//        metric("Controller Winch output", _winchMotor.getAppliedOutput());
-//        metric("Winch encoder conversion", _winchEncoder.getPositionConversionFactor());
-//        metric("Controller Winch goal", _winchController.getGoal().toString());
-//        metric("Encoder Winch Zeroed", _winchEncoderZeroed);
-//        metric("Arm Hall Effect", isArmLowered());
+        metric("Controller Winch output", _winchMotor.getAppliedOutput());
+        metric("Winch encoder conversion", _winchEncoder.getPositionConversionFactor());
+        metric("Controller Winch goal", _winchController.getGoal().toString());
+        metric("Encoder Winch Zeroed", _winchEncoderZeroed);
+        metric("Arm Hall Effect", isArmLowered());
         metric("Spring Hall Effect", isSpringHallTriggered());
     }
 
