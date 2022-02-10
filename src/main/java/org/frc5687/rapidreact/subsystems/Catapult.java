@@ -32,8 +32,6 @@ public class Catapult extends OutliersSubsystem {
     private boolean _springEncoderZeroed = false;
     private boolean _winchEncoderZeroed = false;
 
-    private double _winchGoal;
-
     public Catapult(OutliersContainer container) {
         super(container);
 
@@ -56,9 +54,14 @@ public class Catapult extends OutliersSubsystem {
         _winchMotor.restoreFactoryDefaults();
         _springMotor.setInverted(Constants.Catapult.SPRING_MOTOR_INVERTED);
         _winchMotor.setInverted(Constants.Catapult.WINCH_MOTOR_INVERTED);
+        _springMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        _winchMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-        _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+        _springMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+        _springMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
+        _springMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
+        _springMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
 
         // setup encoder.
         _springEncoder = _springMotor.getEncoder();
@@ -89,24 +92,23 @@ public class Catapult extends OutliersSubsystem {
         _winchController.setTolerance(Constants.Catapult.WINCH_TOLERANCE);
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
-        _winchGoal = 0;
     }
 
 
     @Override
     public void periodic() {
         super.periodic();
-        if (isSpringHallTriggered() && !_springEncoderZeroed) {
+        if (isSpringHallTriggered()) {
+            error("Resetting Srping");
             _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
             _springEncoderZeroed = true;
-        } else {
+        } else if(!isSpringHallTriggered() && _springEncoderZeroed) {
             _springEncoderZeroed = false;
         }
 
         if (isArmLowered() && !_winchEncoderZeroed) {
             error("Resetting winch");
             _winchEncoder.setPosition(Constants.Catapult.WINCH_BOTTOM_LIMIT); // conversion is weird
-            _winchGoal = Constants.Catapult.WINCH_BOTTOM_LIMIT;
             _winchEncoderZeroed = true;
         } else if (!isArmLowered() && _winchEncoderZeroed) {
             _winchEncoderZeroed = false;
@@ -140,8 +142,12 @@ public class Catapult extends OutliersSubsystem {
         return getWinchEncoderRotation() / Constants.Catapult.GEAR_REDUCTION;
     }
 
-    public void setSpringPosition(double position) {
-        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition(), position));
+    public void setSpringPosition() {
+        setSpringMotorSpeed(_springController.calculate(getSpringEncoderRotation()));
+    }
+
+    public void setSpringGoal(double position) {
+        _springController.setGoal(position);
     }
 
     public void setWinchGoal(double rotation) {
@@ -196,13 +202,15 @@ public class Catapult extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Spring Encoder Rail Rotations", getSpringRailPosition());
+        metric("Spring Encoder Rotations", getSpringEncoderRotation());
+        metric("Get spring setpoint", _springController.getGoal().position);
+        metric("Spring encoder", _springMotor.getAppliedOutput());
         metric("Winch rotation", getWinchRotation());
-        metric("Controller Winch output", _winchMotor.getAppliedOutput());
-        metric("Winch encoder conversion", _winchEncoder.getPositionConversionFactor());
-        metric("Controller Winch goal", _winchController.getGoal().toString());
-        metric("Encoder Winch Zeroed", _winchEncoderZeroed);
-        metric("Arm Hall Effect", isArmLowered());
+//        metric("Controller Winch output", _winchMotor.getAppliedOutput());
+//        metric("Winch encoder conversion", _winchEncoder.getPositionConversionFactor());
+//        metric("Controller Winch goal", _winchController.getGoal().toString());
+//        metric("Encoder Winch Zeroed", _winchEncoderZeroed);
+//        metric("Arm Hall Effect", isArmLowered());
         metric("Spring Hall Effect", isSpringHallTriggered());
     }
 

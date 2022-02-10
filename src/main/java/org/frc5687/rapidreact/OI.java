@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.rapidreact.commands.LowerCatapult;
 import org.frc5687.rapidreact.commands.ShootSetpoint;
+import org.frc5687.rapidreact.commands.TestSpring;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.util.Gamepad;
@@ -25,6 +26,7 @@ public class OI extends OutliersProxy {
     private Gamepad _debug;
 
     private Button _shootButton;
+    private Button _shootButton1;
 
 
     private JoystickButton resetNavX;
@@ -39,11 +41,13 @@ public class OI extends OutliersProxy {
         _debug = new Gamepad(2);
 
         _shootButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
+        _shootButton1 = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult) {
         //There's nothing to init here
-        _shootButton.whenPressed(new LowerCatapult(catapult));
+        _shootButton.whenPressed(new TestSpring(catapult));
+        _shootButton1.whenPressed(new LowerCatapult(catapult));
     }
 
 

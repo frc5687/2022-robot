@@ -21,7 +21,9 @@ public class LowerCatapult extends OutliersCommand {
     @Override
     public void execute() {
         super.execute();
-        _catapult.runWinchController();
+        _catapult.setWinchMotorSpeed(0.5);
+//        _catapult.setSpringMotorSpeed(-0.1);
+//        _catapult.runWinchController();
     }
 
     @Override

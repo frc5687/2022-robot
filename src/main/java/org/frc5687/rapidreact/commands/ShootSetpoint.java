@@ -18,7 +18,7 @@ public class ShootSetpoint extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-        _catapult.setSpringPosition(_position);
+//        _catapult.setSpringPosition(_position);
         _catapult.setWinchGoal(_angle);
     }
 

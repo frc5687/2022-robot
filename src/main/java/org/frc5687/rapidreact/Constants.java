@@ -101,25 +101,24 @@ public class Constants {
         public static final double ROTATIONS_TO_POSITION = 0.02; // meters
 
         // Spring Linear actuator limits
-        public static final double SPRING_TOP_LIMIT = 10; //TODO: Real values
-        public static final double SPRING_BOTTOM_LIMIT = 1; //TODO: Real values
+        public static final double SPRING_BOTTOM_LIMIT = 0; //TODO: Real values
 
         // Winch actuator limits
         public static final double WINCH_BOTTOM_LIMIT = 0;
 
         // Controller Parameters
-        public static final double SPRING_kP = 0.01; // Always start with kP
+        public static final double SPRING_kP = 0.1; // Always start with kP
         public static final double SPRING_kI = 0.0; // If possible avoid kI
         public static final double SPRING_kD = 0.0; // 2nd Kd
-        public static final double MAX_SPRING_VELOCITY = 1.0; // m/s
-        public static final double MAX_SPRING_ACCELERATION = 0.5; // m/s^2
+        public static final double MAX_SPRING_VELOCITY = 200; // m/s
+        public static final double MAX_SPRING_ACCELERATION = 100; // m/s^2
         public static final double SPRING_TOLERANCE = 0.1; // m/s^2
         // winch
-        public static final double WINCH_kP = 0.1; // Always start with kP
+        public static final double WINCH_kP = 0.25; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
         public static final double WINCH_kD = 0.0; // 2nd Kd
-        public static final double MAX_WINCH_VELOCITY = 0.5; // rad/s
-        public static final double MAX_WINCH_ACCELERATION = 0.1; // rad/s^2
+        public static final double MAX_WINCH_VELOCITY = 18; // rad/s
+        public static final double MAX_WINCH_ACCELERATION = 7; // rad/s^2
         public static final double WINCH_TOLERANCE = 0.05; // m/s^2
     }
 

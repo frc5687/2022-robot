@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Catapult/#10-CreateSubsystem";
-    public static final String REVISION = "4b83a0e";
+    public static final String REVISION = "8a2f9b5";
     public static final String MODIFIED = " *";
 }
