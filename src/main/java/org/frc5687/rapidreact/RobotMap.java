@@ -54,7 +54,7 @@ public class RobotMap {
      * for Analog only one device can connect to each port, so the numbers should be unique.
      */
     public static class Analog {}
-
+    
     /**
      * There should be an entry here for each DIO port, preferrably in numerical order. Note that
      * for DIO only one device can connect to each port, so the numbers should be unique.
