@@ -25,8 +25,9 @@ public class OI extends OutliersProxy {
 
     private Gamepad _debug;
 
+    private Button _lowerArm;
     private Button _shootButton;
-    private Button _shootButton1;
+    private Button _shootButtonTest;
 
 
     private JoystickButton resetNavX;
@@ -40,14 +41,19 @@ public class OI extends OutliersProxy {
 
         _debug = new Gamepad(2);
 
-        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _shootButton1 = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _lowerArm = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
+        _shootButton= new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _shootButtonTest = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult) {
         //There's nothing to init here
         _shootButton.whenPressed(new TestSpring(catapult));
-        _shootButton1.whenPressed(new LowerCatapult(catapult));
+        _lowerArm.whenPressed(new LowerCatapult(catapult));
+    }
+
+    public boolean isShootButtonPressed() {
+        return _shootButtonTest.get();
     }
 
 

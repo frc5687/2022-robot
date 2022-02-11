@@ -142,6 +142,8 @@ public class Constants {
         public static final double MAX_WINCH_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
         public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS / 2.0; // heuristic.
         public static final double WINCH_TOLERANCE = 0.05; // m
+
+        public static final double LOWERING_SPEED = 0.1;
     }
 
 }

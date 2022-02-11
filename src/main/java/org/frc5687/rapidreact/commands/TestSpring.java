@@ -1,6 +1,7 @@
 package org.frc5687.rapidreact.commands;
 
 
+import edu.wpi.first.math.util.Units;
 import org.frc5687.rapidreact.subsystems.Catapult;
 
 public class TestSpring extends OutliersCommand{
@@ -14,8 +15,8 @@ public class TestSpring extends OutliersCommand{
 
     @Override
     public void initialize() {
-        _catapult.setWinchGoal(_catapult.ca);
-        _catapult.setSpringGoal(100);
+        _catapult.setWinchGoal(Units.degreesToRadians(20));
+        _catapult.setSpringGoal(0.2); // meters
     }
 
     @Override
@@ -27,8 +28,8 @@ public class TestSpring extends OutliersCommand{
 
     @Override
     public boolean isFinished() {
-        if (Math.abs(-3.0 - _catapult.getWinchRotation()) < 0.1) {
-            _catapult.releasePinIn();
+        if (_catapult.isWinchAtGoal()) {
+            _catapult.releaseArm();
             return true;
         }
         return false;

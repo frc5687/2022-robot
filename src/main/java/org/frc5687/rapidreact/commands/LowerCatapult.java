@@ -21,7 +21,7 @@ public class LowerCatapult extends OutliersCommand {
     @Override
     public void execute() {
         super.execute();
-        _catapult.setWinchMotorSpeed(0.5);
+        _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
 //        _catapult.setSpringMotorSpeed(-0.1);
 //        _catapult.runWinchController();
     }
@@ -30,7 +30,7 @@ public class LowerCatapult extends OutliersCommand {
     public boolean isFinished() {
         if (_catapult.isArmLowered()) {
             error("exiting command");
-            _catapult.releasePinOut();// latch ;
+            _catapult.lockArm();// latch ;
             return true;
         }
         return false;
