@@ -46,6 +46,7 @@ public class RobotMap {
      * for PCM only one device can connect to each port, so the numbers should be unique.
      */
     public static class PCM {
+        public static final int comp = 1;
         public static final int INTAKE_HIGH = 10;
         public static final int INTAKE_LOW = 5;
     }

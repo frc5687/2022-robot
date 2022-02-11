@@ -27,7 +27,7 @@ public class OI extends OutliersProxy {
     public OI() {
         //_driverGamepad = new Gamepad(0);
         _leftJoystick = new Joystick(0);
-        _rightJoystick = new Joystick(2);
+        _rightJoystick = new Joystick(1);
         _intakeBTN = new JoystickButton(_leftJoystick, 4);
     }
 

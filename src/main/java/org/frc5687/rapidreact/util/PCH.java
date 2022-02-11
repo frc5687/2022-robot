@@ -8,7 +8,7 @@ public class PCH {
     private Compressor comp;  
     
     public PCH(){
-        comp = new Compressor(14, PneumaticsModuleType.REVPH);
+        comp = new Compressor(1, PneumaticsModuleType.REVPH);
         comp.enableDigital();
     }
 

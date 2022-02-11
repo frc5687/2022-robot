@@ -2,8 +2,6 @@ package org.frc5687.rapidreact.commands;
 
 import org.frc5687.rapidreact.subsystems.Intake;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 public class Intaker extends OutliersCommand {
 
     Intake _intake;
