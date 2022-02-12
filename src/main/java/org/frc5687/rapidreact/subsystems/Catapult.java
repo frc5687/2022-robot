@@ -254,9 +254,9 @@ public class Catapult extends OutliersSubsystem {
     @Override
     public void updateDashboard() {
 //        metric("Spring encoder rotations", getSpringEncoderRotation());
-//        metric("Spring rail position", getSpringRailPosition());
-//        metric("Spring motor output", _springMotor.getAppliedOutput());
-//        metric("Spring goal", _springController.getGoal().position);
+        metric("Spring rail position", getSpringRailPosition());
+        metric("Spring motor output", _springMotor.getAppliedOutput());
+        metric("Spring goal", _springController.getGoal().position);
 
         metric("Winch rotation", getWinchRotation());
         metric("Arm release angle", getArmReleaseAngle());

@@ -26,7 +26,7 @@ public class TestSpring extends OutliersCommand{
     @Override
     public void execute() {
         super.execute();
-        _catapult.runWinchController();
+//        _catapult.runWinchController();
         _catapult.runSpringController();
     }
 

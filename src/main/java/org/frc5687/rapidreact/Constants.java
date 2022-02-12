@@ -129,12 +129,12 @@ public class Constants {
         public static final double WINCH_BOTTOM_LIMIT = 0;
 
         // Controller Parameters
-        public static final double SPRING_kP = 20.0; // Always start with kP
+        public static final double SPRING_kP = 30.0; // Always start with kP
         public static final double SPRING_kI = 5.0; // If possible avoid kI
         public static final double SPRING_kD = 0.0; // 2nd Kd
         public static final double MAX_SPRING_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * SPRING_WINCH_DRUM_CIRCUMFERENCE; // divide by 2 PI as that is one rotation.
         public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS * 10; // heuristic.
-        public static final double SPRING_IZONE = 3.0;
+        public static final double SPRING_IZONE = 9.0;
         public static final double SPRING_TOLERANCE = 0.05; // m
         // winch
         public static final double WINCH_kP = 20.0; // Always start with kP
