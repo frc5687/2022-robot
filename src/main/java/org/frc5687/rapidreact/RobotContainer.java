@@ -5,18 +5,23 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.rapidreact.commands.Drive;
+import org.frc5687.rapidreact.commands.IdleIntake;
+import org.frc5687.rapidreact.commands.Intaker;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.OutliersContainer;
+import org.frc5687.rapidreact.util.PCH;
 
 public class RobotContainer extends OutliersContainer {
 
     private OI _oi;
     private AHRS _imu;
-
     private Robot _robot;
+    private Intake _intake;
     private DriveTrain _driveTrain;
+    private PCH _pch;
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
@@ -25,39 +30,29 @@ public class RobotContainer extends OutliersContainer {
 
     public void init() {
         _oi = new OI();
-        //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
+        _intake = new Intake(this);
         _driveTrain = new DriveTrain(this, _oi, _imu);
-        //The robots default command will run so long as another command isn't activated
+        setDefaultCommand(_intake, new IdleIntake(_intake));
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
-        _oi.initializeButtons(_driveTrain);
+        _pch = new PCH();
+        _oi.initializeButtons(_driveTrain, _intake);
     }
 
-    public void periodic() {
-        //Runs every 20ms
-    }
+    public void periodic() {}
 
-    public void disabledPeriodic() {
-        //Runs every 20ms during disabled
-    }
+    public void disabledPeriodic() {}
 
     @Override
-    public void disabledInit() {
-        //Runs once during disabled
-    }
+    public void disabledInit() {}
 
     @Override
-    public void teleopInit() {
-        //Runs at the start of teleop
-    }
+    public void teleopInit() {}
 
     @Override
-    public void autonomousInit() {
-        //This is where autos go
-        //Runs once during auto
-    }
+    public void autonomousInit() {}
 
     private void setDefaultCommand(OutliersSubsystem subSystem, OutliersCommand command) {
         if (subSystem == null || command == null) {
@@ -69,7 +64,6 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
-        //Updates the driver station
         _driveTrain.updateDashboard();
     }
 

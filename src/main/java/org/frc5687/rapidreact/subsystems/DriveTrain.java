@@ -43,6 +43,13 @@ public class DriveTrain extends OutliersSubsystem {
             _oi = oi;
             _imu = imu;
 
+            /**
+            *          N
+            *          |
+            *      E -- -- W
+            *          |
+            *          S
+             */
             _northWest =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
@@ -202,10 +209,10 @@ public class DriveTrain extends OutliersSubsystem {
                                             vx, vy, omega, getHeading())
                                     : new ChassisSpeeds(vx, vy, omega));
             SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DifferentialSwerveModule.MAX_MODULE_SPEED_MPS);
-            setFrontLeftModuleState(swerveModuleStates[0]);
-            setFrontRightModuleState(swerveModuleStates[1]);
-            setBackLeftModuleState(swerveModuleStates[2]);
-            setBackRightModuleState(swerveModuleStates[3]);
+            setFrontLeftModuleState(swerveModuleStates[1]);
+            setFrontRightModuleState(swerveModuleStates[0]);
+            setBackLeftModuleState(swerveModuleStates[3]);
+            setBackRightModuleState(swerveModuleStates[2]);
             _PIDAngle = getHeading().getRadians();
             _angleController.reset(_PIDAngle);
         } else {
@@ -218,10 +225,10 @@ public class DriveTrain extends OutliersSubsystem {
                                             getHeading().getRadians(), _PIDAngle),
                                     new Rotation2d(_PIDAngle)));
             SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.DifferentialSwerveModule.MAX_MODULE_SPEED_MPS);
-            setFrontLeftModuleState(swerveModuleStates[0]);
-            setFrontRightModuleState(swerveModuleStates[1]);
-            setBackLeftModuleState(swerveModuleStates[2]);
-            setBackRightModuleState(swerveModuleStates[3]);
+            setFrontLeftModuleState(swerveModuleStates[1]);
+            setFrontRightModuleState(swerveModuleStates[0]);
+            setBackLeftModuleState(swerveModuleStates[3]);
+            setBackRightModuleState(swerveModuleStates[2]);
         }
     }
 
@@ -251,9 +258,9 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void startModules() {
-        _northWest.start();
-        _northEast.start();
-        _southEast.start();
-        _southWest.start();
+       _northWest.start();
+       _northEast.start();
+       _southEast.start();
+       _southWest.start();
     }
 }
