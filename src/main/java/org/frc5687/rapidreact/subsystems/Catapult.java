@@ -102,7 +102,7 @@ public class Catapult extends OutliersSubsystem {
         _winchController.setTolerance(Constants.Catapult.WINCH_TOLERANCE);
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
-        _state = CatapultState.IDLE;
+        _state = CatapultState.ZEROING;
     }
 
 
@@ -272,7 +272,7 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public enum CatapultState {
-        IDLE(0),
+        ZEROING(0),
         LOWERING_ARM(1),
         LOADING(2),
         AIMING(3),

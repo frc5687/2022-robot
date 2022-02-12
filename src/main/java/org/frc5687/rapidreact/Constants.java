@@ -144,7 +144,8 @@ public class Constants {
         public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 10.0; // heuristic.
         public static final double WINCH_TOLERANCE = 0.005; // m
 
-        public static final double LOWERING_SPEED = 0.8;
+        public static final double LOWERING_SPEED = 0.2;
+        public static final double SPRING_ZERO_SPEED = -0.5;
     }
 
 }

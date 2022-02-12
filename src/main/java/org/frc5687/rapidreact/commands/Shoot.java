@@ -25,13 +25,22 @@ public class Shoot extends OutliersCommand {
     @Override
     public void execute() {
         switch(_catapult.getState()) {
-            case IDLE:
-                _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
-            case LOWERING_ARM:
-                if (!_catapult.isArmLowered()) {
-                    _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
-                } else {
+            case ZEROING:
+                _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
+                _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
+                if (_catapult.isSpringHallTriggered()) {
                     _catapult.setSpringMotorSpeed(0.0);
+                    _catapult.setSpringGoal(0.0);
+                }
+                if (_catapult.isArmLowered()) {
+                    _catapult.setWinchMotorSpeed(0.0);
+                    _catapult.setWinchGoal(0.0);
+                    _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
+                }
+            case LOWERING_ARM:
+                _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
+                _catapult.runSpringController();
+                if (_catapult.isArmLowered()) {
                     _catapult.setWinchMotorSpeed(0.0);
                     _catapult.lockArm();
                     _catapult.setState(Catapult.CatapultState.LOADING);
@@ -42,16 +51,20 @@ public class Shoot extends OutliersCommand {
                 // get Spring Goal and Winch Goal from an override or distance to goal measurement.
                 _catapult.setWinchGoal(0.2);
                 _catapult.setSpringGoal(0.1); // meters
-//                _catapult.runSpringController();
-//                _catapult.runWinchController();
+                _catapult.runSpringController();
+                _catapult.runWinchController();
                 if (_catapult.isWinchAtGoal()) {
                     _catapult.setState(Catapult.CatapultState.AIMING);
                 }
             case AIMING:
                 // check if we are in the correct position and aiming at the goal.
+                _catapult.runSpringController();
+//                _catapult.runWinchController();
                 _catapult.setState(Catapult.CatapultState.SHOOTING);
             case SHOOTING:
                 // call OI button to shoot.
+                _catapult.runSpringController();
+//                _catapult.runWinchController();
                 if (_oi.isShootButtonPressed()) {
                     _catapult.releaseArm();
                     _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
