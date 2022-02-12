@@ -1,11 +1,9 @@
-/** Team 5687 (C)2021-2022
- * Joystick and gamepad control for the robot.
- * Also has button inits.
- * Has some instructions on how to switch controls.
-*/
+/* Team 5687 (C)2020-2021 */
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
+
+import org.frc5687.rapidreact.commands.Intaker;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -15,15 +13,13 @@ import org.frc5687.rapidreact.commands.ShootSetpoint;
 import org.frc5687.rapidreact.commands.TestSpring;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
 public class OI extends OutliersProxy {
-    // Joysticks and XBox controller
-    protected Gamepad _gamepad;
-    protected Joystick _rotation;
-    protected Joystick _translation;
-
+    private Joystick _translation;
+    private Joystick _rotation;
     private Gamepad _debug;
 
     private Button _lowerArm;
@@ -31,6 +27,7 @@ public class OI extends OutliersProxy {
     private Button _shootButtonTest;
     private Button _release;
 
+    private JoystickButton _intakeButton;
 
     private JoystickButton resetNavX;
     // "Raw" joystick values
@@ -47,15 +44,17 @@ public class OI extends OutliersProxy {
         _shootButton= new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
         _shootButtonTest = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _release = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+        _intakeButton = new JoystickButton(_rotation, 4);
     }
 
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult) {
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake) {
         //There's nothing to init here
         _shootButton.whenPressed(new TestSpring(catapult, 0.1150, 0.18));
 //        _lowerArm.whenPressed(catapult::lockArm);
         _lowerArm.whenPressed(new LowerCatapult(catapult));
         _shootButtonTest.whenPressed(new Reset(catapult));
         _release.whenPressed(catapult::releaseArm);
+        _intakeButton.whenHeld(new Intaker(intake));
     }
 
     public boolean isShootButtonPressed() {
@@ -79,6 +78,7 @@ public class OI extends OutliersProxy {
         xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
         //xIn = -getSpeedFromAxis(Gamepad, Gamepad.getXChannel());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
+
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0; // numbers from empirical testing.
         return xOut;

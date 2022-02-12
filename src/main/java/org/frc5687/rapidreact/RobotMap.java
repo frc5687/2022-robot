@@ -1,6 +1,7 @@
 /* Team 5687 (C)2020-2021 */
 package org.frc5687.rapidreact;
 
+
 public class RobotMap {
 
     /**
@@ -10,7 +11,6 @@ public class RobotMap {
      * SparkMax with Id 0 and a TalonSRX with Id 0.
      */
     public static class CAN {
-
         /**
          *          N
          *          |
@@ -26,14 +26,14 @@ public class RobotMap {
             public static final int SOUTH_EAST_INNER = 3; // SOUTH EAST
             public static final int NORTH_WEST_OUTER = 8; // NORHT WEST
             public static final int NORTH_WEST_INNER = 7; // NORHT WEST
-            public static final int NORHT_EAST_OUTER = 2; // NORTH EAST
+            public static final int NORTH_EAST_OUTER = 2; // NORTH EAST
             public static final int NORTH_EAST_INNER = 1; // NORTH EAST
         }
 
         public static class SPARKMAX {
             public static final int SPRING_BABY_NEO = 9;
             public static final int WINCH_BABY_NEO = 10;
-
+            public static final int INTAKE_ROLLER = 13;
         }
     }
 
@@ -52,6 +52,8 @@ public class RobotMap {
         public static int RELEASE_PIN_HIGH = 7;
         public static int RELEASE_PIN_LOW = 8;
 
+        public static final int INTAKE_HIGH = 10;
+        public static final int INTAKE_LOW = 5;
     }
 
     /**

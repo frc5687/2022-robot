@@ -13,6 +13,14 @@ public class Constants {
 
     public static class DriveTrain {
 
+        /**
+         *          N
+         *          |
+         *      E -- -- W
+         *          |
+         *          S
+         */
+
         public static final double WIDTH = 0.6223;
         public static final double LENGTH = 0.6223;
 
@@ -29,14 +37,14 @@ public class Constants {
         public static final double SOUTH_WEST_OFFSET = 0; // radians
         public static final boolean SOUTH_WEST_ENCODER_INVERTED = true;
 
-        public static final double DEADBAND = 0.2;
 
-        public static final double MAX_MPS = 1.5; // Max speed of robot (m/s) .
+        public static final double DEADBAND = 0.1;
 
-        public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
+        public static final double MAX_MPS = 3.5; // Max speed of robot (m/s) .
+
+        public static final double MAX_ANG_VEL =
+                Math.PI * 2.0; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
-
-
 
         public static final double ANGLE_kP = 3.5;
         public static final double ANGLE_kI = 0.0;
@@ -93,6 +101,7 @@ public class Constants {
         public static final double CONTROL_EFFORT = VOLTAGE;
     }
 
+<<<<<<< HEAD
     public static class Catapult {
 
         public static final boolean SPRING_MOTOR_INVERTED = false;
@@ -148,4 +157,11 @@ public class Constants {
         public static final double SPRING_ZERO_SPEED = -0.5;
     }
 
+=======
+    public static class Intake{
+            public static final boolean INVERTED = false;
+            public static final double ROLLER_IDLE_SPEED = 0.0;
+            public static final double ROLLER_INTAKE_SPEED = 0.8;
+    }
+>>>>>>> main
 }
