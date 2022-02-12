@@ -227,6 +227,10 @@ public class DriveTrain extends OutliersSubsystem {
                 .addConstraint(getKinematicConstraint());
     }
 
+    public void AutoAim(){
+        
+    }
+
     public void trajectoryFollower(Trajectory.State goal, Rotation2d heading) {
         ChassisSpeeds adjustedSpeeds =
                 _controller.calculate(_odomerty.getPoseMeters(), goal, heading);
