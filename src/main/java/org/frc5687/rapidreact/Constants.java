@@ -103,6 +103,6 @@ public class Constants {
     public static class Intake{
             public static final boolean INVERTED = false;
             public static final double ROLLER_IDLE_SPEED = 0.0;
-            public static final double ROLLER_INTAKE_SPEED = 0.5;
+            public static final double ROLLER_INTAKE_SPEED = 0.8;
     }
 }

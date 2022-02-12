@@ -258,9 +258,9 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void startModules() {
-        _northWest.start();
-        _northEast.start();
-        _southEast.start();
-        _southWest.start();
+       // _northWest.start();
+       // _northEast.start();
+       // _southEast.start();
+       // _southWest.start();
     }
 }
