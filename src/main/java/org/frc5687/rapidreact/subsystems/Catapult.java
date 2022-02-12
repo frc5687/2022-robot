@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
@@ -97,6 +98,7 @@ public class Catapult extends OutliersSubsystem {
         );
 
         _springController.setTolerance(SPRING_TOLERANCE);
+        _springController.setIntegratorRange(-SPRING_IZONE, SPRING_IZONE);
         _winchController.setTolerance(Constants.Catapult.WINCH_TOLERANCE);
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
@@ -151,6 +153,9 @@ public class Catapult extends OutliersSubsystem {
         return getWinchEncoderRotation() / GEAR_REDUCTION;
     }
 
+    public double getWinchStringLength() {
+        return getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE;
+    }
     // currently, angle is STOWED_ANGLE all the way down not referencing a plane.
     public double getArmReleaseAngle() {
         return STOWED_ANGLE - stringLengthToAngle(getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE);
@@ -166,19 +171,19 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void runSpringController() {
-        setSpringMotorSpeed(_springController.calculate(getSpringEncoderRotation()));
+        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()));
     }
 
     public void setSpringGoal(double position) {
         _springController.setGoal(position);
     }
 
-    public void setWinchGoal(double angle) {
-        _winchController.setGoal(angleToStringLength(angle));
+    public void setWinchGoal(double stringLength) {
+        _winchController.setGoal(-stringLength);
     }
 
     public void runWinchController() {
-        setWinchMotorSpeed(_winchController.calculate(getWinchRotation()));
+        setWinchMotorSpeed(_winchController.calculate(getWinchStringLength()));
     }
 
     public boolean isSpringAtPosition() {
@@ -248,15 +253,19 @@ public class Catapult extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Spring encoder rotations", getSpringEncoderRotation());
-        metric("Spring rail position", getSpringRailPosition());
-        metric("Spring motor output", _springMotor.getAppliedOutput());
-        metric("Spring goal", _springController.getGoal().position);
+//        metric("Spring encoder rotations", getSpringEncoderRotation());
+//        metric("Spring rail position", getSpringRailPosition());
+//        metric("Spring motor output", _springMotor.getAppliedOutput());
+//        metric("Spring goal", _springController.getGoal().position);
 
         metric("Winch rotation", getWinchRotation());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Winch controller output", _winchMotor.getAppliedOutput());
-        metric("Winch goal", _winchController.getGoal().toString());
+        metric("winch goal", _winchController.getGoal().position);
+        metric("Winch string length", getWinchStringLength());
+//        metric("String length", stringLengthToAngle(getArmReleaseAngle()));
+//        metric("Winch goal", Units.radiansToDegrees(stringLengthToAngle(_winchController.getGoal().position)));
+        metric("Arm state", getState()._value);
 
         metric("Arm Hall Effect", isArmLowered());
         metric("Spring Hall Effect", isSpringHallTriggered());

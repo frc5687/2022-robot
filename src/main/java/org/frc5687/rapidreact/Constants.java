@@ -129,21 +129,22 @@ public class Constants {
         public static final double WINCH_BOTTOM_LIMIT = 0;
 
         // Controller Parameters
-        public static final double SPRING_kP = 0.1; // Always start with kP
-        public static final double SPRING_kI = 0.0; // If possible avoid kI
+        public static final double SPRING_kP = 20.0; // Always start with kP
+        public static final double SPRING_kI = 5.0; // If possible avoid kI
         public static final double SPRING_kD = 0.0; // 2nd Kd
         public static final double MAX_SPRING_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * SPRING_WINCH_DRUM_CIRCUMFERENCE; // divide by 2 PI as that is one rotation.
-        public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS / 2.0; // heuristic.
-        public static final double SPRING_TOLERANCE = 0.1; // m
+        public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS * 10; // heuristic.
+        public static final double SPRING_IZONE = 3.0;
+        public static final double SPRING_TOLERANCE = 0.05; // m
         // winch
-        public static final double WINCH_kP = 0.1; // Always start with kP
+        public static final double WINCH_kP = 20.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
         public static final double WINCH_kD = 0.0; // 2nd Kd
         public static final double MAX_WINCH_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
-        public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS / 2.0; // heuristic.
-        public static final double WINCH_TOLERANCE = 0.05; // m
+        public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 10.0; // heuristic.
+        public static final double WINCH_TOLERANCE = 0.005; // m
 
-        public static final double LOWERING_SPEED = 0.1;
+        public static final double LOWERING_SPEED = 0.8;
     }
 
 }

@@ -7,16 +7,20 @@ import org.frc5687.rapidreact.subsystems.Catapult;
 public class TestSpring extends OutliersCommand{
 
     private Catapult _catapult;
+    private double _distance;
+    private double _string;
 
-    public TestSpring(Catapult catapult) {
+    public TestSpring(Catapult catapult, double distance, double string) {
         _catapult = catapult;
+        _distance = distance;
+        _string = string;
         addRequirements(_catapult);
     }
 
     @Override
     public void initialize() {
-        _catapult.setWinchGoal(Units.degreesToRadians(20));
-        _catapult.setSpringGoal(0.2); // meters
+        _catapult.setWinchGoal(_string);
+        _catapult.setSpringGoal(_distance); // meters
     }
 
     @Override
@@ -29,7 +33,7 @@ public class TestSpring extends OutliersCommand{
     @Override
     public boolean isFinished() {
         if (_catapult.isWinchAtGoal()) {
-            _catapult.releaseArm();
+//            _catapult.releaseArm();
             return true;
         }
         return false;

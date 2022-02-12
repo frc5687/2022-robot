@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.rapidreact.commands.LowerCatapult;
+import org.frc5687.rapidreact.commands.Reset;
 import org.frc5687.rapidreact.commands.ShootSetpoint;
 import org.frc5687.rapidreact.commands.TestSpring;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -28,6 +29,7 @@ public class OI extends OutliersProxy {
     private Button _lowerArm;
     private Button _shootButton;
     private Button _shootButtonTest;
+    private Button _release;
 
 
     private JoystickButton resetNavX;
@@ -44,12 +46,16 @@ public class OI extends OutliersProxy {
         _lowerArm = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
         _shootButton= new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
         _shootButtonTest = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
+        _release = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult) {
         //There's nothing to init here
-        _shootButton.whenPressed(new TestSpring(catapult));
-        _lowerArm.whenPressed(new LowerCatapult(catapult));
+        _shootButton.whenPressed(new TestSpring(catapult, 0.10, 0.15));
+        _lowerArm.whenPressed(catapult::lockArm);
+//        _lowerArm.whenPressed(new LowerCatapult(catapult));
+        _shootButtonTest.whenPressed(new Reset(catapult));
+        _release.whenPressed(catapult::releaseArm);
     }
 
     public boolean isShootButtonPressed() {
