@@ -94,4 +94,8 @@ public class Constants {
         public static final double LIME_ANGLE = 0.0; //Radians
         public static final double TARGET_ANGLE = 0.0; //Radian
     }
+
+    public static class AutoAim{
+        public static final double LRV = 3.5;
+    }
 }

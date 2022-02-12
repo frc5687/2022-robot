@@ -14,6 +14,7 @@ public class AutoAim extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
+        _driveTrain.AutoAim();
     }
 
     @Override

@@ -228,7 +228,37 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void AutoAim(){
-        
+        if(_limelight.hasTarget()){
+            //The limelight has targets lock on
+            double yaw = _limelight.getYaw();
+            Rotation2d AOB = new Rotation2d(yaw);
+            poseFollower(_odomerty.getPoseMeters(), AOB, Constants.AutoAim.LRV);
+            metric("Yaw", yaw);
+        }else{
+            //The limelight has no targets
+            error("No targets");
+        }
+    }
+
+    public void poseFollower(Pose2d pose, Rotation2d heading, double vel) {
+        ChassisSpeeds adjustedSpeeds = _controller.calculate(_odomerty.getPoseMeters(), pose, vel, heading);
+        SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveTrain.MAX_MPS);
+        setFrontLeftModuleState(moduleStates[0]);
+        setFrontRightModuleState(moduleStates[1]);
+        setBackLeftModuleState(moduleStates[2]);
+        setBackRightModuleState(moduleStates[3]);
+    }
+
+    public boolean MaverickDone(Pose2d destnation){
+        //Is Maverick at the end position
+        Pose2d cPose =  _odomerty.getPoseMeters();
+        if(cPose == destnation){
+            //Is the robots position equal to the Maverick supplied destenation
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public void trajectoryFollower(Trajectory.State goal, Rotation2d heading) {
