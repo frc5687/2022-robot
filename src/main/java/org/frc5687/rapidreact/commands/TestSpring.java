@@ -26,14 +26,14 @@ public class TestSpring extends OutliersCommand{
     @Override
     public void execute() {
         super.execute();
-//        _catapult.runWinchController();
+        _catapult.runWinchController();
         _catapult.runSpringController();
     }
 
     @Override
     public boolean isFinished() {
         if (_catapult.isWinchAtGoal()) {
-//            _catapult.releaseArm();
+            _catapult.releaseArm();
             return true;
         }
         return false;

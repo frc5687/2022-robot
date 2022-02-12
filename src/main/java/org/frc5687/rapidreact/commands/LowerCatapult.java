@@ -15,7 +15,7 @@ public class LowerCatapult extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-//        _catapult.setWinchGoal(Constants.Catapult.WINCH_BOTTOM_LIMIT);
+        _catapult.setWinchGoal(Constants.Catapult.WINCH_BOTTOM_LIMIT);
     }
 
     @Override

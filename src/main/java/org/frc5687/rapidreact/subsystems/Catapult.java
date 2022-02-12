@@ -170,8 +170,12 @@ public class Catapult extends OutliersSubsystem {
         return (angle - STOWED_ANGLE + LINEAR_REGRESSION_OFFSET) / LINEAR_REGRESSION_SLOPE;
     }
 
+    public double springDisplacement() {
+        return getSpringRailPosition() - 0.0;
+    }
+
     public void runSpringController() {
-        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()));
+        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()) + springDisplacement() * -3);
     }
 
     public void setSpringGoal(double position) {
@@ -183,7 +187,8 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void runWinchController() {
-        setWinchMotorSpeed(_winchController.calculate(getWinchStringLength()));
+        setWinchMotorSpeed(
+                _winchController.calculate(getWinchStringLength()));
     }
 
     public boolean isSpringAtPosition() {
