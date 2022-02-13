@@ -43,6 +43,13 @@ public class DriveTrain extends OutliersSubsystem {
             _oi = oi;
             _imu = imu;
 
+            /**
+            *          N
+            *          |
+            *      E -- -- W
+            *          |
+            *          S
+             */
             _northWest =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
@@ -251,9 +258,9 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void startModules() {
-        _northWest.start();
-        _northEast.start();
-        _southEast.start();
-        _southWest.start();
+       // _northWest.start();
+       // _northEast.start();
+       // _southEast.start();
+       // _southWest.start();
     }
 }
