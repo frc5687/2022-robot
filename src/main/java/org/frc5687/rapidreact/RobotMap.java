@@ -24,8 +24,8 @@ public class RobotMap {
 
         public static class SPARKMAX{
             public static class Climber{
-                public static final int LEFT_ARM = 4;
-                public static final int RIGHT_ARM = 5;
+                public static final int LEFT_ARM = 11;
+                public static final int RIGHT_ARM = 12;
             }
         }
     }
