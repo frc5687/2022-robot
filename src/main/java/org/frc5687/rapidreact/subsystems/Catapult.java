@@ -175,7 +175,7 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void runSpringController() {
-        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()) + springDisplacement() * -3);
+        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()) + springDisplacement() * -6.0);
     }
 
     public void setSpringGoal(double position) {
