@@ -4,10 +4,7 @@ package org.frc5687.rapidreact;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.frc5687.rapidreact.commands.Drive;
-import org.frc5687.rapidreact.commands.IdleCatapult;
-import org.frc5687.rapidreact.commands.IdleIntake;
-import org.frc5687.rapidreact.commands.OutliersCommand;
+import org.frc5687.rapidreact.commands.*;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
@@ -36,7 +33,7 @@ public class RobotContainer extends OutliersContainer {
         _driveTrain = new DriveTrain(this, _oi, _imu);
         _intake = new Intake(this);
         //The robots default command will run so long as another command isn't activated
-        setDefaultCommand(_catapult, new IdleCatapult(_catapult, _oi));
+        setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake));
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 

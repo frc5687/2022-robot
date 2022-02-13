@@ -113,7 +113,7 @@ public class Catapult extends OutliersSubsystem {
 //            error("Resetting Spring");
             _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
             _springEncoderZeroed = true;
-            _state = CatapultState.LOADING;
+//            _state = CatapultState.LOADING;
         } else if(!isSpringHallTriggered() && _springEncoderZeroed) {
             _springEncoderZeroed = false;
         }
@@ -175,7 +175,7 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void runSpringController() {
-        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()) + springDisplacement() * -6.0);
+        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()) + springDisplacement() * -8.0);
     }
 
     public void setSpringGoal(double position) {

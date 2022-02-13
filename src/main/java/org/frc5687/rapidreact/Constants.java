@@ -143,16 +143,16 @@ public class Constants {
         public static final double MAX_SPRING_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * SPRING_WINCH_DRUM_CIRCUMFERENCE; // divide by 2 PI as that is one rotation.
         public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS * 20; // heuristic.
         public static final double SPRING_IZONE = 9.0;
-        public static final double SPRING_TOLERANCE = 0.0001; // m
+        public static final double SPRING_TOLERANCE = 0.001; // m
         // winch
         public static final double WINCH_kP = 20.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
         public static final double WINCH_kD = 0.0; // 2nd Kd
         public static final double MAX_WINCH_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
         public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 20.0; // heuristic.
-        public static final double WINCH_TOLERANCE = 0.0001; // m
+        public static final double WINCH_TOLERANCE = 0.001; // m
 
-        public static final double LOWERING_SPEED = 0.8;
+        public static final double LOWERING_SPEED = 0.9;
         public static final double SPRING_ZERO_SPEED = -0.5;
     }
 

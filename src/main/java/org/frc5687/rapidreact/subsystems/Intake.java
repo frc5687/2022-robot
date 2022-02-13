@@ -49,6 +49,14 @@ public class Intake extends OutliersSubsystem{
         spinUpRoller();
     }
 
+    public boolean isIntakeUp() {
+        return _solenoid.get() == Value.kReverse;
+    }
+
+    public boolean isIntakeDown() {
+        return _solenoid.get() == Value.kForward;
+    }
+
     @Override
     public void updateDashboard() {
         
