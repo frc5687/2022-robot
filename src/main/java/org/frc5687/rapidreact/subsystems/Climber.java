@@ -2,6 +2,7 @@
 package org.frc5687.rapidreact.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.Robot;
@@ -15,27 +16,23 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Climber extends OutliersSubsystem{
     
-    private CANSparkMax _leftArm;
-    private CANSparkMax _rightArm;
+    private CANSparkMax _stationaryArm;
+    private CANSparkMax _rockerArm;
     private DoubleSolenoid _rocker;
 
     public Climber(OutliersContainer container) {
         super(container);
-        _leftArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.Climber.LEFT_ARM, CANSparkMax.MotorType.kBrushless);
-        _rightArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.Climber.RIGHT_ARM, CANSparkMax.MotorType.kBrushless);
-        _rocker = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotMap.PCM.Climber.ROCKER_HIGH, RobotMap.PCM.Climber.ROCKER_LOW);
+        _stationaryArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.STATIONARY_CLIMBER, CANSparkMax.MotorType.kBrushless);
+        _rockerArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.ROCKER_CLIMBER, CANSparkMax.MotorType.kBrushless);
+        _rocker = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotMap.PCM.CLIMBER_IN, RobotMap.PCM.CLIMBER_OUT);
+
+        _stationaryArm.setIdleMode(IdleMode.kCoast);
+        _stationaryArm.setInverted(false);
     }
 
-    public void raiseArms(){
-        //Raise both arms
-    }
-
-    public void raiseLeftArm(){
-        //Raise left arm
-    }
-
-    public void raiseRightArm(){
+    public void raiseSationaryArm(){
         //Raise right arm
+        _stationaryArm.set(0.1);
     }
 
     public void rock(){
@@ -45,6 +42,7 @@ public class Climber extends OutliersSubsystem{
 
     @Override
     public void updateDashboard() {
-
+        metric("Stationary climber motor encoder", _stationaryArm.getEncoder().toString());
+        metric("Stationary climber motor temp", _stationaryArm.getMotorTemperature());
     }
 }

@@ -32,6 +32,8 @@ public class RobotMap {
 
         public static class SPARKMAX{
             public static final int INTAKE_ROLLER = 13;
+            public static final int STATIONARY_CLIMBER = 11;
+            public static final int ROCKER_CLIMBER = 12;
         }
     }
 
@@ -49,6 +51,8 @@ public class RobotMap {
         public static final int comp = 1;
         public static final int INTAKE_HIGH = 10;
         public static final int INTAKE_LOW = 5;
+        public static final int CLIMBER_IN = 2;
+        public static final int CLIMBER_OUT = 3;
     }
 
     /**
