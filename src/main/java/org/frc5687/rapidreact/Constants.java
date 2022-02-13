@@ -12,20 +12,30 @@ public class Constants {
 
     public static class DriveTrain {
 
+        /**
+         *          N
+         *          |
+         *      E -- -- W
+         *          |
+         *          S
+         */
+
         public static final double WIDTH = 0.6223;
         public static final double LENGTH = 0.6223;
-        public static final Translation2d FRONT_LEFT_POSITION =
-                new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
-        public static final double FRONT_LEFT_ENCODER_OFFSET = -0.071; // radians
-        public static final Translation2d FRONT_RIGHT_POSITION =
-                new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
-        public static final double FRONT_RIGHT_ENCODER_OFFSET = -1.01; // radians
-        public static final Translation2d BACK_LEFT_POSITION =
-                new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
-        public static final double BACK_RIGHT_ENCODER_OFFSET = -0.122; // radians
-        public static final Translation2d BACK_RIGHT_POSITION =
-                new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
-        public static final double BACK_LEFT_ENCODER_OFFSET = 0.585 + Math.PI; // radians
+
+        public static final Translation2d NORTH_EAST = new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
+        public static final double NORTH_EAST_OFFSET = 0; // radians
+        public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
+        public static final Translation2d NORTH_WEST = new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
+        public static final double NORTH_WEST_OFFSET = 0; // radians
+        public static final boolean NORTH_WEST_ENCODER_INVERTED = true;
+        public static final Translation2d SOUTH_EAST = new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
+        public static final double SOUTH_EAST_OFFSET = 0; // radians
+        public static final boolean SOUTH_EAST_ENCODER_INVERTED = true;
+        public static final Translation2d SOUTH_WEST = new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
+        public static final double SOUTH_WEST_OFFSET = 0; // radians
+        public static final boolean SOUTH_WEST_ENCODER_INVERTED = true;
+
 
         public static final double DEADBAND = 0.1;
 
@@ -88,5 +98,11 @@ public class Constants {
         public static final double SENSOR_AZIMUTH_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double CONTROL_EFFORT = VOLTAGE;
+    }
+
+    public static class Intake{
+            public static final boolean INVERTED = false;
+            public static final double ROLLER_IDLE_SPEED = 0.0;
+            public static final double ROLLER_INTAKE_SPEED = 0.8;
     }
 }

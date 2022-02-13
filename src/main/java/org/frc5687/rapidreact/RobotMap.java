@@ -1,6 +1,7 @@
 /* Team 5687 (C)2020-2021 */
 package org.frc5687.rapidreact;
 
+
 public class RobotMap {
 
     /**
@@ -10,23 +11,27 @@ public class RobotMap {
      * SparkMax with Id 0 and a TalonSRX with Id 0.
      */
     public static class CAN {
+        /**
+         *          N
+         *          |
+         *      E -- -- W
+         *          |
+         *          S
+         */
 
         public static class TALONFX {
-            public static final int BL_RIGHT_FALCON = 3; // real 3
-            public static final int BL_LEFT_FALCON = 4; // real 4
-            public static final int BR_RIGHT_FALCON = 1;
-            public static final int BR_LEFT_FALCON = 2;
-            public static final int FL_RIGHT_FALCON = 5; // real 5
-            public static final int FL_LEFT_FALCON = 6; // real 6
-            public static final int FR_RIGHT_FALCON = 7;
-            public static final int FR_LEFT_FALCON = 8;
+            public static final int SOUTH_WEST_OUTER = 6; // SOUTH WEST
+            public static final int SOUTH_WEST_INNER = 5; // SOUTH WEST
+            public static final int SOUTH_EAST_OUTER = 4; // SOUTH EAST
+            public static final int SOUTH_EAST_INNER = 3; // SOUTH EAST
+            public static final int NORTH_WEST_OUTER = 8; // NORHT WEST
+            public static final int NORTH_WEST_INNER = 7; // NORHT WEST
+            public static final int NORHT_EAST_OUTER = 2; // NORTH EAST
+            public static final int NORTH_EAST_INNER = 1; // NORTH EAST
         }
 
         public static class SPARKMAX{
-            public static class Climber{
-                public static final int LEFT_ARM = 11;
-                public static final int RIGHT_ARM = 12;
-            }
+            public static final int INTAKE_ROLLER = 13;
         }
     }
 
@@ -41,10 +46,9 @@ public class RobotMap {
      * for PCM only one device can connect to each port, so the numbers should be unique.
      */
     public static class PCM {
-        public static class Climber{
-            public static final int ROCKER_HIGH = 3;
-            public static final int ROCKER_LOW = 4;
-        }
+        public static final int comp = 1;
+        public static final int INTAKE_HIGH = 10;
+        public static final int INTAKE_LOW = 5;
     }
 
     /**
@@ -64,9 +68,9 @@ public class RobotMap {
      * for DIO only one device can connect to each port, so the numbers should be unique.
      */
     public static class DIO {
-        public static final int ENCODER_FR = 4;
-        public static final int ENCODER_FL = 3;
-        public static final int ENCODER_BR = 5;
-        public static final int ENCODER_BL = 2;
+        public static final int NORTH_WEST = 3;
+        public static final int NORTH_EAST = 0;
+        public static final int SOUTH_WEST = 2;
+        public static final int SOUTH_EAST = 1;
     }
 }

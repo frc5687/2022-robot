@@ -2,7 +2,6 @@
 package org.frc5687.rapidreact.util;
 
 import org.frc5687.rapidreact.Constants;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
