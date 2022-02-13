@@ -26,7 +26,8 @@ public class Constants {
         public static final Translation2d SOUTH_WEST = new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
         public static final double SOUTH_WEST_OFFSET = Math.PI; // radians
 
-        public static final double DEADBAND = 0.2;
+        public static final double TRANSLATION_DEADBAND = 0.2;
+        public static final double ROTATION_DEADBAND = 0.2;
 
         public static final double MAX_MPS = 3.5; // Max speed of robot (m/s) .
 

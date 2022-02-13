@@ -44,17 +44,21 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void disabledPeriodic() {
+        //Turn off the death ray
         _limelight.LEDOff();
         //Runs every 20ms during disabled
     }
 
     @Override
     public void disabledInit() {
+        _limelight.LEDOff();
         //Runs once during disabled
     }
 
     @Override
     public void teleopInit() {
+        //Turn in the death
+        _limelight.LEDBlink();
         _limelight.LEDOn();
         //Runs at the start of teleop
     }

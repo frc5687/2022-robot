@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Vision/#24-Limelight-Auto-Aim";
-    public static final String REVISION = "a39c7bb";
+    public static final String REVISION = "5faa313";
     public static final String MODIFIED = " *";
 }
