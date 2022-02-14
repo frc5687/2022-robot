@@ -26,11 +26,13 @@ public class RobotMap {
             public static final int SOUTH_EAST_INNER = 3; // SOUTH EAST
             public static final int NORTH_WEST_OUTER = 8; // NORHT WEST
             public static final int NORTH_WEST_INNER = 7; // NORHT WEST
-            public static final int NORHT_EAST_OUTER = 2; // NORTH EAST
+            public static final int NORTH_EAST_OUTER = 2; // NORTH EAST
             public static final int NORTH_EAST_INNER = 1; // NORTH EAST
         }
 
-        public static class SPARKMAX{
+        public static class SPARKMAX {
+            public static final int SPRING_BABY_NEO = 9;
+            public static final int WINCH_BABY_NEO = 10;
             public static final int INTAKE_ROLLER = 13;
         }
     }
@@ -43,10 +45,13 @@ public class RobotMap {
 
     /**
      * There should be an entry here for each PCM port, preferrably in numerical order. Note that
-     * for PCM only one device can connect to each port, so the numbers should be unique.
+     * for PCH only one device can connect to each port, so the numbers should be unique.
+     * This is the REVRobotics Pneumatic Control Hub.
      */
-    public static class PCM {
-        public static final int comp = 1;
+    public static class PCH {
+        public static int RELEASE_PIN_HIGH = 7;
+        public static int RELEASE_PIN_LOW = 8;
+
         public static final int INTAKE_HIGH = 10;
         public static final int INTAKE_LOW = 5;
     }
@@ -72,5 +77,8 @@ public class RobotMap {
         public static final int NORTH_EAST = 0;
         public static final int SOUTH_WEST = 2;
         public static final int SOUTH_EAST = 1;
+
+        public static final int SPRING_HALL_EFFECT = 4;
+        public static final int ARM_HALL_EFFECT = 5;
     }
 }

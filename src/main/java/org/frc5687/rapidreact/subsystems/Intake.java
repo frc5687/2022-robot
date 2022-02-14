@@ -25,7 +25,7 @@ public class Intake extends OutliersSubsystem{
         _roller.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100);
         _roller.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 1000);
         _roller.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 1000);
-        _solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCM.INTAKE_HIGH, RobotMap.PCM.INTAKE_LOW);
+        _solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.INTAKE_HIGH, RobotMap.PCH.INTAKE_LOW);
     }
 
     private void spinDownRoller(){
@@ -47,6 +47,14 @@ public class Intake extends OutliersSubsystem{
         //Deploy the intake
         _solenoid.set(Value.kForward);
         spinUpRoller();
+    }
+
+    public boolean isIntakeUp() {
+        return _solenoid.get() == Value.kReverse;
+    }
+
+    public boolean isIntakeDown() {
+        return _solenoid.get() == Value.kForward;
     }
 
     @Override
