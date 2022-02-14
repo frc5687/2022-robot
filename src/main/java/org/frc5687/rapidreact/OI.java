@@ -54,7 +54,7 @@ public class OI extends OutliersProxy {
 //        _lowerArm.whenPressed(new LowerCatapult(catapult));
 //        _shootButtonTest.whenPressed(new Reset(catapult));
         _release.whenPressed(catapult::releaseArm);
-        _shootButton.whenHeld(new Intaker(intake));
+        _intakeButton.whenHeld(new Intaker(intake));
     }
 
     public boolean isShootButtonPressed() {
