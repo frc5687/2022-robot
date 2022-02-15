@@ -281,7 +281,8 @@ public class Catapult extends OutliersSubsystem {
         LOWERING_ARM(1),
         LOADING(2),
         AIMING(3),
-        SHOOTING(4);
+        SHOOTING(4),
+        DELAY(5);
 
         private final int _value;
         CatapultState(int value) { _value = value; }

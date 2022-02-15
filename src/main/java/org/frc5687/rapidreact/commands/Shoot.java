@@ -13,6 +13,7 @@ public class Shoot extends OutliersCommand {
     private final Intake _intake;
     private final OI _oi;
 
+    private long _time;
     private boolean _shoot;
 
     public Shoot(Catapult catapult, Intake intake, OI oi) {
@@ -98,8 +99,14 @@ public class Shoot extends OutliersCommand {
                     }
                     if (_shoot) {
                         _catapult.releaseArm();
-                        _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
+                        _catapult.setState(Catapult.CatapultState.DELAY);
+                        _time = System.currentTimeMillis() + Constants.Catapult.DELAY;
                         _shoot = false;
+                    }
+                } break;
+                case DELAY: {
+                    if (Math.abs(_time - System.currentTimeMillis()) < 0) {
+                        _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
                     }
                 } break;
             }
