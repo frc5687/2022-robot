@@ -110,6 +110,10 @@ public class DriveTrain extends OutliersSubsystem {
         _backLeft.periodic();
     }
 
+    public void dataPeriodic() {
+
+    }
+
     @Override
     public void periodic() {
         _odomerty.update(

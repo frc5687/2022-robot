@@ -35,6 +35,7 @@ public class RobotContainer extends OutliersContainer {
         //The robots default command will run so long as another command isn't activated
         //setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         //_robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
+        _robot.addPeriodic(this::dataPeriodic, 0.05, 0.01);
         _imu.reset();
         //_oi.initializeButtons(_driveTrain);
     }
@@ -44,6 +45,12 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void disabledPeriodic() {
+        _proxy.setData(
+                new JetsonProxy.Data(0),
+//                new JetsonProxy.Data(System.currentTimeMillis()),
+                new JetsonProxy.Data(10),
+                new JetsonProxy.Data(5),
+                new JetsonProxy.Data(0));
         //Runs every 20ms during disabled
     }
 
@@ -73,11 +80,12 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
-        _proxy.setData(
-                new JetsonProxy.Data(System.currentTimeMillis()),
-                new JetsonProxy.Data(0),
-                new JetsonProxy.Data(0),
-                new JetsonProxy.Data(0));
+//        _proxy.setData(
+//                new JetsonProxy.Data(0),
+//                new JetsonProxy.Data(System.currentTimeMillis()),
+//                new JetsonProxy.Data(10),
+//                new JetsonProxy.Data(5),
+//                new JetsonProxy.Data(0));
         if (_proxy.getLatestFrame() != null) {
             metric("Millis", _proxy.getLatestFrame().getMillis());
             metric("Object Distance", _proxy.getLatestFrame().getGoalDistance());
@@ -90,6 +98,11 @@ public class RobotContainer extends OutliersContainer {
     public void controllerPeriodic() {
         if (_driveTrain != null) {
             _driveTrain.controllerPeriodic();
+        }
+    }
+    public void dataPeriodic() {
+        if (_driveTrain != null) {
+            _driveTrain.dataPeriodic();
         }
     }
 }
