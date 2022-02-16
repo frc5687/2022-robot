@@ -112,6 +112,7 @@ public class Constants {
         public static final double GEAR_REDUCTION = 64.0;
 
         public static final double BABY_NEO_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(11710);
+        public static final double NEO_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(5500);
         public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
         public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
         public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.437) * Math.PI; // meters
@@ -151,11 +152,11 @@ public class Constants {
         public static final double WINCH_kP = 20.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
         public static final double WINCH_kD = 0.0; // 2nd Kd
-        public static final double MAX_WINCH_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
+        public static final double MAX_WINCH_VELOCITY_MPS = ((NEO_RAD_PER_SEC / GEAR_REDUCTION)/ (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
         public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 20.0; // heuristic.
         public static final double WINCH_TOLERANCE = 0.001; // m
 
-        public static final double LOWERING_SPEED = 0.8;
+        public static final double LOWERING_SPEED = 1.0;
         public static final double SPRING_ZERO_SPEED = -0.5;
     }
 

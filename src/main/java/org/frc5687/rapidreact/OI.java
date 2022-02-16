@@ -49,11 +49,11 @@ public class OI extends OutliersProxy {
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake) {
         //There's nothing to init here
-        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
+//        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
 //        _lowerArm.whenPressed(catapult::lockArm);
-        _lowerArm.whenPressed(new LowerCatapult(catapult));
-        _shootButtonTest.whenPressed(new Reset(catapult));
-        _release.whenPressed(catapult::releaseArm);
+//        _lowerArm.whenPressed(new LowerCatapult(catapult));
+//        _shootButtonTest.whenPressed(new Reset(catapult));
+//        _release.whenPressed(catapult::releaseArm);
         _intakeButton.whenHeld(new Intaker(intake));
     }
 
