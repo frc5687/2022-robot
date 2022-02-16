@@ -9,24 +9,36 @@ public class Constants {
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
     public static final double EPSILON = 0.00001;
+    public static final double DEADBAND = 0.1;
 
     public static class DriveTrain {
+
+        /**
+         *          N
+         *          |
+         *      E -- -- W
+         *          |
+         *          S
+         */
 
         public static final double WIDTH = 0.6223;
         public static final double LENGTH = 0.6223;
 
-        //Swerve modules renamed from positions to directions
-        //I did it ya'll happy? :) Where's my golden star?
         public static final Translation2d NORTH_EAST = new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
         public static final double NORTH_EAST_OFFSET = 0; // radians
+        public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
         public static final Translation2d NORTH_WEST = new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
         public static final double NORTH_WEST_OFFSET = 0; // radians
+        public static final boolean NORTH_WEST_ENCODER_INVERTED = true;
         public static final Translation2d SOUTH_EAST = new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
-        public static final double SOUTH_EAST_OFFSET = Math.PI; // radians
+        public static final double SOUTH_EAST_OFFSET = 0; // radians
+        public static final boolean SOUTH_EAST_ENCODER_INVERTED = true;
         public static final Translation2d SOUTH_WEST = new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
-        public static final double SOUTH_WEST_OFFSET = Math.PI; // radians
+        public static final double SOUTH_WEST_OFFSET = 0; // radians
+        public static final boolean SOUTH_WEST_ENCODER_INVERTED = true;
 
-        public static final double DEADBAND = 0.2;
+
+        public static final double DEADBAND = 0.1;
 
         public static final double MAX_MPS = 3.5; // Max speed of robot (m/s) .
 
@@ -90,5 +102,66 @@ public class Constants {
     }
     public static class UDPJetson {
         public static final int BUFFER = 1024;
+    }
+
+    public static class Catapult {
+
+        public static final boolean SPRING_MOTOR_INVERTED = false;
+        public static final boolean WINCH_MOTOR_INVERTED = false;
+
+        public static final double GEAR_REDUCTION = 64.0;
+
+        public static final double BABY_NEO_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(11710);
+        public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
+        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
+        public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.375) * Math.PI; // meters
+
+        // Physical characteristics
+        public static final double POUND_PER_IN_TO_NEWTON_PER_METER = 0.0057101471627692;
+        public static final double SPRING_RATE = 11.2 * POUND_PER_IN_TO_NEWTON_PER_METER; // Newtons per meter.
+        public static final double ARM_LENGTH = Units.inchesToMeters(20.9);
+        public static final double LEVER_ARM_LENGTH = Units.inchesToMeters(6.0);
+        public static final double ARM_MASS = 1.2; //kg
+        public static final double BALL_INERTIA = 0.0432;
+        public static final double ROD_INERTIA = (1.0 / 3.0) * ARM_MASS * (ARM_LENGTH * ARM_LENGTH);
+        public static final double INERTIA_OF_ARM = ROD_INERTIA + BALL_INERTIA;
+
+        public static final double STOWED_ANGLE = Units.degreesToRadians(90 + 24.724);
+
+        //Linear regression constants
+        public static final double LINEAR_REGRESSION_SLOPE = 3.6073; // meters and radians
+        public static final double LINEAR_REGRESSION_OFFSET = -0.0217; //meters and radians
+
+
+        // Spring Linear actuator limits
+        public static final double SPRING_BOTTOM_LIMIT = 0; //TODO: Real values
+
+        // Winch actuator limits
+        public static final double WINCH_BOTTOM_LIMIT = 0;
+
+        // Controller Parameters
+        public static final double SPRING_kP = 30.0; // Always start with kP
+        public static final double SPRING_kI = 10.0; // If possible avoid kI
+        public static final double SPRING_kD = 0.0; // 2nd Kd
+        public static final double MAX_SPRING_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * SPRING_WINCH_DRUM_CIRCUMFERENCE; // divide by 2 PI as that is one rotation.
+        public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS * 20; // heuristic.
+        public static final double SPRING_IZONE = 9.0;
+        public static final double SPRING_TOLERANCE = 0.001; // m
+        // winch
+        public static final double WINCH_kP = 20.0; // Always start with kP
+        public static final double WINCH_kI = 0.0; // If possible avoid kI
+        public static final double WINCH_kD = 0.0; // 2nd Kd
+        public static final double MAX_WINCH_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
+        public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 20.0; // heuristic.
+        public static final double WINCH_TOLERANCE = 0.001; // m
+
+        public static final double LOWERING_SPEED = 0.9;
+        public static final double SPRING_ZERO_SPEED = -0.5;
+    }
+
+    public static class Intake{
+            public static final boolean INVERTED = false;
+            public static final double ROLLER_IDLE_SPEED = 0.0;
+            public static final double ROLLER_INTAKE_SPEED = 0.8;
     }
 }

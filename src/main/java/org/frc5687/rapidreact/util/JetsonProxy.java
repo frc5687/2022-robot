@@ -146,7 +146,9 @@ public class JetsonProxy {
         public long getMillis() { return _millis; }
         public double getEstimatedX() { return _estimatedX; }
         public double getEstimatedY() { return _estimatedY; }
+        public boolean hasGoal() { return _hasTarget; }
         public double getGoalDistance() { return _goalDistance; }
+        public double getGoalAngle() { return _goalAngle; }
 
 
     }
