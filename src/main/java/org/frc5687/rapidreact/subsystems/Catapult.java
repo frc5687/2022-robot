@@ -4,6 +4,7 @@ package org.frc5687.rapidreact.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -70,7 +71,7 @@ public class Catapult extends OutliersSubsystem {
 
         // setup encoder.
         _springEncoder = _springMotor.getEncoder();
-        _winchEncoder = _winchMotor.getEncoder();
+        _winchEncoder = _winchMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, COUNTS_PER_REVOLUTION);
 
         //Save changes into flash memory of spark maxes
         _winchMotor.burnFlash();
@@ -122,8 +123,6 @@ public class Catapult extends OutliersSubsystem {
             error("Resetting winch");
             _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT); // conversion is weird
             _winchEncoderZeroed = true;
-        } else if (!isArmLowered() && _winchEncoderZeroed) {
-            _winchEncoderZeroed = false;
         }
 
     }
@@ -140,17 +139,13 @@ public class Catapult extends OutliersSubsystem {
         return _springEncoder.getPosition();
     }
 
-    public double getWinchEncoderRotation() {
+    public double getWinchRotation() {
         return _winchEncoder.getPosition();
     }
 
     // meters
     public double getSpringRailPosition() {
         return (getSpringEncoderRotation() / GEAR_REDUCTION) * SPRING_WINCH_DRUM_CIRCUMFERENCE;
-    }
-
-    public double getWinchRotation() {
-        return getWinchEncoderRotation() / GEAR_REDUCTION;
     }
 
     public double getWinchStringLength() {
@@ -175,7 +170,7 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void runSpringController() {
-        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()) + springDisplacement() * -8.0);
+        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()) + springDisplacement() * -15.0);
     }
 
     public void setSpringGoal(double position) {

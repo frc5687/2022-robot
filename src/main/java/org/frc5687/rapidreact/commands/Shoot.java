@@ -31,7 +31,7 @@ public class Shoot extends OutliersCommand {
 
     @Override
     public void execute() {
-//        metric("intake down", _intake.isIntakeDown());
+        metric("intake down", _intake.isIntakeDown());
 //        if (_intake.isIntakeDown()) {
             switch (_catapult.getState()) {
                 case ZEROING: {
@@ -44,7 +44,7 @@ public class Shoot extends OutliersCommand {
                     }
                     if (_catapult.isArmLowered()) {
                         _catapult.setWinchMotorSpeed(0.0);
-//                    _catapult.setWinchGoal(0.0);
+                        _catapult.setWinchGoal(0.0);
                     }
                     if (_catapult.isArmLowered() && _catapult.isSpringHallTriggered()) {
                         _catapult.setSpringMotorSpeed(0.0);
@@ -72,8 +72,8 @@ public class Shoot extends OutliersCommand {
                     // in the future check if we have a ball and the ball color, REV Color Sensor
                     // has a proximity sensor built it.
                     // get Spring Goal and Winch Goal from an override or distance to goal measurement.
-                    _catapult.setWinchGoal(0.25);
-                    _catapult.setSpringGoal(0.11); // meters
+                    _catapult.setWinchGoal(0.245);
+                    _catapult.setSpringGoal(0.105); // meters
                     _catapult.runSpringController();
                     _catapult.runWinchController();
                     if (_catapult.isWinchAtGoal()) {
@@ -99,16 +99,17 @@ public class Shoot extends OutliersCommand {
                     }
                     if (_shoot) {
                         _catapult.releaseArm();
-                        _catapult.setState(Catapult.CatapultState.DELAY);
-                        _time = System.currentTimeMillis() + Constants.Catapult.DELAY;
+                        _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
+//                        _time = System.currentTimeMillis() + Constants.Catapult.DELAY;
+                        metric("time", _time);
                         _shoot = false;
                     }
                 } break;
-                case DELAY: {
-                    if (Math.abs(_time - System.currentTimeMillis()) < 0) {
-                        _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
-                    }
-                } break;
+//                case DELAY: {
+//                    if (Math.abs(_time - currentTime) < 0) {
+//                        _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
+//                    }
+//                } break;
             }
 //        } else {
 //            _catapult.setSpringMotorSpeed(0.0);

@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -14,6 +15,7 @@ public class Intake extends OutliersSubsystem{
 
     private CANSparkMax _roller;
     private DoubleSolenoid _solenoid;
+    private HallEffect _intakeHall;
     
     public Intake(OutliersContainer container) {
         //Construct the roller and solenoids
@@ -26,6 +28,7 @@ public class Intake extends OutliersSubsystem{
         _roller.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 1000);
         _roller.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 1000);
         _solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.INTAKE_HIGH, RobotMap.PCH.INTAKE_LOW);
+        _intakeHall = new HallEffect(RobotMap.DIO.INTAKE_HALL_EFFECT);
     }
 
     private void spinDownRoller(){
@@ -49,12 +52,8 @@ public class Intake extends OutliersSubsystem{
         spinUpRoller();
     }
 
-    public boolean isIntakeUp() {
-        return _solenoid.get() == Value.kReverse;
-    }
-
     public boolean isIntakeDown() {
-        return _solenoid.get() == Value.kForward;
+        return _intakeHall.get();
     }
 
     @Override
