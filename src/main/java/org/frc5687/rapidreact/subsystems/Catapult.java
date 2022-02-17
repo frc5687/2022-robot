@@ -39,13 +39,25 @@ public class Catapult extends OutliersSubsystem {
     private CatapultState _state;
 
     public enum CatapultState {
+        // Robot starts in ZEROING state, assuming the following:
+        // - no tension on spring (should trigger spring Hall effect)
+        // - catapult arm lowered
+        // - pin locked
+        // If spring Hall effect is triggered, robot enters LOWERING_ARM 
         ZEROING(0),
+        // LOWERING_ARM checks if arm Hall effect is triggered.
+        // ** DANGER ** winching too far will break robot
+        // Winches down until arm Hall effect triggers.
+        // If arm Hall effect is triggered, robot enters LOADING
         LOWERING_ARM(1),
+        // LOADING checks to 
         LOADING(2),
         AIMING(3),
         SHOOTING(4),
-        DELAY(5);
-        
+        DELAY(5),
+        ERROR(6),
+        DEBUG(7);
+
         private final int _value;
         CatapultState(int value) { _value = value; }
 
@@ -130,24 +142,36 @@ public class Catapult extends OutliersSubsystem {
                         MAX_WINCH_ACCELERATION_MPSS
                 )
         );
-        _winchController.setTolerance(Constants.Catapult.WINCH_TOLERANCE);
+        _winchController.setTolerance(WINCH_TOLERANCE);
 
         // set state
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
-        _state = CatapultState.ZEROING;
+        _state = CatapultState.DEBUG;
     }
 
+    public void startZeroing() {
+        _state = CatapultState.ZEROING
+    }
 
     @Override
     public void periodic() {
         super.periodic();
+
+        if (_state == CatapultState.DEBUG) {
+            // Check for button press to enter ZEROING state
+            // startZeroing()
+            return;
+        }
+
         if (isSpringHallTriggered()) {
+            // Spring is at bottom limit.
 //            error("Resetting Spring");
             _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
             _springEncoderZeroed = true;
 //            _state = CatapultState.LOADING;
         } else if(!isSpringHallTriggered() && _springEncoderZeroed) {
+            // Spring is not at bottom limit.
             _springEncoderZeroed = false;
         }
 
@@ -183,6 +207,7 @@ public class Catapult extends OutliersSubsystem {
     public double getWinchStringLength() {
         return getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE;
     }
+
     // currently, angle is STOWED_ANGLE all the way down not referencing a plane.
     public double getArmReleaseAngle() {
         return STOWED_ANGLE - stringLengthToAngle(getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE);
@@ -192,6 +217,7 @@ public class Catapult extends OutliersSubsystem {
     protected double stringLengthToAngle(double stringLength) {
         return LINEAR_REGRESSION_SLOPE * stringLength + LINEAR_REGRESSION_OFFSET;
     }
+
     // radians
     protected double angleToStringLength(double angle) {
         return (angle - STOWED_ANGLE + LINEAR_REGRESSION_OFFSET) / LINEAR_REGRESSION_SLOPE;
@@ -202,7 +228,8 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void runSpringController() {
-        setSpringMotorSpeed(_springController.calculate(getSpringRailPosition()) + springDisplacement() * -15.0);
+        setSpringMotorSpeed(
+            _springController.calculate(getSpringRailPosition()) + springDisplacement() * SPRING_DISPLACEMENT_FACTOR);
     }
 
     public void setSpringGoal(double position) {
@@ -215,7 +242,7 @@ public class Catapult extends OutliersSubsystem {
 
     public void runWinchController() {
         setWinchMotorSpeed(
-                _winchController.calculate(getWinchStringLength()));
+            _winchController.calculate(getWinchStringLength()));
     }
 
     public boolean isSpringAtPosition() {
@@ -244,12 +271,12 @@ public class Catapult extends OutliersSubsystem {
     public double calculateExitVelocity(double angle, double spring) {
         double springDisplacement = Math.abs(spring - SPRING_BOTTOM_LIMIT);
         double angleDisplacement = Math.abs(angle - STOWED_ANGLE);
-        double force = springDisplacement * Constants.Catapult.SPRING_RATE;
-        double torque = Constants.Catapult.LEVER_ARM_LENGTH * force;
-        double angularAcceleration = torque / Constants.Catapult.INERTIA_OF_ARM;
+        double force = springDisplacement * SPRING_RATE;
+        double torque = LEVER_ARM_LENGTH * force;
+        double angularAcceleration = torque / INERTIA_OF_ARM;
         double time = Math.sqrt((2.0 / angularAcceleration) * angleDisplacement);
         double angularVelocity = angleDisplacement / time;
-        return angularVelocity * Constants.Catapult.ARM_LENGTH;
+        return angularVelocity * ARM_LENGTH;
     }
 
     public boolean isReleasePinOut() {
@@ -270,7 +297,6 @@ public class Catapult extends OutliersSubsystem {
     public void setState(CatapultState state) {
         _state = state;
     }
-
 
     public PinPosition getPinPosition() {
         // Get the release pin's position
