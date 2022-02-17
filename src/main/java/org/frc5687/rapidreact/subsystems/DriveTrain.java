@@ -15,9 +15,12 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import edu.wpi.first.wpilibj.util.Color;
+
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
+import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class DriveTrain extends OutliersSubsystem {
@@ -30,7 +33,7 @@ public class DriveTrain extends OutliersSubsystem {
     private SwerveDriveOdometry _odometry;
 
     private double _PIDAngle;
-
+    private ColorSensor _colorSensor;
     private AHRS _imu;
     private OI _oi;
 
@@ -42,7 +45,7 @@ public class DriveTrain extends OutliersSubsystem {
         try {
             _oi = oi;
             _imu = imu;
-
+            _colorSensor = new ColorSensor();
             _northWest =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
@@ -124,13 +127,17 @@ public class DriveTrain extends OutliersSubsystem {
                 _southWest.getState());
     }
 
+    public void showColor(){
+        metric("Prox", _colorSensor.getPorximity());
+        metric("Good to fire", _colorSensor.goodToFire());
+    }
+
     @Override
     public void updateDashboard() {
         metric("SW/Encoder Angle", _southWest.getModuleAngle());
         metric("SE/Encoder Angle", _southEast.getModuleAngle());
         metric("NE/Encoder Angle", _northEast.getModuleAngle());
         metric("NW/Encoder Angle", _northWest.getModuleAngle());
-
         metric("SW/Predicted Angle", _southWest.getPredictedAzimuthAngle());
 
         metric("SW/Encoder Azimuth Vel", _southWest.getAzimuthAngularVelocity());

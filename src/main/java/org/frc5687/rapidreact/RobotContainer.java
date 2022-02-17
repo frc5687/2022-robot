@@ -2,12 +2,15 @@
 package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
+import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
@@ -17,6 +20,8 @@ public class RobotContainer extends OutliersContainer {
 
     private Robot _robot;
     private DriveTrain _driveTrain;
+    private ColorSensor _colorSensor;
+
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
@@ -33,6 +38,7 @@ public class RobotContainer extends OutliersContainer {
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
         _oi.initializeButtons(_driveTrain);
+        _colorSensor = new ColorSensor();
     }
 
     public void periodic() {
@@ -71,6 +77,7 @@ public class RobotContainer extends OutliersContainer {
     public void updateDashboard() {
         //Updates the driver station
         _driveTrain.updateDashboard();
+        _driveTrain.showColor();
     }
 
     public void controllerPeriodic() {

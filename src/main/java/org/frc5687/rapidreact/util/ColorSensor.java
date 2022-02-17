@@ -1,6 +1,8 @@
 package org.frc5687.rapidreact.util;
 
 import com.revrobotics.ColorSensorV3;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -10,7 +12,7 @@ public class ColorSensor {
     private I2C.Port _port;
 
     public ColorSensor(){
-        _port = I2C.Port.kMXP;
+        _port = I2C.Port.kOnboard;
         _color = new ColorSensorV3(_port);
     }
 
@@ -35,6 +37,18 @@ public class ColorSensor {
     public double getPorximity(){
         //Get the robots proximity
         return _color.getProximity();
+    }
+
+    public boolean goodToFire(){
+        if(getPorximity() < 130){
+            return false;
+        }else{
+            if(getPorximity() > 130){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 
     public void updateDashboard(){
