@@ -1,10 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: edu.wpi.first.wpilibj:wpilibj-java:2022.3.1">
     <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2022.3.1/74d41f7adb27d5520e8a1275ba0525d28b967ca9/wpilibj-java-2022.3.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/edu/wpi/first/wpilibj/wpilibj-java/2022.3.1/wpilibj-java-2022.3.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2022.3.1/2e36af7904f84ccda72b9d7b2a51672f8fc66964/wpilibj-java-2022.3.1-sources.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/edu/wpi/first/wpilibj/wpilibj-java/2022.3.1/wpilibj-java-2022.3.1-sources.jar!/" />
     </SOURCES>
   </library>

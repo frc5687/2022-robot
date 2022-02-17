@@ -1,10 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: edu.wpi.first.cameraserver:cameraserver-java:2022.3.1">
     <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cameraserver/cameraserver-java/2022.3.1/66d5f6bcfee1e8797c461dd5bd3478fa007d4ecc/cameraserver-java-2022.3.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/edu/wpi/first/cameraserver/cameraserver-java/2022.3.1/cameraserver-java-2022.3.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cameraserver/cameraserver-java/2022.3.1/2ab7a2e88c45a5467670656f491f7fc30f432ce6/cameraserver-java-2022.3.1-sources.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/edu/wpi/first/cameraserver/cameraserver-java/2022.3.1/cameraserver-java-2022.3.1-sources.jar!/" />
     </SOURCES>
   </library>

@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Utils/#28-UDPSocket";
-    public static final String REVISION = "cfd2aa9";
+    public static final String REVISION = "8ec4324";
     public static final String MODIFIED = " *";
 }

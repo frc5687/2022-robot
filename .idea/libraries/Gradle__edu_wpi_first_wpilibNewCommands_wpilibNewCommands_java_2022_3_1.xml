@@ -1,10 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2022.3.1">
     <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2022.3.1/dc894348fdc639848045f84c8200ce3b83911e1/wpilibNewCommands-java-2022.3.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/edu/wpi/first/wpilibNewCommands/wpilibNewCommands-java/2022.3.1/wpilibNewCommands-java-2022.3.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibNewCommands/wpilibNewCommands-java/2022.3.1/af7da76de0da77631cda6415407b8f55ccb91810/wpilibNewCommands-java-2022.3.1-sources.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/edu/wpi/first/wpilibNewCommands/wpilibNewCommands-java/2022.3.1/wpilibNewCommands-java-2022.3.1-sources.jar!/" />
     </SOURCES>
   </library>

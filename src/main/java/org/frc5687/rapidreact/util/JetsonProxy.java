@@ -1,11 +1,9 @@
 package org.frc5687.rapidreact.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import org.frc5687.rapidreact.commands.Drive;
 
 import java.io.*;
 import java.net.*;
-import java.nio.Buffer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -134,8 +132,8 @@ public class JetsonProxy {
         private double _estimatedY;
         private double _estimatedHeading;
         private boolean _hasTarget;
-        private double _goalDistance;
-        private double _goalAngle;
+        private double _targetDistance;
+        private double _targetAngle;
 
         public Frame(String packet) {
 //            DriverStation.reportError("string is: " + packet, false);
@@ -145,20 +143,20 @@ public class JetsonProxy {
             _estimatedY = Double.parseDouble(a[2]);
             _estimatedHeading = Double.parseDouble(a[3]);
             _hasTarget = Boolean.parseBoolean(a[4]);
-            _goalDistance = Double.parseDouble(a[5]);
+            _targetDistance = Double.parseDouble(a[5]);
             if (a[6].equals("nan")) {
-                _goalAngle = NaN;
+                _targetAngle = NaN;
             } else {
-                _goalAngle = Double.parseDouble(a[6]);
+                _targetAngle = Double.parseDouble(a[6]);
             }
         }
 
         public long getMillis() { return _millis; }
         public double getEstimatedX() { return _estimatedX; }
         public double getEstimatedY() { return _estimatedY; }
-        public boolean hasGoal() { return _hasTarget; }
-        public double getGoalDistance() { return _goalDistance; }
-        public double getGoalAngle() { return _goalAngle; }
+        public boolean hasTarget() { return _hasTarget; }
+        public double getTargetDistance() { return _targetDistance; }
+        public double getTargetAngle() { return _targetAngle; }
 
 
     }
