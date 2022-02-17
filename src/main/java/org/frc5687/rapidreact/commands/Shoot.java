@@ -47,7 +47,7 @@ public class Shoot extends OutliersCommand {
                     if (_catapult.isArmLowered() && _catapult.isSpringHallTriggered()) {
                         _catapult.setSpringMotorSpeed(0.0);
                         _catapult.setWinchMotorSpeed(0.0);
-//                    _catapult.setWinchGoal(0.0);
+                        _catapult.setWinchGoal(0.0);
                         _catapult.setSpringGoal(0.0);
 //                    error("Switching state Lowering arm");
                         _catapult.setState(Catapult.CatapultState.LOWERING_ARM);

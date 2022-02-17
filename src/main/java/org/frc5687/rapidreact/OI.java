@@ -61,9 +61,7 @@ public class OI extends OutliersProxy {
     public boolean exitDebugCatapult() {
         return _catapultDebugButton.get();
     }
-    public boolean releaseArm() {
-        return _release.get();
-    }
+    public boolean releaseArm() { return _release.get();}
 
 
     public double getDriveY() {
