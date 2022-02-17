@@ -45,17 +45,31 @@ public class Catapult extends OutliersSubsystem {
         // - pin locked
         // If spring Hall effect is triggered, robot enters LOWERING_ARM 
         ZEROING(0),
+
         // LOWERING_ARM checks if arm Hall effect is triggered.
         // ** DANGER ** winching too far will break robot
         // Winches down until arm Hall effect triggers.
         // If arm Hall effect is triggered, robot enters LOADING
         LOWERING_ARM(1),
-        // LOADING checks to 
+
+        // LOADING locks pin, unspools winch, tensions spring 
         LOADING(2),
+
+        // AIMING adjusts drive train to line up robot to shoot
         AIMING(3),
+
+        // SHOOTING waits for shoot button to be pressed
+        // If shoot button pressed, releases pin
+        // then enters
         SHOOTING(4),
+
         DELAY(5),
         ERROR(6),
+
+        // Until we have figured out catapult, start in DEBUG state
+        // Check that everything looks good, then press
+        // button to get into ZEROING state
+        // Allow manual pin release and pin lock
         DEBUG(7);
 
         private final int _value;
@@ -66,8 +80,8 @@ public class Catapult extends OutliersSubsystem {
 
     private enum PinPosition {
         UNKNOWN(DoubleSolenoid.Value.kOff),
-        OUT(DoubleSolenoid.Value.kReverse),
-        IN(DoubleSolenoid.Value.kForward);
+        LOCKED(DoubleSolenoid.Value.kReverse),
+        RELEASED(DoubleSolenoid.Value.kForward);
 
         private DoubleSolenoid.Value solenoidValue;
         PinPosition(DoubleSolenoid.Value solenoidValue) {
@@ -151,7 +165,7 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void startZeroing() {
-        _state = CatapultState.ZEROING
+        _state = CatapultState.ZEROING;
     }
 
     @Override
@@ -160,7 +174,7 @@ public class Catapult extends OutliersSubsystem {
 
         if (_state == CatapultState.DEBUG) {
             // Check for button press to enter ZEROING state
-            // startZeroing()
+            // startZeroing();
             return;
         }
 
@@ -254,11 +268,11 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void lockArm() {
-        _releasePin.set(PinPosition.OUT.getSolenoidValue());
+        _releasePin.set(PinPosition.LOCKED.getSolenoidValue());
     }
 
     public void releaseArm() {
-        _releasePin.set(PinPosition.IN.getSolenoidValue());
+        _releasePin.set(PinPosition.RELEASED.getSolenoidValue());
     }
 
     // calculate the spring displacement based on angle displacement.
@@ -280,11 +294,11 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public boolean isReleasePinOut() {
-        return _releasePin.get() == PinPosition.OUT.getSolenoidValue();
+        return _releasePin.get() == PinPosition.LOCKED.getSolenoidValue();
     }
 
     public boolean isReleasePinIn() {
-        return _releasePin.get() == PinPosition.IN.getSolenoidValue();
+        return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
     }
 
     public boolean isSpringHallTriggered() { return _springHall.get(); }
@@ -301,12 +315,12 @@ public class Catapult extends OutliersSubsystem {
     public PinPosition getPinPosition() {
         // Get the release pin's position
         DoubleSolenoid.Value current = _releasePin.get();
-        if (current == PinPosition.OUT.getSolenoidValue()) {
+        if (current == PinPosition.LOCKED.getSolenoidValue()) {
             // Catapult arm locked
-            return PinPosition.OUT;
-        } else if (current == PinPosition.IN.getSolenoidValue()) {
+            return PinPosition.LOCKED;
+        } else if (current == PinPosition.RELEASED.getSolenoidValue()) {
             // Catapult arm released
-            return PinPosition.IN;
+            return PinPosition.RELEASED;
         }
         return PinPosition.UNKNOWN;
     }
