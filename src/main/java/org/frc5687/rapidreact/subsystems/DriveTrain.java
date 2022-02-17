@@ -175,7 +175,7 @@ public class DriveTrain extends OutliersSubsystem {
      * @param fieldRelative forward is always forward no mater orientation of robot.
      */
     public void drive(double vx, double vy, double omega, boolean fieldRelative) {
-        if (Math.abs(vx) < Constants.DriveTrain.DEADBAND && Math.abs(vy) < Constants.DriveTrain.DEADBAND && Math.abs(omega) < Constants.DriveTrain.DEADBAND) {
+        if (Math.abs(vx) < Constants.DriveTrain.TRANSLATION_DEADBAND && Math.abs(vy) < Constants.DriveTrain.TRANSLATION_DEADBAND && Math.abs(omega) < Constants.DriveTrain.TRANSLATION_DEADBAND) {
             setFrontRightModuleState(
                     new SwerveModuleState(0, new Rotation2d(_frontRight.getModuleAngle())));
             setFrontLeftModuleState(

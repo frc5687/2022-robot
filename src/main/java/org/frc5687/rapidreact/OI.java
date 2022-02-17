@@ -35,7 +35,7 @@ public class OI extends OutliersProxy {
         yIn = getSpeedFromAxis(_translation, _translation.getYChannel());
         //Uncomment for gamepad control
         // yIn = getSpeedFromAxis(Gamepad, Gamepad.getYChannel());
-        yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
+        yIn = applyDeadband(yIn, Constants.DriveTrain.TRANSLATION_DEADBAND);
 
         double yOut = yIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         yOut = (yOut + (yIn * 2)) / 3.0;
@@ -47,7 +47,7 @@ public class OI extends OutliersProxy {
         xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
         //Uncomment for gamepad control
         //xIn = -getSpeedFromAxis(Gamepad, Gamepad.getXChannel());
-        xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
+        xIn = applyDeadband(xIn, Constants.DriveTrain.TRANSLATION_DEADBAND);
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0;
         return xOut;
