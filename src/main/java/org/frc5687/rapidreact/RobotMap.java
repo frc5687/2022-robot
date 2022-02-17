@@ -1,6 +1,7 @@
 /* Team 5687 (C)2020-2021 */
 package org.frc5687.rapidreact;
 
+
 public class RobotMap {
 
     /**
@@ -10,25 +11,29 @@ public class RobotMap {
      * SparkMax with Id 0 and a TalonSRX with Id 0.
      */
     public static class CAN {
+        /**
+         *          N
+         *          |
+         *      E -- -- W
+         *          |
+         *          S
+         */
 
         public static class TALONFX {
+            public static final int SOUTH_WEST_OUTER = 6; // SOUTH WEST
+            public static final int SOUTH_WEST_INNER = 5; // SOUTH WEST
+            public static final int SOUTH_EAST_OUTER = 4; // SOUTH EAST
+            public static final int SOUTH_EAST_INNER = 3; // SOUTH EAST
+            public static final int NORTH_WEST_OUTER = 8; // NORHT WEST
+            public static final int NORTH_WEST_INNER = 7; // NORHT WEST
+            public static final int NORTH_EAST_OUTER = 2; // NORTH EAST
+            public static final int NORTH_EAST_INNER = 1; // NORTH EAST
+        }
 
-            /**
-             * Pulled in from 2021-Proto-Bot
-             *          N
-             *          |
-             *      E -- -- W
-             *          |
-             *          S
-             */
-            public static final int BL_RIGHT_FALCON = 4;
-            public static final int BL_LEFT_FALCON = 3;
-            public static final int BR_RIGHT_FALCON = 6;
-            public static final int BR_LEFT_FALCON = 5;
-            public static final int FL_RIGHT_FALCON = 1;
-            public static final int FL_LEFT_FALCON = 2;
-            public static final int FR_RIGHT_FALCON = 8;
-            public static final int FR_LEFT_FALCON = 7;
+        public static class SPARKMAX {
+            public static final int SPRING_BABY_NEO = 9;
+            public static final int WINCH_BABY_NEO = 10;
+            public static final int INTAKE_ROLLER = 13;
         }
     }
 
@@ -40,9 +45,16 @@ public class RobotMap {
 
     /**
      * There should be an entry here for each PCM port, preferrably in numerical order. Note that
-     * for PCM only one device can connect to each port, so the numbers should be unique.
+     * for PCH only one device can connect to each port, so the numbers should be unique.
+     * This is the REVRobotics Pneumatic Control Hub.
      */
-    public static class PCM {}
+    public static class PCH {
+        public static int RELEASE_PIN_HIGH = 7;
+        public static int RELEASE_PIN_LOW = 8;
+
+        public static final int INTAKE_HIGH = 10;
+        public static final int INTAKE_LOW = 5;
+    }
 
     /**
      * There should be an entry here for each PDP breaker, preferrably in numerical order. Note that
@@ -61,9 +73,12 @@ public class RobotMap {
      * for DIO only one device can connect to each port, so the numbers should be unique.
      */
     public static class DIO {
-        public static final int ENCODER_FR = 4; //DIO 4
-        public static final int ENCODER_FL = 3; //DIO 3
-        public static final int ENCODER_BR = 1; //DIO 1
-        public static final int ENCODER_BL = 2; //DIO 2
+        public static final int NORTH_WEST = 3;
+        public static final int NORTH_EAST = 0;
+        public static final int SOUTH_WEST = 2;
+        public static final int SOUTH_EAST = 1;
+
+        public static final int SPRING_HALL_EFFECT = 4;
+        public static final int ARM_HALL_EFFECT = 5;
     }
 }

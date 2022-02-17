@@ -4,7 +4,6 @@ package org.frc5687.rapidreact.util;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 public abstract class OutliersContainer implements ILoggingSource {

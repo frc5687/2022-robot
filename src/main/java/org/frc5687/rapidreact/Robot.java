@@ -22,16 +22,11 @@ public class Robot extends OutliersRobot implements ILoggingSource {
             OutliersContainer.IdentityMode.competition;
     private RioLogger.LogLevel _dsLogLevel = RioLogger.LogLevel.warn;
     private RioLogger.LogLevel _fileLogLevel = RioLogger.LogLevel.warn;
-
     private int _updateTick = 0;
-
     private String _name;
-
     private RobotContainer _robotContainer;
     private boolean _fmsConnected;
-
     private Command _autoCommand;
-
     private Timer _timer;
     private double _prevTime;
     private double _time;
