@@ -46,8 +46,8 @@ public class RobotContainer extends OutliersContainer {
 
     public void disabledPeriodic() {
         _proxy.setData(
-                new JetsonProxy.Data(0),
-//                new JetsonProxy.Data(System.currentTimeMillis()),
+                new JetsonProxy.Data(1),
+                new JetsonProxy.Data(System.currentTimeMillis()),
                 new JetsonProxy.Data(10),
                 new JetsonProxy.Data(5),
                 new JetsonProxy.Data(0));
@@ -88,7 +88,9 @@ public class RobotContainer extends OutliersContainer {
 //                new JetsonProxy.Data(0));
         if (_proxy.getLatestFrame() != null) {
             metric("Millis", _proxy.getLatestFrame().getMillis());
+            metric("Has goal", _proxy.getLatestFrame().hasGoal());
             metric("Object Distance", _proxy.getLatestFrame().getGoalDistance());
+            metric("Object Angle", _proxy.getLatestFrame().getGoalAngle());
         }
         //Updates the driver station
         //_driveTrain.updateDashboard();
