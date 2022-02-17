@@ -72,8 +72,8 @@ public class Shoot extends OutliersCommand {
                     // in the future check if we have a ball and the ball color, REV Color Sensor
                     // has a proximity sensor built it.
                     // get Spring Goal and Winch Goal from an override or distance to goal measurement.
-                    _catapult.setWinchGoal(0.245);
-                    _catapult.setSpringGoal(0.105); // meters
+                    _catapult.setWinchGoal(0.245); // string length of arm
+                    _catapult.setSpringGoal(0.105); // meters spring length tension.
                     _catapult.runSpringController();
                     _catapult.runWinchController();
                     if (_catapult.isWinchAtGoal()) {

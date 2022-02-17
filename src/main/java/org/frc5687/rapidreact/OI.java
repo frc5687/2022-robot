@@ -41,19 +41,20 @@ public class OI extends OutliersProxy {
         _debug = new Gamepad(2);
 
         _lowerArm = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _shootButton= new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _shootButton= new JoystickButton(_translation, 1);
+//        _shootButton= new JoystickButton(_translation, 1);
         _shootButtonTest = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
-        _release = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+        _release = new JoystickButton(_translation, 2);
         _intakeButton = new JoystickButton(_rotation, 4);
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake) {
         //There's nothing to init here
 //        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
-//        _lowerArm.whenPressed(catapult::lockArm);
+        _lowerArm.whenPressed(catapult::lockArm);
 //        _lowerArm.whenPressed(new LowerCatapult(catapult));
 //        _shootButtonTest.whenPressed(new Reset(catapult));
-//        _release.whenPressed(catapult::releaseArm);
+        _release.whenPressed(catapult::releaseArm);
         _intakeButton.whenHeld(new Intaker(intake));
     }
 
