@@ -52,25 +52,29 @@ public class Catapult extends OutliersSubsystem {
         // If arm Hall effect is triggered, robot enters LOADING
         LOWERING_ARM(1),
 
-        // LOADING locks pin, unspools winch, tensions spring 
+        // LOADING locks pin, check for which color ball we have.
+        // Depending on the ball the robot enters the AIMING state or WRONG_BALL state.
         LOADING(2),
 
-        // AIMING adjusts drive train to line up robot to shoot
+        // AIMING waited for the OI aim button and if the drivetrain is within tolerance.
+        // Also have an override button if vision is not working.
+        // Change state to SHOOTING.
         AIMING(3),
 
-        // SHOOTING waits for shoot button to be pressed
-        // If shoot button pressed, releases pin
-        // then enters
-        SHOOTING(4),
+        // We have the wrong ball, set the Winch and Spring goal to remove the ball.
+        WRONG_BALL(4),
 
-        DELAY(5),
-        ERROR(6),
+        // Set the winch goal and spring goal.
+        // SHOOTING waits for shoot button to be pressed and the goals to be in tolerance.
+        // If shoot button pressed, releases pin
+        // then enters LOWERING_ARM
+        SHOOTING(5),
 
         // Until we have figured out catapult, start in DEBUG state
         // Check that everything looks good, then press
         // button to get into ZEROING state
         // Allow manual pin release and pin lock
-        DEBUG(7);
+        DEBUG(6);
 
         private final int _value;
         CatapultState(int value) { _value = value; }
@@ -164,29 +168,14 @@ public class Catapult extends OutliersSubsystem {
         _state = CatapultState.DEBUG;
     }
 
-    public void startZeroing() {
-        _state = CatapultState.ZEROING;
-    }
 
     @Override
     public void periodic() {
         super.periodic();
 
-        if (_state == CatapultState.DEBUG) {
-            // Check for button press to enter ZEROING state
-            // startZeroing();
-            return;
-        }
-
         if (isSpringHallTriggered()) {
-            // Spring is at bottom limit.
-//            error("Resetting Spring");
             _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
             _springEncoderZeroed = true;
-//            _state = CatapultState.LOADING;
-        } else if(!isSpringHallTriggered() && _springEncoderZeroed) {
-            // Spring is not at bottom limit.
-            _springEncoderZeroed = false;
         }
 
         if (isArmLowered() && !_winchEncoderZeroed) {
@@ -293,11 +282,11 @@ public class Catapult extends OutliersSubsystem {
         return angularVelocity * ARM_LENGTH;
     }
 
-    public boolean isReleasePinOut() {
+    public boolean isReleasePinLocked() {
         return _releasePin.get() == PinPosition.LOCKED.getSolenoidValue();
     }
 
-    public boolean isReleasePinIn() {
+    public boolean isReleasePinReleased() {
         return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
     }
 

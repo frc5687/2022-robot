@@ -25,9 +25,7 @@ public class Shoot extends OutliersCommand {
     }
 
     @Override
-    public void initialize() {
-        _catapult.setState(Catapult.CatapultState.ZEROING);
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
@@ -71,45 +69,54 @@ public class Shoot extends OutliersCommand {
                 case LOADING: {
                     // in the future check if we have a ball and the ball color, REV Color Sensor
                     // has a proximity sensor built it.
-                    // get Spring Goal and Winch Goal from an override or distance to goal measurement.
-                    _catapult.setWinchGoal(0.245); // string length of arm
-                    _catapult.setSpringGoal(0.105); // meters spring length tension.
-                    _catapult.runSpringController();
-                    _catapult.runWinchController();
-                    if (_catapult.isWinchAtGoal()) {
-//                    error("Switching state Aiming");
+//                    if (!correctColor && hasBall) {
+//                        _catapult.setState(Catapult.CatapultState.WRONG_BALL);
+//                    } else {
                         _catapult.setState(Catapult.CatapultState.AIMING);
-                    }
+//                    }
                 }
                 break;
                 case AIMING: {
 //                 check if we are in the correct position and aiming at the goal.
                     _catapult.runSpringController();
-                    _catapult.runWinchController();
 //                error("Switching state Shooting");
                     _catapult.setState(Catapult.CatapultState.SHOOTING);
                 }
                 break;
+                case WRONG_BALL: {
+                    _catapult.setWinchGoal(Constants.Catapult.REMOVE_BALL_WINCH_GOAL);
+                    _catapult.setSpringGoal(Constants.Catapult.REMOVE_BALL_SPRING_GOAL);
+                    _catapult.runSpringController();
+                    _catapult.runWinchController();
+                    if (_catapult.isWinchAtGoal()) {
+                        _catapult.releaseArm();
+                        _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
+                    }
+                }
+                break;
                 case SHOOTING: {
                     // call OI button to shoot.
+                    _catapult.setWinchGoal(0.245);
+                    _catapult.setSpringGoal(0.105);
                     _catapult.runSpringController();
                     _catapult.runWinchController();
                     if (_oi.isShootButtonPressed()) {
                         _shoot = true;
                     }
-                    if (_shoot) {
+                    if (_shoot && _catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
                         _catapult.releaseArm();
                         _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
-//                        _time = System.currentTimeMillis() + Constants.Catapult.DELAY;
-                        metric("time", _time);
                         _shoot = false;
                     }
                 } break;
-//                case DELAY: {
-//                    if (Math.abs(_time - currentTime) < 0) {
-//                        _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
-//                    }
-//                } break;
+                case DEBUG: {
+                    if (_oi.releaseArm()) {
+                        _catapult.releaseArm();
+                    }
+                    if (_oi.exitDebugCatapult()) {
+                        _catapult.setState(Catapult.CatapultState.ZEROING);
+                    }
+                }
             }
 //        } else {
 //            _catapult.setSpringMotorSpeed(0.0);
