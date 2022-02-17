@@ -246,13 +246,22 @@ public class DriveTrain extends OutliersSubsystem {
         return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
     }
     public boolean hasGoal() {
+        if (_proxy.getLatestFrame() == null) {
+            return false;
+        }
         return _proxy.getLatestFrame().hasGoal();
     }
 
     public double getDistanceToGoal() {
+        if (_proxy.getLatestFrame() == null) {
+            return -2;
+        }
         return _proxy.getLatestFrame().getGoalDistance();
     }
     public double getAngleToGoal() {
+        if (_proxy.getLatestFrame() == null) {
+            return 190;
+        }
         return _proxy.getLatestFrame().getGoalAngle();
     }
 
