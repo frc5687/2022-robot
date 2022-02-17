@@ -1,8 +1,6 @@
 package org.frc5687.rapidreact.subsystems;
 
 import org.frc5687.rapidreact.Constants;
-import org.frc5687.rapidreact.RobotMap;
-
 import edu.wpi.first.wpilibj.Servo;
 
 public class ServoStop {
@@ -10,7 +8,7 @@ public class ServoStop {
     private Servo stopper;
 
     public ServoStop(){
-        stopper = new Servo(RobotMap.PWM.INTAKE_STOPPER);
+        stopper = new Servo(0);
     }
 
     public void lower(){

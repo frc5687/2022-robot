@@ -96,4 +96,8 @@ public class Constants {
         public static final double DOWN_POSITION = 160;
         public static final double UP_POSITION = 90;
     }
+
+    public static class ColorSensor{
+        public static final double COLOR_PROXIMITY_BUFFER = 130;
+    }
 }

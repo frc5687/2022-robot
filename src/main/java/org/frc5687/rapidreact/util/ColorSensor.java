@@ -2,6 +2,8 @@ package org.frc5687.rapidreact.util;
 
 import com.revrobotics.ColorSensorV3;
 
+import org.frc5687.rapidreact.Constants;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,14 +42,10 @@ public class ColorSensor {
     }
 
     public boolean goodToFire(){
-        if(getPorximity() < 130){
+        if(getPorximity() < Constants.ColorSensor.COLOR_PROXIMITY_BUFFER){
             return false;
         }else{
-            if(getPorximity() > 130){
-                return true;
-            }else{
-                return false;
-            }
+            return true;
         }
     }
 

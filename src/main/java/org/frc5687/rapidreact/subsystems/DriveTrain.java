@@ -36,7 +36,7 @@ public class DriveTrain extends OutliersSubsystem {
     private ColorSensor _colorSensor;
     private AHRS _imu;
     private OI _oi;
-
+    private ServoStop _servo;
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
 
@@ -46,6 +46,7 @@ public class DriveTrain extends OutliersSubsystem {
             _oi = oi;
             _imu = imu;
             _colorSensor = new ColorSensor();
+            _servo = new ServoStop();
             _northWest =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
@@ -130,6 +131,7 @@ public class DriveTrain extends OutliersSubsystem {
     public void showColor(){
         metric("Prox", _colorSensor.getPorximity());
         metric("Good to fire", _colorSensor.goodToFire());
+        _servo.raise();
     }
 
     @Override
