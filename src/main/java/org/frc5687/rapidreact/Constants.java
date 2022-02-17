@@ -149,7 +149,7 @@ public class Constants {
         public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS * 20; // heuristic.
         public static final double SPRING_IZONE = 9.0;
         public static final double SPRING_TOLERANCE = 0.001; // m
-        public static final double SPRING_DISPLACEMENT_FACTOR = -15.0
+        public static final double SPRING_DISPLACEMENT_FACTOR = -15.0; // TODO: magic number
         // winch
         public static final double WINCH_kP = 20.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
