@@ -36,10 +36,8 @@ public class Shoot extends OutliersCommand {
         metric("Intake down", _intake.isIntakeDown());
         switch (_catapult.getState()) {
             case ZEROING: {
-                if(!_intake.isIntakeDown()) {
-                    _prevState = _catapult.getState();
-                    _catapult.setState(Catapult.CatapultState.LOCK_OUT);
-                }
+                checkLockOut();
+                checkKill();
                 _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
                 _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
                 if (_catapult.isSpringHallTriggered()) {
@@ -61,10 +59,8 @@ public class Shoot extends OutliersCommand {
             }
             break;
             case LOWERING_ARM: {
-                if(!_intake.isIntakeDown()) {
-                    _prevState = _catapult.getState();
-                    _catapult.setState(Catapult.CatapultState.LOCK_OUT);
-                }
+                checkLockOut();
+                checkKill();
                 _shoot = false;
                 _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
                 _catapult.runSpringController();
@@ -77,10 +73,8 @@ public class Shoot extends OutliersCommand {
             }
             break;
             case LOADING: {
-                if(!_intake.isIntakeDown()) {
-                    _prevState = _catapult.getState();
-                    _catapult.setState(Catapult.CatapultState.LOCK_OUT);
-                }
+                checkLockOut();
+                checkKill();
                 // in the future check if we have a ball and the ball color, REV Color Sensor
                 // has a proximity sensor built it.
 //                if (!correctColor && hasBall) {
@@ -91,10 +85,8 @@ public class Shoot extends OutliersCommand {
             }
             break;
             case AIMING: {
-                if(!_intake.isIntakeDown()) {
-                    _prevState = _catapult.getState();
-                    _catapult.setState(Catapult.CatapultState.LOCK_OUT);
-                }
+                checkLockOut();
+                checkKill();
 //             check if we are in the correct position and aiming at the goal.
                 _catapult.runSpringController();
 //            error("Switching state Shooting");
@@ -102,10 +94,8 @@ public class Shoot extends OutliersCommand {
             }
             break;
             case WRONG_BALL: {
-                if(!_intake.isIntakeDown()) {
-                    _prevState = _catapult.getState();
-                    _catapult.setState(Catapult.CatapultState.LOCK_OUT);
-                }
+                checkLockOut();
+                checkKill();
                 _catapult.setWinchGoal(Constants.Catapult.REMOVE_BALL_WINCH_GOAL);
                 _catapult.setSpringGoal(Constants.Catapult.REMOVE_BALL_SPRING_GOAL);
                 _catapult.runSpringController();
@@ -117,10 +107,8 @@ public class Shoot extends OutliersCommand {
             }
             break;
             case SHOOTING: {
-                if(!_intake.isIntakeDown()) {
-                    _prevState = _catapult.getState();
-                    _catapult.setState(Catapult.CatapultState.LOCK_OUT);
-                }
+                checkLockOut();
+                checkKill();
                 // call OI button to shoot.
                 _catapult.setWinchGoal(0.245);
                 _catapult.setSpringGoal(0.105);
@@ -146,7 +134,7 @@ public class Shoot extends OutliersCommand {
                 if (!_catapult.isSpringHallTriggered() && !_catapult.isSpringZeroed()) {
                     _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
                 } else {
-                    _catapult.setSpringGoal(0.10);
+                    _catapult.setSpringGoal(Constants.Catapult.INITIAL_BALL_SPRING_GOAL);
                     _catapult.runSpringController();
                 }
                 if (!_catapult.isArmLowered() && !_catapult.isWinchZeroed()) {
@@ -154,7 +142,7 @@ public class Shoot extends OutliersCommand {
                 } else {
                     _catapult.zeroWinchEncoder();
                     _catapult.lockArm();
-                    _catapult.setWinchGoal(0.235);
+                    _catapult.setWinchGoal(Constants.Catapult.INITIAL_BALL_WINCH_GOAL);
                     _catapult.runWinchController();
                 }
                 if (_catapult.isSpringAtPosition() && _catapult.isWinchAtGoal() && _catapult.isWinchZeroed()) {
@@ -174,6 +162,13 @@ public class Shoot extends OutliersCommand {
                     _catapult.setState(Catapult.CatapultState.ZEROING);
                 }
             } break;
+            case KILL: {
+                _catapult.setSpringMotorSpeed(0);
+                _catapult.setWinchMotorSpeed(0);
+                if (_oi.exitKill()) {
+                    _catapult.setState(_prevState);
+                }
+            }
         }
     }
 
@@ -185,6 +180,19 @@ public class Shoot extends OutliersCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+    }
+
+    protected void checkLockOut() {
+        if (!_intake.isIntakeDown()) {
+            _prevState = _catapult.getState();
+            _catapult.setState(Catapult.CatapultState.LOCK_OUT);
+        }
+    }
+    protected void checkKill() {
+        if (_oi.kill()) {
+            _prevState = _catapult.getState();
+            _catapult.setState(Catapult.CatapultState.KILL);
+        }
     }
 }
 

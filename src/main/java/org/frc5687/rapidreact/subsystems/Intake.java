@@ -31,29 +31,34 @@ public class Intake extends OutliersSubsystem{
         _intakeHall = new HallEffect(RobotMap.DIO.INTAKE_HALL_EFFECT);
     }
 
-    private void spinDownRoller(){
+    public void spinDownRoller(){
         //Set the intake roller to idle
         _roller.set(Constants.Intake.ROLLER_IDLE_SPEED);
     }
 
-    private void spinUpRoller(){
+    public void spinUpRoller(){
         _roller.set(Constants.Intake.ROLLER_INTAKE_SPEED);
     }
 
     public void stowe(){
         //Stowe the intake
         _solenoid.set(Value.kReverse);
-        spinDownRoller();
     }
 
     public void deploy(){
         //Deploy the intake
         _solenoid.set(Value.kForward);
-        spinUpRoller();
     }
 
     public boolean isIntakeDown() {
         return _intakeHall.get();
+    }
+
+    public boolean isIntakeSolenoidDeployed() {
+        return _solenoid.get() == Value.kForward;
+    }
+    public boolean isIntakeSolenoidStowed() {
+        return _solenoid.get() == Value.kReverse;
     }
 
     @Override

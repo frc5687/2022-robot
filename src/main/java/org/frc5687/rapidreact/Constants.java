@@ -10,42 +10,110 @@ public class Constants {
     public static final double UPDATE_PERIOD = 0.02;
     public static final double EPSILON = 0.00001;
     public static final double DEADBAND = 0.1;
+    // Separate constants into individual inner classes corresponding
+    // to subsystems or robot modes, to keep variable names shorter.
 
+    /**
+     * We use compass headings to reference swerve modules.
+     *
+     * When looking down at top of robot:
+     *
+     *          N
+     *          |
+     *      W -- -- E
+     *          |
+     *          S
+     *
+     * When robot is flipped over on its back:
+     *
+     *          N
+     *          |
+     *      E -- -- W
+     *          |
+     *          S
+     */
+
+
+    /** Constants for driving robot
+     *
+     * <p>These constants control how entire drivetrain works, including
+     *
+     * - what angle the wheels point,
+     * - which direction the wheels turn,
+     * - how sensitive the joystick is,
+     * - maximum speed and acceleration
+     */
     public static class DriveTrain {
 
+        // Control
+        public static final double DEADBAND = 0.2; // Avoid unintentional joystick movement
+
+        // Size of the robot chassis in meters
+        public static final double WIDTH = 0.6223; // meters
+        public static final double LENGTH = 0.6223; // meters
+
         /**
-         *          N
-         *          |
-         *      E -- -- W
-         *          |
-         *          S
+         * Swerve modules are on four corners of robot:
+         *
+         * NW  <- Width of robot ->  NE
+         *             / \
+         *              |
+         *        Length of robot
+         *              |
+         *             \ /
+         *  SW                       SE
          */
 
-        public static final double WIDTH = 0.6223;
-        public static final double LENGTH = 0.6223;
+        // Distance of swerve modules from center of robot
+        public static final double SWERVE_NS_POS = LENGTH / 2.0;
+        public static final double SWERVE_WE_POS = WIDTH / 2.0;
 
-        public static final Translation2d NORTH_EAST = new Translation2d(WIDTH / 2.0, LENGTH / 2.0);
-        public static final double NORTH_EAST_OFFSET = 0; // radians
-        public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
-        public static final Translation2d NORTH_WEST = new Translation2d(WIDTH / 2.0, -LENGTH / 2.0);
+        /**
+         *
+         * Coordinate system is wacky:
+         *
+         * (X, Y):
+         *   X is N or S, N is +
+         *   Y is W or E, W is +
+         *
+         *   NW (+,+)  NE (+,-)
+         *
+         *   SW (-,+)  SE (-,-)
+         *
+         * We go counter-counter clockwise starting at NW of chassis:
+         *
+         *  NW, SW, SE, NE
+         *
+         * Note: when robot is flipped over, this is clockwise.
+         *
+         */
+
+        // Position vectors for the swerve module kinematics
+        // i.e. location of each swerve module from center of robot
+        // see coordinate system above to understand signs of vector coordinates
+        public static final Translation2d NORTH_WEST = new Translation2d( SWERVE_NS_POS, SWERVE_WE_POS ); // +,+
+        public static final Translation2d SOUTH_WEST = new Translation2d( -SWERVE_NS_POS, SWERVE_WE_POS ); // -,+
+        public static final Translation2d SOUTH_EAST = new Translation2d( -SWERVE_NS_POS, -SWERVE_WE_POS ); // -,-
+        public static final Translation2d NORTH_EAST = new Translation2d( SWERVE_NS_POS, -SWERVE_WE_POS ); // +,-
+
+        // Should be 0, but can correct for hardware error in swerve module headings here.
         public static final double NORTH_WEST_OFFSET = 0; // radians
-        public static final boolean NORTH_WEST_ENCODER_INVERTED = true;
-        public static final Translation2d SOUTH_EAST = new Translation2d(-WIDTH / 2.0, LENGTH / 2.0);
-        public static final double SOUTH_EAST_OFFSET = 0; // radians
-        public static final boolean SOUTH_EAST_ENCODER_INVERTED = true;
-        public static final Translation2d SOUTH_WEST = new Translation2d(-WIDTH / 2.0, -LENGTH / 2.0);
         public static final double SOUTH_WEST_OFFSET = 0; // radians
+        public static final double SOUTH_EAST_OFFSET = 0; // radians
+        public static final double NORTH_EAST_OFFSET = 0; // radians
+
+        // In case encoder is measuring rotation in the opposite direction we expect.
+        public static final boolean NORTH_WEST_ENCODER_INVERTED = true;
         public static final boolean SOUTH_WEST_ENCODER_INVERTED = true;
+        public static final boolean SOUTH_EAST_ENCODER_INVERTED = true;
+        public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
 
-
-        public static final double DEADBAND = 0.1;
-
-        public static final double MAX_MPS = 3.5; // Max speed of robot (m/s) .
-
-        public static final double MAX_ANG_VEL =
-                Math.PI * 2.0; // Max rotation rate of robot (rads/s)
+        // Maximum rates of motion
+        public static final double MAX_MPS = 1.5; // Max speed of robot (m/s)
+        public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
 
+        // PID controller settings
         public static final double ANGLE_kP = 3.5;
         public static final double ANGLE_kI = 0.0;
         public static final double ANGLE_kD = 0.0;
@@ -55,6 +123,7 @@ public class Constants {
         public static final double kD = 0.5;
         public static final double PROFILE_CONSTRAINT_VEL = 3.0 * Math.PI;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
+
     }
 
     public static class DifferentialSwerveModule {
@@ -166,6 +235,9 @@ public class Constants {
         public static final double SPRING_ZERO_SPEED = -0.5;
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
         public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
+        public static final double INITIAL_BALL_WINCH_GOAL = 0.245;
+        public static final double INITIAL_BALL_SPRING_GOAL = 0.1;
+
 
     }
 

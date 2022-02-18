@@ -20,14 +20,14 @@ public class RobotMap {
          */
 
         public static class TALONFX {
-            public static final int SOUTH_WEST_OUTER = 6; // SOUTH WEST
-            public static final int SOUTH_WEST_INNER = 5; // SOUTH WEST
-            public static final int SOUTH_EAST_OUTER = 4; // SOUTH EAST
-            public static final int SOUTH_EAST_INNER = 3; // SOUTH EAST
-            public static final int NORTH_WEST_OUTER = 8; // NORHT WEST
-            public static final int NORTH_WEST_INNER = 7; // NORHT WEST
-            public static final int NORTH_EAST_OUTER = 2; // NORTH EAST
-            public static final int NORTH_EAST_INNER = 1; // NORTH EAST
+            public static final int NORTH_EAST_OUTER = 1;
+            public static final int NORTH_EAST_INNER = 2;
+            public static final int SOUTH_EAST_INNER = 3;
+            public static final int SOUTH_EAST_OUTER = 4;
+            public static final int SOUTH_WEST_OUTER = 5;
+            public static final int SOUTH_WEST_INNER = 6;
+            public static final int NORTH_WEST_INNER = 7;
+            public static final int NORTH_WEST_OUTER = 8;
         }
 
         public static class SPARKMAX {

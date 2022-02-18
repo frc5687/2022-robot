@@ -27,6 +27,9 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootButton;
     private Button _release;
 
+    private JoystickButton _kill;
+    private JoystickButton _exitKill;
+
     private JoystickButton _intakeButton;
 
     private JoystickButton resetNavX;
@@ -42,15 +45,18 @@ public class OI extends OutliersProxy {
 
         _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
         _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
-        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
-        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+//        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
+//        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 
-//        _shootButton= new JoystickButton(_translation, 1);
-//        _release = new JoystickButton(_translation, 2);
+        _shootButton= new JoystickButton(_translation, 1);
+        _release = new JoystickButton(_translation, 2);
+        _kill = new JoystickButton(_translation, 10);
+        _exitKill = new JoystickButton(_translation, 9);
+
         _intakeButton = new JoystickButton(_rotation, 4);
     }
 
-    public void initializeButtons(/**DriveTrain driveTrain,**/ Catapult catapult, Intake intake) {
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake) {
         //There's nothing to init here
 //        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
 //        _lowerArm.whenPressed(catapult::lockArm);
@@ -60,14 +66,13 @@ public class OI extends OutliersProxy {
         _intakeButton.whenHeld(new Intaker(intake));
     }
 
-    public boolean isShootButtonPressed() {
-        return _shootButton.get();
-    }
-    public boolean exitDebugCatapult() {
-        return _catapultDebugButton.get();
-    }
+    public boolean isShootButtonPressed() { return _shootButton.get(); }
+    public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
     public boolean preloadCatapult() { return _preloadButton.get(); }
     public boolean releaseArm() { return _release.get();}
+    public boolean intakeDeployRetract() { return _intakeButton.get(); }
+    public boolean exitKill() { return _exitKill.get(); }
+    public boolean kill() { return _kill.get(); }
 
 
     public double getDriveY() {

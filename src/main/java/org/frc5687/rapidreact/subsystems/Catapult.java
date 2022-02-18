@@ -79,7 +79,10 @@ public class Catapult extends OutliersSubsystem {
         // Check that everything looks good, then press
         // button to get into ZEROING state
         // Allow manual pin release and pin lock
-        DEBUG(8);
+        DEBUG(8),
+        // a button will stop all catapult movement, this is for the case if
+        // a ball gets under the catapult.
+        KILL(9);
 
 
         private final int _value;
