@@ -22,7 +22,7 @@ public class RobotMap {
         public static class TALONFX {
             public static final int SOUTH_WEST_OUTER = 6; // SOUTH WEST
             public static final int SOUTH_WEST_INNER = 5; // SOUTH WEST
-            public static final int SOUTH_EAST_OUTER = 4; // SOUTH EAST
+            public static final int SOUTH_EAST_OUTER = 4; // SOUTH EAST9
             public static final int SOUTH_EAST_INNER = 3; // SOUTH EAST
             public static final int NORTH_WEST_OUTER = 8; // NORHT WEST
             public static final int NORTH_WEST_INNER = 7; // NORHT WEST
@@ -36,7 +36,7 @@ public class RobotMap {
      * for PWM only one device can connect to each port, so the numbers should be unique.
      */
     public static class PWM {
-        public static final int INTAKE_STOPPER = 1;
+        public static final int INTAKE_STOPPER = 9;
     }
 
     /**

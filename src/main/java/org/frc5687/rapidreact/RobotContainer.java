@@ -8,13 +8,14 @@ import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
+import org.frc5687.rapidreact.subsystems.ServoStop;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
 
     private OI _oi;
     private AHRS _imu;
-
+    private ServoStop _servoStop;
     private Robot _robot;
     private DriveTrain _driveTrain;
 
@@ -32,7 +33,8 @@ public class RobotContainer extends OutliersContainer {
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
-        _oi.initializeButtons(_driveTrain);
+        _servoStop = new ServoStop();
+        _oi.initializeButtons(_driveTrain, _servoStop);
     }
 
     public void periodic() {

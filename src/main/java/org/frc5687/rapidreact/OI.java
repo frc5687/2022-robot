@@ -9,6 +9,7 @@ import static org.frc5687.rapidreact.util.Helpers.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.ServoStop;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -19,6 +20,7 @@ public class OI extends OutliersProxy {
     protected Joystick _translation;
 
     private JoystickButton resetNavX;
+    private JoystickButton _dropArm;
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -31,7 +33,7 @@ public class OI extends OutliersProxy {
         resetNavX = new JoystickButton(_translation, 5);
     }
 
-    public void initializeButtons(DriveTrain driveTrain) {
+    public void initializeButtons(DriveTrain driveTrain, ServoStop servoStop) {
     }
 
     public double getDriveY() {

@@ -28,6 +28,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     private SwerveDriveKinematics _kinematics;
     private SwerveDriveOdometry _odometry;
+    private ServoStop _servoStop;
 
     private double _PIDAngle;
 
@@ -42,7 +43,7 @@ public class DriveTrain extends OutliersSubsystem {
         try {
             _oi = oi;
             _imu = imu;
-
+            _servoStop = new ServoStop();
             _northWest =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
@@ -126,6 +127,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
+        _servoStop.raise();
         metric("SW/Encoder Angle", _southWest.getModuleAngle());
         metric("SE/Encoder Angle", _southEast.getModuleAngle());
         metric("NE/Encoder Angle", _northEast.getModuleAngle());
