@@ -23,7 +23,7 @@ public class IdleIntake extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        if (_oi.intakeDeployRetract() && _intake.isIntakeSolenoidDeployed()) {
+        if (_oi.intakeDeployRetract() && _intake.isIntakeDown()) {
             _intake.stowe();
         } else if (_oi.intakeDeployRetract() && _intake.isIntakeSolenoidStowed()) {
             _intake.deploy();

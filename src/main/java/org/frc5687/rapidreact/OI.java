@@ -30,6 +30,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _kill;
     private JoystickButton _exitKill;
 
+    private JoystickButton _deployRetract;
     private JoystickButton _intakeButton;
 
     private JoystickButton resetNavX;
@@ -53,7 +54,8 @@ public class OI extends OutliersProxy {
         _kill = new JoystickButton(_translation, 10);
         _exitKill = new JoystickButton(_translation, 9);
 
-        _intakeButton = new JoystickButton(_rotation, 4);
+        _deployRetract = new JoystickButton(_rotation, 3);
+        _intakeButton = new JoystickButton(_rotation, 1);
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake) {
@@ -70,7 +72,7 @@ public class OI extends OutliersProxy {
     public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
     public boolean preloadCatapult() { return _preloadButton.get(); }
     public boolean releaseArm() { return _release.get();}
-    public boolean intakeDeployRetract() { return _intakeButton.get(); }
+    public boolean intakeDeployRetract() { return _deployRetract.get(); }
     public boolean exitKill() { return _exitKill.get(); }
     public boolean kill() { return _kill.get(); }
 

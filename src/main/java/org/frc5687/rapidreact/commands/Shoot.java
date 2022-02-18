@@ -131,6 +131,7 @@ public class Shoot extends OutliersCommand {
                 }
             } break;
             case PRELOAD: {
+                checkLockOut();
                 if (!_catapult.isSpringHallTriggered() && !_catapult.isSpringZeroed()) {
                     _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
                 } else {
