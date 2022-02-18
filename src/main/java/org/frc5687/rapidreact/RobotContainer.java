@@ -51,12 +51,12 @@ public class RobotContainer extends OutliersContainer {
     public void periodic() {}
 
     public void disabledPeriodic() {
-        _proxy.setData(
-                new JetsonProxy.Data(1),
-                new JetsonProxy.Data(System.currentTimeMillis()),
-                new JetsonProxy.Data(10),
-                new JetsonProxy.Data(5),
-                new JetsonProxy.Data(0));
+//        _proxy.setData(
+//                new JetsonProxy.Data(1),
+//                new JetsonProxy.Data(System.currentTimeMillis()),
+//                new JetsonProxy.Data(10),
+//                new JetsonProxy.Data(5),
+//                new JetsonProxy.Data(0));
         //Runs every 20ms during disabled
     }
     @Override

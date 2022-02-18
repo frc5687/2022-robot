@@ -1,9 +1,11 @@
 package org.frc5687.rapidreact.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,7 +17,7 @@ public class JetsonProxy {
     public static final int JETSON_PORT = 27002;
     public static final int RIO_PORT = 27001;
     public static final int PERIOD = 10;
-    public static final String JETSON_IP = "10.56.87.59";
+    public static final String JETSON_IP = "10.56.87.20"; // this is the static ip now.
 
     private Socket _socket;
     private DataInputStream _input;
@@ -137,16 +139,14 @@ public class JetsonProxy {
 
         public Frame(String packet) {
 //            DriverStation.reportError("string is: " + packet, false);
-            String[] a = packet.split(";");
-            _millis = Long.parseLong(a[0]);
-            _estimatedX = Double.parseDouble(a[1]);
-            _estimatedY = Double.parseDouble(a[2]);
-            _estimatedHeading = Double.parseDouble(a[3]);
-            _hasTarget = Boolean.parseBoolean(a[4]);
-            _targetDistance = Double.parseDouble(a[5]);
-            if (a[6].equals("nan")) {
-                _targetAngle = NaN;
-            } else {
+            if (!packet.equals("nan")) {
+                String[] a = packet.split(";");
+                _millis = Long.parseLong(a[0]);
+                _estimatedX = Double.parseDouble(a[1]);
+                _estimatedY = Double.parseDouble(a[2]);
+                _estimatedHeading = Double.parseDouble(a[3]);
+                _hasTarget = Boolean.parseBoolean(a[4]);
+                _targetDistance = Double.parseDouble(a[5]);
                 _targetAngle = Double.parseDouble(a[6]);
             }
         }
@@ -187,9 +187,9 @@ public class JetsonProxy {
             try {
                 byte[] data = new byte[BUFFER];
                 while (true) {
-                    if (_input.read(data)> 0) {
+                    if (_input.read(data) > 0) {
                         String raw = new String(data);
-//                    DriverStation.reportError(raw, false);
+//                        DriverStation.reportError(raw,i false);
                             Frame frame = new Frame(raw);
                             _proxy.setLatestFrame(frame);
                     }
@@ -197,7 +197,7 @@ public class JetsonProxy {
             } catch (IOException ioe) {
                 DriverStation.reportError("IOE Exception getting frame", false);
             } catch (Exception e) {
-                DriverStation.reportError("Exception getting frame [Error]: " + e.getMessage(), false);
+                DriverStation.reportError("Exception getting frame [Error]: " + e.getMessage(), true);
             }
         }
     }
