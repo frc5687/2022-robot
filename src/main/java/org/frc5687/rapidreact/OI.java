@@ -23,6 +23,7 @@ public class OI extends OutliersProxy {
     private Gamepad _debug;
 
     private Button _catapultDebugButton;
+    private Button _preloadButton;
     private JoystickButton _shootButton;
     private Button _release;
 
@@ -40,18 +41,22 @@ public class OI extends OutliersProxy {
         _debug = new Gamepad(2);
 
         _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _shootButton= new JoystickButton(_translation, 1);
-        _release = new JoystickButton(_translation, 2);
+        _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
+        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+
+//        _shootButton= new JoystickButton(_translation, 1);
+//        _release = new JoystickButton(_translation, 2);
         _intakeButton = new JoystickButton(_rotation, 4);
     }
 
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake) {
+    public void initializeButtons(/**DriveTrain driveTrain,**/ Catapult catapult, Intake intake) {
         //There's nothing to init here
 //        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
 //        _lowerArm.whenPressed(catapult::lockArm);
 //        _lowerArm.whenPressed(new LowerCatapult(catapult));
 //        _shootButtonTest.whenPressed(new Reset(catapult));
-        _release.whenPressed(catapult::releaseArm);
+//        _release.whenPressed(catapult::releaseArm);
         _intakeButton.whenHeld(new Intaker(intake));
     }
 
@@ -61,6 +66,7 @@ public class OI extends OutliersProxy {
     public boolean exitDebugCatapult() {
         return _catapultDebugButton.get();
     }
+    public boolean preloadCatapult() { return _preloadButton.get(); }
     public boolean releaseArm() { return _release.get();}
 
 

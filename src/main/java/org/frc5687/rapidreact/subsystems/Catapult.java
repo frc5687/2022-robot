@@ -70,11 +70,17 @@ public class Catapult extends OutliersSubsystem {
         // then enters LOWERING_ARM
         SHOOTING(5),
 
+        // If intake is up lock the catapult;
+        LOCK_OUT(6),
+
+        // if in debug, set the winch and spring settings for initial position
+        PRELOAD(7),
         // Until we have figured out catapult, start in DEBUG state
         // Check that everything looks good, then press
         // button to get into ZEROING state
         // Allow manual pin release and pin lock
-        DEBUG(6);
+        DEBUG(8);
+
 
         private final int _value;
         CatapultState(int value) { _value = value; }
@@ -177,12 +183,12 @@ public class Catapult extends OutliersSubsystem {
             _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
             _springEncoderZeroed = true;
         }
-
-        if (isArmLowered() && !_winchEncoderZeroed) {
-            error("Resetting winch");
-            _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT); // conversion is weird
-            _winchEncoderZeroed = true;
-        }
+//
+//        if (isArmLowered() && !_winchEncoderZeroed) {
+//            error("Resetting winch");
+//            _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT); // conversion is weird
+//            _winchEncoderZeroed = true;
+//        }
 
     }
 
@@ -200,6 +206,20 @@ public class Catapult extends OutliersSubsystem {
 
     public double getWinchRotation() {
         return _winchEncoder.getPosition();
+    }
+
+    public void zeroWinchEncoder() {
+        if (!_winchEncoderZeroed) {
+            _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT);
+            _winchEncoderZeroed = true;
+        }
+    }
+    public boolean isWinchZeroed() {
+        return _winchEncoderZeroed;
+    }
+
+    public boolean isSpringZeroed() {
+        return _springEncoderZeroed;
     }
 
     // meters

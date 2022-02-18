@@ -30,16 +30,16 @@ public class RobotContainer extends OutliersContainer {
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _catapult = new Catapult(this);
-        _driveTrain = new DriveTrain(this, _oi, _imu);
+//        _driveTrain = new DriveTrain(this, _oi, _imu);
         _intake = new Intake(this);
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake));
 //        setDefaultCommand(_catapult, new IdleCatapult(_catapult, _oi));
-        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+//        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain, _catapult, _intake);
+        _oi.initializeButtons(/**_driveTrain,**/ _catapult, _intake);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
     }
@@ -67,7 +67,7 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
-        _driveTrain.updateDashboard();
+//        _driveTrain.updateDashboard();
         _catapult.updateDashboard();
     }
 

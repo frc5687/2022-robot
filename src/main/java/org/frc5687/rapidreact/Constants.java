@@ -144,14 +144,14 @@ public class Constants {
 
         // Controller Parameters
         // spring
-        public static final double SPRING_kP = 35.0; // Always start with kP
-        public static final double SPRING_kI = 10.0; // If possible avoid kI
+        public static final double SPRING_kP = 40.0; // Always start with kP
+        public static final double SPRING_kI = 28.0; // If possible avoid kI
         public static final double SPRING_kD = 0.0; // 2nd Kd
         public static final double MAX_SPRING_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * SPRING_WINCH_DRUM_CIRCUMFERENCE; // divide by 2 PI as that is one rotation.
         public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS * 20; // heuristic.
-        public static final double SPRING_IZONE = 9.0;
+        public static final double SPRING_IZONE = 30.0;
         public static final double SPRING_TOLERANCE = 0.001; // m
-        public static final double SPRING_DISPLACEMENT_FACTOR = -15.0; // TODO: magic number
+        public static final double SPRING_DISPLACEMENT_FACTOR = -0.0; // TODO: magic number
         // winch
         public static final double WINCH_kP = 20.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
