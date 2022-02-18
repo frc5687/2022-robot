@@ -12,19 +12,18 @@ public class Intaker extends OutliersCommand {
     }
 
     @Override
-    public void execute(){
-        super.execute();
-        _intake.deploy();
+    public void initialize(){
     }
 
     @Override
-    public void initialize(){
-        _intake.deploy();
+    public void execute(){
+        super.execute();
+        _intake.spinUpRoller();
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        _intake.stowe();
+        _intake.spinDownRoller();
     }
 }

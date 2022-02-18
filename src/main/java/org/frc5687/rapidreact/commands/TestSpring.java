@@ -33,7 +33,7 @@ public class TestSpring extends OutliersCommand{
     @Override
     public boolean isFinished() {
         if (_catapult.isWinchAtGoal()) {
-            _catapult.releaseArm();
+//            _catapult.releaseArm();
             return true;
         }
         return false;
