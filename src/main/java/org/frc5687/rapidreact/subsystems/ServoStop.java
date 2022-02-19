@@ -1,6 +1,5 @@
 package org.frc5687.rapidreact.subsystems;
 
-import org.frc5687.rapidreact.Constants;
 import edu.wpi.first.wpilibj.Servo;
 
 public class ServoStop {
@@ -16,14 +15,14 @@ public class ServoStop {
         //Lowers the blocking arm
         //Lets balls enter the catapult
         feeding = false;
-        stopper.setAngle(0);
+        stopper.setAngle(180);
     }
 
     public void raise(){
         //Raises the blocking arm
         //Stops balls from enter the catapult
         feeding = true;
-        stopper.setAngle(120);
+        stopper.setAngle(60);
     }
 
     public boolean getMode(){
