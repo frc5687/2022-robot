@@ -236,7 +236,7 @@ public class Constants {
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
         public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
         public static final double INITIAL_BALL_WINCH_GOAL = 0.245;
-        public static final double INITIAL_BALL_SPRING_GOAL = 0.1;
+        public static final double INITIAL_BALL_SPRING_GOAL = 0.08;
 
 
     }
@@ -248,7 +248,7 @@ public class Constants {
     public static class Intake{
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
-        public static final double ROLLER_INTAKE_SPEED = 0.8;
+        public static final double ROLLER_INTAKE_SPEED = 1.0;
     }
 
     public static class Auto{

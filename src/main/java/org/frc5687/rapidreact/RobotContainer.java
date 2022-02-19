@@ -69,7 +69,7 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void autonomousInit() {
-        _catapult.setState(CatapultState.AUTO);
+//        _catapult.setState(CatapultState.AUTO);
         _hold = true;
     }
 
@@ -99,7 +99,7 @@ public class RobotContainer extends OutliersContainer {
     public void updateDashboard() {
         _driveTrain.updateDashboard();
         SmartDashboard.putBoolean("Loss connection test", _hold);
-//        _catapult.updateDashboard();
+        _catapult.updateDashboard();
     }
 
     public void controllerPeriodic() {

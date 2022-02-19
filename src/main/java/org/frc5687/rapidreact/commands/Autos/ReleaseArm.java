@@ -22,12 +22,12 @@ public class ReleaseArm extends OutliersCommand{
     @Override
     public boolean isFinished() {
         
-        return !_catapult.isArmLowered();
+        return _catapult.isReleasePinReleased();
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        _catapult.setState(CatapultState.ZEROING);
+//        _catapult.setState(CatapultState.ZEROING);
     }
 }

@@ -2,7 +2,6 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
-
 import org.frc5687.rapidreact.commands.Feed;
 import org.frc5687.rapidreact.commands.Intaker;
 import org.frc5687.rapidreact.commands.*;
@@ -30,9 +29,11 @@ public class OI extends OutliersProxy {
 
     private JoystickButton _deployRetract;
     private JoystickButton _intakeButton;
+    private JoystickButton _intakeButton1;
 
     private JoystickButton  _setState;
     private JoystickButton resetNavX;
+    private JoystickButton _resetNavX;
     private JoystickButton _dropArm;
     // "Raw" joystick values
     private double yIn = 0;
@@ -54,7 +55,9 @@ public class OI extends OutliersProxy {
         _exitKill = new JoystickButton(_translation, 9);
         _deployRetract = new JoystickButton(_rotation, 3);
         _intakeButton = new JoystickButton(_rotation, 1);
+        _intakeButton1 = new JoystickButton(_rotation, 5);
         _dropArm = new JoystickButton(_translation, 3);
+        _resetNavX = new JoystickButton(_translation, 5);
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, ServoStop servoStop) {
@@ -69,8 +72,10 @@ public class OI extends OutliersProxy {
 //        _shootButtonTest.whenPressed(new Reset(catapult));
 //        _release.whenPressed(catapult::releaseArm);
 //        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
-        _intakeButton.whenHeld(new Intaker(intake));
+        _intakeButton1.whenHeld(new Intaker(intake, true));
+        _intakeButton.whenHeld(new Intaker(intake, false));
 //        _dropArm.whenHeld(new Feed(servoStop));
+        _resetNavX.whenPressed(driveTrain::resetYaw);
     }
 
     public boolean isShootButtonPressed() { return _shootButton.get(); }
