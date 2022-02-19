@@ -8,6 +8,7 @@ import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.commands.IdleIntake;
 import org.frc5687.rapidreact.commands.Intaker;
 import org.frc5687.rapidreact.commands.OutliersCommand;
+import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
@@ -20,6 +21,7 @@ public class RobotContainer extends OutliersContainer {
     private AHRS _imu;
     private Robot _robot;
     private Intake _intake;
+    private Climber _climber;
     private DriveTrain _driveTrain;
     private PCH _pch;
 
@@ -33,12 +35,13 @@ public class RobotContainer extends OutliersContainer {
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _intake = new Intake(this);
         _driveTrain = new DriveTrain(this, _oi, _imu);
+        _climber = new Climber(this);
         setDefaultCommand(_intake, new IdleIntake(_intake));
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
         _pch = new PCH();
-        _oi.initializeButtons(_driveTrain, _intake);
+        _oi.initializeButtons(_driveTrain, _intake, _climber);
     }
 
     public void periodic() {}

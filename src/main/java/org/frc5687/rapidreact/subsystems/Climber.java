@@ -5,13 +5,16 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import org.frc5687.rapidreact.Constants;
-import org.frc5687.rapidreact.Robot;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 
 
 public class Climber extends OutliersSubsystem{
@@ -19,6 +22,7 @@ public class Climber extends OutliersSubsystem{
     private CANSparkMax _stationaryArm;
     private CANSparkMax _rockerArm;
     private DoubleSolenoid _rocker;
+    private PIDController _climberControl;
 
     public Climber(OutliersContainer container) {
         super(container);
@@ -28,11 +32,18 @@ public class Climber extends OutliersSubsystem{
 
         _stationaryArm.setIdleMode(IdleMode.kCoast);
         _stationaryArm.setInverted(false);
+
+        _climberControl = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.kD,  new TrapezoidProfile.Constraints(2.0, 6.2));
     }
 
     public void raiseSationaryArm(){
         //Raise right arm
         _stationaryArm.set(0.1);
+    }
+
+    public void stopClimb(){
+        //Only for debuging
+        _stationaryArm.set(0.0);
     }
 
     public void rock(){
