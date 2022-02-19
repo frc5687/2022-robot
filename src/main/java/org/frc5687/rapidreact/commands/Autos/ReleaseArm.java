@@ -19,6 +19,11 @@ public class ReleaseArm extends OutliersCommand{
     }
     
     @Override
+    public boolean isFinished() {
+        return _catapult.isArmLowered();
+    }
+
+    @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
     }
