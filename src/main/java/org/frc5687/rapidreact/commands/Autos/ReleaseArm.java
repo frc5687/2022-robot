@@ -22,7 +22,7 @@ public class ReleaseArm extends OutliersCommand{
     @Override
     public boolean isFinished() {
         
-        return !_catapult.isArmLowered();
+        return _catapult.isArmLowered();
     }
 
     @Override
