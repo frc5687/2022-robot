@@ -34,6 +34,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _intakeButton;
 
     private JoystickButton resetNavX;
+    private JoystickButton _dropArm;
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
