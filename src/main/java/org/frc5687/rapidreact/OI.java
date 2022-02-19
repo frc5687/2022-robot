@@ -5,13 +5,10 @@ import static org.frc5687.rapidreact.util.Helpers.*;
 
 import org.frc5687.rapidreact.commands.Feed;
 import org.frc5687.rapidreact.commands.Intaker;
+import org.frc5687.rapidreact.commands.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.frc5687.rapidreact.commands.LowerCatapult;
-import org.frc5687.rapidreact.commands.Reset;
-import org.frc5687.rapidreact.commands.ShootSetpoint;
-import org.frc5687.rapidreact.commands.TestSpring;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
@@ -34,6 +31,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _deployRetract;
     private JoystickButton _intakeButton;
 
+    private JoystickButton  _setState;
     private JoystickButton resetNavX;
     private JoystickButton _dropArm;
     // "Raw" joystick values
@@ -60,14 +58,19 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, ServoStop servoStop) {
+        _setState = new JoystickButton(_rotation, 11);
+    }
+
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult , Intake intake) {
         //There's nothing to init here
 //        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
 //        _lowerArm.whenPressed(catapult::lockArm);
 //        _lowerArm.whenPressed(new LowerCatapult(catapult));
 //        _shootButtonTest.whenPressed(new Reset(catapult));
 //        _release.whenPressed(catapult::releaseArm);
+//        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
         _intakeButton.whenHeld(new Intaker(intake));
-        _dropArm.whenHeld(new Feed(servoStop));
+//        _dropArm.whenHeld(new Feed(servoStop));
     }
 
     public boolean isShootButtonPressed() { return _shootButton.get(); }

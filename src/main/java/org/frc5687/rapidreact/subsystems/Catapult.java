@@ -131,6 +131,7 @@ public class Catapult extends OutliersSubsystem {
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+        _winchMotor.setSmartCurrentLimit(20);
 
         //Save changes into flash memory of spark maxes
         _springMotor.burnFlash();
@@ -189,11 +190,13 @@ public class Catapult extends OutliersSubsystem {
             _springEncoderZeroed = true;
         }
 //
-//        if (isArmLowered() && !_winchEncoderZeroed) {
-//            error("Resetting winch");
-//            _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT); // conversion is weird
-//            _winchEncoderZeroed = true;
-//        }
+        if (isArmLowered() && (_winchMotor.getAppliedOutput() > 0)) {
+            setWinchMotorSpeed(0);
+            setWinchGoal(0);
+        }
+        if (_winchMotor.getOutputCurrent() > 25) {
+            setWinchMotorSpeed(0);
+        }
 
     }
 

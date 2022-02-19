@@ -28,6 +28,6 @@ public class ReleaseArm extends OutliersCommand{
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        _catapult.setState(CatapultState.LOWERING_ARM);
+        _catapult.setState(CatapultState.ZEROING);
     }
 }

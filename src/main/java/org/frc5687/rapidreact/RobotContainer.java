@@ -51,7 +51,7 @@ public class RobotContainer extends OutliersContainer {
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain, _catapult, _intake, _servoStop);
+        _oi.initializeButtons(_driveTrain, _catapult, _intake);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
     }
@@ -64,7 +64,8 @@ public class RobotContainer extends OutliersContainer {
     public void disabledInit() {}
 
     @Override
-    public void teleopInit() {}
+    public void teleopInit() {
+    }
 
     @Override
     public void autonomousInit() {
@@ -85,6 +86,7 @@ public class RobotContainer extends OutliersContainer {
         //                _driveTrain, _shooter, _hood, _intake, _spindexer, _stealTenPrt1,
         // _stealExit, _oi);
         error("Start auto");
+//        return null;
         return wrapCommand(new OneBall(_driveTrain, _catapult, _intake, _oi));
         //        return null;
     }
@@ -96,8 +98,8 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void updateDashboard() {
         _driveTrain.updateDashboard();
-        _catapult.updateDashboard();
         SmartDashboard.putBoolean("Loss connection test", _hold);
+//        _catapult.updateDashboard();
     }
 
     public void controllerPeriodic() {
