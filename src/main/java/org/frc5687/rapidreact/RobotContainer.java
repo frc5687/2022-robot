@@ -15,6 +15,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.subsystems.ServoStop;
+import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
@@ -64,7 +65,9 @@ public class RobotContainer extends OutliersContainer {
     public void teleopInit() {}
 
     @Override
-    public void autonomousInit() {}
+    public void autonomousInit() {
+        _catapult.setState(CatapultState.AUTO);
+    }
 
     private void setDefaultCommand(OutliersSubsystem subSystem, OutliersCommand command) {
         if (subSystem == null || command == null) {

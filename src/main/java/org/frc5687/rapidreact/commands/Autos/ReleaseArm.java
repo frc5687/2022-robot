@@ -2,6 +2,7 @@ package org.frc5687.rapidreact.commands.Autos;
 
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Catapult;
+import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
 public class ReleaseArm extends OutliersCommand{
 
@@ -20,11 +21,13 @@ public class ReleaseArm extends OutliersCommand{
 
     @Override
     public boolean isFinished() {
-        return _catapult.isReleasePinReleased();
+        
+        return !_catapult.isArmLowered();
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        _catapult.setState(CatapultState.LOWERING_ARM);
     }
 }
