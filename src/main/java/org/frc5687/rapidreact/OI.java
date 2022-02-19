@@ -4,6 +4,8 @@ package org.frc5687.rapidreact;
 import static org.frc5687.rapidreact.util.Helpers.*;
 import org.frc5687.rapidreact.commands.Intaker;
 import org.frc5687.rapidreact.commands.Climber.ArmUp;
+import org.frc5687.rapidreact.commands.Climber.ClimberDown;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -22,6 +24,7 @@ public class OI extends OutliersProxy {
 
     private JoystickButton _intakeBTN;
     private JoystickButton  _climberUp;
+    private JoystickButton _climberDown;
 
     private double yIn = 0;
     private double xIn = 0;
@@ -31,11 +34,15 @@ public class OI extends OutliersProxy {
         _leftJoystick = new Joystick(1);
         _rightJoystick = new Joystick(0);
         _intakeBTN = new JoystickButton(_leftJoystick, 4);
+        _climberUp = new JoystickButton(_leftJoystick, 7);
+        _climberDown = new JoystickButton(_leftJoystick, 8);
     }
 
     public void initializeButtons(DriveTrain driveTrain, Intake intake, Climber climber) {
         _intakeBTN.whenHeld(new Intaker(intake));
+        //ADD END INTO COMMANDS
         _climberUp.whenHeld(new ArmUp(climber));
+        _climberDown.whenHeld(new ClimberDown(climber));
     }
 
     public double getDriveY() {

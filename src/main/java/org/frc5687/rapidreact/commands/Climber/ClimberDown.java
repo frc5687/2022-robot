@@ -3,11 +3,11 @@ package org.frc5687.rapidreact.commands.Climber;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
 
-public class ArmUp extends OutliersCommand{
+public class ClimberDown extends OutliersCommand{
 
     private Climber _climber;
-    
-    public ArmUp(Climber climber){
+
+    public ClimberDown(Climber climber){
         _climber = climber;
         addRequirements(_climber);
     }
@@ -15,17 +15,11 @@ public class ArmUp extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        _climber.raiseSationaryArm();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        super.end(interrupted);
-        _climber.stopClimb();
+        _climber.climb();
     }
 
     @Override
     public boolean isFinished(){
-        return true;
+        return _climber.isArmDown();
     }
 }
