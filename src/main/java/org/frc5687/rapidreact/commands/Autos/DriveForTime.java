@@ -31,9 +31,9 @@ public class DriveForTime extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        if(System.currentTimeMillis() < _endMillis){
+        if (_endMillis > System.currentTimeMillis()) {
             _driveTrain.drive(_pow, 0.0, 0.0, false);
-        }else{
+        } else {
             _driveTrain.drive(0.0, 0.0, 0.0, false);
         }
     }

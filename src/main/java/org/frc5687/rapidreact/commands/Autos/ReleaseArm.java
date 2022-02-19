@@ -17,7 +17,12 @@ public class ReleaseArm extends OutliersCommand{
         super.initialize();
         _catapult.releaseArm();
     }
-    
+
+    @Override
+    public boolean isFinished() {
+        return _catapult.isReleasePinReleased();
+    }
+
     @Override
     public boolean isFinished() {
         return _catapult.isArmLowered();
