@@ -81,6 +81,7 @@ public class RobotContainer extends OutliersContainer {
         //        return new StealBallAuto(
         //                _driveTrain, _shooter, _hood, _intake, _spindexer, _stealTenPrt1,
         // _stealExit, _oi);
+        error("Start auto");
         return wrapCommand(new OneBall(_driveTrain, _catapult, _intake, _oi));
         //        return null;
     }
