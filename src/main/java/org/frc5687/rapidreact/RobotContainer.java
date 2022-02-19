@@ -3,6 +3,7 @@ package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.rapidreact.commands.*;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -21,6 +22,7 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private DriveTrain _driveTrain;
     private ServoStop _servoStop;
+    private boolean _reset = false;
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
@@ -43,9 +45,10 @@ public class RobotContainer extends OutliersContainer {
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain, _catapult, _intake);
+        _oi.initializeButtons(_driveTrain, _catapult, _intake, _servoStop);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
+        _reset = true;
     }
 
     public void periodic() {}
@@ -73,6 +76,7 @@ public class RobotContainer extends OutliersContainer {
     public void updateDashboard() {
         _driveTrain.updateDashboard();
         _catapult.updateDashboard();
+        SmartDashboard.putBoolean("Reset", _reset);
     }
 
     public void controllerPeriodic() {
