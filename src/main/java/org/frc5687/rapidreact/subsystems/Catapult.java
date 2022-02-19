@@ -1,6 +1,7 @@
 package org.frc5687.rapidreact.subsystems;
 
 
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
@@ -93,6 +94,54 @@ public class Catapult extends OutliersSubsystem {
         public int getValue() { return _value; }
     }
 
+    public String getStateString(){
+        if(getState() == CatapultState.ZEROING){
+            return "ZEROING";
+        }else{
+            if(getState() == CatapultState.LOWERING_ARM){
+                return "LOWERING_ARM";
+            }else{
+                if(getState() == CatapultState.LOADING){
+                    return "LOADING";
+                }else{
+                    if(getState() == CatapultState.AIMING){
+                        return "AIMING";
+                    }else{
+                        if(getState() == CatapultState.WRONG_BALL){
+                            return "WRONG_BALL";
+                        }else{
+                            if(getState() == CatapultState.SHOOTING){
+                                return "SHOOTING";
+                            }else{
+                                if(getState() == CatapultState.LOCK_OUT){
+                                    return "LOCK_OUT";
+                                }else{
+                                    if(getState() == CatapultState.PRELOAD){
+                                        return "PRELOAD";
+                                    }else{
+                                        if(getState() == CatapultState.DEBUG){
+                                            return "DEBUG";
+                                        }else{
+                                            if(getState() == CatapultState.KILL){
+                                                return "KILL";
+                                            }else{
+                                                if(getState() == CatapultState.AUTO){
+                                                    return "AUTO";
+                                                }else{
+                                                    return "NO_STATE_FOUND";
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private enum PinPosition {
         UNKNOWN(DoubleSolenoid.Value.kOff),
         LOCKED(DoubleSolenoid.Value.kReverse),
@@ -107,6 +156,7 @@ public class Catapult extends OutliersSubsystem {
             return solenoidValue;
         }
     }
+
 
     /** Catapult constructor */
     public Catapult(OutliersContainer container) {
@@ -360,9 +410,8 @@ public class Catapult extends OutliersSubsystem {
 //        metric("Winch goal", Units.radiansToDegrees(stringLengthToAngle(_winchController.getGoal().position)));
 
         // Catapult arm values
-        metric("Arm state", getState()._value);
+        metric("Arm state", getStateString());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
     }
-
 }
