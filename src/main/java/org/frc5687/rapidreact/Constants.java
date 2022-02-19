@@ -124,6 +124,11 @@ public class Constants {
         public static final double PROFILE_CONSTRAINT_VEL = 3.0 * Math.PI;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
 
+        public static final double VISION_kP = 1.0;
+        public static final double VISION_kI = 0.0;
+        public static final double VISION_kD = 0.0;
+        public static final double VISION_IRANGE = 1.0;
+
     }
 
     public static class DifferentialSwerveModule {
@@ -168,6 +173,9 @@ public class Constants {
         public static final double SENSOR_AZIMUTH_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double CONTROL_EFFORT = VOLTAGE;
+    }
+    public static class UDPJetson {
+        public static final int BUFFER = 1024;
     }
 
     public static class Catapult {

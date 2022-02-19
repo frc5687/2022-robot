@@ -14,6 +14,7 @@ import org.frc5687.rapidreact.commands.TestSpring;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.util.AxisButton;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -35,6 +36,7 @@ public class OI extends OutliersProxy {
 
     private JoystickButton resetNavX;
     private JoystickButton _dropArm;
+    private AxisButton _autoAim;
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -57,6 +59,7 @@ public class OI extends OutliersProxy {
 
         _deployRetract = new JoystickButton(_rotation, 3);
         _intakeButton = new JoystickButton(_rotation, 1);
+        _autoAim = new AxisButton(_rotation, _rotation.getXChannel(), -0.5);
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake) {
@@ -76,6 +79,7 @@ public class OI extends OutliersProxy {
     public boolean intakeDeployRetract() { return _deployRetract.get(); }
     public boolean exitKill() { return _exitKill.get(); }
     public boolean kill() { return _kill.get(); }
+    public boolean autoAim() { return _autoAim.get(); }
 
 
     public double getDriveY() {
