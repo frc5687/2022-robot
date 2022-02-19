@@ -14,6 +14,7 @@ import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
+import org.frc5687.rapidreact.subsystems.ServoStop;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
@@ -24,6 +25,7 @@ public class RobotContainer extends OutliersContainer {
     private Catapult _catapult;
     private Intake _intake;
     private DriveTrain _driveTrain;
+    private ServoStop _servoStop;
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
@@ -37,6 +39,8 @@ public class RobotContainer extends OutliersContainer {
         _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _imu);
         _intake = new Intake(this);
+        _servoStop = new ServoStop();
+
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));

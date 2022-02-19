@@ -240,11 +240,15 @@ public class Constants {
 
 
     }
+    public static class IntakeBlocker{
+        public static final double DOWN_POSITION = 180;
+        public static final double UP_POSITION = 50;
+    }
 
     public static class Intake{
-            public static final boolean INVERTED = false;
-            public static final double ROLLER_IDLE_SPEED = 0.0;
-            public static final double ROLLER_INTAKE_SPEED = 0.8;
+        public static final boolean INVERTED = false;
+        public static final double ROLLER_IDLE_SPEED = 0.0;
+        public static final double ROLLER_INTAKE_SPEED = 0.8;
     }
 
     public static class Auto{
