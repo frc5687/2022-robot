@@ -1,4 +1,4 @@
-package org.frc5687.rapidreact.subsystems;
+package org.frc5687.rapidreact.util;
 
 import edu.wpi.first.wpilibj.Servo;
 
@@ -7,8 +7,8 @@ public class ServoStop {
     private Servo stopper;
     private boolean feeding = false;
 
-    public ServoStop(){
-        stopper = new Servo(9);
+    public ServoStop(int channel){
+        stopper = new Servo(channel);
     }
 
     public void lower(){

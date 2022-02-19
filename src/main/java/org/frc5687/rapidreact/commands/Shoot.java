@@ -73,19 +73,24 @@ public class Shoot extends OutliersCommand {
             }
             break;
             case LOADING: {
+                _catapult.raiseGate();
                 checkLockOut();
                 checkKill();
                 // in the future check if we have a ball and the ball color, REV Color Sensor
                 // has a proximity sensor built it.
                 if (_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
                     _catapult.setState(Catapult.CatapultState.AIMING);
+                    _catapult.lowerGate();
                 } else if (_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
                     _catapult.setState(Catapult.CatapultState.WRONG_BALL);
+                    _catapult.lowerGate();
                 }
                 if (!_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
                     _catapult.setState(Catapult.CatapultState.AIMING);
+                    _catapult.lowerGate();
                 } else if (!_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
                     _catapult.setState(Catapult.CatapultState.WRONG_BALL);
+                    _catapult.lowerGate();
                 }
             }
             break;

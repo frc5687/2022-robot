@@ -16,6 +16,7 @@ import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
+import org.frc5687.rapidreact.util.ServoStop;
 
 import java.sql.Driver;
 
@@ -37,6 +38,7 @@ public class Catapult extends OutliersSubsystem {
     private final HallEffect _springHall;
     private final HallEffect _armHall;
     private final ColorSensor _colorSensor;
+    private final ServoStop _servo;
 
     private boolean _springEncoderZeroed = false;
     private boolean _winchEncoderZeroed = false;
@@ -183,8 +185,10 @@ public class Catapult extends OutliersSubsystem {
         _winchEncoderZeroed = false;
         _state = CatapultState.DEBUG;
 
-        // create color sensor
+        // create color sensor and servo
         _colorSensor = new ColorSensor();
+        _servo = new ServoStop(RobotMap.PWM.INTAKE_STOPPER);
+
         // get alliance color
         _alliance = DriverStation.getAlliance();
     }
@@ -336,6 +340,14 @@ public class Catapult extends OutliersSubsystem {
 
     public CatapultState getState() {
         return _state;
+    }
+
+    public void raiseGate() {
+        _servo.raise();
+    }
+
+    public void lowerGate() {
+        _servo.lower();
     }
 
     public void setState(CatapultState state) {
