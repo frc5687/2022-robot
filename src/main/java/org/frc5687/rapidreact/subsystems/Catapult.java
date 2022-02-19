@@ -407,7 +407,7 @@ public class Catapult extends OutliersSubsystem {
 //        metric("Winch goal", Units.radiansToDegrees(stringLengthToAngle(_winchController.getGoal().position)));
 
         // Catapult arm values
-        metric("Arm state", getState()._value);
+        metric("Arm state", getStateString());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
     }
