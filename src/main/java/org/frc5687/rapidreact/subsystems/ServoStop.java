@@ -16,14 +16,14 @@ public class ServoStop {
         //Lowers the blocking arm
         //Lets balls enter the catapult
         feeding = false;
-        stopper.setAngle(Constants.IntakeBlocker.DOWN_POSITION);
+        stopper.setAngle(0);
     }
 
     public void raise(){
         //Raises the blocking arm
         //Stops balls from enter the catapult
         feeding = true;
-        stopper.setAngle(Constants.IntakeBlocker.UP_POSITION);
+        stopper.setAngle(120);
     }
 
     public boolean getMode(){

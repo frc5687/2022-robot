@@ -6,6 +6,9 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
+
+import org.frc5687.rapidreact.commands.Feed;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -26,14 +29,16 @@ public class OI extends OutliersProxy {
     private double xIn = 0;
 
     public OI() {
-        // _gamepad = new Gamepad(0);
+        _gamepad = new Gamepad(0);
 
-        _translation = new Joystick(0);
+        _translation = new Joystick(2);
         _rotation = new Joystick(1);
         resetNavX = new JoystickButton(_translation, 5);
+        _dropArm = new JoystickButton(_gamepad, Gamepad.Buttons.X.getNumber());
     }
 
     public void initializeButtons(DriveTrain driveTrain, ServoStop servoStop) {
+        _dropArm.whenHeld(new Feed(servoStop));
     }
 
     public double getDriveY() {

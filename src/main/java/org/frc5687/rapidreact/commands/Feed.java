@@ -13,10 +13,12 @@ public class Feed extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        if(_servo.getMode()){
-            _servo.raise();
-        }else{
-            _servo.lower();
-        }
+        _servo.lower();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        _servo.raise();
     }
 }
