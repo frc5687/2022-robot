@@ -250,4 +250,8 @@ public class Constants {
         public static final double ROLLER_IDLE_SPEED = 0.0;
         public static final double ROLLER_INTAKE_SPEED = 0.8;
     }
+
+    public static class Auto{
+            public static final double DRIVETRAIN_POWER = 0.5;
+    }
 }

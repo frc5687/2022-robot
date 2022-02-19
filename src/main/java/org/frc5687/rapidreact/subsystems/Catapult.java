@@ -82,7 +82,9 @@ public class Catapult extends OutliersSubsystem {
         DEBUG(8),
         // a button will stop all catapult movement, this is for the case if
         // a ball gets under the catapult.
-        KILL(9);
+        KILL(9),
+
+        AUTO(10);
 
 
         private final int _value;
