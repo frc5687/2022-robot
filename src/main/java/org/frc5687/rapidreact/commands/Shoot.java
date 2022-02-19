@@ -1,7 +1,5 @@
 package org.frc5687.rapidreact.commands;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.subsystems.Catapult;
