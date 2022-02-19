@@ -2,6 +2,7 @@
 package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.rapidreact.commands.*;
@@ -10,6 +11,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.subsystems.ServoStop;
+import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
@@ -22,19 +24,21 @@ public class RobotContainer extends OutliersContainer {
     private DriveTrain _driveTrain;
     private ServoStop _servoStop;
 
+
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
         _robot = robot;
     }
 
     public void init() {
-        // initialize peripherals. Do this before subsystems.
+//         initialize peripherals. Do this before subsystems.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _imu);
         _intake = new Intake(this);
         _servoStop = new ServoStop();
+
 
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));

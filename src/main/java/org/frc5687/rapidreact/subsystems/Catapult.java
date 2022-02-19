@@ -9,11 +9,15 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
+
+import java.sql.Driver;
 
 import static org.frc5687.rapidreact.Constants.Catapult.*;
 
@@ -32,11 +36,14 @@ public class Catapult extends OutliersSubsystem {
 
     private final HallEffect _springHall;
     private final HallEffect _armHall;
+    private final ColorSensor _colorSensor;
 
     private boolean _springEncoderZeroed = false;
     private boolean _winchEncoderZeroed = false;
 
     private CatapultState _state;
+
+    private DriverStation.Alliance _alliance;
 
     public enum CatapultState {
         // Robot starts in ZEROING state, assuming the following:
@@ -175,6 +182,11 @@ public class Catapult extends OutliersSubsystem {
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
         _state = CatapultState.DEBUG;
+
+        // create color sensor
+        _colorSensor = new ColorSensor();
+        // get alliance color
+        _alliance = DriverStation.getAlliance();
     }
 
 
@@ -186,13 +198,6 @@ public class Catapult extends OutliersSubsystem {
             _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
             _springEncoderZeroed = true;
         }
-//
-//        if (isArmLowered() && !_winchEncoderZeroed) {
-//            error("Resetting winch");
-//            _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT); // conversion is weird
-//            _winchEncoderZeroed = true;
-//        }
-
     }
 
     public void setSpringMotorSpeed(double speed) {
@@ -314,7 +319,20 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public boolean isSpringHallTriggered() { return _springHall.get(); }
+
     public boolean isArmLowered() { return _armHall.get(); }
+
+    public boolean isBlueBallDetected() {
+        return _colorSensor.isBlue() && _colorSensor.hasBall();
+    }
+
+    public boolean isRedBallDetected() {
+        return _colorSensor.isRed() && _colorSensor.hasBall();
+    }
+
+    public boolean isRedAlliance() {
+        return _alliance == DriverStation.Alliance.Red;
+    }
 
     public CatapultState getState() {
         return _state;
@@ -351,13 +369,14 @@ public class Catapult extends OutliersSubsystem {
         metric("Winch controller output", _winchMotor.getAppliedOutput());
         metric("winch goal", _winchController.getGoal().position);
         metric("Winch string length", getWinchStringLength());
-//        metric("String length", stringLengthToAngle(getArmReleaseAngle()));
-//        metric("Winch goal", Units.radiansToDegrees(stringLengthToAngle(_winchController.getGoal().position)));
 
         // Catapult arm values
         metric("Arm state", getState()._value);
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
+
+        metric("Has blue ball", isBlueBallDetected());
+        metric("Has red ball", isRedBallDetected());
     }
 
 }

@@ -71,16 +71,12 @@ public abstract class OutliersContainer implements ILoggingSource {
     }
 
     public void disabledPeriodic() {}
-    ;
 
     public void disabledInit() {}
-    ;
 
     public void teleopInit() {}
-    ;
 
     public void autonomousInit() {}
-    ;
 
     public enum IdentityMode {
         competition(0),
