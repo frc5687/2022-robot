@@ -35,6 +35,8 @@ public class Drive extends OutliersCommand {
         double vx = _vxFilter.calculate(-_oi.getDriveY()) * Constants.DriveTrain.MAX_MPS;
         double vy = _vyFilter.calculate(_oi.getDriveX()) * Constants.DriveTrain.MAX_MPS;
         double rot = -_oi.getRotationX() * Constants.DriveTrain.MAX_ANG_VEL;
+        metric("vx", vx);
+        metric("vy", vy);
 
         _driveTrain.drive(vx, vy, rot, true);
     }
