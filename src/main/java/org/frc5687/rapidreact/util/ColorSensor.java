@@ -10,32 +10,32 @@ import com.revrobotics.ColorMatch;
 
 public class ColorSensor {
     
-    private ColorSensorV3 _color;
+    private ColorSensorV3 _colorSensor;
     private I2C.Port _port;
     private final ColorMatch _colorMatcher;
     private final Color kBlueTarget = new Color(0.143, 0.427, 0.429);
-    private final Color kGreenTarget = new Color(0.197, 0.561, 0.240);
     private final Color kRedTarget = new Color(0.561, 0.232, 0.114);
-    private final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
 
     public ColorSensor(){
-        _port = I2C.Port.kOnboard;
-        _color = new ColorSensorV3(_port);
+        _port = I2C.Port.kMXP;
+        _colorSensor = new ColorSensorV3(_port);
         _colorMatcher = new ColorMatch();
+        _colorMatcher.addColorMatch(kBlueTarget);
+        _colorMatcher.addColorMatch(kRedTarget);
     }
 
     public double getIR(){
         //Returns to raw amount of IR light detected
-        return _color.getIR();
+        return _colorSensor.getIR();
     }
 
     //Get the raw amounts of Red, Green, Blue detected
     public double getRed(){
-        return _color.getRed();
+        return _colorSensor.getRed();
     }
 
     public String getColor(){
-        Color detectedColor = _color.getColor();
+        Color detectedColor = _colorSensor.getColor();
         String colorString;
         ColorMatchResult match = _colorMatcher.matchClosestColor(detectedColor);
         if (match.color == kBlueTarget) {
@@ -44,14 +44,6 @@ public class ColorSensor {
             return colorString;
           } else if (match.color == kRedTarget) {
             colorString = "Red";
-            SmartDashboard.putString("Color String", colorString);
-            return colorString;
-          } else if (match.color == kGreenTarget) {
-            colorString = "Green";
-            SmartDashboard.putString("Color String", colorString);
-            return colorString;
-          } else if (match.color == kYellowTarget) {
-            colorString = "Yellow";
             SmartDashboard.putString("Color String", colorString);
             return colorString;
           } else {
@@ -74,32 +66,26 @@ public class ColorSensor {
     }
 
     public double getGreen(){
-        return _color.getGreen();
+        return _colorSensor.getGreen();
     }
 
     public double getBlue(){
-        return _color.getBlue();
+        return _colorSensor.getBlue();
     }
 
-    public double getPorximity(){
+    public double getProximity(){
         //Get the robots proximity
-        return _color.getProximity();
+        return _colorSensor.getProximity();
     }
 
     public boolean goodToFire(){
-        if(getPorximity() < Constants.ColorSensor.COLOR_PROXIMITY_BUFFER){
-            return false;
-        }else{
-            return true;
-        }
+        return !(getProximity() < Constants.ColorSensor.COLOR_PROXIMITY_BUFFER);
     }
 
     public void updateDashboard(){
-        SmartDashboard.putNumber("Red", getRed());
-        SmartDashboard.putNumber("Green", getRed());
-        SmartDashboard.putNumber("Blue", getBlue());
+        SmartDashboard.putBoolean("Red Ball", isRed());
+        SmartDashboard.putBoolean("Blue Ball", isBlue());
         SmartDashboard.putNumber("IR", getIR());
-        SmartDashboard.putNumber("Proximity", getPorximity());
-        SmartDashboard.putString("Color", _color.getColor().toString());
+        SmartDashboard.putNumber("Proximity", getProximity());
     }
 }

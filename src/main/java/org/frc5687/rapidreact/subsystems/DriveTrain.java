@@ -33,7 +33,6 @@ public class DriveTrain extends OutliersSubsystem {
     private SwerveDriveOdometry _odometry;
 
     private double _PIDAngle;
-    private ColorSensor _colorSensor;
     private AHRS _imu;
     private OI _oi;
     private HolonomicDriveController _controller;
@@ -44,7 +43,6 @@ public class DriveTrain extends OutliersSubsystem {
         try {
             _oi = oi;
             _imu = imu;
-            _colorSensor = new ColorSensor();
             _northWest =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
@@ -124,13 +122,6 @@ public class DriveTrain extends OutliersSubsystem {
                 _northWest.getState(),
                 _southEast.getState(),
                 _southWest.getState());
-    }
-
-    public void showColor(){
-        metric("Prox", _colorSensor.getPorximity());
-        metric("Good to fire", _colorSensor.goodToFire());
-        metric("Is red", _colorSensor.isRed());
-        metric("Is blue", _colorSensor.isBlue());
     }
 
     @Override

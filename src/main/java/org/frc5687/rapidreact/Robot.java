@@ -18,7 +18,6 @@ import org.frc5687.rapidreact.util.*;
  */
 public class Robot extends OutliersRobot implements ILoggingSource {
 
-    private final I2C.Port i2cPort = I2C.Port.kMXP;
     public static OutliersContainer.IdentityMode _identityMode =
             OutliersContainer.IdentityMode.competition;
     private RioLogger.LogLevel _dsLogLevel = RioLogger.LogLevel.warn;

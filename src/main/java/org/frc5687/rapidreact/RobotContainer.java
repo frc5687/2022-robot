@@ -31,12 +31,12 @@ public class RobotContainer extends OutliersContainer {
         //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _driveTrain = new DriveTrain(this, _oi, _imu);
+        _colorSensor = new ColorSensor();
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
         _oi.initializeButtons(_driveTrain);
-        _colorSensor = new ColorSensor();
     }
 
     public void periodic() {
@@ -75,7 +75,7 @@ public class RobotContainer extends OutliersContainer {
     public void updateDashboard() {
         //Updates the driver station
         _driveTrain.updateDashboard();
-        _driveTrain.showColor();
+        _colorSensor.updateDashboard();
     }
 
     public void controllerPeriodic() {
