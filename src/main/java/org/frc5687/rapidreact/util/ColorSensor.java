@@ -78,7 +78,7 @@ public class ColorSensor {
         return _colorSensor.getProximity();
     }
 
-    public boolean goodToFire(){
+    public boolean hasBall(){
         return !(getProximity() < Constants.ColorSensor.COLOR_PROXIMITY_BUFFER);
     }
 
