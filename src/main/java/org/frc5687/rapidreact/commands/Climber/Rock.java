@@ -1,13 +1,15 @@
 package org.frc5687.rapidreact.commands.Climber;
 
+import com.fasterxml.jackson.databind.ser.std.AsArraySerializerBase;
+
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
 
-public class ClimberDown extends OutliersCommand{
+public class Rock extends OutliersCommand{
 
     private Climber _climber;
-
-    public ClimberDown(Climber climber){
+    
+    public Rock(Climber climber){
         _climber = climber;
         addRequirements(_climber);
     }
@@ -15,14 +17,16 @@ public class ClimberDown extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        _climber.climb();
-        if(_climber.isStaArmDown()){
-            _climber.stopClimb();
+        metric("Arm Forward", _climber.isArmForward());
+        if(_climber.isArmForward()){
+            _climber.reverse();
+        }else{
+            _climber.forward();
         }
     }
 
     @Override
     public boolean isFinished(){
-        return _climber.isStaArmDown();
+        return true;
     }
 }

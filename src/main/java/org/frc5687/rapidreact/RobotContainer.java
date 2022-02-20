@@ -67,6 +67,7 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
+        _climber.updateDashboard();
         _driveTrain.updateDashboard();
     }
 

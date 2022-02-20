@@ -51,8 +51,8 @@ public class RobotMap {
         public static final int comp = 1;
         public static final int INTAKE_HIGH = 10;
         public static final int INTAKE_LOW = 5;
-        public static final int CLIMBER_IN = 2;
-        public static final int CLIMBER_OUT = 3;
+        public static final int CLIMBER_IN = 6;
+        public static final int CLIMBER_OUT = 9;
     }
 
     /**

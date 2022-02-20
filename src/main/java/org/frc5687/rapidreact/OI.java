@@ -5,6 +5,7 @@ import static org.frc5687.rapidreact.util.Helpers.*;
 import org.frc5687.rapidreact.commands.Intaker;
 import org.frc5687.rapidreact.commands.Climber.ArmUp;
 import org.frc5687.rapidreact.commands.Climber.ClimberDown;
+import org.frc5687.rapidreact.commands.Climber.Rock;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -16,7 +17,7 @@ import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
 public class OI extends OutliersProxy {
-    protected Gamepad _driverGamepad;
+    protected Gamepad _debug;
     protected Joystick _leftJoystick;
     protected Joystick _rightJoystick;
 
@@ -25,29 +26,31 @@ public class OI extends OutliersProxy {
     private JoystickButton _intakeBTN;
     private JoystickButton  _climberUp;
     private JoystickButton _climberDown;
+    private JoystickButton _rock;
 
     private double yIn = 0;
     private double xIn = 0;
 
     public OI() {
-        //_driverGamepad = new Gamepad(0);
+        _debug = new Gamepad(0);
         _leftJoystick = new Joystick(1);
         _rightJoystick = new Joystick(0);
         _intakeBTN = new JoystickButton(_leftJoystick, 4);
-        _climberUp = new JoystickButton(_leftJoystick, 7);
-        _climberDown = new JoystickButton(_leftJoystick, 8);
+        _climberUp = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
+        _climberDown = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _rock = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
     }
 
     public void initializeButtons(DriveTrain driveTrain, Intake intake, Climber climber) {
         _intakeBTN.whenHeld(new Intaker(intake));
-        //ADD END INTO COMMANDS
-        _climberUp.whenHeld(new ArmUp(climber));
-        _climberDown.whenHeld(new ClimberDown(climber));
+        _climberUp.whenPressed(new ArmUp(climber));
+        _climberDown.whenPressed(new ClimberDown(climber));
+        _rock.whenPressed(new Rock(climber));
     }
 
     public double getDriveY() {
         yIn = getSpeedFromAxis(_leftJoystick, _leftJoystick.getYChannel());
-        //yIn = getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_Y.getNumber());
+        //yIn = getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
 
         double yOut = yIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
@@ -57,7 +60,7 @@ public class OI extends OutliersProxy {
 
     public double getDriveX() {
         xIn = -getSpeedFromAxis(_leftJoystick, _leftJoystick.getXChannel());
-       // xIn = -getSpeedFromAxis(_driverGamepad, Gamepad.Axes.LEFT_X.getNumber());
+       // xIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
 
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);

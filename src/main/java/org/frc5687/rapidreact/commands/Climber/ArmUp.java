@@ -16,16 +16,14 @@ public class ArmUp extends OutliersCommand{
     public void execute(){
         super.execute();
         _climber.raiseSationaryArm();
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        super.end(interrupted);
-        _climber.stopClimb();
+        if(_climber.isStaArmUp()){
+            _climber.stopClimb();
+        }
     }
 
     @Override
     public boolean isFinished(){
-        return true;
+        metric("Sta Arm Up", _climber.isStaArmUp());
+        return _climber.isStaArmUp();
     }
 }
