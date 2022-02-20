@@ -42,7 +42,7 @@ public class RobotMap {
      * for PWM only one device can connect to each port, so the numbers should be unique.
      */
     public static class PWM {
-        public static final int INTAKE_STOPPER = 9;
+        public static final int INTAKE_STOPPER = 0;
     }
 
     /**
