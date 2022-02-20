@@ -35,16 +35,16 @@ public class RobotContainer extends OutliersContainer {
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
 //        _catapult = new Catapult(this);
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
-        _intake = new Intake(this);
+//        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
+//        _intake = new Intake(this);
         //The robots default command will run so long as another command isn't activated
 //        setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));
-        setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));
-        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+//        setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));
+//        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
+//        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain, _catapult, _intake);
+//        _oi.initializeButtons(_driveTrain, _catapult, _intake);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
     }
@@ -94,7 +94,7 @@ public class RobotContainer extends OutliersContainer {
         //Updates the driver station
         //_driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
-        _driveTrain.updateDashboard();
+//        _driveTrain.updateDashboard();
 //        _catapult.updateDashboard();
     }
 
