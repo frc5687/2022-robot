@@ -52,7 +52,6 @@ public class DriveTrain extends OutliersSubsystem {
             _oi = oi;
             _proxy = proxy;
             _imu = imu;
-
             _northWest =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
