@@ -3,7 +3,8 @@ package org.frc5687.rapidreact.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import org.frc5687.rapidreact.Constants;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.RelativeEncoder;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
@@ -13,27 +14,80 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import static org.frc5687.rapidreact.Constants.Climber.*;
+
 
 public class Climber extends OutliersSubsystem{
     
-    private CANSparkMax _stationaryArm;
-    private CANSparkMax _rockerArm;
-    private DoubleSolenoid _rocker;
-    private ProfiledPIDController _climberControl;
-    private HallEffect _topHallEffect;
-    private HallEffect _bottomHallEffect;
+    private final CANSparkMax _stationaryArm;
+    private final RelativeEncoder _stationaryArmEncoder;
+
+    private final CANSparkMax _rockerArm;
+    private final RelativeEncoder _rockerArmEncoder;
+
+    private final DoubleSolenoid _rocker;
+    private final ProfiledPIDController _stationaryArmController;
+    private final HallEffect _topHallEffect;
+    private final HallEffect _bottomHallEffect;
 
     public Climber(OutliersContainer container) {
         super(container);
         _stationaryArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.STATIONARY_CLIMBER, CANSparkMax.MotorType.kBrushless);
-        _rockerArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.ROCKER_CLIMBER, CANSparkMax.MotorType.kBrushless);
-        _rocker = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotMap.PCM.CLIMBER_IN, RobotMap.PCM.CLIMBER_OUT);
+        _stationaryArm.setInverted(STATIONARY_ARM_REVERSED);
+        _stationaryArm.setSmartCurrentLimit(STATIONARY_ARM_CURRENT_LIMIT);
+        _stationaryArm.setIdleMode(IdleMode.kBrake);
+        _stationaryArm.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
+        _stationaryArm.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
+        _stationaryArm.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
 
-        _stationaryArm.setIdleMode(IdleMode.kCoast);
-        _stationaryArm.setInverted(false);
-        _topHallEffect = new HallEffect(1);
-        _bottomHallEffect = new HallEffect(2);
-        _climberControl = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD,  new TrapezoidProfile.Constraints(2.0, 6.2));
+        _stationaryArmEncoder = _stationaryArm.getEncoder();
+
+        _rockerArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.ROCKER_CLIMBER, CANSparkMax.MotorType.kBrushless);
+        _rockerArm.setInverted(ROCKER_ARM_REVERSED);
+        _rockerArm.setSmartCurrentLimit(ROCKER_ARM_CURRENT_LIMIT);
+        _rockerArm.setIdleMode(IdleMode.kBrake);
+        _rockerArm.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
+        _rockerArm.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
+        _rockerArm.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+
+        _rockerArmEncoder = _rockerArm.getEncoder();
+
+        _rocker = new DoubleSolenoid(
+                PneumaticsModuleType.REVPH,
+                RobotMap.PCM.CLIMBER_IN,
+                RobotMap.PCM.CLIMBER_OUT
+        );
+
+        _topHallEffect = new HallEffect(RobotMap.DIO.STATIONARY_ARM_TOP_HALL);
+        _bottomHallEffect = new HallEffect(RobotMap.DIO.STATIONARY_ARM_BOTTOM_HALL);
+
+
+        _stationaryArmController = new ProfiledPIDController(
+                kP,
+                kI,
+                kD,
+                new TrapezoidProfile.Constraints(
+                        MAX_VELOCITY_MPS,
+                        MAX_ACCELERATION_MPSS
+                )
+        );
+    }
+
+    public void setStationaryArmSpeed(double speed) {
+        _stationaryArm.set(speed);
+    }
+
+    // Revolution.
+    public double getStationaryArmEncoderPosition() {
+        return _stationaryArmEncoder.getPosition();
+    }
+
+    public double getStationaryArmPosition() {
+        return (getStationaryArmEncoderPosition() / GEAR_REDUCTION) * WINCH_DRUM_CIRCUMFERENCE;
+    }
+
+    public double getStationaryArmControllerOutput(double goal) {
+        return _stationaryArmController.calculate(goal, getStationaryArmPosition());
     }
 
     public void raiseSationaryArm(){

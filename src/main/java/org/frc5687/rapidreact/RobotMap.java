@@ -76,5 +76,9 @@ public class RobotMap {
         public static final int NORTH_EAST = 0;
         public static final int SOUTH_WEST = 2;
         public static final int SOUTH_EAST = 1;
+
+
+        public static final int STATIONARY_ARM_TOP_HALL = 10;
+        public static final int STATIONARY_ARM_BOTTOM_HALL = 11;
     }
 }

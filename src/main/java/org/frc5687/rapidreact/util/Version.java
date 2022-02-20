@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Climber/#12-CreateSubsystem";
-    public static final String REVISION = "f19b064";
-    public static final String MODIFIED = " *";
+    public static final String REVISION = "56c8b50";
+    public static final String MODIFIED = "";
 }

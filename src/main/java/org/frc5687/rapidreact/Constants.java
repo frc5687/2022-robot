@@ -107,8 +107,24 @@ public class Constants {
     }
 
     public static class Climber{
-            public static final double kP = 0.1;
-            public static final double kI = 0.0;
-            public static final double kD = 0.1;
+        public static final double BABY_NEO_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(11710);
+        public static final double GEAR_REDUCTION = 64.0;
+        public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
+        public static final double WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
+
+
+        public static final boolean STATIONARY_ARM_REVERSED = false;
+        public static final int STATIONARY_ARM_CURRENT_LIMIT = 25; // amps
+
+        public static final boolean ROCKER_ARM_REVERSED = false;
+        public static final int ROCKER_ARM_CURRENT_LIMIT = 25; // amps
+
+        public static final double kP = 0.1;
+        public static final double kI = 0.0;
+        public static final double kD = 0.1;
+        public static final double MAX_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI) * WINCH_DRUM_CIRCUMFERENCE);
+        public static final double MAX_ACCELERATION_MPSS = MAX_VELOCITY_MPS * 10.0; // heuristic
+        public static final double TOLERANCE = 0.1; // meters.
+
     }
 }
