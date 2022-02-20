@@ -190,7 +190,7 @@ public class Catapult extends OutliersSubsystem {
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
         _state = CatapultState.DEBUG;
-
+        _gate = new ServoStop(RobotMap.PWM.INTAKE_STOPPER);
         _colorSensor = new ColorSensor(I2C.Port.kMXP);
         _alliance = DriverStation.getAlliance();
     }
@@ -278,7 +278,7 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public double getWinchControllerOutput() {
-        return _winchController.calculate(getSpringRailPosition());
+        return _winchController.calculate(getWinchStringLength());
     }
 
     public void setWinchGoal(double stringLength) {
@@ -366,7 +366,8 @@ public class Catapult extends OutliersSubsystem {
         metric("Winch string length", getWinchStringLength());
 //        metric("String length", stringLengthToAngle(getArmReleaseAngle()));
 //        metric("Winch goal", Units.radiansToDegrees(stringLengthToAngle(_winchController.getGoal().position)));
-
+        metric("Blue", isBlueBallDetected());
+        metric("Red", isRedBallDetected());
         // Catapult arm values
         metric("Arm state", _state.name());
         metric("Arm release angle", getArmReleaseAngle());

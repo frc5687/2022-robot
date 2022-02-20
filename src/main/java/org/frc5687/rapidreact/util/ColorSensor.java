@@ -15,6 +15,8 @@ public class ColorSensor {
     private final ColorMatch _colorMatcher;
     private final Color kBlueTarget = new Color(0.143, 0.427, 0.429);
     private final Color kRedTarget = new Color(0.561, 0.232, 0.114);
+    private final Color kGreenTarget = new Color(0.197, 0.561, 0.240);
+    private final Color kYellowTarget = new Color(0.361, 0.524, 0.113);
 
     public ColorSensor(I2C.Port port){
         _port = port;
@@ -22,6 +24,8 @@ public class ColorSensor {
         _colorMatcher = new ColorMatch();
         _colorMatcher.addColorMatch(kBlueTarget);
         _colorMatcher.addColorMatch(kRedTarget);
+        _colorMatcher.addColorMatch(kYellowTarget);
+        _colorMatcher.addColorMatch(kGreenTarget);
     }
 
     public double getIR(){

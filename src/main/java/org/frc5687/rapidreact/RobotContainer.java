@@ -2,6 +2,8 @@
 package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,6 +17,7 @@ import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
+import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
@@ -52,7 +55,8 @@ public class RobotContainer extends OutliersContainer {
         _imu.reset();
     }
 
-    public void periodic() {}
+    public void periodic() {
+    }
 
     public void disabledPeriodic() {}
 

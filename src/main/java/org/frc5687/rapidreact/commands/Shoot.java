@@ -110,6 +110,7 @@ public class Shoot extends OutliersCommand {
                 _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
                 _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
                 if (_catapult.isWinchAtGoal()) {
+                    _catapult.setWinchMotorSpeed(0.0);
                     _catapult.releaseArm();
                     _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
                 }
