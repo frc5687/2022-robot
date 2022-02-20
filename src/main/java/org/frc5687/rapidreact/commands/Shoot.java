@@ -1,11 +1,10 @@
 package org.frc5687.rapidreact.commands;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
 public class Shoot extends OutliersCommand {
 
@@ -63,7 +62,7 @@ public class Shoot extends OutliersCommand {
                 checkKill();
                 _shoot = false;
                 _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
-                _catapult.runSpringController();
+                _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
                 if (_catapult.isArmLowered() && (Math.abs(_catapult.getWinchStringLength()) < 0.05)) {
                     _catapult.setWinchMotorSpeed(0.0);
                     _catapult.lockArm();
@@ -98,9 +97,9 @@ public class Shoot extends OutliersCommand {
                 checkLockOut();
                 checkKill();
 //             check if we are in the correct position and aiming at the goal.
-                _catapult.runSpringController();
+              _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
 //            error("Switching state Shooting");
-                _catapult.setState(Catapult.CatapultState.SHOOTING);
+              _catapult.setState(Catapult.CatapultState.SHOOTING);
             }
             break;
             case WRONG_BALL: {
@@ -108,8 +107,8 @@ public class Shoot extends OutliersCommand {
                 checkKill();
                 _catapult.setWinchGoal(Constants.Catapult.REMOVE_BALL_WINCH_GOAL);
                 _catapult.setSpringGoal(Constants.Catapult.REMOVE_BALL_SPRING_GOAL);
-                _catapult.runSpringController();
-                _catapult.runWinchController();
+                _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
+                _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
                 if (_catapult.isWinchAtGoal()) {
                     _catapult.releaseArm();
                     _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
@@ -122,8 +121,8 @@ public class Shoot extends OutliersCommand {
                 // call OI button to shoot.
                 _catapult.setWinchGoal(0.245);
                 _catapult.setSpringGoal(0.105);
-                _catapult.runSpringController();
-                _catapult.runWinchController();
+                _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
+                _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
                 if (_oi.isShootButtonPressed()) {
                     _shoot = true;
                 }
@@ -146,7 +145,7 @@ public class Shoot extends OutliersCommand {
                     _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
                 } else {
                     _catapult.setSpringGoal(Constants.Catapult.INITIAL_BALL_SPRING_GOAL);
-                    _catapult.runSpringController();
+                    _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
                 }
                 if (!_catapult.isArmLowered() && !_catapult.isWinchZeroed()) {
                     _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
@@ -154,7 +153,7 @@ public class Shoot extends OutliersCommand {
                     _catapult.zeroWinchEncoder();
                     _catapult.lockArm();
                     _catapult.setWinchGoal(Constants.Catapult.INITIAL_BALL_WINCH_GOAL);
-                    _catapult.runWinchController();
+                    _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
                 }
                 if (_catapult.isSpringAtPosition() && _catapult.isWinchAtGoal() && _catapult.isWinchZeroed()) {
                     _catapult.setWinchMotorSpeed(0);
@@ -179,7 +178,13 @@ public class Shoot extends OutliersCommand {
                 if (_oi.exitKill()) {
                     _catapult.setState(_prevState);
                 }
-            }
+            }break;
+            case AUTO:
+                _catapult.setSpringMotorSpeed(0.0);
+                _catapult.setWinchMotorSpeed(0.0);
+                if(!_catapult.isArmLowered()){
+                    _catapult.setState(CatapultState.ZEROING);
+                }
         }
     }
 

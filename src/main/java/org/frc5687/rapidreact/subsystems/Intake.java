@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import static org.frc5687.rapidreact.Constants.Intake.ROLLER_INTAKE_SPEED;
+
 
 public class Intake extends OutliersSubsystem{
 
@@ -36,9 +38,14 @@ public class Intake extends OutliersSubsystem{
         _roller.set(Constants.Intake.ROLLER_IDLE_SPEED);
     }
 
-    public void spinUpRoller(){
-        _roller.set(Constants.Intake.ROLLER_INTAKE_SPEED);
+    public void reversed() {
+        _roller.set(-ROLLER_INTAKE_SPEED);
     }
+
+    public void spinUpRoller(){
+        _roller.set(ROLLER_INTAKE_SPEED);
+    }
+
 
     public void stowe(){
         //Stowe the intake
