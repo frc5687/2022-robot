@@ -2,18 +2,16 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
-
+import org.frc5687.rapidreact.commands.Feed;
 import org.frc5687.rapidreact.commands.Intaker;
+import org.frc5687.rapidreact.commands.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.frc5687.rapidreact.commands.LowerCatapult;
-import org.frc5687.rapidreact.commands.Reset;
-import org.frc5687.rapidreact.commands.ShootSetpoint;
-import org.frc5687.rapidreact.commands.TestSpring;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.ServoStop;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -21,7 +19,6 @@ public class OI extends OutliersProxy {
     private Joystick _translation;
     private Joystick _rotation;
     private Gamepad _debug;
-
     private Button _catapultDebugButton;
     private Button _preloadButton;
     private JoystickButton _shootButton;
@@ -32,8 +29,11 @@ public class OI extends OutliersProxy {
 
     private JoystickButton _deployRetract;
     private JoystickButton _intakeButton;
+    private JoystickButton _intakeButton1;
 
+    private JoystickButton  _setState;
     private JoystickButton resetNavX;
+    private JoystickButton _resetNavX;
     private JoystickButton _dropArm;
     // "Raw" joystick values
     private double yIn = 0;
@@ -42,7 +42,6 @@ public class OI extends OutliersProxy {
     public OI() {
         _translation = new Joystick(0);
         _rotation = new Joystick(1);
-
         _debug = new Gamepad(2);
 
         _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
@@ -54,25 +53,35 @@ public class OI extends OutliersProxy {
         _release = new JoystickButton(_translation, 2);
         _kill = new JoystickButton(_translation, 10);
         _exitKill = new JoystickButton(_translation, 9);
-
         _deployRetract = new JoystickButton(_rotation, 3);
         _intakeButton = new JoystickButton(_rotation, 1);
+        _intakeButton1 = new JoystickButton(_rotation, 5);
+        _dropArm = new JoystickButton(_translation, 3);
+        _resetNavX = new JoystickButton(_translation, 5);
     }
 
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake) {
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, ServoStop servoStop) {
+        _setState = new JoystickButton(_rotation, 11);
+    }
+
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult , Intake intake) {
         //There's nothing to init here
 //        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
 //        _lowerArm.whenPressed(catapult::lockArm);
 //        _lowerArm.whenPressed(new LowerCatapult(catapult));
 //        _shootButtonTest.whenPressed(new Reset(catapult));
 //        _release.whenPressed(catapult::releaseArm);
-        _intakeButton.whenHeld(new Intaker(intake));
+//        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
+        _intakeButton1.whenHeld(new Intaker(intake, true));
+        _intakeButton.whenHeld(new Intaker(intake, false));
+//        _dropArm.whenHeld(new Feed(servoStop));
+        _resetNavX.whenPressed(driveTrain::resetYaw);
     }
 
     public boolean isShootButtonPressed() { return _shootButton.get(); }
     public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
     public boolean preloadCatapult() { return _preloadButton.get(); }
-    public boolean releaseArm() { return _release.get();}
+    public boolean releaseArm() { return _release.get(); }
     public boolean intakeDeployRetract() { return _deployRetract.get(); }
     public boolean exitKill() { return _exitKill.get(); }
     public boolean kill() { return _kill.get(); }

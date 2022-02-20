@@ -3,6 +3,7 @@ package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -27,6 +28,7 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private DriveTrain _driveTrain;
     private ServoStop _servoStop;
+    private boolean _hold;
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
@@ -62,11 +64,13 @@ public class RobotContainer extends OutliersContainer {
     public void disabledInit() {}
 
     @Override
-    public void teleopInit() {}
+    public void teleopInit() {
+    }
 
     @Override
     public void autonomousInit() {
-        _catapult.setState(CatapultState.AUTO);
+//        _catapult.setState(CatapultState.AUTO);
+        _hold = true;
     }
 
     private void setDefaultCommand(OutliersSubsystem subSystem, OutliersCommand command) {
@@ -82,6 +86,7 @@ public class RobotContainer extends OutliersContainer {
         //                _driveTrain, _shooter, _hood, _intake, _spindexer, _stealTenPrt1,
         // _stealExit, _oi);
         error("Start auto");
+//        return null;
         return wrapCommand(new OneBall(_driveTrain, _catapult, _intake, _oi));
         //        return null;
     }
@@ -93,6 +98,7 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void updateDashboard() {
         _driveTrain.updateDashboard();
+        SmartDashboard.putBoolean("Loss connection test", _hold);
         _catapult.updateDashboard();
     }
 
