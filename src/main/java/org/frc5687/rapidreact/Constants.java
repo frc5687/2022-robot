@@ -109,7 +109,7 @@ public class Constants {
         public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
 
         // Maximum rates of motion
-        public static final double MAX_MPS = 1.5; // Max speed of robot (m/s)
+        public static final double MAX_MPS = 4.0; // Max speed of robot (m/s)
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
 
@@ -187,6 +187,7 @@ public class Constants {
 //        public static final double MAX_SPEED_WITH_GEAR_BOX_VP = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION_VP;
         public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
         public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.437) * Math.PI; // meters
+        public static final int WINCH_CURRENT_LIMIT = 25; //amps
 
         // Physical characteristics
         public static final double POUND_PER_IN_TO_NEWTON_PER_METER = 0.0057101471627692;
@@ -236,7 +237,7 @@ public class Constants {
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
         public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
         public static final double INITIAL_BALL_WINCH_GOAL = 0.245;
-        public static final double INITIAL_BALL_SPRING_GOAL = 0.1;
+        public static final double INITIAL_BALL_SPRING_GOAL = 0.08;
 
 
     }
@@ -248,7 +249,11 @@ public class Constants {
     public static class Intake{
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
-        public static final double ROLLER_INTAKE_SPEED = 0.8;
+        public static final double ROLLER_INTAKE_SPEED = 1.0;
+    }
+
+    public static class Auto{
+            public static final double DRIVETRAIN_POWER = 0.5;
     }
 
     public static class ColorSensor{

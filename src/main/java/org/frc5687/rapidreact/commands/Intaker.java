@@ -4,10 +4,12 @@ import org.frc5687.rapidreact.subsystems.Intake;
 
 public class Intaker extends OutliersCommand {
 
-    Intake _intake;
+    private Intake _intake;
+    private boolean _reversed;
 
-    public Intaker(Intake intake){
+    public Intaker(Intake intake, boolean reversed){
         _intake = intake;
+        _reversed = reversed;
         addRequirements(_intake);
     }
 
@@ -18,12 +20,16 @@ public class Intaker extends OutliersCommand {
     @Override
     public void execute(){
         super.execute();
-        _intake.spinUpRoller();
+        if (_reversed) {
+            _intake.reversed();
+        } else {
+            _intake.spinUpRoller();
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        super.end(interrupted);
         _intake.spinDownRoller();
+        super.end(interrupted);
     }
 }

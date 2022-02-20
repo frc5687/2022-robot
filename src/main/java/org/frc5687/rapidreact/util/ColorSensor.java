@@ -16,8 +16,8 @@ public class ColorSensor {
     private final Color kBlueTarget = new Color(0.143, 0.427, 0.429);
     private final Color kRedTarget = new Color(0.561, 0.232, 0.114);
 
-    public ColorSensor(){
-        _port = I2C.Port.kMXP;
+    public ColorSensor(I2C.Port port){
+        _port = port;
         _colorSensor = new ColorSensorV3(_port);
         _colorMatcher = new ColorMatch();
         _colorMatcher.addColorMatch(kBlueTarget);
