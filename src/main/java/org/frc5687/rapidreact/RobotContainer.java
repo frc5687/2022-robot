@@ -17,18 +17,21 @@ import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
-import org.frc5687.rapidreact.util.ColorSensor;
+import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
 
     private OI _oi;
     private AHRS _imu;
+    private JetsonProxy _proxy;
+
     private Robot _robot;
     private Catapult _catapult;
     private Intake _intake;
     private DriveTrain _driveTrain;
     private boolean _hold;
+
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
@@ -40,13 +43,13 @@ public class RobotContainer extends OutliersContainer {
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _catapult = new Catapult(this);
-        _driveTrain = new DriveTrain(this, _oi, _imu);
+        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
         _intake = new Intake(this);
+        _proxy = new JetsonProxy(10);
 
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-//        setDefaultCommand(_catapult, new IdleCatapult(_catapult, _oi));
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 
         // initialize OI after subsystems.
@@ -58,8 +61,9 @@ public class RobotContainer extends OutliersContainer {
     public void periodic() {
     }
 
-    public void disabledPeriodic() {}
-
+    public void disabledPeriodic() {
+        //Runs every 20ms during disabled
+    }
     @Override
     public void disabledInit() {}
 
@@ -97,14 +101,27 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
-        _driveTrain.updateDashboard();
-        SmartDashboard.putBoolean("Loss connection test", _hold);
-        _catapult.updateDashboard();
+        if (_proxy.getLatestFrame() != null) {
+            metric("Millis", _proxy.getLatestFrame().getMillis());
+            metric("Has goal", _proxy.getLatestFrame().hasTarget());
+            metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
+            metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
+        }
+        //Updates the driver station
+        //_driveTrain.updateDashboard();
+        //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
+//        _driveTrain.updateDashboard();
+//        _catapult.updateDashboard();
     }
 
     public void controllerPeriodic() {
         if (_driveTrain != null) {
             _driveTrain.controllerPeriodic();
+        }
+    }
+    public void dataPeriodic() {
+        if (_driveTrain != null) {
+            _driveTrain.dataPeriodic();
         }
     }
 }
