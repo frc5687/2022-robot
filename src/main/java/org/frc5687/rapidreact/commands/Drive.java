@@ -20,6 +20,8 @@ public class Drive extends OutliersCommand {
         _vxFilter = new SlewRateLimiter(3.0);
         _vyFilter = new SlewRateLimiter(3.0);
         addRequirements(_driveTrain);
+        logMetrics("vx","vy");
+        enableMetrics();
     }
 
     @Override

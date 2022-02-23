@@ -42,6 +42,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
 
+        metric("Name", _name);
         metric("Identity", _identityMode.toString());
         metric("Commit", Version.REVISION);
         metric("Branch", Version.BRANCH);
