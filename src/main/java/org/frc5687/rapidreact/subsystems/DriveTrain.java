@@ -156,8 +156,9 @@ public class DriveTrain extends OutliersSubsystem {
         metric("SW/Encoder Azimuth Vel", _southWest.getAzimuthAngularVelocity());
         metric("SW/Predicted Azimuth Vel", _southWest.getPredictedAzimuthAngularVelocity());
 
-        metric("SW/Encoder Wheel Vel", _southWest.getWheelVelocity());
-        metric("SW/Predicted Wheel Vel", _southWest.getPredictedWheelVelocity());
+        metric("SE/Encoder Wheel Vel", _southEast.getWheelVelocity());
+        metric("SE/Predicted Wheel Vel", _southEast.getPredictedWheelVelocity());
+
         metric("Odometry/x", getOdometryPose().getX());
         metric("Odometry/y", getOdometryPose().getY());
         metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());

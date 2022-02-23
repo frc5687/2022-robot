@@ -5,9 +5,6 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import org.frc5687.rapidreact.util.*;
 
 /**
@@ -18,12 +15,7 @@ import org.frc5687.rapidreact.util.*;
  */
 public class Robot extends OutliersRobot implements ILoggingSource {
 
-    public static OutliersContainer.IdentityMode _identityMode =
-            OutliersContainer.IdentityMode.competition;
-    private RioLogger.LogLevel _dsLogLevel = RioLogger.LogLevel.warn;
-    private RioLogger.LogLevel _fileLogLevel = RioLogger.LogLevel.warn;
     private int _updateTick = 0;
-    private String _name;
     private RobotContainer _robotContainer;
     private boolean _fmsConnected;
     private Command _autoCommand;
@@ -37,27 +29,16 @@ public class Robot extends OutliersRobot implements ILoggingSource {
      */
     @Override
     public void robotInit() {
-        loadConfigFromUSB();
-        RioLogger.getInstance().init(_fileLogLevel, _dsLogLevel);
+        super.robotInit();
+
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
-
-        metric("Identity", _identityMode.toString());
-        metric("Commit", Version.REVISION);
-        metric("Branch", Version.BRANCH);
-
-        info("Robot " + _name + " running in " + _identityMode.toString() + " mode");
-        info("Running commit " + Version.REVISION + " of branch " + Version.BRANCH);
 
         _robotContainer = new RobotContainer(this, _identityMode);
         _timer = new Timer();
         _robotContainer.init();
 
-        // Periodically flushes metrics (might be good to configure enable/disable via USB config
-        // file)
-//        _autoCommand = _robotContainer.getAutonomousCommand();
         _time = _timer.get();
-        new Notifier(MetricTracker::flushAll).startPeriodic(Constants.METRIC_FLUSH_PERIOD);
     }
 
     /**
@@ -146,55 +127,6 @@ public class Robot extends OutliersRobot implements ILoggingSource {
         }
     }
 
-    private void loadConfigFromUSB() {
-        String output_dir = "/U/"; // USB drive is mounted to /U on roboRIO
-        try {
-            String usbDir = "/U/"; // USB drive is mounted to /U on roboRIO
-            String configFileName = usbDir + "frc5687.cfg";
-            File configFile = new File(configFileName);
-            FileReader reader = new FileReader(configFile);
-            BufferedReader bufferedReader = new BufferedReader(reader);
-
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                processConfigLine(line);
-            }
-
-            bufferedReader.close();
-            reader.close();
-        } catch (Exception e) {
-            _identityMode = OutliersContainer.IdentityMode.competition;
-        }
-    }
-
-    private void processConfigLine(String line) {
-        try {
-            if (line.startsWith("#")) {
-                return;
-            }
-            String[] a = line.split("=");
-            if (a.length == 2) {
-                String key = a[0].trim().toLowerCase();
-                String value = a[1].trim();
-                switch (key) {
-                    case "name":
-                        _name = value;
-                        break;
-                    case "mode":
-                        _identityMode = OutliersContainer.IdentityMode.valueOf(value.toLowerCase());
-                        break;
-                    case "fileloglevel":
-                        _fileLogLevel = RioLogger.LogLevel.valueOf(value.toLowerCase());
-                        break;
-                    case "dsloglevel":
-                        _dsLogLevel = RioLogger.LogLevel.valueOf(value.toLowerCase());
-                        break;
-                }
-            }
-        } catch (Exception e) {
-
-        }
-    }
 
     private void update() {}
 }
