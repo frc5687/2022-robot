@@ -15,7 +15,7 @@ public class ArmUp extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        _climber.raiseSationaryArm();
+        _climber.extendStationaryArm();
         if(_climber.isStaArmUp()){
             _climber.stopClimb();
         }

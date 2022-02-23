@@ -2,6 +2,7 @@
 package org.frc5687.rapidreact.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
@@ -20,9 +21,30 @@ public class Climber extends OutliersSubsystem{
     private CANSparkMax _rockerArm;
     private DoubleSolenoid _rocker;
     private ProfiledPIDController _climberController;
+    private RelativeEncoder _stationaryArmWinch;
     private HallEffect _staArmUp;
     private HallEffect _staArmDown;
     private boolean _armForward = false;
+    private ClimberState _state = ClimberState.UNKNOW;
+
+    public enum ClimberState {
+        KILLs(1),
+        RETRACTING_S_ARM(2),
+        RETRACTING_R_ARM(3),
+        EXTENDING_S_ARM(4),
+        EXTENDING_R_ARM(5),
+        ROCKING(6),
+        UNKNOW(0);
+
+        private final int _value;
+        ClimberState(int value) { 
+            _value = value; 
+        }
+
+        public int getValue() { 
+            return _value; 
+        }
+    }
 
     public Climber(OutliersContainer container) {
         super(container);
@@ -35,32 +57,74 @@ public class Climber extends OutliersSubsystem{
         _staArmUp = new HallEffect(8);
         _staArmDown = new HallEffect(6);
         _climberController = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD,  new TrapezoidProfile.Constraints(1.5, 2.0));
-        _climberController.setTolerance(0.5);
+        _climberController.setTolerance(0.1);
+        _stationaryArmWinch = _stationaryArm.getEncoder();
     }
 
-    public void raiseRockerArm(){
-        //Raise the rocker arm
-        _rockerArm.setInverted(false);
-        _rockerArm.set(0.6);
+    @Override
+    public void periodic(){
+        super.periodic();
     }
 
-    public void raiseSationaryArm(){
-        //Raise right arm
-        _stationaryArm.setInverted(false);
-        _stationaryArm.set(0.6);
+    public void setState(ClimberState state){
+        //Sets a new climber state
+        _state = state;
     }
 
-    public void climb(){
-        //Lower right arm
-        _stationaryArm.setInverted(true);
-        _stationaryArm.set(0.4);
+    public String getStateName(){
+        //Returns current state as a string
+        return _state.name();
+    }
+
+    public void setWinchGoal(double winchGoal){
+        //Set to climber PID controllers goal
+        _climberController.setGoal(winchGoal);
+    }
+
+    public double getWinchPosition(){
+        //Get the current position of the climber winch
+        return _stationaryArmWinch.getPosition();
+    }
+
+    public void setStationaryArmSpeed(double speed){
+        //Set the stationary arm speed
+        _stationaryArm.set(speed);
+    }
+
+    public void setRockerArmSpeed(double speed){
+        //Set the speed of the rocker arm
+        _rockerArm.set(speed);
+    }
+
+    public double calculateWinch(){
+        return _climberController.calculate(getWinchPosition());
+    }
+
+    public void retractStationaryArm(){
+        //Retract stationary arm
+        setState(ClimberState.RETRACTING_S_ARM);
+        setWinchGoal(Constants.Climber.STATIONARY_RETRACTED_POSITION);
+        setStationaryArmSpeed(calculateWinch());
+    }
+
+    public void extendStationaryArm(){
+        //Extend stationary arm
+        setState(ClimberState.EXTENDING_S_ARM);
+        setWinchGoal(Constants.Climber.STATIONARY_EXTENDED_POSITION);
+        setStationaryArmSpeed(calculateWinch());
+    }
+
+    public boolean atGoal(){
+        return _climberController.atGoal();
     }
 
     public boolean isStaArmUp(){
+        //Is the stationary arm up
         return _staArmUp.get();
     }
 
     public boolean isStaArmDown(){
+        //Is the stationary arm down
         return _staArmDown.get();
     }
 
@@ -83,6 +147,7 @@ public class Climber extends OutliersSubsystem{
     }
 
     public boolean isArmForward(){
+        //Is the rocker arm forward
         return _armForward;
     }
 
@@ -92,5 +157,8 @@ public class Climber extends OutliersSubsystem{
         metric("Stationary climber motor temp", _stationaryArm.getMotorTemperature());
         metric("Arm Forward", isArmForward());
         metric("Arm Output", _stationaryArm.getAppliedOutput());
+        metric("Winch position", getWinchPosition());
+        metric("PID output", calculateWinch());
+        metric("Climber State", getStateName());
     }
 }

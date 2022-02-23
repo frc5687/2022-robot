@@ -15,7 +15,7 @@ public class ClimberDown extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        _climber.climb();
+        _climber.retractStationaryArm();
         if(_climber.isStaArmDown()){
             _climber.stopClimb();
         }

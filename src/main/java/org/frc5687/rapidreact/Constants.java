@@ -126,5 +126,8 @@ public class Constants {
         public static final double MAX_ACCELERATION_MPSS = MAX_VELOCITY_MPS * 10.0; // heuristic
         public static final double TOLERANCE = 0.1; // meters.
 
+
+        public static final double STATIONARY_RETRACTED_POSITION = 0.0;
+        public static final double STATIONARY_EXTENDED_POSITION = 0.5;
     }
 }
