@@ -6,6 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
+/**
+ * The Outliers
+ */
 public abstract class OutliersContainer implements ILoggingSource {
     private List<OutliersSubsystem> _subsystems = new LinkedList<OutliersSubsystem>();
     private IdentityMode _identityMode;
@@ -82,6 +85,16 @@ public abstract class OutliersContainer implements ILoggingSource {
     public void autonomousInit() {}
     ;
 
+    /**
+     * The identity mode of the robot currently running the code.
+     * IdentityMode allows SubSystems and Commands to behave differently on different versions of the robot.
+     * For example, the programming bot usually doesn't have all subsystems on it, and the PID constants
+     * for practice and competition bots are often different.
+     * 
+     * Identity is set by creating a file called "frc5687.cfg" on a USB thumbdrive inserted into the RoboRio.
+     * On startup, OutliersRobot reads this file and gets the identity, name, and logging levels.
+     * 
+     */
     public enum IdentityMode {
         competition(0),
         practice(1),
