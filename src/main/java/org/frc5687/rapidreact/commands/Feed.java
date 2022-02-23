@@ -1,6 +1,6 @@
 package org.frc5687.rapidreact.commands;
 
-import org.frc5687.rapidreact.subsystems.ServoStop;
+import org.frc5687.rapidreact.util.ServoStop;
 
 public class Feed extends OutliersCommand{
     

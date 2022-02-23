@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
-import org.frc5687.rapidreact.subsystems.ServoStop;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -58,10 +57,6 @@ public class OI extends OutliersProxy {
         _intakeButton1 = new JoystickButton(_rotation, 5);
         _dropArm = new JoystickButton(_translation, 3);
         _resetNavX = new JoystickButton(_translation, 5);
-    }
-
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, ServoStop servoStop) {
-        _setState = new JoystickButton(_rotation, 11);
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult , Intake intake) {

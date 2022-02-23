@@ -190,6 +190,7 @@ public class Constants {
 //        public static final double MAX_SPEED_WITH_GEAR_BOX_VP = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION_VP;
         public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
         public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.437) * Math.PI; // meters
+        public static final int WINCH_CURRENT_LIMIT = 25; //amps
 
         // Physical characteristics
         public static final double POUND_PER_IN_TO_NEWTON_PER_METER = 0.0057101471627692;
@@ -256,5 +257,9 @@ public class Constants {
 
     public static class Auto{
             public static final double DRIVETRAIN_POWER = 0.5;
+    }
+
+    public static class ColorSensor{
+        public static final double COLOR_PROXIMITY_BUFFER = 130;
     }
 }

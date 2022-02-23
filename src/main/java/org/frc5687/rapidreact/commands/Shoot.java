@@ -62,7 +62,7 @@ public class Shoot extends OutliersCommand {
                 checkKill();
                 _shoot = false;
                 _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
-                _catapult.runSpringController();
+                _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
                 if (_catapult.isArmLowered() && (Math.abs(_catapult.getWinchStringLength()) < 0.05)) {
                     _catapult.setWinchMotorSpeed(0.0);
                     _catapult.lockArm();
@@ -72,24 +72,34 @@ public class Shoot extends OutliersCommand {
             }
             break;
             case LOADING: {
+                _catapult.raiseGate();
                 checkLockOut();
                 checkKill();
                 // in the future check if we have a ball and the ball color, REV Color Sensor
                 // has a proximity sensor built it.
-//                if (!correctColor && hasBall) {
-//                    _catapult.setState(Catapult.CatapultState.WRONG_BALL);
-//                } else {
+                if (_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
                     _catapult.setState(Catapult.CatapultState.AIMING);
-//                }
+                    _catapult.lowerGate();
+                } else if (_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
+                    _catapult.setState(Catapult.CatapultState.WRONG_BALL);
+                    _catapult.lowerGate();
+                }
+                if (!_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
+                    _catapult.setState(Catapult.CatapultState.AIMING);
+                    _catapult.lowerGate();
+                } else if (!_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
+                    _catapult.setState(Catapult.CatapultState.WRONG_BALL);
+                    _catapult.lowerGate();
+                }
             }
             break;
             case AIMING: {
                 checkLockOut();
                 checkKill();
 //             check if we are in the correct position and aiming at the goal.
-                _catapult.runSpringController();
+              _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
 //            error("Switching state Shooting");
-                _catapult.setState(Catapult.CatapultState.SHOOTING);
+              _catapult.setState(Catapult.CatapultState.SHOOTING);
             }
             break;
             case WRONG_BALL: {
@@ -97,9 +107,10 @@ public class Shoot extends OutliersCommand {
                 checkKill();
                 _catapult.setWinchGoal(Constants.Catapult.REMOVE_BALL_WINCH_GOAL);
                 _catapult.setSpringGoal(Constants.Catapult.REMOVE_BALL_SPRING_GOAL);
-                _catapult.runSpringController();
-                _catapult.runWinchController();
+                _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
+                _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
                 if (_catapult.isWinchAtGoal()) {
+                    _catapult.setWinchMotorSpeed(0.0);
                     _catapult.releaseArm();
                     _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
                 }
@@ -111,8 +122,8 @@ public class Shoot extends OutliersCommand {
                 // call OI button to shoot.
                 _catapult.setWinchGoal(0.245);
                 _catapult.setSpringGoal(0.105);
-                _catapult.runSpringController();
-                _catapult.runWinchController();
+                _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
+                _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
                 if (_oi.isShootButtonPressed()) {
                     _shoot = true;
                 }
@@ -135,7 +146,7 @@ public class Shoot extends OutliersCommand {
                     _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
                 } else {
                     _catapult.setSpringGoal(Constants.Catapult.INITIAL_BALL_SPRING_GOAL);
-                    _catapult.runSpringController();
+                    _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
                 }
                 if (!_catapult.isArmLowered() && !_catapult.isWinchZeroed()) {
                     _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
@@ -143,7 +154,7 @@ public class Shoot extends OutliersCommand {
                     _catapult.zeroWinchEncoder();
                     _catapult.lockArm();
                     _catapult.setWinchGoal(Constants.Catapult.INITIAL_BALL_WINCH_GOAL);
-                    _catapult.runWinchController();
+                    _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
                 }
                 if (_catapult.isSpringAtPosition() && _catapult.isWinchAtGoal() && _catapult.isWinchZeroed()) {
                     _catapult.setWinchMotorSpeed(0);

@@ -74,16 +74,12 @@ public abstract class OutliersContainer implements ILoggingSource {
     }
 
     public void disabledPeriodic() {}
-    ;
 
     public void disabledInit() {}
-    ;
 
     public void teleopInit() {}
-    ;
 
     public void autonomousInit() {}
-    ;
 
     /**
      * The identity mode of the robot currently running the code.
