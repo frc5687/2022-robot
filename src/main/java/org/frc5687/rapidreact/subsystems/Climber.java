@@ -66,7 +66,7 @@ public class Climber extends OutliersSubsystem{
         super(container);
         _stationaryArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.STATIONARY_CLIMBER, CANSparkMax.MotorType.kBrushless);
         _rockerArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.ROCKER_CLIMBER, CANSparkMax.MotorType.kBrushless);
-        _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCM.CLIMBER_IN, RobotMap.PCM.CLIMBER_OUT);
+        _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
 
         _stationaryArm.setIdleMode(IdleMode.kCoast);
         _stationaryArm.setInverted(false);

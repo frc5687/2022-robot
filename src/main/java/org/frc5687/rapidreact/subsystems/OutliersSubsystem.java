@@ -9,7 +9,33 @@ import org.frc5687.rapidreact.util.RioLogger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
+/**
+ * Base class to provide metrics and logging infrustructure.
+ * 
+ * See ILoggingSource for logging details.
+ * 
+ * See MetricTracker for metrics details.
+ * 
+ * Example of metrics collection. In a child class's constructor:
+ * 
+ * public SampleSystem() {
+ *    logMetrics("foo", "bar", "baz");
+ * }
+ * 
+ * Later on in the child class, eg in setSpeed():
+ * 
+ * ...
+ * metric("foo", 123);
+ * metric("bar", "elvis");
+ * metric("baz", 42.42);
+ * metric("pants", 99);    <~ This metric won't get written to USB storage because it wasn't registered.
+ * ...
+ * 
+ * Note that metric logging is expensive, so it is turned OFF by default.
+ * To turn it on, either call enableMetrics() from code (eg at the start of an auto command)
+ * or set Metrics/[SubSystemName] to true in the SmartDashboard 
+ * 
+ */
 public abstract class OutliersSubsystem extends SubsystemBase implements ILoggingSource {
     private MetricTracker _metricTracker;
 
@@ -58,17 +84,8 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
         }
     }
 
-    // Example of metrics collection. In a child class's constructor:
-    // getMetricTracker().registerReportableMetricName("foo");
-    // getMetricTracker().registerReportableMetricName("bar");
-    // getMetricTracker().registerReportableMetricName("baz");
-    //
-    // Later on in the child class...
-    // metric("foo", 123);
-    // metric("bar", "elvis");
-    // metric("baz", 42.42);
-    // metric("pants", 99);    <~ This metric won't get written to USB storage because it wasn't
-    // registered.
+    
+
 
     protected void logMetrics(String... metrics) {
         _metricTracker = MetricTracker.createMetricTracker(getClass().getSimpleName(), metrics);

@@ -28,7 +28,6 @@ public class FirstStep extends OutliersCommand{
 
     @Override
     public boolean isFinished(){
-        super.isFinished()
         return true;
     }
 }

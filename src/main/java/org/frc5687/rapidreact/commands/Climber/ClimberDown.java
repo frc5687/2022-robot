@@ -1,5 +1,6 @@
 package org.frc5687.rapidreact.commands.Climber;
 
+import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
 
@@ -15,7 +16,7 @@ public class ClimberDown extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        _climber.retractStationaryArm();
+        _climber.retractStationaryArm(Constants.Climber.STATIONARY_RETRACTED_POSITION);
         if(_climber.isStaArmDown()){
             _climber.stopClimb();
         }

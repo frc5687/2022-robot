@@ -1,5 +1,6 @@
 package org.frc5687.rapidreact.commands.Climber;
 
+import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
 
@@ -15,7 +16,7 @@ public class ArmUp extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        _climber.extendStationaryArm();
+        _climber.extendStationaryArm(Constants.Climber.STATIONARY_EXTENDED_POSITION);
         if(_climber.isStaArmUp()){
             _climber.stopClimb();
         }
