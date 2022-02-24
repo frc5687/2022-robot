@@ -51,8 +51,6 @@ public class RobotContainer extends OutliersContainer {
         _proxy = new JetsonProxy(10);
 
         //The robots default command will run so long as another command isn't activated
-        setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));
-        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 
         // initialize OI after subsystems.

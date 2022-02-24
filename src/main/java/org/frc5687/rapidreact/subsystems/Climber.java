@@ -21,7 +21,9 @@ public class Climber extends OutliersSubsystem{
     private CANSparkMax _rockerArmWinch;
     private DoubleSolenoid _rocker;
     private ProfiledPIDController _staController;
+    private ProfiledPIDController _rockController;
     private RelativeEncoder _stationaryArmWinchEncoder;
+    private RelativeEncoder _rockerArmWinchEncoder;
     private HallEffect _staArmUp;
     private HallEffect _staArmDown;
     private boolean _armForward = false;
@@ -86,7 +88,9 @@ public class Climber extends OutliersSubsystem{
         _staArmUp = new HallEffect(8);
         _staArmDown = new HallEffect(6);
         _staController = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD,  new TrapezoidProfile.Constraints(1.5, 2.0));
+        _rockController = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD, new TrapezoidProfile.Constraints(1.5, 2.0));
         _stationaryArmWinchEncoder = _stationaryArmWinch.getEncoder();
+        _rockerArmWinchEncoder = _rockerArmWinch.getEncoder();
     }
 
     @Override
@@ -119,6 +123,38 @@ public class Climber extends OutliersSubsystem{
     public void dropDriveSpeed(){
         //Drop driveTrain speed 
         Constants.DriveTrain.MAX_MPS = Constants.Climber.CLIMB_DRIVE_SPEED;
+    }
+
+    public void setRockSpeed(double speed){
+        //Sets the speed of SparkMax controlling the rocker arm
+        _rockerArmWinch.set(speed);
+    }
+
+    public void setRockGoal(double goal){
+        //Sets the goal of the PID controller
+        _rockController.setGoal(goal);
+    }
+
+    public double getRockPID(){
+        //Get calculation form PID controller
+        return _rockController.calculate(_rockerArmWinchEncoder.getPosition());
+    }
+
+    public void moveRockArm(ClimberState state, double position){
+        //Move to 
+        _state = state;
+        setStaGoal(position);
+        setRockSpeed(getStaPID());
+    }
+
+    public void rockerIn(){
+        //Rock arm in
+        _rocker.set(Value.kForward);
+    }
+
+    public void rockerOut(){
+        //Rock arm out
+        _rocker.set(Value.kReverse);
     }
 
     public boolean isStaArmUp(){
