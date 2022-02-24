@@ -4,11 +4,8 @@ package org.frc5687.rapidreact;
 import static org.frc5687.rapidreact.util.Helpers.*;
 import org.frc5687.rapidreact.commands.Feed;
 import org.frc5687.rapidreact.commands.Intaker;
-import org.frc5687.rapidreact.commands.Climber.ArmUp;
-import org.frc5687.rapidreact.commands.Climber.ClimberDown;
-import org.frc5687.rapidreact.commands.Climber.Rock;
-import org.frc5687.rapidreact.commands.Climber.SecondStep;
-
+import org.frc5687.rapidreact.commands.Climber.PrepToClimb;
+import org.frc5687.rapidreact.commands.Climber.Stow;
 import org.frc5687.rapidreact.commands.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -32,12 +29,11 @@ public class OI extends OutliersProxy {
     private JoystickButton _kill;
     private JoystickButton _exitKill;
 
+    private JoystickButton _stow;
+    private JoystickButton _prepClimb;
+
     private JoystickButton _deployRetract;
     private JoystickButton _intakeButton;
-    private JoystickButton _intakeButton1;
-    private JoystickButton  _climberUp;
-    private JoystickButton _firstStep;
-    private JoystickButton _secondStep;
 
     private JoystickButton  _setState;
     private JoystickButton resetNavX;
@@ -52,23 +48,11 @@ public class OI extends OutliersProxy {
         _rotation = new Joystick(1);
         _debug = new Gamepad(2);
 
-        _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _stow = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
+        _prepClimb = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
 //        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
 //        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 
-        _shootButton= new JoystickButton(_translation, 1);
-        _release = new JoystickButton(_translation, 2);
-        _kill = new JoystickButton(_translation, 10);
-        _exitKill = new JoystickButton(_translation, 9);
-        _deployRetract = new JoystickButton(_rotation, 3);
-        _intakeButton = new JoystickButton(_rotation, 1);
-        _intakeButton1 = new JoystickButton(_rotation, 5);
-        _dropArm = new JoystickButton(_translation, 3);
-        _resetNavX = new JoystickButton(_translation, 5);
-        _climberUp = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _firstStep = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
-        _secondStep = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult , Intake intake, Climber climber) {
@@ -79,22 +63,13 @@ public class OI extends OutliersProxy {
 //        _shootButtonTest.whenPressed(new Reset(catapult));
 //        _release.whenPressed(catapult::releaseArm);
 //        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
-        _intakeButton1.whenHeld(new Intaker(intake, true));
-        _intakeButton.whenHeld(new Intaker(intake, false));
 //        _dropArm.whenHeld(new Feed(servoStop));
         _resetNavX.whenPressed(driveTrain::resetYaw);
-        _climberUp.whenPressed(new ArmUp(climber));
-        _firstStep.whenPressed(new ClimberDown(climber));
-        _secondStep.whenPressed(new SecondStep(climber));
-    }
 
-    public boolean isShootButtonPressed() { return _shootButton.get(); }
-    public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
-    public boolean preloadCatapult() { return _preloadButton.get(); }
-    public boolean releaseArm() { return _release.get(); }
-    public boolean intakeDeployRetract() { return _deployRetract.get(); }
-    public boolean exitKill() { return _exitKill.get(); }
-    public boolean kill() { return _kill.get(); }
+        _stow.whenPressed(new Stow(climber));
+        _prepClimb.whenPressed(new PrepToClimb(climber));
+
+    }
 
 
     public double getDriveY() {

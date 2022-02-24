@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Climber extends OutliersSubsystem{
     
-    private CANSparkMax _stationaryArm;
-    private CANSparkMax _rockerArm;
+    private CANSparkMax _stationaryArmWinch;
+    private CANSparkMax _rockerArmWinch;
     private DoubleSolenoid _rocker;
-    private ProfiledPIDController _climberController;
-    private RelativeEncoder _stationaryArmWinch;
+    private ProfiledPIDController _staController;
+    private RelativeEncoder _stationaryArmWinchEncoder;
     private HallEffect _staArmUp;
     private HallEffect _staArmDown;
     private boolean _armForward = false;
@@ -48,8 +48,11 @@ public class Climber extends OutliersSubsystem{
     }
 
     public enum ClimberStep{
-        FIRST_STEP(0),
-        SECOND_STEP(1),
+        ON_FLOOR(0),
+        ON_FIRST_BAR(1),
+        ATTACH_MID(2),
+        ATTACH_HIGH(3),
+        ATTACH_TRANSVERSAL(4),
         UNKNOW(2);
 
         private final int _value;
@@ -62,19 +65,28 @@ public class Climber extends OutliersSubsystem{
         }
     }
 
+    public void setState(ClimberState state){
+        //Sets the current state of the climber
+        _state = state;
+    }
+
+    public void setStep(ClimberStep step){
+        //Sets the current step of the climbing process
+        _step = step;
+    }
+
     public Climber(OutliersContainer container) {
         super(container);
-        _stationaryArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.STATIONARY_CLIMBER, CANSparkMax.MotorType.kBrushless);
-        _rockerArm = new CANSparkMax(RobotMap.CAN.SPARKMAX.ROCKER_CLIMBER, CANSparkMax.MotorType.kBrushless);
+        _stationaryArmWinch = new CANSparkMax(RobotMap.CAN.SPARKMAX.STATIONARY_CLIMBER, CANSparkMax.MotorType.kBrushless);
+        _rockerArmWinch = new CANSparkMax(RobotMap.CAN.SPARKMAX.ROCKER_CLIMBER, CANSparkMax.MotorType.kBrushless);
         _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
 
-        _stationaryArm.setIdleMode(IdleMode.kCoast);
-        _stationaryArm.setInverted(false);
+        _stationaryArmWinch.setIdleMode(IdleMode.kBrake);
+        _stationaryArmWinch.setInverted(false);
         _staArmUp = new HallEffect(8);
         _staArmDown = new HallEffect(6);
-        _climberController = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD,  new TrapezoidProfile.Constraints(1.5, 2.0));
-        _climberController.setTolerance(0.1);
-        _stationaryArmWinch = _stationaryArm.getEncoder();
+        _staController = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD,  new TrapezoidProfile.Constraints(1.5, 2.0));
+        _stationaryArmWinchEncoder = _stationaryArmWinch.getEncoder();
     }
 
     @Override
@@ -82,82 +94,31 @@ public class Climber extends OutliersSubsystem{
         super.periodic();
     }
 
-    public void setState(ClimberState state){
-        //Sets the current climber state
+    public void setStaSpeed(double speed){
+        //Sets the speed of SparkMax controlling the climber arm
+        _stationaryArmWinch.set(speed);
+    }
+
+    public void setStaGoal(double goal){
+        //Sets the goal of the PID controller
+        _staController.setGoal(goal);
+    }
+
+    public double getStaPID(){
+        //Get calculation form PID controller
+        return _staController.calculate(_stationaryArmWinchEncoder.getPosition());
+    }
+
+    public void moveStaArm(ClimberState state, double position){
+        //Move to 
         _state = state;
+        setStaGoal(position);
+        setStaSpeed(getStaPID());
     }
 
-    public void setStep(ClimberStep step){
-        //Sets the current climber step
-        _step = step;
-    }
-
-    public String getStateName(){
-        //Returns current state as a string
-        return _state.name();
-    }
-
-    public String getStepName(){
-        //Returns current step as a string
-        return _step.name();
-    }
-
-    public void setWinchGoal(double winchGoal){
-        //Set to climber PID controllers goal
-        _climberController.setGoal(winchGoal);
-    }
-
-    public double getWinchPosition(){
-        //Get the current position of the climber winch
-        return _stationaryArmWinch.getPosition();
-    }
-
-    public void setStationaryArmSpeed(double speed){
-        //Set the stationary arm speed
-        _stationaryArm.set(speed);
-    }
-
-    public void setRockerArmSpeed(double speed){
-        //Set the speed of the rocker arm
-        _rockerArm.set(speed);
-    }
-
-    public double calculateWinch(){
-        return _climberController.calculate(getWinchPosition());
-    }
-
-    public void retractStationaryArm(double setpoint){
-        //Retract stationary arm
-        setState(ClimberState.RETRACTING_S_ARM);
-        setWinchGoal(setpoint);
-        setStationaryArmSpeed(calculateWinch());
-    }
-
-    public void retractRockerArm(double setpoint){
-        //Retract rocker arm
-        setState(ClimberState.RETRACTING_R_ARM);
-        setWinchGoal(setpoint);
-        setRockerArmSpeed(calculateWinch());
-    }
-
-    public void extendStationaryArm(double setpoint){
-        //Extend stationary arm
-        setState(ClimberState.EXTENDING_S_ARM);
-        setWinchGoal(setpoint);
-        setStationaryArmSpeed(calculateWinch());
-    }
-
-    
-    public void extendRockerArm(double setpoint){
-        //Retract rocker arm
-        setState(ClimberState.EXTENDING_R_ARM);
-        setWinchGoal(setpoint);
-        setRockerArmSpeed(calculateWinch());
-    }
-
-    public boolean atGoal(){
-        //Is the PID controller at the set point
-        return _climberController.atGoal();
+    public void dropDriveSpeed(){
+        //Drop driveTrain speed 
+        Constants.DriveTrain.MAX_MPS = Constants.Climber.CLIMB_DRIVE_SPEED;
     }
 
     public boolean isStaArmUp(){
@@ -170,38 +131,10 @@ public class Climber extends OutliersSubsystem{
         return _staArmDown.get();
     }
 
-    public void stopClimb(){
-        //Only for debuging
-        _stationaryArm.set(0.0);
-        _rockerArm.set(0.0);
-    }
-
-    public void forward(){
-        //Use the rocker
-        _rocker.set(Value.kForward);
-        _armForward = true;
-    }
-
-    public void reverse(){
-        //Use the rocker
-        _rocker.set(Value.kReverse);
-        _armForward = false;
-    }
-
-    public boolean isArmForward(){
-        //Is the rocker arm forward
-        return _armForward;
-    }
-
     @Override
     public void updateDashboard() {
-        metric("Stationary climber motor encoder", _stationaryArm.getEncoder().toString());
-        metric("Stationary climber motor temp", _stationaryArm.getMotorTemperature());
-        metric("Arm Forward", isArmForward());
-        metric("Arm Output", _stationaryArm.getAppliedOutput());
-        metric("Winch position", getWinchPosition());
-        metric("PID output", calculateWinch());
-        metric("Climber State", getStateName());
-        metric("Climber Step", getStepName());
+        metric("Stationary encoder", _stationaryArmWinchEncoder.getPosition());
+        metric("State", _state.name());
+        metric("Step", _step.name());
     }
 }
