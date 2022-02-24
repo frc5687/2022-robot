@@ -26,7 +26,7 @@ public class OI extends OutliersProxy {
 
     private JoystickButton _intakeBTN;
     private JoystickButton  _climberUp;
-    private JoystickButton _climberDown;
+    private JoystickButton _firstStep;
     private JoystickButton _secondStep;
 
     private double yIn = 0;
@@ -38,14 +38,14 @@ public class OI extends OutliersProxy {
         _rightJoystick = new Joystick(0);
         _intakeBTN = new JoystickButton(_leftJoystick, 4);
         _climberUp = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _climberDown = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _firstStep = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
         _secondStep = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
     }
 
     public void initializeButtons(DriveTrain driveTrain, Intake intake, Climber climber) {
         _intakeBTN.whenHeld(new Intaker(intake));
         _climberUp.whenPressed(new ArmUp(climber));
-        _climberDown.whenPressed(new ClimberDown(climber));
+        _firstStep.whenPressed(new ClimberDown(climber));
         _secondStep.whenPressed(new SecondStep(climber));
     }
 

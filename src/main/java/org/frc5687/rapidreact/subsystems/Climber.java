@@ -26,9 +26,10 @@ public class Climber extends OutliersSubsystem{
     private HallEffect _staArmDown;
     private boolean _armForward = false;
     private ClimberState _state = ClimberState.UNKNOW;
+    private ClimberStep _step = ClimberStep.UNKNOW;
 
     public enum ClimberState {
-        KILLs(1),
+        KILL(1),
         RETRACTING_S_ARM(2),
         RETRACTING_R_ARM(3),
         EXTENDING_S_ARM(4),
@@ -38,6 +39,21 @@ public class Climber extends OutliersSubsystem{
 
         private final int _value;
         ClimberState(int value) { 
+            _value = value; 
+        }
+
+        public int getValue() { 
+            return _value; 
+        }
+    }
+
+    public enum ClimberStep{
+        FIRST_STEP(0),
+        SECOND_STEP(1),
+        UNKNOW(2);
+
+        private final int _value;
+        ClimberStep(int value) { 
             _value = value; 
         }
 
@@ -67,13 +83,23 @@ public class Climber extends OutliersSubsystem{
     }
 
     public void setState(ClimberState state){
-        //Sets a new climber state
+        //Sets the current climber state
         _state = state;
+    }
+
+    public void setStep(ClimberStep step){
+        //Sets the current climber step
+        _step = step;
     }
 
     public String getStateName(){
         //Returns current state as a string
         return _state.name();
+    }
+
+    public String getStepName(){
+        //Returns current step as a string
+        return _step.name();
     }
 
     public void setWinchGoal(double winchGoal){
@@ -100,21 +126,37 @@ public class Climber extends OutliersSubsystem{
         return _climberController.calculate(getWinchPosition());
     }
 
-    public void retractStationaryArm(){
+    public void retractStationaryArm(double setpoint){
         //Retract stationary arm
         setState(ClimberState.RETRACTING_S_ARM);
-        setWinchGoal(Constants.Climber.STATIONARY_RETRACTED_POSITION);
+        setWinchGoal(setpoint);
         setStationaryArmSpeed(calculateWinch());
     }
 
-    public void extendStationaryArm(){
+    public void retractRockerArm(double setpoint){
+        //Retract rocker arm
+        setState(ClimberState.RETRACTING_R_ARM);
+        setWinchGoal(setpoint);
+        setRockerArmSpeed(calculateWinch());
+    }
+
+    public void extendStationaryArm(double setpoint){
         //Extend stationary arm
         setState(ClimberState.EXTENDING_S_ARM);
-        setWinchGoal(Constants.Climber.STATIONARY_EXTENDED_POSITION);
+        setWinchGoal(setpoint);
         setStationaryArmSpeed(calculateWinch());
+    }
+
+    
+    public void extendRockerArm(double setpoint){
+        //Retract rocker arm
+        setState(ClimberState.EXTENDING_R_ARM);
+        setWinchGoal(setpoint);
+        setRockerArmSpeed(calculateWinch());
     }
 
     public boolean atGoal(){
+        //Is the PID controller at the set point
         return _climberController.atGoal();
     }
 
@@ -160,5 +202,6 @@ public class Climber extends OutliersSubsystem{
         metric("Winch position", getWinchPosition());
         metric("PID output", calculateWinch());
         metric("Climber State", getStateName());
+        metric("Climber Step", getStepName());
     }
 }
