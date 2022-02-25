@@ -284,7 +284,17 @@ public class Constants {
         public static final double TOLERANCE = 0.1; // meters.
 
         public static final double CLIMB_DRIVE_SPEED = 1.75; //The speed of the drivetrain during climbing
+
+        public static final int COUNTS_PER_REVOLUTION = 8196;
+
         public static final double STATIONARY_RETRACTED_POSITION = 0.0;
-        public static final double STATIONARY_EXTENDED_POSITION = 0.5;
+        public static final double STATIONARY_EXTENDED_POSITION = 26.0;
+
+        public static final double ROCKER_RETRACTED_POSITION = 0.0;
+        public static final double ROCKER_EXTENDED_POSITION = 26.0;
+
+        public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
+        public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
+
     }
 }
