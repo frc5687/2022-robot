@@ -29,6 +29,7 @@ public class Climber extends OutliersSubsystem{
     private boolean _armForward = false;
     private ClimberState _state = ClimberState.UNKNOW;
     private ClimberStep _step = ClimberStep.UNKNOW;
+    private double _goal = 0.0;
 
     public enum ClimberState {
         KILL(1),
@@ -50,8 +51,8 @@ public class Climber extends OutliersSubsystem{
     }
 
     public enum ClimberStep{
-        ON_FLOOR(0),
-        ON_FIRST_BAR(1),
+        STOW(0),
+        PREP_TO_CLIMB(1),
         ATTACH_MID(2),
         ATTACH_HIGH(3),
         ATTACH_TRANSVERSAL(4),
@@ -83,19 +84,23 @@ public class Climber extends OutliersSubsystem{
         _rockerArmWinch = new CANSparkMax(RobotMap.CAN.SPARKMAX.ROCKER_CLIMBER, CANSparkMax.MotorType.kBrushless);
         _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
 
-        _stationaryArmWinch.setIdleMode(IdleMode.kBrake);
-        _stationaryArmWinch.setInverted(false);
-        _staArmUp = new HallEffect(8);
-        _staArmDown = new HallEffect(6);
+        _stationaryArmWinch.setIdleMode(IdleMode.kCoast);
+        _stationaryArmWinch.setInverted(Constants.Climber.STATIONARY_ARM_REVERSED);
+        _staArmUp = new HallEffect(RobotMap.DIO.STATIONARY_ARM_TOP_HALL);
+        _staArmDown = new HallEffect(RobotMap.DIO.STATIONARY_ARM_BOTTOM_HALL);
         _staController = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD,  new TrapezoidProfile.Constraints(1.5, 2.0));
         _rockController = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD, new TrapezoidProfile.Constraints(1.5, 2.0));
         _stationaryArmWinchEncoder = _stationaryArmWinch.getEncoder();
         _rockerArmWinchEncoder = _rockerArmWinch.getEncoder();
+        _stationaryArmWinchEncoder.setPosition(0);
     }
 
     @Override
     public void periodic(){
         super.periodic();
+        if(_stationaryArmWinch.getAppliedOutput() > Constants.Climber.STATIONARY_ARM_CURRENT_LIMIT){
+            stop();
+        }
     }
 
     public void setStaSpeed(double speed){
@@ -103,8 +108,14 @@ public class Climber extends OutliersSubsystem{
         _stationaryArmWinch.set(speed);
     }
 
+    public void stop(){
+        _stationaryArmWinch.set(0.0);
+        _stationaryArmWinch.setIdleMode(IdleMode.kBrake);
+    }
+
     public void setStaGoal(double goal){
         //Sets the goal of the PID controller
+        _goal = goal;
         _staController.setGoal(goal);
     }
 
@@ -167,10 +178,22 @@ public class Climber extends OutliersSubsystem{
         return _staArmDown.get();
     }
 
+    public void zeroEncoder(){
+        _stationaryArmWinchEncoder.setPosition(0);
+    }
+
+    public void invert(boolean inverted){
+        _stationaryArmWinch.setInverted(inverted);
+    }
+
     @Override
     public void updateDashboard() {
         metric("Stationary encoder", _stationaryArmWinchEncoder.getPosition());
+        metric("PID goal", _goal);
+        metric("PID calculation", _staController.calculate(_stationaryArmWinchEncoder.getPosition()));
         metric("State", _state.name());
         metric("Step", _step.name());
+        metric("Stationary Arm Up", isStaArmUp());
+        metric("Stationary Arm Down", isStaArmDown());
     }
 }

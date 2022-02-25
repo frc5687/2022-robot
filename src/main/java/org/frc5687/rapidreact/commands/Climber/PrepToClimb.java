@@ -3,6 +3,8 @@ package org.frc5687.rapidreact.commands.Climber;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
+import org.frc5687.rapidreact.subsystems.Climber.ClimberState;
+import org.frc5687.rapidreact.subsystems.Climber.ClimberStep;
 
 public class PrepToClimb extends OutliersCommand{
 
@@ -16,7 +18,8 @@ public class PrepToClimb extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        _climber.setStaSpeed(Constants.Climber.STATIONARY_EXTENDED_POSITION);
+        _climber.setStep(ClimberStep.PREP_TO_CLIMB);
+        _climber.moveStaArm(ClimberState.EXTENDING_S_ARM, 20);
     }
 
     @Override

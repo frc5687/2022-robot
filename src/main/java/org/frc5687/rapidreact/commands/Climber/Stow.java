@@ -2,7 +2,6 @@ package org.frc5687.rapidreact.commands.Climber;
 
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
-import org.frc5687.rapidreact.subsystems.Climber.ClimberState;
 
 public class Stow extends OutliersCommand{
 
@@ -17,7 +16,12 @@ public class Stow extends OutliersCommand{
     public void execute(){
         super.execute();
         //Store the stationary arm
-        _climber.moveStaArm(ClimberState.RETRACTING_S_ARM, 0.0);
+        _climber.zeroEncoder();
+        //_climber.setStaSpeed(0.4);
+        //if(_climber.isStaArmDown()){
+        //    _climber.stop();
+        //    _climber.zeroEncoder();
+        //}
     }
 
     @Override

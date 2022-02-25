@@ -64,7 +64,7 @@ public class OI extends OutliersProxy {
 //        _release.whenPressed(catapult::releaseArm);
 //        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
 //        _dropArm.whenHeld(new Feed(servoStop));
-        _resetNavX.whenPressed(driveTrain::resetYaw);
+
 
         _stow.whenPressed(new Stow(climber));
         _prepClimb.whenPressed(new PrepToClimb(climber));

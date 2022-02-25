@@ -256,9 +256,11 @@ public class Catapult extends OutliersSubsystem {
     public double getWinchStringLength() {
         return getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE;
     }
+
     public double getArmReleaseAngle() {
         return STOWED_ANGLE - stringLengthToAngle(getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE);
     }
+    
     //meters and radians.
     protected double stringLengthToAngle(double stringLength) {
         return LINEAR_REGRESSION_SLOPE * stringLength + LINEAR_REGRESSION_OFFSET;
@@ -267,6 +269,7 @@ public class Catapult extends OutliersSubsystem {
     protected double angleToStringLength(double angle) {
         return (angle - STOWED_ANGLE + LINEAR_REGRESSION_OFFSET) / LINEAR_REGRESSION_SLOPE;
     }
+
     public void zeroWinchEncoder() {
         if (!_winchEncoderZeroed) {
             _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT);
@@ -284,9 +287,11 @@ public class Catapult extends OutliersSubsystem {
     public void setWinchGoal(double stringLength) {
         _winchController.setGoal(-stringLength);
     }
+
     public boolean isWinchAtGoal() {
         return _winchController.atGoal();
     }
+
     public boolean isArmLowered() { return _armHall.get(); }
 
 
