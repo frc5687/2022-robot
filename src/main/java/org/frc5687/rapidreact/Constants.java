@@ -288,13 +288,17 @@ public class Constants {
         public static final int COUNTS_PER_REVOLUTION = 8196;
 
         public static final double STATIONARY_RETRACTED_POSITION = 0.0;
+        public static final double STATIONARY_CLOSE_POSITION = 14.0;
         public static final double STATIONARY_EXTENDED_POSITION = 26.0;
 
         public static final double ROCKER_RETRACTED_POSITION = 0.0;
+        public static final double ROCKER_CLOSE_POSITION = 16.0;
+        public static final double ROCKER_MID_POSITION = 19.0;
         public static final double ROCKER_EXTENDED_POSITION = 26.0;
 
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
+        public static final long ROCKER_PISTON_WAIT = 250;
 
     }
 }
