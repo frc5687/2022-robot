@@ -76,6 +76,7 @@ public class Climber extends OutliersSubsystem{
         _rockerArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
         _rockerArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
 
+
         _stationaryArmWinch.burnFlash();
         _rockerArmWinch.burnFlash();
 
@@ -86,14 +87,24 @@ public class Climber extends OutliersSubsystem{
         _rockArmDown = new HallEffect(RobotMap.DIO.ROCKER_ARM_BOTTOM_HALL);
 
         _staController = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD,  new TrapezoidProfile.Constraints(1.5, 2.0));
-        _rockController = new ProfiledPIDController(Constants.Climber.kP, Constants.Climber.kI, Constants.Climber.kD, new TrapezoidProfile.Constraints(1.5, 2.0));
+        _rockController = new ProfiledPIDController(
+            Constants.Climber.kP,
+            Constants.Climber.kI, 
+            Constants.Climber.kD,
+                new TrapezoidProfile.Constraints(
+                        Constants.Climber.MAX_VELOCITY_MPS,
+                        Constants.Climber.MAX_ACCELERATION_MPSS
+                )
+            );
 
-        _stationaryArmWinchEncoder = _stationaryArmWinch.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, Constants.Climber.COUNTS_PER_REVOLUTION);
+        _stationaryArmWinchEncoder = _stationaryArmWinch.getEncoder();
         _stationaryArmWinchEncoder.setPositionConversionFactor(Constants.Climber.STATIONARY_ENCODER_CONVERSION_FACTOR);
 
-        _rockerArmWinchEncoder = _rockerArmWinch.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, Constants.Climber.COUNTS_PER_REVOLUTION);
+        // _rockerArmWinchEncoder = _rockerArmWinch.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, Constants.Climber.COUNTS_PER_REVOLUTION);
+        _rockerArmWinchEncoder = _rockerArmWinch.getEncoder();
         _rockerArmWinchEncoder.setPositionConversionFactor(Constants.Climber.ROCKER_ENCODER_CONVERSION_FACTOR);
 
+        _rockerArmWinchEncoder.setPosition(0);
         _stationaryArmWinchEncoder.setPosition(0);
     }
 
@@ -115,6 +126,7 @@ public class Climber extends OutliersSubsystem{
     public void setRockSpeed(double speed) {
         _rockSpeed = speed;
         _rockerArmWinch.set(speed);
+        info("Rocker arm speed set to " + speed);
     }
 
     /**
@@ -133,7 +145,7 @@ public class Climber extends OutliersSubsystem{
 
         _staControllerEnabled = false;
         setStaSpeed(0.0);
-        _stationaryArmWinch.setIdleMode(IdleMode.kBrake);
+        // _stationaryArmWinch.setIdleMode(IdleMode.kBrake);
     }
 
     /**
@@ -144,7 +156,7 @@ public class Climber extends OutliersSubsystem{
 
         _rockControllerEnabled = false;
         setRockSpeed(0.0);
-        _rockerArmWinch.setIdleMode(IdleMode.kBrake);
+        // _rockerArmWinch.setIdleMode(IdleMode.kBrake);
     }
 
     /**
@@ -168,6 +180,7 @@ public class Climber extends OutliersSubsystem{
 
         //Sets the goal of the PID controller
         _rockController.setGoal(goal);
+        _rockControllerEnabled = true;
     }
 
     /**

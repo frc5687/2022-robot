@@ -270,10 +270,10 @@ public class Constants {
         public static final double WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
 
 
-        public static final boolean STATIONARY_ARM_REVERSED = false;
+        public static final boolean STATIONARY_ARM_REVERSED = true;
         public static final int STATIONARY_ARM_CURRENT_LIMIT = 10; // amps
 
-        public static final boolean ROCKER_ARM_REVERSED = false;
+        public static final boolean ROCKER_ARM_REVERSED = true;
         public static final int ROCKER_ARM_CURRENT_LIMIT = 25; // amps
 
         public static final double kP = 0.5;
@@ -299,7 +299,7 @@ public class Constants {
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final long ROCKER_PISTON_WAIT = 250;
-        public static final double ARM_STOW_SPEED = 0.25;
+        public static final double ARM_STOW_SPEED = 0.4;
 
     }
 }

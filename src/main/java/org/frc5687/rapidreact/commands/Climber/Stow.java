@@ -17,17 +17,21 @@ public class Stow extends OutliersCommand{
     public void initialize(){
         super.initialize();
         _climber.rockerOut();
+        info("Stow initialized.");
+        _climber.enableMetrics();
     }
 
     @Override
     public void execute(){
         super.execute();
         if (_climber.isRockArmDown()) {
-            _climber.setRockSpeed(0.0);
+            _climber.stopRockerArm();
         } else {
             _climber.setRockSpeed(Constants.Climber.ARM_STOW_SPEED);
         }
-        if (!_climber.isStaArmDown()) {
+        if (_climber.isStaArmDown()) {
+            _climber.stopStationaryArm();
+        } else {
             _climber.setStaSpeed(Constants.Climber.ARM_STOW_SPEED);
         }
     }
@@ -35,13 +39,19 @@ public class Stow extends OutliersCommand{
 
     @Override
     public boolean isFinished(){
-        return _climber.isStaArmDown() && _climber.isRockArmDown();
+        if  (_climber.isRockArmDown()) {
+            info("Stow finished.");
+            return true;
+        };
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
+        info("Stow ended.");
         _climber.stop();
         _climber.zeroRockerArmEncoder();
         _climber.zeroStationaryArmEncoder();
+        _climber.disableMetrics();
     }
 }

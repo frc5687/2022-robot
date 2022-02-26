@@ -11,7 +11,7 @@ public class PrepToClimb extends OutliersCommand{
     public PrepToClimb(Climber climber) {
         _climber = climber;
         addRequirements(_climber);
-        info("Instantiated PrepToClimb");
+        info("Instantiated PrepToClimb Check");
     }
 
     @Override
@@ -20,8 +20,8 @@ public class PrepToClimb extends OutliersCommand{
         info("Initialized PrepToClimb");
         _climber.enableMetrics();
         _climber.dropDriveSpeed();
-        // _climber.setRockGoal(Constants.Climber.ROCKER_EXTENDED_POSITION);
-        _climber.setStaGoal(Constants.Climber.STATIONARY_EXTENDED_POSITION);
+        _climber.setRockGoal(Constants.Climber.ROCKER_EXTENDED_POSITION);
+        // _climber.setStaGoal(Constants.Climber.STATIONARY_EXTENDED_POSITION);
         _climber.rockerIn();
         enableMetrics();
     }
@@ -47,7 +47,7 @@ public class PrepToClimb extends OutliersCommand{
     public boolean isFinished(){
         super.isFinished();
         
-        if (_climber.isStaAtGoal() || _climber.isStaArmUp()) {
+        if (_climber.isRockAtGoal() || _climber.isRockArmUp()) {
             info("Finished PrepToClimb");
             return true;
         }
