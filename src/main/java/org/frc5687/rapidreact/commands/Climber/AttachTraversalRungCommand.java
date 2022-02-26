@@ -16,12 +16,14 @@ public class AttachTraversalRungCommand extends OutliersCommand{
     public AttachTraversalRungCommand(Climber climber) {
         _climber = climber;
         addRequirements(_climber);
+        info("Instantiated AttachTraversalRungCommand");
     }
 
     @Override
     public void initialize(){
         super.initialize();
         _step = Step.START;
+        info("Initialized AttachTraversalRungCommand");
     }
 
     @Override
@@ -30,40 +32,48 @@ public class AttachTraversalRungCommand extends OutliersCommand{
         switch(_step) {
             case START:
                 _step = Step.EXTEND_STATIONARY;
+                info("AttachTraversalRungCommand advancing to EXTEND_STATIONARY step.");
                 break;
             case EXTEND_STATIONARY:
                 _climber.setStaGoal(Constants.Climber.STATIONARY_EXTENDED_POSITION);
                 _step = Step.WAIT_STATIONARY;
+                info("AttachTraversalRungCommand advancing to WAIT_STATIONARY step.");
                 break;
             case WAIT_STATIONARY:
                 if (_climber.isStaAtGoal()) {
                     _climber.stopStationaryArm();
                     _step = Step.RETRACT_ROCKER;
+                    info("AttachTraversalRungCommand advancing to RETRACT_ROCKER step.");
                 }
                 break;
             case RETRACT_ROCKER:
                 _climber.setRockGoal(Constants.Climber.ROCKER_RETRACTED_POSITION);
                 _step = Step.WAIT_ROCKER;
+                info("AttachTraversalRungCommand advancing to WAIT_ROCKER step.");
                 break;
             case WAIT_ROCKER:
                 if (_climber.isRockAtGoal()) {
                     _climber.stopRockerArm();
                     _step = Step.ROCKIN;
+                    info("AttachTraversalRungCommand advancing to ROCKIN step.");
                 }
                 break;
             case ROCKIN:
                 _climber.rockerIn();
                 _step = Step.WAIT_ROCK;
+                info("AttachTraversalRungCommand advancing to WAIT_ROCK step.");
                 _wait = System.currentTimeMillis() + Constants.Climber.ROCKER_PISTON_WAIT;
                 break;
             case WAIT_ROCK:
                 if ( System.currentTimeMillis() > _wait) {
                     _step = Step.EXTEND_ROCKER;
+                    info("AttachTraversalRungCommand advancing to EXTEND_ROCKER step.");
                 }
                 break;
             case EXTEND_ROCKER:
                 _climber.setRockGoal(Constants.Climber.ROCKER_MID_POSITION);
                 _step = Step.WAIT_FINISH;
+                info("AttachTraversalRungCommand advancing to WAIT_FINISH step.");
                 break;
             case WAIT_FINISH:
                 break;
@@ -76,13 +86,19 @@ public class AttachTraversalRungCommand extends OutliersCommand{
     @Override
     public boolean isFinished(){
         super.isFinished();
-        return _step == Step.WAIT_FINISH && _climber.isRockAtGoal(); 
+        
+        if (_step == Step.WAIT_FINISH && _climber.isRockAtGoal()) {
+            info("Finished AttachTraversalRungCommand.");
+            return true;
+        }; 
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        _climber.stopStationaryArm();
+        _climber.stop();
+        info("Ended AttachTraversalRungCommand.");
     }
 
     public enum Step{

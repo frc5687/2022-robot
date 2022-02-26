@@ -14,18 +14,20 @@ public class AttachMidRungCommand extends OutliersCommand{
     public AttachMidRungCommand(Climber climber) {
         _climber = climber;
         addRequirements(_climber);
+        info("Instantiated AttachMidRungCommand");
     }
 
     @Override
     public void initialize(){
         super.initialize();
+        info("Initialized AttachMidRungCommand");
+        _climber.enableMetrics();
         _climber.setStaGoal(Constants.Climber.STATIONARY_RETRACTED_POSITION);
     }
 
     @Override
     public void execute(){
         super.execute();
-        // _climber.setStep(ClimberStep.PREP_TO_CLIMB);
         _climber.runControllers();
     }
 
@@ -33,12 +35,18 @@ public class AttachMidRungCommand extends OutliersCommand{
     @Override
     public boolean isFinished(){
         super.isFinished();
-        return _climber.isStaAtGoal() || _climber.isStaArmDown();
+        if (_climber.isStaAtGoal() || _climber.isStaArmDown()) {
+            info("Finished AttachMidRungCommand");
+            return true;
+        };
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        _climber.stopStationaryArm();
+        _climber.stop();
+        _climber.disableMetrics();
+        info("Ended AttachMidRung");
     }
 }

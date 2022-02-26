@@ -57,8 +57,7 @@ public class PrepToClimb extends OutliersCommand{
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        _climber.stopStationaryArm();
-        _climber.stopRockerArm();
+        _climber.stop();
         _climber.disableMetrics();
         info("Ended PrepToClimb");
     }
