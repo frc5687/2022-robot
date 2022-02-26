@@ -1,11 +1,10 @@
 package org.frc5687.rapidreact.commands;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
 public class Shoot extends OutliersCommand {
 
@@ -169,7 +168,13 @@ public class Shoot extends OutliersCommand {
                 if (_oi.exitKill()) {
                     _catapult.setState(_prevState);
                 }
-            }
+            }break;
+            case AUTO:
+                _catapult.setSpringMotorSpeed(0.0);
+                _catapult.setWinchMotorSpeed(0.0);
+                if(!_catapult.isArmLowered()){
+                    _catapult.setState(CatapultState.ZEROING);
+                }
         }
     }
 

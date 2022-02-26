@@ -250,7 +250,7 @@ public class DriveTrain extends OutliersSubsystem {
         if (_proxy.getLatestFrame() == null) {
             return false;
         }
-        return _proxy.getLatestFrame().hasTarget();
+        return _proxy.getLatestFrame().getTargetDistance() != -1;
     }
 
     public double getDistanceToTarget() {
