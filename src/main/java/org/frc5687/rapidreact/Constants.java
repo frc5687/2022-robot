@@ -299,6 +299,7 @@ public class Constants {
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final long ROCKER_PISTON_WAIT = 250;
+        public static final double ARM_STOW_SPEED = 0.25;
 
     }
 }

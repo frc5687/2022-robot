@@ -1,4 +1,4 @@
-/* Team 5687 (C)5687-2022 */
+/* Team 5687 (C)2022 */
 package org.frc5687.rapidreact.subsystems;
 
 import com.revrobotics.CANSparkMax;
@@ -16,7 +16,17 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-
+/**
+ * The Climber subsytem consists of two hooked arms on spring-loaded cylinders, restrained by winches.
+ * Paying the winch out allows the hook to extend, retracting the winch pulls the hook down.
+ * One arm is stationary, the other rocks foreward and back driven by a pneumatic piston.
+ * 
+ * The winches are driven by baby neos on sparkmax controllers (with integral encoders) and the each arm
+ * has a pair of hall-effect sensors to indicate when they are UP or DOWN.
+ * 
+ * The winches are controlled by ProfiledPIDControllers, with goals set using setStaGoal and setRockGoal.
+ * The controllers are enabled/disabled using the enable
+ */
 public class Climber extends OutliersSubsystem{
     
     private CANSparkMax _stationaryArmWinch;
@@ -89,50 +99,104 @@ public class Climber extends OutliersSubsystem{
 
     /**
      * Directly sets the speed of the stationary arm winch.
-     * Note that this is private because it is intended to be called only by the climber's controllers. 
+     * Note that this is intended to be called only by the climber's controllers. 
      * @param speed
      */
-    private void setStaSpeed(double speed) {
+    public void setStaSpeed(double speed) {
         _staSpeed = speed;
         _stationaryArmWinch.set(speed);
     }
 
     /**
      * Directly sets the speed of the rocker arm winch.
-     * Note that this is private because it is intended to be called only by the climber's controllers. 
+     * Note that this is intended to be called only by the climber's controllers. 
      * @param speed
      */
-    private void setRockSpeed(double speed) {
+    public void setRockSpeed(double speed) {
         _rockSpeed = speed;
         _rockerArmWinch.set(speed);
     }
 
+    /**
+     * Disables both PID controllers and sets both winch motors to brake mode.
+     */
     public void stop(){
         stopRockerArm();
         stopStationaryArm();
     }
 
     /**
-     * Sets the goal of the PID controller
-     * @param goal
+     * Stops the stationary arm by disabling the PID controller, setting the winch speed to 0, and setting brake mode.
+     */
+    public void stopStationaryArm() {
+        info("Stopping StationaryArm");
+
+        _staControllerEnabled = false;
+        setStaSpeed(0.0);
+        _stationaryArmWinch.setIdleMode(IdleMode.kBrake);
+    }
+
+    /**
+     * Stops the rocker arm by disabling the PID controller, setting the winch speed to 0, and setting brake mode.
+     */
+    public void stopRockerArm() {
+        info("Stopping RockerArm");
+
+        _rockControllerEnabled = false;
+        setRockSpeed(0.0);
+        _rockerArmWinch.setIdleMode(IdleMode.kBrake);
+    }
+
+    /**
+     * Sets the goal of the stationary arm PID controller
+     * @param goal in inches
      */
     public void setStaGoal(double goal){
+        info("Setting StationaryArm goal to " + goal);
+
         _staController.setGoal(goal);
         _staControllerEnabled = true;
     }
 
 
+    /**
+     * Sets the goal of the rocker arm PID controller
+     * @param goal in inches
+     */
     public void setRockGoal(double goal){
+        info("Setting RockerArm goal to " + goal);
+
         //Sets the goal of the PID controller
         _rockController.setGoal(goal);
     }
 
+    /**
+     * Run the winch PID controllers.  Called once per cycle by the various Climber Command classes.
+     */
+    public void runControllers() {
+        if (_staControllerEnabled) {
+            setStaSpeed(_staController.calculate(_stationaryArmWinchEncoder.getPosition()));
+        }
+        if (_rockControllerEnabled) {
+            setRockSpeed(_rockController.calculate(_rockerArmWinchEncoder.getPosition()));
+        }
+    }
+
+    /**
+     * Pushes the rocker-arm piston in.
+     */
     public void rockerIn(){
         //Rock arm in
+        info("Setting Rocker in");
+
         _rocker.set(Value.kForward);
     }
 
+    /**
+     * Pushes the rocker-arm piston out.
+     */
     public void rockerOut(){
+        info("Setting Rocker out");
         //Rock arm out
         _rocker.set(Value.kReverse);
     }
@@ -142,31 +206,50 @@ public class Climber extends OutliersSubsystem{
         // Constants.DriveTrain.MAX_MPS = Constants.Climber.CLIMB_DRIVE_SPEED;
     }
 
+    /**
+     * Checks the stationary arm "up" hall-effect sensor.
+     * @return true if the sensor is triggered
+     */
     public boolean isStaArmUp(){
-        //Is the stationary arm up
         return _staArmUp.get();
     }
 
+    /**
+     * Checks the stationary arm "down" hall-effect sensor.
+     * @return true if the sensor is triggered
+     */
     public boolean isStaArmDown(){
-        //Is the stationary arm down
         return _staArmDown.get();
     }
 
+    /**
+     * Checks the rocker arm "up" hall-effect sensor.
+     * @return true if the sensor is triggered
+     */
     public boolean isRockArmUp(){
         return _rockArmUp.get();
     }
 
+    /**
+     * Checks the rocker arm "down" hall-effect sensor.
+     * @return true if the sensor is triggered
+     */
     public boolean isRockArmDown(){
         return _rockArmDown.get();
     }
 
-
-    public void zeroEncoder(){
+    /**
+     * Sets the stationary arm encoder to 0.  This should be called when the "down" HE is triggered.
+     */
+    public void zeroStationaryArmEncoder(){
         _stationaryArmWinchEncoder.setPosition(0);
     }
 
-    public void invert(boolean inverted){
-        _stationaryArmWinch.setInverted(inverted);
+    /**
+     * Sets the rocker arm encoder to 0.  This should be called when the "down" HE is triggered.
+     */
+    public void zeroRockerArmEncoder() {
+        _rockerArmWinchEncoder.setPosition(0);
     }
 
     @Override
@@ -188,57 +271,57 @@ public class Climber extends OutliersSubsystem{
         metric("Rocker Cylinder", getRockerLabel());
 
         metric("Step", _step.name());
-
     }
+
 
     /**
-     * Run the winch PID controllers.  Called by the various Climber Command classes.
+     * Checks whether the stationary arm PID controlled is at its goal.
+     * @return true if within tolerance
      */
-    public void runControllers() {
-        if (_staControllerEnabled) {
-            setStaSpeed(_staController.calculate(_stationaryArmWinchEncoder.getPosition()));
-        }
-        if (_rockControllerEnabled) {
-            setRockSpeed(_rockController.calculate(_rockerArmWinchEncoder.getPosition()));
-        }
-    }
-
-    public boolean getStaAtGoal() {
+    public boolean isStaAtGoal() {
         return _staController.atGoal();
     }
 
-    public boolean getRockAtGoal() {
+    /**
+     * Checks whether the rocker arm PID controlled is at its goal.
+     * @return true if within tolerance
+     */
+    public boolean isRockAtGoal() {
         return _rockController.atGoal();
     }
 
-    public void stopStationaryArm() {
-        _staControllerEnabled = false;
-        setStaSpeed(0.0);
-        _stationaryArmWinch.setIdleMode(IdleMode.kBrake);
-    }
 
-    public void stopRockerArm() {
-        _rockControllerEnabled = false;
-        setRockSpeed(0.0);
-        _rockerArmWinch.setIdleMode(IdleMode.kBrake);
-    }
-
+    /**
+     * @return the current stationary arm winch speed.
+     */
     public double getStaSpeed() {
         return _staSpeed;
     }
 
+    /**
+     * @return the current stationary arm winch position in inches.
+     */
     public double getStaPosition() {
         return _stationaryArmWinchEncoder.getPosition();
     }
 
+    /**
+     * @return the current rocker arm winch speed.
+     */
     public double getRockSpeed() {
         return _rockSpeed;
     }
 
+    /**
+     * @return the current rocker arm winch position in inches.
+     */
     public double getRockPosition() {
         return _rockerArmWinchEncoder.getPosition();
     }
 
+    /**
+     * @return the position (In or Out) of the rocker piston
+     */
     public String getRockerLabel() {
         return(_rocker.get() == Value.kForward) ? "In" : "Out";
     }

@@ -33,7 +33,7 @@ public class AttachMidRungCommand extends OutliersCommand{
     @Override
     public boolean isFinished(){
         super.isFinished();
-        return _climber.getStaAtGoal() || _climber.isStaArmDown();
+        return _climber.isStaAtGoal() || _climber.isStaArmDown();
     }
 
     @Override

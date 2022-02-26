@@ -36,7 +36,7 @@ public class AttachTraversalRungCommand extends OutliersCommand{
                 _step = Step.WAIT_STATIONARY;
                 break;
             case WAIT_STATIONARY:
-                if (_climber.getStaAtGoal()) {
+                if (_climber.isStaAtGoal()) {
                     _climber.stopStationaryArm();
                     _step = Step.RETRACT_ROCKER;
                 }
@@ -46,7 +46,7 @@ public class AttachTraversalRungCommand extends OutliersCommand{
                 _step = Step.WAIT_ROCKER;
                 break;
             case WAIT_ROCKER:
-                if (_climber.getRockAtGoal()) {
+                if (_climber.isRockAtGoal()) {
                     _climber.stopRockerArm();
                     _step = Step.ROCKIN;
                 }
@@ -76,7 +76,7 @@ public class AttachTraversalRungCommand extends OutliersCommand{
     @Override
     public boolean isFinished(){
         super.isFinished();
-        return _step == Step.WAIT_FINISH && _climber.getRockAtGoal(); 
+        return _step == Step.WAIT_FINISH && _climber.isRockAtGoal(); 
     }
 
     @Override

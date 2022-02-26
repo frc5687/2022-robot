@@ -46,7 +46,7 @@ public class AttachHighRungCommand extends OutliersCommand{
                 _step = Step.WAIT_ROCKER;
                 break;
             case WAIT_ROCKER:
-                if (_climber.getRockAtGoal()) {
+                if (_climber.isRockAtGoal()) {
                     _step = Step.EXTEND_STATIONARY;
                 }
                 break;
@@ -65,7 +65,7 @@ public class AttachHighRungCommand extends OutliersCommand{
     @Override
     public boolean isFinished(){
         super.isFinished();
-        return _step == Step.WAIT_STATIONARY && _climber.getStaAtGoal(); 
+        return _step == Step.WAIT_STATIONARY && _climber.isStaAtGoal(); 
     }
 
     @Override
