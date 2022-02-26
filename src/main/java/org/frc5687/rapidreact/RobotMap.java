@@ -92,8 +92,8 @@ public class RobotMap {
         public static final int STATIONARY_ARM_TOP_HALL = 6;
         public static final int STATIONARY_ARM_BOTTOM_HALL = 8;
 
-        public static final int ROCKER_ARM_TOP_HALL = 9; // TODO: check on the bot
-        public static final int ROCKER_ARM_BOTTOM_HALL = 10; // TODO: check on the bot
+        public static final int ROCKER_ARM_TOP_HALL = 9; 
+        public static final int ROCKER_ARM_BOTTOM_HALL = 7; 
 
     }
 }

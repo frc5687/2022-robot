@@ -267,7 +267,7 @@ public class Climber extends OutliersSubsystem{
         metric("Rocker/Enabled", _rockControllerEnabled);
         metric("Rocker/Speed", _rockSpeed);
         metric("Rocker/Up", isRockArmUp()); 
-        metric("Rocker/Down", isStaArmDown());
+        metric("Rocker/Down", isRockArmDown());
         metric("Rocker Cylinder", getRockerLabel());
 
         metric("Step", _step.name());
