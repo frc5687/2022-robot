@@ -3,6 +3,7 @@ package org.frc5687.rapidreact.commands.Climber;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
+import org.frc5687.rapidreact.subsystems.Climber.ClimberStep;
 
 public class PrepToClimb extends OutliersCommand{
 
@@ -18,6 +19,7 @@ public class PrepToClimb extends OutliersCommand{
     public void initialize(){
         super.initialize();
         info("Initialized PrepToClimb");
+        _climber.setStep(ClimberStep.PREP_TO_CLIMB);
         _climber.enableMetrics();
         _climber.dropDriveSpeed();
         _climber.setRockGoal(Constants.Climber.ROCKER_EXTENDED_POSITION);

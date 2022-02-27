@@ -274,7 +274,7 @@ public class Constants {
         public static final int STATIONARY_ARM_CURRENT_LIMIT = 10; // amps
 
         public static final boolean ROCKER_ARM_REVERSED = true;
-        public static final int ROCKER_ARM_CURRENT_LIMIT = 25; // amps
+        public static final int ROCKER_ARM_CURRENT_LIMIT = 10; // amps
 
         public static final double kP = 0.1;
         public static final double kI = 0.0;
@@ -286,6 +286,10 @@ public class Constants {
         public static final double CLIMB_DRIVE_SPEED = 1.75; //The speed of the drivetrain during climbing
 
         public static final int COUNTS_PER_REVOLUTION = 8196;
+
+
+
+
 
         public static final double STATIONARY_RETRACTED_POSITION = 0.0;
         public static final double STATIONARY_CLOSE_POSITION = 14.0;
@@ -301,5 +305,7 @@ public class Constants {
         public static final long ROCKER_PISTON_WAIT = 250;
         public static final double ARM_STOW_SPEED = 0.4;
 
+        public static final boolean ROCKER_ENCODER_INVERTED = false;
+        public static final boolean STATIONARY_ARM_ENCODER_INVERTED = false;
     }
 }

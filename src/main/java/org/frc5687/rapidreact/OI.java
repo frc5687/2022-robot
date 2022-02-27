@@ -2,11 +2,8 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
-import org.frc5687.rapidreact.commands.Feed;
-import org.frc5687.rapidreact.commands.Intaker;
 import org.frc5687.rapidreact.commands.Climber.PrepToClimb;
 import org.frc5687.rapidreact.commands.Climber.Stow;
-import org.frc5687.rapidreact.commands.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;

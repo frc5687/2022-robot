@@ -40,6 +40,7 @@ public class Climber extends OutliersSubsystem{
     private HallEffect _rockArmUp;
     private HallEffect _rockArmDown;
     private ClimberStep _step = ClimberStep.UNKNOWN;
+    private boolean _climberStopped = true;
 
     private boolean _staControllerEnabled = false;
     private boolean _rockControllerEnabled = false;
@@ -128,6 +129,7 @@ public class Climber extends OutliersSubsystem{
         info("Rocker arm speed set to " + speed);
     }
 
+
     /**
      * Disables both PID controllers and sets both winch motors to brake mode.
      */
@@ -141,7 +143,6 @@ public class Climber extends OutliersSubsystem{
      */
     public void stopStationaryArm() {
         info("Stopping StationaryArm");
-
         _staControllerEnabled = false;
         setStaSpeed(0.0);
         // _stationaryArmWinch.setIdleMode(IdleMode.kBrake);
@@ -152,7 +153,6 @@ public class Climber extends OutliersSubsystem{
      */
     public void stopRockerArm() {
         info("Stopping RockerArm");
-
         _rockControllerEnabled = false;
         setRockSpeed(0.0);
         // _rockerArmWinch.setIdleMode(IdleMode.kBrake);
@@ -164,7 +164,6 @@ public class Climber extends OutliersSubsystem{
      */
     public void setStaGoal(double goal){
         info("Setting StationaryArm goal to " + goal);
-
         _staController.setGoal(goal);
         _staControllerEnabled = true;
     }
@@ -176,23 +175,40 @@ public class Climber extends OutliersSubsystem{
      */
     public void setRockGoal(double goal){
         info("Setting RockerArm goal to " + goal);
-
         //Sets the goal of the PID controller
         _rockController.setGoal(goal);
         _rockControllerEnabled = true;
     }
 
+
+    /**
+     * Gets the lenght of the stationary arm lenght
+     * @return
+     */
+    public double getStaStringLenght(){
+        return getStaPosition() * Constants.Climber.WINCH_DRUM_CIRCUMFERENCE;
+    }
+
+    /**
+     * Get the lenght of the string of the rocker arm
+     * @return
+     */
+    public double getRockStringLenght(){
+        return getRockPosition() * Constants.Climber.WINCH_DRUM_CIRCUMFERENCE;
+    }
     /**
      * Run the winch PID controllers.  Called once per cycle by the various Climber Command classes.
+     * Using the rocker arm and the stationary arms encoders with the string to get the distance
+     * the arm is extened, that is used as the input to the PID controllers
      */
     public void runControllers() {
         if (_staControllerEnabled) {
             metric("Running stationary controller", true);
-            setStaSpeed(_staController.calculate(_stationaryArmWinchEncoder.getPosition()));
+            setStaSpeed(_staController.calculate(getStaStringLenght()));
         }
         if (_rockControllerEnabled) {
             metric("Running rocker controller", true);
-            setRockSpeed(_rockController.calculate(_rockerArmWinchEncoder.getPosition()));
+            setRockSpeed(_rockController.calculate(getRockStringLenght()));
         }
     }
 
@@ -274,7 +290,7 @@ public class Climber extends OutliersSubsystem{
         metric("Stationary/Speed", _staSpeed); 
         metric("Stationary/Up", _staArmUp.get());
         metric("Stationary/Down", _staArmDown.get());
-
+        metric("Stationary String Lenght", getStaStringLenght());
         
         metric("Rocker/Position", getRockPosition());
         metric("Rocker/Goal", _rockController.getGoal().position);
@@ -283,8 +299,10 @@ public class Climber extends OutliersSubsystem{
         metric("Rocker/Up", isRockArmUp()); 
         metric("Rocker/Down", isRockArmDown());
         metric("Rocker Cylinder", getRockerLabel());
+        metric("Rocker String Lenght", getRockStringLenght());
 
         metric("Step", _step.name());
+        metric("Climber stopped", _climberStopped);
     }
 
 
