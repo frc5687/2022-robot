@@ -2,8 +2,6 @@ package org.frc5687.rapidreact.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.OutliersContainer;
@@ -19,7 +17,6 @@ public class Intake extends OutliersSubsystem{
     private boolean _deployed;
     
     public Intake(OutliersContainer container) {
-        //Construct the roller and solenoids
         super(container);
         _deployed = false;
         _roller = new TalonFX(RobotMap.CAN.TALONFX.INTAKE_ROLLER);
