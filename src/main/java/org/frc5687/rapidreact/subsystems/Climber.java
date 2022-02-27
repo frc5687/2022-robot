@@ -65,6 +65,7 @@ public class Climber extends OutliersSubsystem{
         _stationaryArmWinch.setIdleMode(IdleMode.kCoast);
         _stationaryArmWinch.setInverted(Constants.Climber.STATIONARY_ARM_REVERSED);
         _stationaryArmWinch.setSecondaryCurrentLimit(Constants.Climber.STATIONARY_ARM_CURRENT_LIMIT);
+        _stationaryArmWinch.setSmartCurrentLimit(Constants.Climber.STATIONARY_ARM_CURRENT_LIMIT);
         _stationaryArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
         _stationaryArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
         _stationaryArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
@@ -72,6 +73,7 @@ public class Climber extends OutliersSubsystem{
         _rockerArmWinch.setIdleMode(IdleMode.kCoast);
         _rockerArmWinch.setInverted(Constants.Climber.ROCKER_ARM_REVERSED);
         _rockerArmWinch.setSecondaryCurrentLimit(Constants.Climber.ROCKER_ARM_CURRENT_LIMIT);
+        _rockerArmWinch.setSmartCurrentLimit(Constants.Climber.ROCKER_ARM_CURRENT_LIMIT);
         _rockerArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
         _rockerArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
         _rockerArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
@@ -124,7 +126,7 @@ public class Climber extends OutliersSubsystem{
      */
     public void setStaSpeed(double speed) {
         _staSpeed = speed;
-        _stationaryArmWinch.set(speed);
+        //_stationaryArmWinch.set(speed);
     }
 
     /**
