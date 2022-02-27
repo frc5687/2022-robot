@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.HallEffect;
@@ -188,9 +187,11 @@ public class Climber extends OutliersSubsystem{
      */
     public void runControllers() {
         if (_staControllerEnabled) {
+            metric("Running stationary controller", true);
             setStaSpeed(_staController.calculate(_stationaryArmWinchEncoder.getPosition()));
         }
         if (_rockControllerEnabled) {
+            metric("Running rocker controller", true);
             setRockSpeed(_rockController.calculate(_rockerArmWinchEncoder.getPosition()));
         }
     }

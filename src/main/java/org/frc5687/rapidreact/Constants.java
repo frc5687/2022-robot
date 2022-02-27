@@ -276,7 +276,7 @@ public class Constants {
         public static final boolean ROCKER_ARM_REVERSED = true;
         public static final int ROCKER_ARM_CURRENT_LIMIT = 25; // amps
 
-        public static final double kP = 0.5;
+        public static final double kP = 0.1;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double MAX_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI) * WINCH_DRUM_CIRCUMFERENCE);

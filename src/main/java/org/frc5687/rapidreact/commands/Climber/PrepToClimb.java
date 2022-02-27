@@ -46,7 +46,6 @@ public class PrepToClimb extends OutliersCommand{
     @Override
     public boolean isFinished(){
         super.isFinished();
-        
         if (_climber.isRockAtGoal() || _climber.isRockArmUp()) {
             info("Finished PrepToClimb");
             return true;
