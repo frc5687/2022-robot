@@ -28,10 +28,7 @@ public class RobotMap {
             public static final int NORTH_WEST_INNER = 7; // NORHT WEST
             public static final int NORHT_EAST_OUTER = 2; // NORTH EAST
             public static final int NORTH_EAST_INNER = 1; // NORTH EAST
-        }
-
-        public static class SPARKMAX{
-            public static final int INTAKE_ROLLER = 13;
+            public static final int INTAKE_ROLLER = 13; // Intake roller
         }
     }
 
