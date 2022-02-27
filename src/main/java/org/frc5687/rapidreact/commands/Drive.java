@@ -47,6 +47,7 @@ public class Drive extends OutliersCommand {
         double vy = _vyFilter.calculate(_oi.getDriveX()) * Constants.DriveTrain.MAX_MPS;
         metric("vx", vx);
         metric("vy", vy);
+//        double rot = 0;
         double rot =
                 (_oi.autoAim() && _driveTrain.hasTarget())
                         ? _visionController.calculate(_driveTrain.getAngleToTarget())
