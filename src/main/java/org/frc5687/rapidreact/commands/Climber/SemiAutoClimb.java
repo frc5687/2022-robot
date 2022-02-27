@@ -20,11 +20,40 @@ public class SemiAutoClimb extends OutliersCommand {
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
         super.initialize();
-
-        (new PrepToClimb(_climber)).schedule();
+        switch(_climber.getStep()) {
+            case UNKNOWN:
+                (new Stow(_climber)).schedule();
+                _climber.setStep(Climber.ClimberStep.STOW);
+                break;
+            case STOW:
+                (new PrepToClimb(_climber)).schedule();
+                _climber.setStep(Climber.ClimberStep.PREP_TO_CLIMB);
+                break;
+            case PREP_TO_CLIMB:
+                (new AttachMidRungCommand(_climber)).schedule();
+                _climber.setStep(Climber.ClimberStep.ATTACH_MID);
+                break;
+            case ATTACH_MID:
+                (new AttachHighRungCommand(_climber)).schedule();
+                _climber.setStep(Climber.ClimberStep.ATTACH_HIGH);
+                break;
+            case ATTACH_HIGH:
+                (new AttachTraversalRungCommand(_climber)).schedule();
+                _climber.setStep(Climber.ClimberStep.ATTACH_TRAVERSAL);
+                break;
+            case ATTACH_TRAVERSAL:
+                _climber.setStep(Climber.ClimberStep.DONE);
+                break;
+            case DONE:
+                break;
+        }
     }     
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 
 
 

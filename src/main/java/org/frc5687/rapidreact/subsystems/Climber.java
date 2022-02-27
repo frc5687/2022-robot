@@ -52,7 +52,11 @@ public class Climber extends OutliersSubsystem{
         //Sets the current step of the climbing process
         _step = step;
     }
-
+ 
+    public ClimberStep getStep() {
+        return _step;
+    }
+    
     public Climber(OutliersContainer container) {
         super(container);
 
@@ -403,7 +407,8 @@ public class Climber extends OutliersSubsystem{
         PREP_TO_CLIMB(2),
         ATTACH_MID(2),
         ATTACH_HIGH(3),
-        ATTACH_TRAVERSAL(4);
+        ATTACH_TRAVERSAL(4),
+        DONE(5);
 
         private final int _value;
         ClimberStep(int value) { 
