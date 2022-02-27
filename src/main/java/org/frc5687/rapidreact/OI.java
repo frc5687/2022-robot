@@ -33,7 +33,7 @@ public class OI extends OutliersProxy {
     private JoystickButton resetNavX;
     private JoystickButton _resetNavX;
     private JoystickButton _dropArm;
-    private AxisButton _autoAim;
+    private JoystickButton _autoAim;
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -54,7 +54,7 @@ public class OI extends OutliersProxy {
         _exitKill = new JoystickButton(_translation, 9);
         _deployRetract = new JoystickButton(_rotation, 3);
         _intakeButton = new JoystickButton(_rotation, 1);
-        _autoAim = new AxisButton(_rotation, _rotation.getXChannel(), -0.5);
+        _autoAim = new JoystickButton(_rotation, 2);
         _intakeButton1 = new JoystickButton(_rotation, 5);
         _dropArm = new JoystickButton(_translation, 3);
         _resetNavX = new JoystickButton(_translation, 5);

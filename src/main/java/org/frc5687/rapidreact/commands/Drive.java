@@ -48,9 +48,12 @@ public class Drive extends OutliersCommand {
         metric("vx", vx);
         metric("vy", vy);
 //        double rot = 0;
+        metric("aim", _oi.autoAim());
+
+        metric("has Target", _driveTrain.hasTarget());
         double rot =
                 (_oi.autoAim() && _driveTrain.hasTarget())
-                        ? _visionController.calculate(_driveTrain.getAngleToTarget())
+                        ? _visionController.calculate(-_driveTrain.getAngleToTarget())
                         : _oi.getRotationX() * MAX_ANG_VEL;
         _driveTrain.drive(vx, vy, rot, true);
     }
