@@ -310,5 +310,9 @@ public class Constants {
 
         public static final double ARM_TOLERANCE = 0.001;
         public static final double ARM_IZONE = 30.0;
+
+        public static final int MAX_STALL_CYCLES = 10;
+        public static final double STALL_CURRENT = 10.0;
+        public static final double STALL_MIN_RPM = 20.0;
     }
 }

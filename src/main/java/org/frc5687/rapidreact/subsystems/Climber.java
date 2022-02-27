@@ -193,7 +193,7 @@ public class Climber extends OutliersSubsystem{
 
 
     /**
-     * Gets the lenght of the stationary arm lenght
+     * Gets the position of the stationary arm in meters
      * @return
      */
     public double getStaPositionMeters(){
@@ -201,7 +201,7 @@ public class Climber extends OutliersSubsystem{
     }
 
     /**
-     * Get the lenght of the string of the rocker arm
+     * Get the rocker arm position in meters
      * @return
      */
     public double getRockPositionMeters(){
@@ -258,10 +258,10 @@ public class Climber extends OutliersSubsystem{
 
     /**
      * Checks the stationary arm "down" hall-effect sensor.
-     * @return true if the sensor is triggered
+     * @return true if the sensor is triggered or if the arm is stalled
      */
     public boolean isStaArmDown(){
-        return _staArmDown.get();
+        return _staArmDown.get() || isStaArmStalled();
     }
 
     /**
@@ -269,15 +269,55 @@ public class Climber extends OutliersSubsystem{
      * @return true if the sensor is triggered
      */
     public boolean isRockArmUp(){
-        return _rockArmUp.get();
+        return _rockArmUp.get()
+        || isRockArmStalled();
+    }
+
+
+    private int _staStallCycles = 0;
+    private int _rockStallCycles = 0;
+
+    /**
+     * Checks to see if the stationary arm motor is stalled.
+     * It is stalled if the amperage draw is > Constant and it has not moved in more than Constant cycles
+     */
+    public boolean isStaArmStalled() {
+        if (isArmStalled(_stationaryArmWinch, _stationaryArmWinchEncoder)) {
+            _staStallCycles++;
+        } else {
+            _staStallCycles=0;
+        }
+        return _staStallCycles > Constants.Climber.MAX_STALL_CYCLES;
+    }
+
+    /**
+     * Checks to see if the rocker arm motor is stalled.
+     * It is stalled if the amperage draw is > STALL_CURRENT and it has not moved in more than MAX_STALL_CYCLES cycles
+     */
+    public boolean isRockArmStalled() {
+        if (isArmStalled(_rockerArmWinch, _rockerArmWinchEncoder)) {
+            _rockStallCycles++;
+        } else {
+            _rockStallCycles=0;
+        }
+        return _rockStallCycles > Constants.Climber.MAX_STALL_CYCLES;
+    }
+
+    /** 
+     * Checks to see if an arm is stalling.  An arm is stalling if the controller is sending more than STALL_CURRENT current
+     * but the encoder is reading less that STALL_MIN_RPM rotations.
+     */
+    private boolean isArmStalled(CANSparkMax controller, RelativeEncoder encoder) {
+        return controller.getOutputCurrent() > Constants.Climber.STALL_CURRENT
+            && Math.abs(encoder.getVelocity()) < Constants.Climber.STALL_MIN_RPM;  
     }
 
     /**
      * Checks the rocker arm "down" hall-effect sensor.
-     * @return true if the sensor is triggered
+     * @return true if the sensor is triggered or the arm motor stalled
      */
     public boolean isRockArmDown(){
-        return _rockArmDown.get();
+        return _rockArmDown.get() || isRockArmStalled();
     }
 
     /**
