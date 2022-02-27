@@ -35,7 +35,7 @@ public class AttachTraversalRungCommand extends OutliersCommand{
                 info("AttachTraversalRungCommand advancing to EXTEND_STATIONARY step.");
                 break;
             case EXTEND_STATIONARY:
-                _climber.setStaGoal(Constants.Climber.STATIONARY_EXTENDED_POSITION);
+                _climber.setStaGoalMeters(Constants.Climber.STATIONARY_EXTENDED_METERS);
                 _step = Step.WAIT_STATIONARY;
                 info("AttachTraversalRungCommand advancing to WAIT_STATIONARY step.");
                 break;
@@ -47,7 +47,7 @@ public class AttachTraversalRungCommand extends OutliersCommand{
                 }
                 break;
             case RETRACT_ROCKER:
-                _climber.setRockGoal(Constants.Climber.ROCKER_RETRACTED_POSITION);
+                _climber.setRockGoalMeters(Constants.Climber.ROCKER_RETRACTED_METERS);
                 _step = Step.WAIT_ROCKER;
                 info("AttachTraversalRungCommand advancing to WAIT_ROCKER step.");
                 break;
@@ -71,7 +71,7 @@ public class AttachTraversalRungCommand extends OutliersCommand{
                 }
                 break;
             case EXTEND_ROCKER:
-                _climber.setRockGoal(Constants.Climber.ROCKER_MID_POSITION);
+                _climber.setRockGoalMeters(Constants.Climber.ROCKER_MID_METERS);
                 _step = Step.WAIT_FINISH;
                 info("AttachTraversalRungCommand advancing to WAIT_FINISH step.");
                 break;

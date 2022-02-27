@@ -34,8 +34,8 @@ public class RobotMap {
             public static final int SPRING_BABY_NEO = 9;
             public static final int WINCH_BABY_NEO = 10;
             public static final int INTAKE_ROLLER = 13;
-            public static final int STATIONARY_CLIMBER = 18;
-            public static final int ROCKER_CLIMBER = 11;
+            public static final int STATIONARY_CLIMBER = 11;
+            public static final int ROCKER_CLIMBER = 12;
         }
     }
 

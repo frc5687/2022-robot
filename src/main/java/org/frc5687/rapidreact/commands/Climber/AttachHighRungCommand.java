@@ -47,7 +47,7 @@ public class AttachHighRungCommand extends OutliersCommand{
                 }
                 break;
             case RETRACT_ROCKER:
-                _climber.setRockGoal(Constants.Climber.ROCKER_MID_POSITION);
+                _climber.setRockGoalMeters(Constants.Climber.ROCKER_MID_METERS);
                 _step = Step.WAIT_ROCKER;
                 info("AttachHighRungCommand advancing to WAIT_ROCKER step.");
                 break;
@@ -58,7 +58,7 @@ public class AttachHighRungCommand extends OutliersCommand{
                 }
                 break;
             case EXTEND_STATIONARY:
-                _climber.setStaGoal(Constants.Climber.STATIONARY_CLOSE_POSITION);
+                _climber.setStaGoalMeters(Constants.Climber.STATIONARY_CLOSE_METERS);
                 _step = Step.WAIT_STATIONARY;
                 info("AttachHighRungCommand advancing to WAIT_STATIONARY step.");
                 break;

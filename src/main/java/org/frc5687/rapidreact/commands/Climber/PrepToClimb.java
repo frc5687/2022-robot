@@ -22,7 +22,7 @@ public class PrepToClimb extends OutliersCommand{
         _climber.setStep(ClimberStep.PREP_TO_CLIMB);
         _climber.enableMetrics();
         _climber.dropDriveSpeed();
-        _climber.setRockGoal(Constants.Climber.ROCKER_EXTENDED_POSITION);
+        _climber.setRockGoalMeters(Constants.Climber.ROCKER_EXTENDED_METERS);
         // _climber.setStaGoal(Constants.Climber.STATIONARY_EXTENDED_POSITION);
         _climber.rockerIn();
         enableMetrics();
@@ -35,12 +35,12 @@ public class PrepToClimb extends OutliersCommand{
         _climber.runControllers();
         
         metric("Stationary/Speed", _climber.getStaSpeed());
-        metric("Stationary/Position", _climber.getStaPosition());
+        metric("Stationary/Position", _climber.getStaPositionMeters());
         metric("Stationary/Up", _climber.isStaArmUp());
         metric("Stationary/Down", _climber.isStaArmDown());
 
         metric("Rocker/Speed", _climber.getRockSpeed());
-        metric("Rocker/Position", _climber.getRockPosition());
+        metric("Rocker/Position", _climber.getRockPositionMeters());
         metric("Rocker Cylinder", _climber.getRockerLabel());
     }
 
@@ -50,8 +50,10 @@ public class PrepToClimb extends OutliersCommand{
         super.isFinished();
         if (_climber.isRockAtGoal() || _climber.isRockArmUp()) {
             info("Finished PrepToClimb");
+            metric("Finished", true);
             return true;
         }
+        metric("Finished", false);
         return false;
     }
 

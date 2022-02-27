@@ -268,20 +268,20 @@ public class Constants {
         public static final double GEAR_REDUCTION = 64.0;
         public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
         public static final double WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
-
-
+        public static final double ENCODER_RATIO = Units.inchesToMeters(26) / 498.0; 
+        // public static final double ENCODER_RATIO  = ;
         public static final boolean STATIONARY_ARM_REVERSED = true;
         public static final int STATIONARY_ARM_CURRENT_LIMIT = 10; // amps
 
         public static final boolean ROCKER_ARM_REVERSED = true;
         public static final int ROCKER_ARM_CURRENT_LIMIT = 10; // amps
 
-        public static final double kP = 0.1;
+        public static final double kP = 3.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double MAX_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI) * WINCH_DRUM_CIRCUMFERENCE);
         public static final double MAX_ACCELERATION_MPSS = MAX_VELOCITY_MPS * 10.0; // heuristic
-        public static final double TOLERANCE = 0.1; // meters.
+        public static final double TOLERANCE = 0.01; // meters.
 
         public static final double CLIMB_DRIVE_SPEED = 1.75; //The speed of the drivetrain during climbing
 
@@ -290,22 +290,25 @@ public class Constants {
 
 
 
+        // These distances are in METERS
+        public static final double STATIONARY_RETRACTED_METERS = 0.0; 
+        public static final double STATIONARY_CLOSE_METERS = 0.3556;
+        public static final double STATIONARY_EXTENDED_METERS = 0.6604;
 
-        public static final double STATIONARY_RETRACTED_POSITION = 0.0;
-        public static final double STATIONARY_CLOSE_POSITION = 14.0;
-        public static final double STATIONARY_EXTENDED_POSITION = 26.0;
-
-        public static final double ROCKER_RETRACTED_POSITION = 0.0;
-        public static final double ROCKER_CLOSE_POSITION = 16.0;
-        public static final double ROCKER_MID_POSITION = 19.0;
-        public static final double ROCKER_EXTENDED_POSITION = 26.0;
+        public static final double ROCKER_RETRACTED_METERS = 0.0;
+        public static final double ROCKER_CLOSE_METERS = 0.4064;
+        public static final double ROCKER_MID_METERS = 0.4826;
+        public static final double ROCKER_EXTENDED_METERS = 0.6604;
 
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final long ROCKER_PISTON_WAIT = 250;
-        public static final double ARM_STOW_SPEED = 0.4;
+        public static final double ARM_STOW_SPEED = 0.6;
 
         public static final boolean ROCKER_ENCODER_INVERTED = false;
         public static final boolean STATIONARY_ARM_ENCODER_INVERTED = false;
+
+        public static final double ARM_TOLERANCE = 0.001;
+        public static final double ARM_IZONE = 30.0;
     }
 }
