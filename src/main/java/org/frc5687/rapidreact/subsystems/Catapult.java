@@ -360,14 +360,28 @@ public class Catapult extends OutliersSubsystem {
         return angularVelocity * ARM_LENGTH;
     }
 
+    // calculate linear regression.
+    public double calculateIdealSpring(double dist) {
+        dist = Units.metersToFeet(dist);
+        return (-0.000009011590555 * (dist * dist * dist)) +
+                (0.000530654657571 * (dist * dist))
+                - (0.004774661593213 * dist) + 0.109083995442365;
+    }
+
+    // calculated from linear regression
+    public double calculateIdealString(double dist) {
+        dist = Units.metersToFeet(dist);
+        return (0.000003373655397 * (dist * dist * dist)) -
+                (0.000188199736432 * (dist * dist )) +
+                (0.003802940454156 * dist) + 0.211164967142583;
+    }
+
     public boolean isReleasePinLocked() {
         return _releasePin.get() == PinPosition.LOCKED.getSolenoidValue();
     }
-
     public boolean isReleasePinReleased() {
         return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
     }
-
     public boolean isSpringHallTriggered() { return _springHall.get(); }
     public boolean isArmLowered() { return _armHall.get(); }
 

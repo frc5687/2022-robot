@@ -238,7 +238,7 @@ public class Constants {
         public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 20.0; // heuristic.
         public static final double WINCH_TOLERANCE = 0.001; // m
 
-        // Shoot constants
+        // DriveCatapult constants
         public static final double LOWERING_SPEED = 1.0;
         public static final double SPRING_ZERO_SPEED = -0.5;
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
@@ -258,8 +258,8 @@ public class Constants {
         public static final double ROLLER_IDLE_SPEED = 0.0;
         public static final double ROLLER_INTAKE_SPEED = 1.0;
     }
-
     public static class Auto{
             public static final double DRIVETRAIN_POWER = 0.5;
     }
+
 }
