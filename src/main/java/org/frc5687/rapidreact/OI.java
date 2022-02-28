@@ -65,5 +65,7 @@ public class OI extends OutliersProxy {
     }
 
     @Override
-    public void updateDashboard() {}
+    public void updateDashboard() {
+        
+    }
 }
