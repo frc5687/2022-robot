@@ -1,32 +1,30 @@
-package org.frc5687.rapidreact.commands;
+package org.frc5687.rapidreact.commands.Autos;
 
+import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Intake;
 
-public class Intaker extends OutliersCommand {
+public class DropIntake extends OutliersCommand{
 
     private Intake _intake;
-    private boolean _reversed;
 
-    public Intaker(Intake intake, boolean reversed){
+    public DropIntake(Intake intake){
         _intake = intake;
-        _reversed = reversed;
         addRequirements(_intake);
     }
 
     @Override
     public void initialize(){
+        super.initialize();
         _intake.deploy();
     }
 
     @Override
-    public void execute(){
-        _intake.spinUpRoller();
+    public boolean isFinished(){
+        return !_intake.isIntakeUp();
     }
 
     @Override
     public void end(boolean interrupted) {
-        _intake.spinDownRoller();
-        _intake.stowe();
         super.end(interrupted);
     }
 }

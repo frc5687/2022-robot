@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -15,25 +16,27 @@ public class Intake extends OutliersSubsystem{
     private TalonFX _roller;
     private DoubleSolenoid _solenoid;
     private boolean _deployed;
+    private HallEffect _intakeHall;
     
     public Intake(OutliersContainer container) {
         super(container);
         _deployed = false;
         _roller = new TalonFX(RobotMap.CAN.TALONFX.INTAKE_ROLLER);
-        _solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCM.INTAKE_HIGH, RobotMap.PCM.INTAKE_LOW);
+        _solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.INTAKE_HIGH, RobotMap.PCH.INTAKE_LOW);
+        _intakeHall = new HallEffect(RobotMap.DIO.INTAKE_HALL_EFFECT);
     }
 
     /**
      * Spin down the intake
      */
-    private void spinDownRoller(){
+    public void spinDownRoller(){
         _roller.set(TalonFXControlMode.PercentOutput, Constants.Intake.ROLLER_IDLE_SPEED);
     }
 
     /**
      * Spin up the intake
      */
-    private void spinUpRoller(){
+    public void spinUpRoller(){
         _roller.set(TalonFXControlMode.PercentOutput, Constants.Intake.THE_BEANS);
     }
 
@@ -42,7 +45,6 @@ public class Intake extends OutliersSubsystem{
      */
     public void stowe(){
         _solenoid.set(Value.kReverse);
-        spinDownRoller();
         _deployed = false;
     }
 
@@ -51,7 +53,6 @@ public class Intake extends OutliersSubsystem{
      */
     public void deploy(){
         _solenoid.set(Value.kForward);
-        spinUpRoller();
         _deployed = true;
     }
 
@@ -69,6 +70,10 @@ public class Intake extends OutliersSubsystem{
      */
     public double getRPM(){
         return getVelocity() / Constants.Intake.TICKS_TO_ROTATIONS * 600 * Constants.Intake.GEAR_RATIO;
+    }
+
+    public boolean isIntakeUp() {
+        return _intakeHall.get();
     }
 
     @Override
