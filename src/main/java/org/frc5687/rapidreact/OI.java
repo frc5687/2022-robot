@@ -25,9 +25,10 @@ public class OI extends OutliersProxy {
     private double xIn = 0;
 
     public OI() {
-        //_debug = new Gamepad(0);
+        _debug = new Gamepad(0);
         _leftJoystick = new Joystick(2);
         _rightJoystick = new Joystick(1);
+        _intake = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
     }
 
     public void initializeButtons(DriveTrain driveTrain, Intake intake) {
@@ -66,6 +67,6 @@ public class OI extends OutliersProxy {
 
     @Override
     public void updateDashboard() {
-        
+
     }
 }
