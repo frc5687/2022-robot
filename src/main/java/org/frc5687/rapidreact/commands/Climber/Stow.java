@@ -29,13 +29,15 @@ public class Stow extends OutliersCommand{
     public void execute(){
         super.execute();
         error("Execute");
-        if (_climber.isRockArmDown() && _climber.getRockSpeed()!=0.0) {
+        if (_climber.isRockArmDown()) {
             _climber.stopRockerArm();
+            _climber.setStaSpeed(0);
         } else {
             _climber.setRockSpeed(Constants.Climber.ARM_STOW_SPEED);
         }
-        if (_climber.isStaArmDown() && _climber.getStaSpeed()!=0.0) {
+        if (_climber.isStaArmDown()) {
             _climber.stopStationaryArm();
+            _climber.setStaSpeed(0);
         } else {
             _climber.setStaSpeed(Constants.Climber.ARM_STOW_SPEED);
         }

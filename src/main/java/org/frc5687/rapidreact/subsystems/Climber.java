@@ -83,8 +83,8 @@ public class Climber extends OutliersSubsystem{
         _rockerArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
 
 
-        _stationaryArmWinch.burnFlash();
-        _rockerArmWinch.burnFlash();
+//        _stationaryArmWinch.burnFlash();
+//        _rockerArmWinch.burnFlash();
 
         _staArmUp = new HallEffect(RobotMap.DIO.STATIONARY_ARM_TOP_HALL);
         _staArmDown = new HallEffect(RobotMap.DIO.STATIONARY_ARM_BOTTOM_HALL);
@@ -130,7 +130,7 @@ public class Climber extends OutliersSubsystem{
      */
     public void setStaSpeed(double speed) {
         _staSpeed = speed;
-        //_stationaryArmWinch.set(speed);
+        _stationaryArmWinch.set(speed);
     }
 
     /**

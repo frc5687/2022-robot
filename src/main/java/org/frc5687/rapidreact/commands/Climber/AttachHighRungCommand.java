@@ -84,7 +84,7 @@ public class AttachHighRungCommand extends OutliersCommand{
     public void end(boolean interrupted) {
         super.end(interrupted);
         _climber.stop();
-        info("Ended AttachHighRungCommand.");
+        error("Ended AttachHighRungCommand.");
     }
 
     public enum Step{

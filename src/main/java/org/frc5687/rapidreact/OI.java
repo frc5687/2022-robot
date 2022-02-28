@@ -2,11 +2,13 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
-import org.frc5687.rapidreact.commands.Climber.PrepToClimb;
-import org.frc5687.rapidreact.commands.Climber.Stow;
+
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import org.frc5687.rapidreact.commands.Climber.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import org.frc5687.rapidreact.commands.ShootSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -28,6 +30,9 @@ public class OI extends OutliersProxy {
 
     private JoystickButton _stow;
     private JoystickButton _prepClimb;
+    private JoystickButton _firstStage;
+    private JoystickButton _secondStage;
+    private JoystickButton _third;
 
     private JoystickButton _deployRetract;
     private JoystickButton _intakeButton;
@@ -47,6 +52,9 @@ public class OI extends OutliersProxy {
 
         _stow = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _prepClimb = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
+        _firstStage = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _secondStage = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
+        _third = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 //        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
 //        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 
@@ -61,8 +69,12 @@ public class OI extends OutliersProxy {
 //        _release.whenPressed(catapult::releaseArm);
 //        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
 //        _dropArm.whenHeld(new Feed(servoStop));
-        _stow.whenPressed(new Stow(climber));
-        _prepClimb.whenPressed(new PrepToClimb(climber));
+//        _stow.whenPressed(new Stow(climber));
+        _prepClimb.whenPressed(new SequentialCommandGroup(new Stow(climber), new PrepToClimb(climber)));
+        _firstStage.whenPressed(new AttachMidRungCommand(climber));
+        _secondStage.whenPressed(new AttachHighRungCommand(climber));
+        _third.whenPressed(new AttachTraversalRungCommand(climber));
+
 
     }
 

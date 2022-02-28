@@ -78,7 +78,6 @@ public class AttachTraversalRungCommand extends OutliersCommand{
             case WAIT_FINISH:
                 break;
         }
-
         _climber.runControllers();
     }
 
@@ -98,7 +97,7 @@ public class AttachTraversalRungCommand extends OutliersCommand{
     public void end(boolean interrupted) {
         super.end(interrupted);
         _climber.stop();
-        info("Ended AttachTraversalRungCommand.");
+        error("Ended AttachTraversalRungCommand.");
     }
 
     public enum Step{

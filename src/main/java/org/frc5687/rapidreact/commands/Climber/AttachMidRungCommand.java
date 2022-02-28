@@ -36,7 +36,7 @@ public class AttachMidRungCommand extends OutliersCommand{
     public boolean isFinished(){
         super.isFinished();
         if (_climber.isStaAtGoal() || _climber.isStaArmDown()) {
-            info("Finished AttachMidRungCommand");
+            error("Finished AttachMidRungCommand");
             return true;
         };
         return false;
@@ -47,6 +47,6 @@ public class AttachMidRungCommand extends OutliersCommand{
         super.end(interrupted);
         _climber.stop();
         _climber.disableMetrics();
-        info("Ended AttachMidRung");
+        error("Ended AttachMidRung");
     }
 }
