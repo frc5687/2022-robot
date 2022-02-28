@@ -156,8 +156,9 @@ public class DriveTrain extends OutliersSubsystem {
         metric("SW/Encoder Azimuth Vel", _southWest.getAzimuthAngularVelocity());
         metric("SW/Predicted Azimuth Vel", _southWest.getPredictedAzimuthAngularVelocity());
 
-        metric("SW/Encoder Wheel Vel", _southWest.getWheelVelocity());
-        metric("SW/Predicted Wheel Vel", _southWest.getPredictedWheelVelocity());
+        metric("SE/Encoder Wheel Vel", _southEast.getWheelVelocity());
+        metric("SE/Predicted Wheel Vel", _southEast.getPredictedWheelVelocity());
+
         metric("Odometry/x", getOdometryPose().getX());
         metric("Odometry/y", getOdometryPose().getY());
         metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());
@@ -247,23 +248,23 @@ public class DriveTrain extends OutliersSubsystem {
         return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
     }
     public boolean hasTarget() {
-        if (_proxy.getLatestFrame() == null) {
-            return false;
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetDistance() != -1;
         }
-        return _proxy.getLatestFrame().getTargetDistance() != -1;
+        return false;
     }
 
     public double getDistanceToTarget() {
-        if (_proxy.getLatestFrame() == null) {
-            return Double.NaN;
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetDistance();
         }
-        return _proxy.getLatestFrame().getTargetDistance();
+        return Double.NaN;
     }
     public double getAngleToTarget() {
-        if (_proxy.getLatestFrame() == null) {
-            return Double.NaN;
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetAngle();
         }
-        return _proxy.getLatestFrame().getTargetAngle();
+        return Double.NaN;
     }
 
     public TrajectoryConfig getConfig() {

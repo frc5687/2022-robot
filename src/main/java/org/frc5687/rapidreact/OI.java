@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
-import org.frc5687.rapidreact.util.AxisButton;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -68,7 +67,6 @@ public class OI extends OutliersProxy {
 //        _shootButtonTest.whenPressed(new Reset(catapult));
 //        _release.whenPressed(catapult::releaseArm);
 //        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
-        _intakeButton1.whenHeld(new Intaker(intake, true));
         _intakeButton.whenHeld(new Intaker(intake, false));
 //        _dropArm.whenHeld(new Feed(servoStop));
         _resetNavX.whenPressed(driveTrain::resetYaw);
@@ -107,7 +105,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getRotationX() {
-        double speed = getSpeedFromAxis(_rotation, _rotation.getXChannel());
+        double speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }
@@ -129,5 +127,7 @@ public class OI extends OutliersProxy {
     }
 
     @Override
-    public void updateDashboard() {}
+    public void updateDashboard() {
+
+    }
 }

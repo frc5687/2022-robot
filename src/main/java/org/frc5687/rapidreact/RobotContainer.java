@@ -2,20 +2,21 @@
 package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import org.frc5687.rapidreact.commands.*;
-import org.frc5687.rapidreact.commands.Autos.DropIntake;
-import org.frc5687.rapidreact.commands.Autos.OneBall;
+import org.frc5687.rapidreact.commands.Drive;
+import org.frc5687.rapidreact.commands.DriveCatapult;
+import org.frc5687.rapidreact.commands.IdleIntake;
+import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.JetsonProxy;
-import org.frc5687.rapidreact.subsystems.ServoStop;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
@@ -28,7 +29,6 @@ public class RobotContainer extends OutliersContainer {
     private Catapult _catapult;
     private Intake _intake;
     private DriveTrain _driveTrain;
-    private ServoStop _servoStop;
     private boolean _hold;
 
 
@@ -42,10 +42,13 @@ public class RobotContainer extends OutliersContainer {
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
+
+
+        // then subsystems
         _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
         _intake = new Intake(this);
-
+        //The robots default command will run so long as another command isn't activated
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
@@ -57,15 +60,10 @@ public class RobotContainer extends OutliersContainer {
         _imu.reset();
     }
 
-    public void periodic() {}
+    public void periodic() {
+    }
 
     public void disabledPeriodic() {
-//        _proxy.setData(
-//                new JetsonProxy.Data(1),
-//                new JetsonProxy.Data(System.currentTimeMillis()),
-//                new JetsonProxy.Data(10),
-//                new JetsonProxy.Data(5),
-//                new JetsonProxy.Data(0));
         //Runs every 20ms during disabled
     }
     @Override
@@ -95,18 +93,23 @@ public class RobotContainer extends OutliersContainer {
         // _stealExit, _oi);
         error("Start auto");
 //        return null;
-        return wrapCommand(new OneBall(_driveTrain, _catapult, _intake, _oi));
-        //        return null;
+        // return wrapCommand(new OneBall(_driveTrain, _catapult, _intake, _oi));
+               return null;
     }
 
     private Command wrapCommand(Command command) {
-        return new SequentialCommandGroup(new DropIntake(_intake), command);
+        // return new SequentialCommandGroup(new DropIntake(_intake), command);
+        return null;
     }
 
     @Override
     public void updateDashboard() {
-        //Updates the driver station
-        //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
+        if (_proxy.getLatestFrame() != null) {
+            metric("Millis", _proxy.getLatestFrame().getMillis());
+            metric("Has goal", _proxy.getLatestFrame().hasTarget());
+            metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
+            metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
+        }
         _driveTrain.updateDashboard();
         _catapult.updateDashboard();
     }

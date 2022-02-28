@@ -17,17 +17,17 @@ public class IdleIntake extends OutliersCommand{
     @Override
     public void initialize(){
         super.initialize();
-        _intake.deploy();
+//        _intake.deploy();
     }
 
     @Override
     public void execute(){
         super.execute();
-        if (_oi.intakeDeployRetract() && _intake.isIntakeDown()) {
-            _intake.stowe();
-        } else if (_oi.intakeDeployRetract() && _intake.isIntakeSolenoidStowed()) {
-            _intake.deploy();
-        }
+        // if (_oi.intakeDeployRetract() && _intake.isIntake()) {
+        //     _intake.stowe();
+        // } else if (_oi.intakeDeployRetract() && _intake.isIntakeSolenoidStowed()) {
+        //     _intake.deploy();
+        // }
     }
 
     @Override
