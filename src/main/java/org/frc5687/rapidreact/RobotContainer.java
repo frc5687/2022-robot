@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.commands.IdleIntake;
-import org.frc5687.rapidreact.commands.Intaker;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
@@ -65,6 +64,7 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void updateDashboard() {
         _driveTrain.updateDashboard();
+        _intake.updateDashboard();
     }
 
     public void controllerPeriodic() {
