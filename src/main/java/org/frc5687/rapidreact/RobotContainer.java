@@ -96,7 +96,9 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command getAutonomousCommand() {
+        _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
         return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+        //TODO: Uncomment. Do it. But not now.
         // AutoChooser.Position autoPosition = _autoChooser.getSelectedPosition();
         // AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
         
@@ -139,12 +141,13 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
-        if (_proxy.getLatestFrame() != null) {
-            metric("Millis", _proxy.getLatestFrame().getMillis());
-            metric("Has goal", _proxy.getLatestFrame().hasTarget());
-            metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
-            metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
-        }
+        //TODO: uncomment this, or don't...
+        // if (_proxy.getLatestFrame() != null) {
+        //     metric("Millis", _proxy.getLatestFrame().getMillis());
+        //     metric("Has goal", _proxy.getLatestFrame().hasTarget());
+        //     metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
+        //     metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
+        // }
         //Updates the driver station
         _driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());

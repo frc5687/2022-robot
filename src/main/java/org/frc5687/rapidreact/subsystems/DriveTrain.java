@@ -142,9 +142,10 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Goal Distance", getDistanceToGoal());
-        metric("Goal Angle", getAngleToGoal());
-        metric("Has goal", hasGoal());
+        //TODO: might uncomment this if i feel like it.
+        //metric("Goal Distance", getDistanceToGoal());
+        // metric("Goal Angle", getAngleToGoal());
+        // metric("Has goal", hasGoal());
 
         metric("NW/Encoder Angle", _northWest.getModuleAngle());
         metric("SW/Encoder Angle", _southWest.getModuleAngle());
@@ -260,6 +261,7 @@ public class DriveTrain extends OutliersSubsystem {
         }
         return _proxy.getLatestFrame().getTargetDistance();
     }
+
     public double getAngleToGoal() {
         if (_proxy.getLatestFrame() == null) {
             return Double.NaN;
