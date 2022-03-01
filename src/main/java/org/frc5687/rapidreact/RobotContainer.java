@@ -148,7 +148,7 @@ public class RobotContainer extends OutliersContainer {
         //Updates the driver station
         _driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
-        _catapult.updateDashboard();
+        //_catapult.updateDashboard();
     }
 
     public void controllerPeriodic() {
