@@ -146,10 +146,9 @@ public class RobotContainer extends OutliersContainer {
             metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
         }
         //Updates the driver station
-        //_driveTrain.updateDashboard();
+        _driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
-//        _driveTrain.updateDashboard();
-//        _catapult.updateDashboard();
+        _catapult.updateDashboard();
     }
 
     public void controllerPeriodic() {
