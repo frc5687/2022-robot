@@ -3,6 +3,7 @@ package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,12 +12,15 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import org.frc5687.rapidreact.commands.*;
+import org.frc5687.rapidreact.commands.Autos.DriveForTime;
 import org.frc5687.rapidreact.commands.Autos.DropIntake;
-import org.frc5687.rapidreact.commands.Autos.OneBall;
+import org.frc5687.rapidreact.commands.Autos.OneBallAuto;
+import org.frc5687.rapidreact.commands.Autos.ZeroBallAuto;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
+import org.frc5687.rapidreact.util.AutoChooser;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
@@ -31,6 +35,7 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private DriveTrain _driveTrain;
     private boolean _hold;
+    private AutoChooser _autoChooser;
 
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
@@ -46,6 +51,7 @@ public class RobotContainer extends OutliersContainer {
         _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
         _intake = new Intake(this);
         _proxy = new JetsonProxy(10);
+        _autoChooser = new AutoChooser();
 
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_catapult, new Shoot(_catapult, _intake, _oi));
@@ -86,13 +92,44 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command getAutonomousCommand() {
-        //        return new StealBallAuto(
-        //                _driveTrain, _shooter, _hood, _intake, _spindexer, _stealTenPrt1,
-        // _stealExit, _oi);
-        error("Start auto");
-//        return null;
-        return wrapCommand(new OneBall(_driveTrain, _catapult, _intake, _oi));
-        //        return null;
+        AutoChooser.Position autoPosition = _autoChooser.getSelectedPosition();
+        AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
+        
+
+        switch(autoPosition) {
+            case First:
+                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
+                switch(autoMode) {
+                    case ZeroBall:
+                        return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
+                    case OneBall:
+                        return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
+                }
+            case Second:
+                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
+                switch(autoMode) {
+                    case ZeroBall:
+                    case OneBall:
+                }
+            case Third:
+                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
+                switch(autoMode) {
+                    case ZeroBall:
+                        return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+                    case OneBall:
+                }       return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+            case Fourth:
+                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
+                switch(autoMode) {
+                    case ZeroBall:
+                        return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_THREE, new Rotation2d());
+                    case OneBall:
+                        return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_THREE, new Rotation2d());
+                }
+            default:
+                return new DriveForTime(_driveTrain, 2000, true);
+                
+        }
     }
 
     private Command wrapCommand(Command command) {

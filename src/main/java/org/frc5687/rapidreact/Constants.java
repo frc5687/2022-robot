@@ -1,6 +1,8 @@
 /* Team 5687 (C)2020-2022 */
 package org.frc5687.rapidreact;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -244,6 +246,22 @@ public class Constants {
 
 
     }
+
+    public static class Auto {
+        public static class BallPositions {
+            public static Pose2d BALL_ONE = new Pose2d(4.8, 6.2, new Rotation2d());
+            public static Pose2d BALL_TWO = new Pose2d(5.1, 1.77, new Rotation2d());
+            public static Pose2d BALL_THREE = new Pose2d(7.7, 0.28, new Rotation2d());
+        }
+
+        public static class RobotPositions {
+            public static Pose2d FIRST = new Pose2d(6.46, 5.45, new Rotation2d());
+            public static Pose2d SECOND = new Pose2d(5.9, 3.93, new Rotation2d());
+            public static Pose2d THIRD = new Pose2d(6.9, 2.5, new Rotation2d());
+            public static Pose2d FOURTH = new Pose2d(8.25, 1.9, new Rotation2d());
+        }
+        public static final double DRIVETRAIN_POWER = 0.5;
+ }
     public static class IntakeBlocker{
         public static final double DOWN_POSITION = 180;
         public static final double UP_POSITION = 50;
@@ -253,10 +271,6 @@ public class Constants {
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
         public static final double ROLLER_INTAKE_SPEED = 1.0;
-    }
-
-    public static class Auto{
-            public static final double DRIVETRAIN_POWER = 0.5;
     }
 
     public static class ColorSensor{
