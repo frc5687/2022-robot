@@ -5,6 +5,10 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+import org.frc5687.rapidreact.commands.Autos.DropIntake;
+import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.util.*;
 
 /**
@@ -65,6 +69,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
      */
     @Override
     public void autonomousInit() {
+        _autoCommand = _robotContainer.wrapCommand(_robotContainer.getAutonomousCommand());
         _fmsConnected = DriverStation.isFMSAttached();
         _robotContainer.autonomousInit();
         if (_autoCommand != null) {

@@ -91,49 +91,50 @@ public class RobotContainer extends OutliersContainer {
         s.setDefaultCommand(subSystem, command);
     }
 
-    public Command getAutonomousCommand() {
-        AutoChooser.Position autoPosition = _autoChooser.getSelectedPosition();
-        AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
-        
-
-        switch(autoPosition) {
-            case First:
-                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
-                switch(autoMode) {
-                    case ZeroBall:
-                        return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
-                    case OneBall:
-                        return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
-                }
-            case Second:
-                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
-                switch(autoMode) {
-                    case ZeroBall:
-                    case OneBall:
-                }
-            case Third:
-                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
-                switch(autoMode) {
-                    case ZeroBall:
-                        return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
-                    case OneBall:
-                }       return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
-            case Fourth:
-                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
-                switch(autoMode) {
-                    case ZeroBall:
-                        return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_THREE, new Rotation2d());
-                    case OneBall:
-                        return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_THREE, new Rotation2d());
-                }
-            default:
-                return new DriveForTime(_driveTrain, 2000, true);
-                
-        }
+    public Command wrapCommand(Command command) {
+        return new SequentialCommandGroup(new DropIntake(_intake), command);
     }
 
-    private Command wrapCommand(Command command) {
-        return new SequentialCommandGroup(new DropIntake(_intake), command);
+    public Command getAutonomousCommand() {
+        return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+        // AutoChooser.Position autoPosition = _autoChooser.getSelectedPosition();
+        // AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
+        
+
+        // switch(autoPosition) {
+        //     case First:
+        //         _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
+        //         switch(autoMode) {
+        //             case ZeroBall:
+        //                 return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
+        //             case OneBall:
+        //                 return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
+        //         }
+        //     case Second:
+        //         _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
+        //         switch(autoMode) {
+        //             case ZeroBall:
+        //             case OneBall:
+        //         }
+        //     case Third:
+        //         _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
+        //         switch(autoMode) {
+        //             case ZeroBall:
+        //                 return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+        //             case OneBall:
+        //         }       return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+        //     case Fourth:
+        //         _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
+        //         switch(autoMode) {
+        //             case ZeroBall:
+        //                 return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_THREE, new Rotation2d());
+        //             case OneBall:
+        //                 return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_THREE, new Rotation2d());
+        //         }
+        //     default:
+        //         return new DriveForTime(_driveTrain, 2000, true);
+                
+        // }
     }
 
     @Override
