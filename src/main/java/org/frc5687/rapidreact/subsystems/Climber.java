@@ -1,6 +1,11 @@
 /* Team 5687 (C)2022 */
 package org.frc5687.rapidreact.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
@@ -9,11 +14,14 @@ import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
+
+import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
 /**
  * The Climber subsytem consists of two hooked arms on spring-loaded cylinders, restrained by winches.
@@ -28,13 +36,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
  */
 public class Climber extends OutliersSubsystem{
     
-    private CANSparkMax _stationaryArmWinch;
-    private CANSparkMax _rockerArmWinch;
+    private TalonFX _stationaryArmWinch;
+    private TalonFX _rockerArmWinch;
     private DoubleSolenoid _rocker;
     private ProfiledPIDController _staController;
     private ProfiledPIDController _rockController;
-    private RelativeEncoder _stationaryArmWinchEncoder;
-    private RelativeEncoder _rockerArmWinchEncoder;
+    private CANCoder _stationaryArmWinchEncoder;
+    private CANCoder _rockerArmWinchEncoder;
     private HallEffect _staArmUp;
     private HallEffect _staArmDown;
     private HallEffect _rockArmUp;
@@ -62,29 +70,20 @@ public class Climber extends OutliersSubsystem{
 
         logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
 
-        _stationaryArmWinch = new CANSparkMax(RobotMap.CAN.SPARKMAX.STATIONARY_CLIMBER, CANSparkMax.MotorType.kBrushless);
-        _rockerArmWinch = new CANSparkMax(RobotMap.CAN.SPARKMAX.ROCKER_CLIMBER, CANSparkMax.MotorType.kBrushless);
+        _stationaryArmWinch = new TalonFX(RobotMap.CAN.TALONFX.STATIONARY_CLIMBER);
+        _rockerArmWinch = new TalonFX(RobotMap.CAN.TALONFX.ROCKER_CLIMBER);
         _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
 
-        _stationaryArmWinch.setIdleMode(IdleMode.kCoast);
         _stationaryArmWinch.setInverted(Constants.Climber.STATIONARY_ARM_REVERSED);
-        _stationaryArmWinch.setSecondaryCurrentLimit(Constants.Climber.STATIONARY_ARM_CURRENT_LIMIT);
-        _stationaryArmWinch.setSmartCurrentLimit(Constants.Climber.STATIONARY_ARM_CURRENT_LIMIT);
-        _stationaryArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
-        _stationaryArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-        _stationaryArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
-
-        _rockerArmWinch.setIdleMode(IdleMode.kCoast);
-        _rockerArmWinch.setInverted(Constants.Climber.ROCKER_ARM_REVERSED);
-        _rockerArmWinch.setSecondaryCurrentLimit(Constants.Climber.ROCKER_ARM_CURRENT_LIMIT);
-        _rockerArmWinch.setSmartCurrentLimit(Constants.Climber.ROCKER_ARM_CURRENT_LIMIT);
-        _rockerArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
-        _rockerArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-        _rockerArmWinch.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+        _stationaryArmWinch.setNeutralMode(NeutralMode.Coast);
+        _stationaryArmWinch.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 10, 15, 0.5));
 
 
-//        _stationaryArmWinch.burnFlash();
-//        _rockerArmWinch.burnFlash();
+        _rockerArmWinch.setInverted(Constants.Climber.ROCKER_ENCODER_INVERTED);
+        _rockerArmWinch.setNeutralMode(NeutralMode.Coast);
+        _stationaryArmWinch.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 10, 15, 0.5));
+       
+
 
         _staArmUp = new HallEffect(RobotMap.DIO.STATIONARY_ARM_TOP_HALL);
         _staArmDown = new HallEffect(RobotMap.DIO.STATIONARY_ARM_BOTTOM_HALL);
@@ -116,11 +115,8 @@ public class Climber extends OutliersSubsystem{
         _rockController.setTolerance(Constants.Climber.ARM_TOLERANCE);
         _rockController.setIntegratorRange(-Constants.Climber.ARM_IZONE, Constants.Climber.ARM_IZONE);
 
-        _stationaryArmWinchEncoder = _stationaryArmWinch.getEncoder();
-        _stationaryArmWinchEncoder.setPosition(0);
-
-        _rockerArmWinchEncoder = _rockerArmWinch.getEncoder();
-        _rockerArmWinchEncoder.setPosition(0);
+        _stationaryArmWinchEncoder = new CANCoder(RobotMap.CAN.TALONFX.STATIONARY_CLIMBER);
+        _rockerArmWinchEncoder = new CANCoder(RobotMap.CAN.TALONFX.ROCKER_CLIMBER);
     }
 
     /**
@@ -130,7 +126,7 @@ public class Climber extends OutliersSubsystem{
      */
     public void setStaSpeed(double speed) {
         _staSpeed = speed;
-        _stationaryArmWinch.set(speed);
+        _stationaryArmWinch.set(TalonFXControlMode.Position, speed);;
     }
 
     /**
@@ -140,7 +136,7 @@ public class Climber extends OutliersSubsystem{
      */
     public void setRockSpeed(double speed) {
         _rockSpeed = speed;
-        _rockerArmWinch.set(speed);
+        _rockerArmWinch.set(TalonFXControlMode.Position, speed);
         info("Rocker arm speed set to " + speed);
     }
 
@@ -160,7 +156,7 @@ public class Climber extends OutliersSubsystem{
         info("Stopping StationaryArm");
         _staControllerEnabled = false;
         setStaSpeed(0.0);
-        _stationaryArmWinch.setIdleMode(IdleMode.kBrake);
+        _stationaryArmWinch.setNeutralMode(NeutralMode.Brake);
     }
 
     /**
@@ -170,7 +166,7 @@ public class Climber extends OutliersSubsystem{
         info("Stopping RockerArm");
         _rockControllerEnabled = false;
         setRockSpeed(0.0);
-        _rockerArmWinch.setIdleMode(IdleMode.kBrake);
+        _rockerArmWinch.setNeutralMode(NeutralMode.Brake);
     }
 
     /**
@@ -201,7 +197,7 @@ public class Climber extends OutliersSubsystem{
      * @return
      */
     public double getStaPositionMeters(){
-        return _stationaryArmWinchEncoder.getPosition() * Constants.Climber.ENCODER_RATIO;
+        return _stationaryArmWinch.getSelectedSensorPosition() * Constants.Climber.ENCODER_RATIO;
     }
 
     /**
@@ -209,7 +205,7 @@ public class Climber extends OutliersSubsystem{
      * @return
      */
     public double getRockPositionMeters(){
-        return _rockerArmWinchEncoder.getPosition() * Constants.Climber.ENCODER_RATIO;
+        return _rockerArmWinch.getSelectedSensorPosition() * Constants.Climber.ENCODER_RATIO;
     }
 
     /**
@@ -311,8 +307,8 @@ public class Climber extends OutliersSubsystem{
      * Checks to see if an arm is stalling.  An arm is stalling if the controller is sending more than STALL_CURRENT current
      * but the encoder is reading less that STALL_MIN_RPM rotations.
      */
-    private boolean isArmStalled(CANSparkMax controller, RelativeEncoder encoder) {
-        return controller.getOutputCurrent() > Constants.Climber.STALL_CURRENT
+    private boolean isArmStalled(TalonFX controller, CANCoder encoder) {
+        return controller.getSupplyCurrent() > Constants.Climber.STALL_CURRENT
             && Math.abs(encoder.getVelocity()) < Constants.Climber.STALL_MIN_RPM;  
     }
 
@@ -340,20 +336,21 @@ public class Climber extends OutliersSubsystem{
 
     @Override
     public void updateDashboard() {
-        metric("Stationary/Rotation", _stationaryArmWinchEncoder.getPosition());
+        metric("Stationary Arm temp", _stationaryArmWinch.getTemperature());
+        metric("Rocker Arm temp", _rockerArmWinch.getTemperature());
         metric("Stationary/Position", getStaPositionMeters());
         metric("Stationary/Goal", _staController.getGoal().position);
         metric("Stationary/Enabled", _staControllerEnabled);
+        metric("Stationary/Encoder", _stationaryArmWinchEncoder.getPosition());
         metric("Stationary/Speed", _staSpeed); 
         metric("Stationary/Up", _staArmUp.get());
         metric("Stationary/Down", _staArmDown.get());
-        
-        metric("Rocker/Rotation", _rockerArmWinchEncoder.getPosition());
         metric("Rocker/Position", getRockPositionMeters());
         metric("Rocker/Goal", _rockController.getGoal().position);
         metric("Rocker/Enabled", _rockControllerEnabled);
         metric("Rocker/Speed", _rockSpeed);
         metric("Rocker/Up", isRockArmUp()); 
+        metric("Rocker/Encoder", _stationaryArmWinchEncoder.getPosition());
         metric("Rocker/Down", isRockArmDown());
         metric("Rocker Cylinder", getRockerLabel());
 
