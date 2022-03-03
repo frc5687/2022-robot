@@ -28,11 +28,13 @@ public class Stow extends OutliersCommand{
         super.execute();
         if (_climber.isRockArmDown()) {
             _climber.stopRockerArm();
-        } else {
+            _climber.zeroRockerArmEncoder();
+            } else {
             _climber.setRockSpeed(Constants.Climber.ARM_STOW_SPEED);
         }
         if (_climber.isStaArmDown()) {
             _climber.stopStationaryArm();
+            _climber.zeroStationaryArmEncoder();
         } else {
             _climber.setStaSpeed(Constants.Climber.ARM_STOW_SPEED);
         }
@@ -42,6 +44,8 @@ public class Stow extends OutliersCommand{
     @Override
     public boolean isFinished(){
         if  (_climber.isRockArmDown() && _climber.isStaArmDown()) {
+            _climber.zeroStationaryArmEncoder();
+            _climber.zeroRockerArmEncoder();
             info("Stow finished.");
             return true;
         };
@@ -52,8 +56,6 @@ public class Stow extends OutliersCommand{
     public void end(boolean interrupted) {
         info("Stow ended.");
         _climber.stop();
-        _climber.zeroRockerArmEncoder();
-        _climber.zeroStationaryArmEncoder();
         _climber.disableMetrics();
     }
 }
