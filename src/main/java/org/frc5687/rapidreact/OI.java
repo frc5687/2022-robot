@@ -5,6 +5,7 @@ import static org.frc5687.rapidreact.util.Helpers.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.frc5687.rapidreact.commands.Climber.*;
+import org.frc5687.rapidreact.commands.Intaker;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -50,6 +51,7 @@ public class OI extends OutliersProxy {
         _rotation = new Joystick(1);
         _debug = new Gamepad(2);
 
+        _intakeButton = new JoystickButton(_rotation, 1);
         _stow = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _prepClimb = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
         _firstStage = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
@@ -61,13 +63,14 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult , Intake intake, Climber climber) {
-        //There's nothing to init here
+        
 //        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
 //        _lowerArm.whenPressed(catapult::lockArm);
 //        _lowerArm.whenPressed(new LowerCatapult(catapult));
 //        _shootButtonTest.whenPressed(new Reset(catapult));
 //        _release.whenPressed(catapult::releaseArm);
 //        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
+        _intakeButton.whenHeld(new Intaker(intake, false));
 //        _dropArm.whenHeld(new Feed(servoStop));
         _stow.whenPressed(new Stow(climber));
         _prepClimb.whenPressed(new SequentialCommandGroup(new Stow(climber), new PrepToClimb(climber)));
@@ -77,6 +80,14 @@ public class OI extends OutliersProxy {
 
 
     }
+
+    public boolean isShootButtonPressed() { return _shootButton.get(); }
+    public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
+    public boolean preloadCatapult() { return _preloadButton.get(); }
+    public boolean releaseArm() { return _release.get(); }
+    public boolean intakeDeployRetract() { return _deployRetract.get(); }
+    public boolean exitKill() { return _exitKill.get(); }
+    public boolean kill() { return _kill.get(); }
 
 
     public double getDriveY() {
@@ -124,5 +135,7 @@ public class OI extends OutliersProxy {
     }
 
     @Override
-    public void updateDashboard() {}
+    public void updateDashboard() {
+
+    }
 }

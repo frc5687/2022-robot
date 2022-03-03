@@ -28,6 +28,8 @@ public class RobotMap {
             public static final int SOUTH_WEST_INNER = 6;
             public static final int NORTH_WEST_INNER = 7;
             public static final int NORTH_WEST_OUTER = 8;
+            public static final int INTAKE_ROLLER = 13;
+
             public static final int STATIONARY_CLIMBER = 14;
             public static final int ROCKER_CLIMBER = 15;
         }
@@ -35,7 +37,6 @@ public class RobotMap {
         public static class SPARKMAX {
             public static final int SPRING_BABY_NEO = 9;
             public static final int WINCH_BABY_NEO = 10;
-            public static final int INTAKE_ROLLER = 13;
         }
     }
 
@@ -53,11 +54,11 @@ public class RobotMap {
      * This is the REVRobotics Pneumatic Control Hub.
      */
     public static class PCH {
-        public static int RELEASE_PIN_HIGH = 7;
-        public static int RELEASE_PIN_LOW = 8;
-
+        public static final int COMP = 1;
         public static final int INTAKE_HIGH = 10;
         public static final int INTAKE_LOW = 5;
+        public static int RELEASE_PIN_HIGH = 7;
+        public static int RELEASE_PIN_LOW = 8;
         public static final int CLIMBER_IN = 6;
         public static final int CLIMBER_OUT = 9;
     }

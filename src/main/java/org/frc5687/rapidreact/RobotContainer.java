@@ -6,11 +6,11 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import org.frc5687.rapidreact.commands.*;
-import org.frc5687.rapidreact.commands.Autos.DropIntake;
-import org.frc5687.rapidreact.commands.Autos.OneBall;
+import org.frc5687.rapidreact.commands.Drive;
+import org.frc5687.rapidreact.commands.IdleIntake;
+import org.frc5687.rapidreact.commands.OutliersCommand;
+import org.frc5687.rapidreact.commands.Shoot;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -90,12 +90,13 @@ public class RobotContainer extends OutliersContainer {
         // _stealExit, _oi);
         error("Start auto");
 //        return null;
-        return wrapCommand(new OneBall(_driveTrain, _catapult, _intake, _oi));
-        //        return null;
+        // return wrapCommand(new OneBall(_driveTrain, _catapult, _intake, _oi));
+               return null;
     }
 
     private Command wrapCommand(Command command) {
-        return new SequentialCommandGroup(new DropIntake(_intake), command);
+        // return new SequentialCommandGroup(new DropIntake(_intake), command);
+        return null;
     }
 
     @Override
@@ -110,7 +111,7 @@ public class RobotContainer extends OutliersContainer {
         //_driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
 //        _driveTrain.updateDashboard();
-//        _catapult.updateDashboard();
+        _catapult.updateDashboard();
         _climber.updateDashboard();
     }
 
