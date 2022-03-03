@@ -5,8 +5,6 @@ import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.Climber.ClimberStep;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 public class Stow extends OutliersCommand{
 
     private Climber _climber;
@@ -28,16 +26,13 @@ public class Stow extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        error("Execute");
         if (_climber.isRockArmDown()) {
             _climber.stopRockerArm();
-            _climber.setStaSpeed(0);
         } else {
             _climber.setRockSpeed(Constants.Climber.ARM_STOW_SPEED);
         }
         if (_climber.isStaArmDown()) {
             _climber.stopStationaryArm();
-            _climber.setStaSpeed(0);
         } else {
             _climber.setStaSpeed(Constants.Climber.ARM_STOW_SPEED);
         }
@@ -46,7 +41,7 @@ public class Stow extends OutliersCommand{
 
     @Override
     public boolean isFinished(){
-        if  (_climber.isRockArmDown()) {
+        if  (_climber.isRockArmDown() && _climber.isStaArmDown()) {
             info("Stow finished.");
             return true;
         };

@@ -271,13 +271,13 @@ public class Constants {
         public static final double ENCODER_RATIO = Units.inchesToMeters(26) / 498.0; 
         // public static final double ENCODER_RATIO  = ;
         public static final boolean STATIONARY_ARM_REVERSED = true;
-        public static final int STATIONARY_ARM_CURRENT_LIMIT = 50; // amps
+        public static final int ARM_CURRENT_LIMIT = 50; // amps
 
         public static final boolean ROCKER_ARM_REVERSED = true;
         public static final int ROCKER_ARM_CURRENT_LIMIT = 40; // amps
 
-        public static final double kP = 40.0;
-        public static final double kI = 15.0;
+        public static final double kP = 0.0; // 40.0;
+        public static final double kI = 0.0; // 15.0;
         public static final double kD = 0.0;
         public static final double MAX_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI) * WINCH_DRUM_CIRCUMFERENCE);
         public static final double MAX_ACCELERATION_MPSS = MAX_VELOCITY_MPS * 50.0; // heuristic
@@ -303,7 +303,7 @@ public class Constants {
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final long ROCKER_PISTON_WAIT = 250;
-        public static final double ARM_STOW_SPEED = 0.6;
+        public static final double ARM_STOW_SPEED = 0.3;
 
         public static final boolean ROCKER_ENCODER_INVERTED = false;
         public static final boolean STATIONARY_ARM_ENCODER_INVERTED = false;
@@ -314,5 +314,7 @@ public class Constants {
         public static final int MAX_STALL_CYCLES = 10;
         public static final double STALL_CURRENT = 40.0;
         public static final double STALL_MIN_RPM = 20.0;
+        public static final double ARM_THRES_TIME = 0.5;
+        public static final double CURRENT_THRES = 15;
     }
 }
