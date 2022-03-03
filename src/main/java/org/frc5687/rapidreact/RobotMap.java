@@ -28,6 +28,8 @@ public class RobotMap {
             public static final int SOUTH_WEST_INNER = 6;
             public static final int NORTH_WEST_INNER = 7;
             public static final int NORTH_WEST_OUTER = 8;
+            public static final int STATIONARY_CLIMBER = 14;
+            public static final int ROCKER_CLIMBER = 15;
         }
 
         public static class SPARKMAX {
@@ -56,6 +58,8 @@ public class RobotMap {
 
         public static final int INTAKE_HIGH = 10;
         public static final int INTAKE_LOW = 5;
+        public static final int CLIMBER_IN = 6;
+        public static final int CLIMBER_OUT = 9;
     }
 
     /**
@@ -83,5 +87,13 @@ public class RobotMap {
         public static final int SPRING_HALL_EFFECT = 4;
         public static final int ARM_HALL_EFFECT = 5;
         public static final int INTAKE_HALL_EFFECT = 22;
+
+
+        public static final int STATIONARY_ARM_TOP_HALL = 6;
+        public static final int STATIONARY_ARM_BOTTOM_HALL = 8;
+
+        public static final int ROCKER_ARM_TOP_HALL = 9; 
+        public static final int ROCKER_ARM_BOTTOM_HALL = 7; 
+
     }
 }
