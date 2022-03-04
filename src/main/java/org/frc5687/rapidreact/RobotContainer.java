@@ -102,24 +102,25 @@ public class RobotContainer extends OutliersContainer {
         //return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
         AutoChooser.Position autoPosition = _autoChooser.getSelectedPosition();
         AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
-        Pose2d[] destinations = {};
+        Pose2d[] destinationsZeroBall = {};
+        Pose2d[] destinationsOneBall = {};
         
         switch(autoPosition) {
             case First:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
-                destinations[0] = Constants.Auto.BallPositions.BALL_ONE;
+                destinationsZeroBall[0] = Constants.Auto.BallPositions.BALL_ONE;
                 break;
             case Second:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
-                destinations[0] = Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST;
+                destinationsZeroBall[0] = Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST;
                 break;
             case Third:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
-                destinations[0] = Constants.Auto.BallPositions.BALL_TWO;
+                destinationsZeroBall[0] = Constants.Auto.BallPositions.BALL_TWO;
                 break;
             case Fourth:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
-                destinations[0] = Constants.Auto.FieldPositions.SAFE_BALL_THREE;
+                destinationsZeroBall[0] = Constants.Auto.FieldPositions.SAFE_BALL_THREE;
                 break;
             default:
                 return new Wait(15);
@@ -127,7 +128,7 @@ public class RobotContainer extends OutliersContainer {
 
         switch (autoMode) {
             case ZeroBall:
-                return new ZeroBallAuto(_driveTrain, destinations[0], new Rotation2d());
+                return new ZeroBallAuto(_driveTrain, destinationsZeroBall[0], new Rotation2d());
             case OneBall:
                 return new Wait(15);
             default:
