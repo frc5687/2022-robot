@@ -1,17 +1,12 @@
 /* Team 5687 (C)2022 */
 package org.frc5687.rapidreact.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -32,8 +27,6 @@ public class Climber extends OutliersSubsystem{
     private TalonFX _stationaryArmWinch;
     private TalonFX _rockerArmWinch;
     private DoubleSolenoid _rocker;
-    private ProfiledPIDController _staController;
-    private ProfiledPIDController _rockController;
 
     private HallEffect _staArmUp;
     private HallEffect _staArmDown;
@@ -47,6 +40,9 @@ public class Climber extends OutliersSubsystem{
 
     private double _staSpeed = 0.0;
     private double _rockSpeed = 0.0;
+
+    private double _staGoal = 0.0;
+    private double _rockGoal = 0.0;
 
     public void setStep(ClimberStep step){
         //Sets the current step of the climbing process
@@ -66,15 +62,40 @@ public class Climber extends OutliersSubsystem{
         _stationaryArmWinch.setNeutralMode(NeutralMode.Coast);
         _stationaryArmWinch.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, Constants.Climber.ARM_CURRENT_LIMIT, Constants.Climber.CURRENT_THRES, Constants.Climber.ARM_THRES_TIME));
         _stationaryArmWinch.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        _stationaryArmWinch.setSensorPhase((Constants.Climber.STATIONARY_ENCODER_REVERSED);
+        _stationaryArmWinch.setSensorPhase(Constants.Climber.STATIONARY_ENCODER_REVERSED);
         _stationaryArmWinch.setInverted(Constants.Climber.STATIONARY_ARM_REVERSED);
 
+        _stationaryArmWinch.configForwardSoftLimitThreshold((int)(Constants.Climber.STATIONARY_EXTENDED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
+        _stationaryArmWinch.configForwardSoftLimitEnable(true, 30);
+        _stationaryArmWinch.configReverseSoftLimitThreshold((int) (Constants.Climber.STATIONARY_RETRACTED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
+        _stationaryArmWinch.configReverseSoftLimitEnable(true, 30);
+
+        _stationaryArmWinch.configMotionCruiseVelocity(Constants.Climber.CRUISE_VELOCITY);
+        _stationaryArmWinch.configMotionAcceleration(Constants.Climber.ACCELERATION);
+        _stationaryArmWinch.configVoltageMeasurementFilter(8);
+        _stationaryArmWinch.enableVoltageCompensation(true);
+        _stationaryArmWinch.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
+        _stationaryArmWinch.configClosedloopRamp(0,50);
+
+ 
         _rockerArmWinch = new TalonFX(RobotMap.CAN.TALONFX.ROCKER_CLIMBER);
         _rockerArmWinch.setNeutralMode(NeutralMode.Coast);
         _rockerArmWinch.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,Constants.Climber.ARM_CURRENT_LIMIT, Constants.Climber.CURRENT_THRES, Constants.Climber.ARM_THRES_TIME));
         _rockerArmWinch.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         _rockerArmWinch.setSensorPhase(Constants.Climber.ROCKER_ENCODER_REVERSED);
         _rockerArmWinch.setInverted(Constants.Climber.ROCKER_ARM_REVERSED);
+
+        _rockerArmWinch.configForwardSoftLimitThreshold((int)(Constants.Climber.ROCKER_EXTENDED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
+        _rockerArmWinch.configForwardSoftLimitEnable(true, 30);
+        _rockerArmWinch.configReverseSoftLimitThreshold((int) (Constants.Climber.ROCKER_RETRACTED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
+        _rockerArmWinch.configReverseSoftLimitEnable(true, 30);
+
+        _rockerArmWinch.configMotionCruiseVelocity(Constants.Climber.CRUISE_VELOCITY);
+        _rockerArmWinch.configMotionAcceleration(Constants.Climber.ACCELERATION);
+        _rockerArmWinch.configVoltageMeasurementFilter(8);
+        _rockerArmWinch.enableVoltageCompensation(true);
+        _rockerArmWinch.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
+        _rockerArmWinch.configClosedloopRamp(0,50);
 
 
         _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
@@ -87,30 +108,6 @@ public class Climber extends OutliersSubsystem{
 
         _rockArmUp = new HallEffect(RobotMap.DIO.ROCKER_ARM_TOP_HALL);
         _rockArmDown = new HallEffect(RobotMap.DIO.ROCKER_ARM_BOTTOM_HALL);
-
-        _staController = new ProfiledPIDController(
-            Constants.Climber.kP, 
-            Constants.Climber.kI,
-            Constants.Climber.kD,  
-            new TrapezoidProfile.Constraints(
-                Constants.Climber.MAX_VELOCITY_MPS,
-                Constants.Climber.MAX_ACCELERATION_MPSS
-            )
-        );
-        _staController.setTolerance(Constants.Climber.ARM_TOLERANCE);
-        _staController.setIntegratorRange(-Constants.Climber.ARM_IZONE, Constants.Climber.ARM_IZONE);
-
-        _rockController = new ProfiledPIDController(
-            Constants.Climber.kP,
-            Constants.Climber.kI, 
-            Constants.Climber.kD,
-            new TrapezoidProfile.Constraints(
-                    Constants.Climber.MAX_VELOCITY_MPS,
-                    Constants.Climber.MAX_ACCELERATION_MPSS
-            )
-        );
-        _rockController.setTolerance(Constants.Climber.ARM_TOLERANCE);
-        _rockController.setIntegratorRange(-Constants.Climber.ARM_IZONE, Constants.Climber.ARM_IZONE);
 
     }
 
@@ -171,8 +168,9 @@ public class Climber extends OutliersSubsystem{
      * @param goalMeters in inches
      */
     public void setStaGoalMeters(double goalMeters){
-        info("Setting StationaryArm goal to " + goalMeters);
-        _staController.setGoal(-goalMeters);
+        _staGoal = goalMeters;
+        info("Setting StationaryArm goal to " + _staGoal);
+        _stationaryArmWinch.set(ControlMode.MotionMagic, (_staGoal/Constants.Climber.TICKS_TO_METERS));
         _staControllerEnabled = true;
     }
 
@@ -182,9 +180,10 @@ public class Climber extends OutliersSubsystem{
      * @param goalMeters in inches
      */
     public void setRockGoalMeters(double goalMeters){
-        info("Setting RockerArm goal to " + goalMeters);
+        _rockGoal = goalMeters;
+        info("Setting RockerArm goal to " + _rockGoal);
         //Sets the goal of the PID controller
-        _rockController.setGoal(-goalMeters);
+        _rockerArmWinch.set(ControlMode.MotionMagic, (_rockGoal/Constants.Climber.TICKS_TO_METERS));
         _rockControllerEnabled = true;
     }
 
@@ -211,13 +210,11 @@ public class Climber extends OutliersSubsystem{
      * the arm is extened, that is used as the input to the PID controllers
      */
     public void runControllers() {
-        if (_staControllerEnabled) {
-            metric("Running stationary controller", true);
-            setStaSpeed(_staController.calculate(getStaPositionMeters()));
+        if (!_staControllerEnabled) {
+            setStaSpeed(0.0);
         }
-        if (_rockControllerEnabled) {
-            metric("Running rocker controller", true);
-            setRockSpeed(_rockController.calculate(getRockPositionMeters()));
+        if (!_rockControllerEnabled) {
+            setRockSpeed(0.0);
         }
     }
 
@@ -336,14 +333,14 @@ public class Climber extends OutliersSubsystem{
     @Override
     public void updateDashboard() {
         metric("Stationary/Position", getStaPositionMeters());
-        metric("Stationary/Goal", _staController.getGoal().position);
+        metric("Stationary/Goal", _staGoal);
         metric("Stationary/Enabled", _staControllerEnabled);
         metric("Stationary/Encoder", _stationaryArmWinch.getSelectedSensorPosition());
         metric("Stationary/Speed", _staSpeed); 
         metric("Stationary/Up", _staArmUp.get());
         metric("Stationary/Down", _staArmDown.get());
         metric("Rocker/Position", getRockPositionMeters());
-        metric("Rocker/Goal", _rockController.getGoal().position);
+        metric("Rocker/Goal", _rockGoal);
         metric("Rocker/Enabled", _rockControllerEnabled);
         metric("Rocker/Speed", _rockSpeed);
         metric("Rocker/Up", isRockArmUp()); 
@@ -361,7 +358,7 @@ public class Climber extends OutliersSubsystem{
      * @return true if within tolerance
      */
     public boolean isStaAtGoal() {
-        return _staController.atGoal();
+        return Math.abs(getStaPositionMeters() - _staGoal) < Constants.Climber.TOLERANCE;
     }
 
     /**
@@ -369,7 +366,7 @@ public class Climber extends OutliersSubsystem{
      * @return true if within tolerance
      */
     public boolean isRockAtGoal() {
-        return _rockController.atGoal();
+        return Math.abs(getRockPositionMeters() - _rockGoal) < Constants.Climber.TOLERANCE;
     }
 
 
