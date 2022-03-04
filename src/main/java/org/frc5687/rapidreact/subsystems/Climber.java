@@ -34,8 +34,7 @@ public class Climber extends OutliersSubsystem{
     private DoubleSolenoid _rocker;
     private ProfiledPIDController _staController;
     private ProfiledPIDController _rockController;
-    private CANCoder _stationaryArmWinchEncoder;
-    private CANCoder _rockerArmWinchEncoder;
+
     private HallEffect _staArmUp;
     private HallEffect _staArmDown;
     private HallEffect _rockArmUp;
@@ -108,8 +107,6 @@ public class Climber extends OutliersSubsystem{
         _rockController.setTolerance(Constants.Climber.ARM_TOLERANCE);
         _rockController.setIntegratorRange(-Constants.Climber.ARM_IZONE, Constants.Climber.ARM_IZONE);
 
-        _stationaryArmWinchEncoder = new CANCoder(RobotMap.CAN.TALONFX.STATIONARY_CLIMBER);
-        _rockerArmWinchEncoder = new CANCoder(RobotMap.CAN.TALONFX.ROCKER_CLIMBER);
     }
 
     /**
@@ -276,7 +273,7 @@ public class Climber extends OutliersSubsystem{
      * It is stalled if the amperage draw is > Constant and it has not moved in more than Constant cycles
      */
     public boolean isStaArmStalled() {
-        if (isArmStalled(_stationaryArmWinch, _stationaryArmWinchEncoder)) {
+        if (isArmStalled(_stationaryArmWinch)) {
             _staStallCycles++;
         } else {
             _staStallCycles=0;
@@ -289,7 +286,7 @@ public class Climber extends OutliersSubsystem{
      * It is stalled if the amperage draw is > STALL_CURRENT and it has not moved in more than MAX_STALL_CYCLES cycles
      */
     public boolean isRockArmStalled() {
-        if (isArmStalled(_rockerArmWinch, _rockerArmWinchEncoder)) {
+        if (isArmStalled(_rockerArmWinch)) {
             _rockStallCycles++;
         } else {
             _rockStallCycles=0;
@@ -301,9 +298,9 @@ public class Climber extends OutliersSubsystem{
      * Checks to see if an arm is stalling.  An arm is stalling if the controller is sending more than STALL_CURRENT current
      * but the encoder is reading less that STALL_MIN_RPM rotations.
      */
-    private boolean isArmStalled(TalonFX controller, CANCoder encoder) {
+    private boolean isArmStalled(TalonFX controller) {
        return controller.getSupplyCurrent() > Constants.Climber.STALL_CURRENT
-            && Math.abs(encoder.getVelocity()) < Constants.Climber.STALL_MIN_RPM;  
+            && Math.abs(controller.getSelectedSensorVelocity()) < Constants.Climber.STALL_MIN_RPM;  
     }
 
     /**
@@ -318,14 +315,14 @@ public class Climber extends OutliersSubsystem{
      * Sets the stationary arm encoder to 0.  This should be called when the "down" HE is triggered.
      */
     public void zeroStationaryArmEncoder(){
-        _stationaryArmWinchEncoder.setPosition(0);
+        _stationaryArmWinch.setSelectedSensorPosition(0);
     }
 
     /**
      * Sets the rocker arm encoder to 0.  This should be called when the "down" HE is triggered.
      */
     public void zeroRockerArmEncoder() {
-        _rockerArmWinchEncoder.setPosition(0);
+        _rockerArmWinch.setSelectedSensorPosition(0);
     }
 
     @Override
@@ -333,7 +330,7 @@ public class Climber extends OutliersSubsystem{
         metric("Stationary/Position", getStaPositionMeters());
         metric("Stationary/Goal", _staController.getGoal().position);
         metric("Stationary/Enabled", _staControllerEnabled);
-        metric("Stationary/Encoder", _stationaryArmWinchEncoder.getPosition());
+        metric("Stationary/Encoder", _stationaryArmWinch.getSelectedSensorPosition());
         metric("Stationary/Speed", _staSpeed); 
         metric("Stationary/Up", _staArmUp.get());
         metric("Stationary/Down", _staArmDown.get());
@@ -342,7 +339,7 @@ public class Climber extends OutliersSubsystem{
         metric("Rocker/Enabled", _rockControllerEnabled);
         metric("Rocker/Speed", _rockSpeed);
         metric("Rocker/Up", isRockArmUp()); 
-        metric("Rocker/Encoder", _stationaryArmWinchEncoder.getPosition());
+        metric("Rocker/Encoder", _rockerArmWinch.getSelectedSensorPosition());
         metric("Rocker/Down", isRockArmDown());
         metric("Rocker Cylinder", getRockerLabel());
 
