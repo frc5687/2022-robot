@@ -257,7 +257,7 @@ public class Constants {
     public static class Intake{
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
-        public static final double THE_BEANS = 0.8;
+        public static final double THE_BEANS = 0.7;
         public static final double GEAR_RATIO = 5.0;
         public static final double MAX_RPM = 6300 * GEAR_RATIO;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
