@@ -32,7 +32,7 @@ public class Shoot extends OutliersCommand {
 
     @Override
     public void execute() {
-        metric("Intake down", _intake.isIntakeDown());
+        metric("Intake down", _intake.isIntakeUp());
         switch (_catapult.getState()) {
             case ZEROING: {
                 checkLockOut();
@@ -136,7 +136,7 @@ public class Shoot extends OutliersCommand {
             case LOCK_OUT: {
                 _catapult.setWinchMotorSpeed(0.0);
                 _catapult.setSpringMotorSpeed(0.0);
-                if (_intake.isIntakeDown()) {
+                if (!_intake.isIntakeUp()) {
                     _catapult.setState(_prevState);
                 }
             } break;
@@ -200,7 +200,7 @@ public class Shoot extends OutliersCommand {
     }
 
     protected void checkLockOut() {
-        if (!_intake.isIntakeDown()) {
+        if (_intake.isIntakeUp()) {
             _prevState = _catapult.getState();
             _catapult.setState(Catapult.CatapultState.LOCK_OUT);
         }

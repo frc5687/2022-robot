@@ -114,9 +114,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
     public void disabledInit() {
         // _limelight.disableLEDs();
         RioLogger.getInstance().forceSync();
-        RioLogger.getInstance().close();
         _robotContainer.disabledInit();
-        //        MetricTracker.flushAll();
     }
 
     @Override

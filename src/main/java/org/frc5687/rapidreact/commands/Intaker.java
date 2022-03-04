@@ -15,21 +15,18 @@ public class Intaker extends OutliersCommand {
 
     @Override
     public void initialize(){
+        _intake.deploy();
     }
 
     @Override
     public void execute(){
-        super.execute();
-        if (_reversed) {
-            _intake.reversed();
-        } else {
-            _intake.spinUpRoller();
-        }
+        _intake.spinUpRoller();
     }
 
     @Override
     public void end(boolean interrupted) {
         _intake.spinDownRoller();
+        _intake.stowe();
         super.end(interrupted);
     }
 }
