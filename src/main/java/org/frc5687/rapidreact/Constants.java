@@ -326,7 +326,7 @@ public class Constants {
         public static final int FPS_LIMIT = 15;
         public static final boolean AUTO_EXPOSURE = true;
         public static final int EXPOSURE = 70;
-        public static final int HEIGHT = 480;
-        public static final int WIDTH = 480;
+        public static final int HEIGHT = 320;
+        public static final int WIDTH = 240;
     }
 }
