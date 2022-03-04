@@ -130,6 +130,18 @@ public class OI extends OutliersProxy {
         return speed;
     }
 
+    public double getStationarySpeed() {
+        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
+        speed = applyDeadband(speed, Constants.DEADBAND);
+        return speed;
+    }
+    public double getRockerSpeed() {
+        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_Y.getNumber());
+        speed = applyDeadband(speed, Constants.DEADBAND);
+        return speed;
+    }
+
+
     protected double getSpeedFromAxis(Joystick gamepad, int axisNumber) {
         return gamepad.getRawAxis(axisNumber);
     }

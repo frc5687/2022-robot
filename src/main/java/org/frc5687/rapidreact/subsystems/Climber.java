@@ -59,16 +59,16 @@ public class Climber extends OutliersSubsystem{
         logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
 
         _stationaryArmWinch = new TalonFX(RobotMap.CAN.TALONFX.STATIONARY_CLIMBER);
-        _stationaryArmWinch.setNeutralMode(NeutralMode.Coast);
+        _stationaryArmWinch.setNeutralMode(NeutralMode.Brake);
         _stationaryArmWinch.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, Constants.Climber.ARM_CURRENT_LIMIT, Constants.Climber.CURRENT_THRES, Constants.Climber.ARM_THRES_TIME));
         _stationaryArmWinch.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        _stationaryArmWinch.setSensorPhase(Constants.Climber.STATIONARY_ENCODER_REVERSED);
+//        _stationaryArmWinch.setSensorPhase(Constants.Climber.STATIONARY_ENCODER_REVERSED);
         _stationaryArmWinch.setInverted(Constants.Climber.STATIONARY_ARM_REVERSED);
 
-        _stationaryArmWinch.configForwardSoftLimitThreshold((int)(Constants.Climber.STATIONARY_EXTENDED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
-        _stationaryArmWinch.configForwardSoftLimitEnable(true, 30);
-        _stationaryArmWinch.configReverseSoftLimitThreshold((int) (Constants.Climber.STATIONARY_RETRACTED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
-        _stationaryArmWinch.configReverseSoftLimitEnable(true, 30);
+//        _stationaryArmWinch.configForwardSoftLimitThreshold((int)(Constants.Climber.STATIONARY_EXTENDED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
+//        _stationaryArmWinch.configForwardSoftLimitEnable(true, 30);
+//        _stationaryArmWinch.configReverseSoftLimitThreshold((int) (Constants.Climber.STATIONARY_RETRACTED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
+//        _stationaryArmWinch.configReverseSoftLimitEnable(true, 30);
 
         _stationaryArmWinch.configMotionCruiseVelocity(Constants.Climber.CRUISE_VELOCITY);
         _stationaryArmWinch.configMotionAcceleration(Constants.Climber.ACCELERATION);
@@ -79,16 +79,16 @@ public class Climber extends OutliersSubsystem{
 
  
         _rockerArmWinch = new TalonFX(RobotMap.CAN.TALONFX.ROCKER_CLIMBER);
-        _rockerArmWinch.setNeutralMode(NeutralMode.Coast);
+        _rockerArmWinch.setNeutralMode(NeutralMode.Brake);
         _rockerArmWinch.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,Constants.Climber.ARM_CURRENT_LIMIT, Constants.Climber.CURRENT_THRES, Constants.Climber.ARM_THRES_TIME));
         _rockerArmWinch.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        _rockerArmWinch.setSensorPhase(Constants.Climber.ROCKER_ENCODER_REVERSED);
+//        _rockerArmWinch.setSensorPhase(Constants.Climber.ROCKER_ENCODER_REVERSED);
         _rockerArmWinch.setInverted(Constants.Climber.ROCKER_ARM_REVERSED);
 
-        _rockerArmWinch.configForwardSoftLimitThreshold((int)(Constants.Climber.ROCKER_EXTENDED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
-        _rockerArmWinch.configForwardSoftLimitEnable(true, 30);
-        _rockerArmWinch.configReverseSoftLimitThreshold((int) (Constants.Climber.ROCKER_RETRACTED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
-        _rockerArmWinch.configReverseSoftLimitEnable(true, 30);
+//        _rockerArmWinch.configForwardSoftLimitThreshold((int)(Constants.Climber.ROCKER_EXTENDED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
+//        _rockerArmWinch.configForwardSoftLimitEnable(true, 30);
+//        _rockerArmWinch.configReverseSoftLimitThreshold((int) (Constants.Climber.ROCKER_RETRACTED_METERS/Constants.Climber.TICKS_TO_METERS), 30);
+//        _rockerArmWinch.configReverseSoftLimitEnable(true, 30);
 
         _rockerArmWinch.configMotionCruiseVelocity(Constants.Climber.CRUISE_VELOCITY);
         _rockerArmWinch.configMotionAcceleration(Constants.Climber.ACCELERATION);
@@ -97,11 +97,7 @@ public class Climber extends OutliersSubsystem{
         _rockerArmWinch.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
         _rockerArmWinch.configClosedloopRamp(0,50);
 
-
         _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
-
-       
-
 
         _staArmUp = new HallEffect(RobotMap.DIO.STATIONARY_ARM_TOP_HALL);
         _staArmDown = new HallEffect(RobotMap.DIO.STATIONARY_ARM_BOTTOM_HALL);
@@ -109,6 +105,16 @@ public class Climber extends OutliersSubsystem{
         _rockArmUp = new HallEffect(RobotMap.DIO.ROCKER_ARM_TOP_HALL);
         _rockArmDown = new HallEffect(RobotMap.DIO.ROCKER_ARM_BOTTOM_HALL);
 
+        // Setup PID stuff
+        _stationaryArmWinch.config_kP(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kP);
+        _stationaryArmWinch.config_kI(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kI);
+        _stationaryArmWinch.config_kD(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kD);
+        _stationaryArmWinch.config_kF(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kF);
+
+        _rockerArmWinch.config_kP(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kP);
+        _rockerArmWinch.config_kI(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kI);
+        _rockerArmWinch.config_kD(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kD);
+        _rockerArmWinch.config_kF(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kF);
     }
 
     /**
@@ -116,8 +122,9 @@ public class Climber extends OutliersSubsystem{
      * Note that this is intended to be called only by the climber's controllers. 
      * @param speed
      */
+
     public void setStaSpeed(double speed) {
-        _staSpeed = -speed;
+        _staSpeed = speed;
         _stationaryArmWinch.set(TalonFXControlMode.PercentOutput, _staSpeed);
     }
 
@@ -127,7 +134,7 @@ public class Climber extends OutliersSubsystem{
      * @param speed
      */
     public void setRockSpeed(double speed) {
-        _rockSpeed = -speed;
+        _rockSpeed = speed;
         //_rockerArmWinch.set(TalonFXControlMode.MotionMagic, speed);
         _rockerArmWinch.set(TalonFXControlMode.PercentOutput, _rockSpeed);
             
@@ -150,7 +157,7 @@ public class Climber extends OutliersSubsystem{
         info("Stopping StationaryArm");
         _staControllerEnabled = false;
         setStaSpeed(0.0);
-        _stationaryArmWinch.setNeutralMode(NeutralMode.Coast);
+//        _stationaryArmWinch.setNeutralMode(NeutralMode.Coast);
     }
 
     /**
@@ -160,7 +167,7 @@ public class Climber extends OutliersSubsystem{
         info("Stopping RockerArm");
         _rockControllerEnabled = false;
         setRockSpeed(0.0);
-        _rockerArmWinch.setNeutralMode(NeutralMode.Coast);
+//        _rockerArmWinch.setNeutralMode(NeutralMode.Coast);
     }
 
     /**
@@ -170,7 +177,7 @@ public class Climber extends OutliersSubsystem{
     public void setStaGoalMeters(double goalMeters){
         _staGoal = goalMeters;
         info("Setting StationaryArm goal to " + _staGoal);
-        _stationaryArmWinch.set(ControlMode.MotionMagic, (_staGoal/Constants.Climber.TICKS_TO_METERS));
+        _stationaryArmWinch.set(ControlMode.MotionMagic, (_staGoal / Constants.Climber.TICKS_TO_METERS));
         _staControllerEnabled = true;
     }
 
@@ -183,7 +190,7 @@ public class Climber extends OutliersSubsystem{
         _rockGoal = goalMeters;
         info("Setting RockerArm goal to " + _rockGoal);
         //Sets the goal of the PID controller
-        _rockerArmWinch.set(ControlMode.MotionMagic, (_rockGoal/Constants.Climber.TICKS_TO_METERS));
+        _rockerArmWinch.set(ControlMode.MotionMagic, (_rockGoal / Constants.Climber.TICKS_TO_METERS));
         _rockControllerEnabled = true;
     }
 
@@ -193,7 +200,7 @@ public class Climber extends OutliersSubsystem{
      * @return
      */
     public double getStaPositionMeters(){
-        return _stationaryArmWinch.getSelectedSensorPosition() * Constants.Climber.ENCODER_RATIO;
+        return _stationaryArmWinch.getSelectedSensorPosition() * Constants.Climber.TICKS_TO_METERS;
     }
 
     /**
@@ -201,7 +208,7 @@ public class Climber extends OutliersSubsystem{
      * @return
      */
     public double getRockPositionMeters(){
-        return _rockerArmWinch.getSelectedSensorPosition() * Constants.Climber.ENCODER_RATIO;
+        return _rockerArmWinch.getSelectedSensorPosition() * Constants.Climber.TICKS_TO_METERS;
     }
 
     /**
