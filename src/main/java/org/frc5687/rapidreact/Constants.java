@@ -303,13 +303,13 @@ public class Constants {
 
         public static final double ROCKER_RETRACTED_METERS = 0.0;
         public static final double ROCKER_CLOSE_METERS = 0.4064;
-        public static final double ROCKER_MID_METERS = 0.46; // 0.4826
-        public static final double ROCKER_EXTENDED_METERS = 0.68; // TODO: Needs to be confirmed
+        public static final double ROCKER_MID_METERS = 0.51; // 0.4826
+        public static final double ROCKER_EXTENDED_METERS = 0.69; // TODO: Needs to be confirmed
 
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final long ROCKER_PISTON_WAIT = 250;
-        public static final double ARM_STOW_SPEED = -0.8;
+        public static final double ARM_STOW_SPEED = -0.3;
 
         public static final boolean ROCKER_ENCODER_INVERTED = false; // TODO: Needs to be calibrated via Phoenix tuner
         public static final boolean STATIONARY_ENCODER_INVERTED = false; // TODO: Needs to be calibrated via Phoenix tuner
@@ -325,7 +325,7 @@ public class Constants {
         public static final boolean ROCKER_ENCODER_REVERSED = false; // TODO: Needs to be calibrated via Phoenix tuner
         public static final boolean STATIONARY_ENCODER_REVERSED = false; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double TICKS_TO_METERS = 0.00000149489; // TODO: Needs to be calibrated via Phoenix tuner
-        public static final double CRUISE_VELOCITY = 30000; // TODO: Needs to be calibrated via Phoenix tuner
-        public static final double ACCELERATION = 60000; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final double CRUISE_VELOCITY = 50000; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final double ACCELERATION = 90000; // TODO: Needs to be calibrated via Phoenix tuner
     }
 }

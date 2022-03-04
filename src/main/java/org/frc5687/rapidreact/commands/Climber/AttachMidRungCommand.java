@@ -28,7 +28,7 @@ public class AttachMidRungCommand extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        _climber.setStaSpeed(-0.8);
+        _climber.setStaSpeed(-1.0);
     }
 
 
