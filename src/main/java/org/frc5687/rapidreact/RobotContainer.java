@@ -114,7 +114,7 @@ public class RobotContainer extends OutliersContainer {
             case Second:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
                 destinationsZeroBall[0] = Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST;
-                destinationsOneBall[0] = Constants.Auto.BallPositions.ROBOT_POS_TWO_DEST;
+                destinationsOneBall[0] = Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST;
                 break;
             case Third:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
@@ -124,7 +124,7 @@ public class RobotContainer extends OutliersContainer {
             case Fourth:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
                 destinationsZeroBall[0] = Constants.Auto.FieldPositions.SAFE_BALL_THREE;
-                destinationsOneBall[0] = Constants.Auto.BallPositions.SAFE_BALL_THREE;
+                destinationsOneBall[0] = Constants.Auto.FieldPositions.SAFE_BALL_THREE;
                 break;
             default:
                 return new Wait(15);
