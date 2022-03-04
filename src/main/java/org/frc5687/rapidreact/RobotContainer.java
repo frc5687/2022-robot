@@ -3,6 +3,7 @@ package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
@@ -15,6 +16,7 @@ import org.frc5687.rapidreact.commands.*;
 import org.frc5687.rapidreact.commands.Autos.DriveForTime;
 import org.frc5687.rapidreact.commands.Autos.DropIntake;
 import org.frc5687.rapidreact.commands.Autos.OneBallAuto;
+import org.frc5687.rapidreact.commands.Autos.Wait;
 import org.frc5687.rapidreact.commands.Autos.ZeroBallAuto;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -96,48 +98,70 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command getAutonomousCommand() {
-        _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
+        //_driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
         //return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
         AutoChooser.Position autoPosition = _autoChooser.getSelectedPosition();
         AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
+        Pose2d[] destinations;
         
-
         switch(autoPosition) {
             case First:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
-                switch(autoMode) {
-                    case ZeroBall:
-                        return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
-                    case OneBall:
-                        return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
-                }
+                break;
             case Second:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
-                switch(autoMode) {
-                    case ZeroBall:
-                        return new ZeroBallAuto(_driveTrain, Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST, new Rotation2d());
-                    case OneBall:
-                        return new OneBallAuto(_driveTrain, Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST, new Rotation2d());
-                }
+                break;
             case Third:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
-                switch(autoMode) {
-                    case ZeroBall:
-                        return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
-                    case OneBall:
-                }       return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+                break;
             case Fourth:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
-                switch(autoMode) {
-                    case ZeroBall:
-                        return new ZeroBallAuto(_driveTrain, Constants.Auto.FieldPositions.SAFE_BALL_THREE, new Rotation2d());
-                    case OneBall:
-                        return new OneBallAuto(_driveTrain, Constants.Auto.FieldPositions.SAFE_BALL_THREE, new Rotation2d());
-                }
+                break;
             default:
-                return new DriveForTime(_driveTrain, 2000, true);
-                
+                return new Wait(15);
         }
+        return new Wait(15);
+        // switch(autoMode) {
+
+        // }
+
+    //     switch(autoPosition) {
+    //         case First:
+    //             _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
+    //             switch(autoMode) {
+    //                 case ZeroBall:
+    //                     return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
+    //                 case OneBall:
+    //                     return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
+    //             }
+    //         case Second:
+    //             _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
+    //             switch(autoMode) {
+    //                 case ZeroBall:
+    //                     return new ZeroBallAuto(_driveTrain, Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST, new Rotation2d());
+    //                 case OneBall:
+    //                     return new OneBallAuto(_driveTrain, Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST, new Rotation2d());
+    //             }
+    //         case Third:
+    //             _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
+    //             switch(autoMode) {
+    //                 case ZeroBall:
+    //                     return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+    //                 case OneBall:
+    //             }       return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+    //         case Fourth:
+    //             _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
+    //             switch(autoMode) {
+    //                 case ZeroBall:
+    //                     return new ZeroBallAuto(_driveTrain, Constants.Auto.FieldPositions.SAFE_BALL_THREE, new Rotation2d());
+    //                 case OneBall:
+    //                     return new OneBallAuto(_driveTrain, Constants.Auto.FieldPositions.SAFE_BALL_THREE, new Rotation2d());
+    //             }
+    //         default:
+    //             info("Couldn't find position switch, waiting.");
+    //             return new Wait(15);
+                
+    //     }
     }
 
     @Override

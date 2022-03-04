@@ -28,7 +28,7 @@ public class AutoChooser extends OutliersProxy {
         try {
             return Mode.values()[raw];
         } catch (Exception e) {
-            return Mode.ZeroBall;
+            return Mode.Unknown;
         }
     }
 
@@ -40,7 +40,7 @@ public class AutoChooser extends OutliersProxy {
         try {
             return Position.values()[raw];
         } catch (Exception e) {
-            return Position.First;
+            return Position.Unknown;
         }
     }
 
@@ -53,7 +53,7 @@ public class AutoChooser extends OutliersProxy {
     }
 
     public enum Position {
-        First(0), Second(1), 
+        Unknown(-1), First(0), Second(1), 
         Third(2), Fourth(3);
 
         private int _value;
@@ -67,7 +67,7 @@ public class AutoChooser extends OutliersProxy {
         }
     }
     public enum Mode {
-        ZeroBall(0), OneBall(1);
+        Unknown(-1), ZeroBall(0), OneBall(1);
 
         private int _value;
 
