@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.HallEffect;
@@ -115,8 +114,8 @@ public class Climber extends OutliersSubsystem{
      * @param speed
      */
     public void setStaSpeed(double speed) {
-        _staSpeed = speed;
-        _stationaryArmWinch.set(TalonFXControlMode.PercentOutput, speed);
+        _staSpeed = -speed;
+        _stationaryArmWinch.set(TalonFXControlMode.PercentOutput, _staSpeed);
     }
 
     /**
@@ -125,9 +124,10 @@ public class Climber extends OutliersSubsystem{
      * @param speed
      */
     public void setRockSpeed(double speed) {
-        _rockSpeed = speed;
+        _rockSpeed = -speed;
         //_rockerArmWinch.set(TalonFXControlMode.MotionMagic, speed);
-        _rockerArmWinch.set(TalonFXControlMode.PercentOutput, speed);
+        _rockerArmWinch.set(TalonFXControlMode.PercentOutput, _rockSpeed);
+            
         info("Rocker arm speed set to " + speed);
     }
 
@@ -316,6 +316,7 @@ public class Climber extends OutliersSubsystem{
      */
     public void zeroStationaryArmEncoder(){
         _stationaryArmWinch.setSelectedSensorPosition(0);
+        info("Stationary Zeroed");
     }
 
     /**
@@ -323,6 +324,7 @@ public class Climber extends OutliersSubsystem{
      */
     public void zeroRockerArmEncoder() {
         _rockerArmWinch.setSelectedSensorPosition(0);
+        info("Rocker Zeroed");
     }
 
     @Override

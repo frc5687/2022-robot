@@ -279,7 +279,7 @@ public class Constants {
         public static final boolean ROCKER_ARM_REVERSED = true;
         public static final int ROCKER_ARM_CURRENT_LIMIT = 40; // amps
 
-        public static final double kP = 0.0; // 40.0;
+        public static final double kP = 1.0; // 40.0;
         public static final double kI = 0.0; // 15.0;
         public static final double kD = 0.0;
         public static final double MAX_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI) * WINCH_DRUM_CIRCUMFERENCE);
@@ -306,7 +306,7 @@ public class Constants {
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final long ROCKER_PISTON_WAIT = 250;
-        public static final double ARM_STOW_SPEED = 0.3;
+        public static final double ARM_STOW_SPEED = -0.3;
 
         public static final boolean ROCKER_ENCODER_INVERTED = false;
         public static final boolean STATIONARY_ARM_ENCODER_INVERTED = false;
