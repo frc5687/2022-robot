@@ -6,7 +6,7 @@
     <content url="file://$MODULE_DIR$/../../src/test" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="Documents.2022-robot.main" />
+    <orderEntry type="module" module-name="5687.2022-robot.main" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:wpilibj-java:2022.3.1" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.wpimath:wpimath-java:2022.3.1" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.ntcore:ntcore-java:2022.3.1" level="project" />
@@ -21,6 +21,8 @@
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.12.4" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2022.3.1" level="project" />
     <orderEntry type="library" name="Gradle: com.revrobotics.frc:REVLib-java:2022.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.photonvision:PhotonLib-java:v2022.1.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.photonvision:PhotonTargeting-java:v2022.1.4" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:api-java:5.20.2" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:wpiapi-java:5.20.2" level="project" />
     <orderEntry type="library" name="Gradle: com.kauailabs.navx.frc:navx-java:4.0.442" level="project" />
@@ -34,4 +36,5 @@
     <orderEntry type="library" name="Gradle: org.ejml:ejml-core:0.41" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
   </component>
+  <component name="TestModuleProperties" production-module="2022-robot.main" />
 </module>

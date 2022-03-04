@@ -126,6 +126,8 @@ public class Constants {
         public static final double PROFILE_CONSTRAINT_VEL = 3.0 * Math.PI;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
 
+        // Vision PID controller
+        public static final double VISION_TOLERANCE = 0.01; // rads
     }
 
     public static class DifferentialSwerveModule {

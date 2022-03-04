@@ -3,10 +3,13 @@ package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -18,14 +21,15 @@ import org.frc5687.rapidreact.commands.Autos.OneBallAuto;
 import org.frc5687.rapidreact.commands.Autos.Wait;
 import org.frc5687.rapidreact.commands.Autos.ZeroBallAuto;
 import org.frc5687.rapidreact.commands.Drive;
-import org.frc5687.rapidreact.commands.IdleIntake;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.commands.Shoot;
+
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
+
 import org.frc5687.rapidreact.util.AutoChooser;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
@@ -197,6 +201,7 @@ public class RobotContainer extends OutliersContainer {
 //        _driveTrain.updateDashboard();
         _catapult.updateDashboard();
         _climber.updateDashboard();
+        //_catapult.updateDashboard();
     }
 
     public void controllerPeriodic() {
