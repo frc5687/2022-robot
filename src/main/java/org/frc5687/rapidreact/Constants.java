@@ -124,7 +124,7 @@ public class Constants {
         public static final double PROFILE_CONSTRAINT_VEL = 3.0 * Math.PI;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
 
-        public static final double VISION_kP = 5.0;
+        public static final double VISION_kP = 4.5;
         public static final double VISION_kI = 0.0;
         public static final double VISION_kD = 1.0;
         public static final double VISION_IRANGE = 1.0;
