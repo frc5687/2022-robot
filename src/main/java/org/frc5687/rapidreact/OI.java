@@ -5,7 +5,11 @@ import static org.frc5687.rapidreact.util.Helpers.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import org.frc5687.rapidreact.commands.Intaker;
+import org.frc5687.rapidreact.subsystems.Catapult;
+import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -54,8 +58,8 @@ public class OI extends OutliersProxy {
 
     }
 
-    public void initializeButtons(DriveTrain driveTrain) {
-        
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
+        _intakeButton.whenHeld(new Intaker(intake, false));
 //        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
 //        _lowerArm.whenPressed(catapult::lockArm);
 //        _lowerArm.whenPressed(new LowerCatapult(catapult));

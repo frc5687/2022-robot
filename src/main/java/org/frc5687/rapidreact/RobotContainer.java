@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.commands.OutliersCommand;
-import org.frc5687.rapidreact.subsystems.DriveTrain;
-import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
+import org.frc5687.rapidreact.subsystems.*;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
@@ -23,6 +22,9 @@ public class RobotContainer extends OutliersContainer {
 
     private Robot _robot;
     private DriveTrain _driveTrain;
+    private Catapult _catapult;
+    private Intake _intake;
+    private Climber _climber;
     private boolean _hold;
     private UsbCamera _cam;
 
@@ -36,7 +38,12 @@ public class RobotContainer extends OutliersContainer {
         // initialize peripherals. Do this before subsystems.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
+        _proxy = new JetsonProxy(10);
+
         _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
+        _catapult = new Catapult(this);
+        _intake = new Intake(this);
+        _climber = new Climber(this);
         initializeCamera();
         
 
@@ -44,7 +51,7 @@ public class RobotContainer extends OutliersContainer {
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain);
+        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
     }
