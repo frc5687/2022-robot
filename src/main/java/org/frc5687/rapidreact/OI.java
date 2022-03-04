@@ -2,18 +2,10 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
-
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import org.frc5687.rapidreact.commands.Climber.*;
-import org.frc5687.rapidreact.commands.Intaker;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.frc5687.rapidreact.commands.ShootSetpoint;
-import org.frc5687.rapidreact.subsystems.Catapult;
-import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
-import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -62,7 +54,7 @@ public class OI extends OutliersProxy {
 
     }
 
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult , Intake intake, Climber climber) {
+    public void initializeButtons(DriveTrain driveTrain) {
         
 //        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
 //        _lowerArm.whenPressed(catapult::lockArm);
@@ -70,13 +62,6 @@ public class OI extends OutliersProxy {
 //        _shootButtonTest.whenPressed(new Reset(catapult));
 //        _release.whenPressed(catapult::releaseArm);
 //        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
-        _intakeButton.whenHeld(new Intaker(intake, false));
-//        _dropArm.whenHeld(new Feed(servoStop));
-        _stow.whenPressed(new Stow(climber));
-        _prepClimb.whenPressed(new SequentialCommandGroup(new Stow(climber), new PrepToClimb(climber)));
-        _firstStage.whenPressed(new AttachMidRungCommand(climber));
-        _secondStage.whenPressed(new AttachHighRungCommand(climber));
-        _third.whenPressed(new AttachTraversalRungCommand(climber));
 
 
     }

@@ -320,4 +320,13 @@ public class Constants {
         public static final double ARM_THRES_TIME = 0.5;
         public static final double CURRENT_THRES = 15;
     }
+
+    public static class Camera{
+        public static final int BRIGHTNESS = 60;
+        public static final int FPS_LIMIT = 15;
+        public static final boolean AUTO_EXPOSURE = true;
+        public static final int EXPOSURE = 70;
+        public static final int HEIGHT = 480;
+        public static final int WIDTH = 480;
+    }
 }
