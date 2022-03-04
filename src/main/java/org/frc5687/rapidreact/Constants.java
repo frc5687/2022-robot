@@ -248,6 +248,11 @@ public class Constants {
     }
 
     public static class Auto {
+        
+        public static class FieldPositions {
+            public static Pose2d SAFE_BALL_THREE = new Pose2d(7.7, 1.42, new Rotation2d());
+            public static Pose2d ROBOT_POS_TWO_DEST = new Pose2d(4.63, 3.65, new Rotation2d());
+        }
         public static class BallPositions {
             public static Pose2d BALL_ONE = new Pose2d(4.8, 6.2, new Rotation2d());
             public static Pose2d BALL_TWO = new Pose2d(5.1, 1.77, new Rotation2d());
