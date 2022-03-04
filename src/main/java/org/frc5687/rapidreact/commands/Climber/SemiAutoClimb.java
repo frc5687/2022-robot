@@ -1,7 +1,9 @@
 package org.frc5687.rapidreact.commands.Climber;
 
+import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
+import org.frc5687.rapidreact.subsystems.DriveTrain;
 
 /**
  * Dispatch class to run through the steps of the auto-climb one step at a time.
@@ -12,10 +14,14 @@ import org.frc5687.rapidreact.subsystems.Climber;
  */
 public class SemiAutoClimb extends OutliersCommand {
 
-    Climber _climber;
+    private Climber _climber;
+    private DriveTrain _driveTrain;
+    private OI _oi;
 
-    public SemiAutoClimb(Climber climber) {
+    public SemiAutoClimb(Climber climber, DriveTrain driveTrain, OI oi) {
         _climber = climber;
+        _driveTrain = driveTrain;
+        _oi = oi;
     }
 
     @Override
@@ -28,11 +34,14 @@ public class SemiAutoClimb extends OutliersCommand {
                 break;
             case STOW:
                 (new PrepToClimb(_climber)).schedule();
+                _driveTrain.setIsClimbing(true);
                 _climber.setStep(Climber.ClimberStep.PREP_TO_CLIMB);
                 break;
             case PREP_TO_CLIMB:
-                (new AttachMidRungCommand(_climber)).schedule();
-                _climber.setStep(Climber.ClimberStep.ATTACH_MID);
+                if(_oi.readyToClimb()){
+                    (new AttachMidRungCommand(_climber)).schedule();
+                    _climber.setStep(Climber.ClimberStep.ATTACH_MID);
+                }
                 break;
             case ATTACH_MID:
                 (new AttachHighRungCommand(_climber)).schedule();

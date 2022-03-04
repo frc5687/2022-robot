@@ -42,6 +42,7 @@ public class OI extends OutliersProxy {
     private JoystickButton resetNavX;
     private JoystickButton _resetNavX;
     private JoystickButton _dropArm;
+    private JoystickButton _readyToClimb;
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -57,6 +58,7 @@ public class OI extends OutliersProxy {
         _firstStage = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
         _secondStage = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _third = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+        _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
 //        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
 //        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 
@@ -81,6 +83,7 @@ public class OI extends OutliersProxy {
 
     }
 
+    public boolean readyToClimb() {return _readyToClimb.get()}
     public boolean isShootButtonPressed() { return _shootButton.get(); }
     public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
     public boolean preloadCatapult() { return _preloadButton.get(); }
