@@ -1,6 +1,7 @@
 /* Team 5687 (C)2022 */
 package org.frc5687.rapidreact.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -62,17 +63,22 @@ public class Climber extends OutliersSubsystem{
         logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
 
         _stationaryArmWinch = new TalonFX(RobotMap.CAN.TALONFX.STATIONARY_CLIMBER);
-        _rockerArmWinch = new TalonFX(RobotMap.CAN.TALONFX.ROCKER_CLIMBER);
-        _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
-
-        _stationaryArmWinch.setInverted(Constants.Climber.STATIONARY_ARM_REVERSED);
         _stationaryArmWinch.setNeutralMode(NeutralMode.Coast);
         _stationaryArmWinch.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, Constants.Climber.ARM_CURRENT_LIMIT, Constants.Climber.CURRENT_THRES, Constants.Climber.ARM_THRES_TIME));
+        _stationaryArmWinch.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        _stationaryArmWinch.setSensorPhase((Constants.Climber.STATIONARY_ENCODER_REVERSED);
+        _stationaryArmWinch.setInverted(Constants.Climber.STATIONARY_ARM_REVERSED);
 
-
-        _rockerArmWinch.setInverted(Constants.Climber.ROCKER_ARM_REVERSED);
+        _rockerArmWinch = new TalonFX(RobotMap.CAN.TALONFX.ROCKER_CLIMBER);
         _rockerArmWinch.setNeutralMode(NeutralMode.Coast);
-        _stationaryArmWinch.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,Constants.Climber.ARM_CURRENT_LIMIT, Constants.Climber.CURRENT_THRES, Constants.Climber.ARM_THRES_TIME));
+        _rockerArmWinch.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true,Constants.Climber.ARM_CURRENT_LIMIT, Constants.Climber.CURRENT_THRES, Constants.Climber.ARM_THRES_TIME));
+        _rockerArmWinch.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        _rockerArmWinch.setSensorPhase(Constants.Climber.ROCKER_ENCODER_REVERSED);
+        _rockerArmWinch.setInverted(Constants.Climber.ROCKER_ARM_REVERSED);
+
+
+        _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
+
        
 
 

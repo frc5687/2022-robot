@@ -319,5 +319,7 @@ public class Constants {
         public static final double STALL_MIN_RPM = 20.0;
         public static final double ARM_THRES_TIME = 0.5;
         public static final double CURRENT_THRES = 15;
+        public static final boolean ROCKER_ENCODER_REVERSED = false;
+        public static final boolean STATIONARY_ENCODER_REVERSED = false;
     }
 }
