@@ -102,14 +102,16 @@ public class RobotContainer extends OutliersContainer {
         //return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
         AutoChooser.Position autoPosition = _autoChooser.getSelectedPosition();
         AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
-        Pose2d[] destinations;
+        Pose2d[] destinations = {};
         
         switch(autoPosition) {
             case First:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
+                destinations[0] = Constants.Auto.BallPositions.BALL_ONE;
                 break;
             case Second:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
+                destinations[0] = Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST;
                 break;
             case Third:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
@@ -120,10 +122,16 @@ public class RobotContainer extends OutliersContainer {
             default:
                 return new Wait(15);
         }
-        return new Wait(15);
-        // switch(autoMode) {
 
-        // }
+        switch (autoMode) {
+            case ZeroBall:
+                return new ZeroBallAuto(_driveTrain, destinations[0], new Rotation2d());
+                break;
+            case OneBall:
+                break;
+            default:
+                return new Wait(15);
+        }
 
     //     switch(autoPosition) {
     //         case First:
