@@ -2,19 +2,16 @@
 package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 import org.frc5687.rapidreact.commands.Drive;
-import org.frc5687.rapidreact.commands.IdleIntake;
 import org.frc5687.rapidreact.commands.OutliersCommand;
-import org.frc5687.rapidreact.commands.Shoot;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
@@ -24,11 +21,12 @@ public class RobotContainer extends OutliersContainer {
     private OI _oi;
     private AHRS _imu;
     private JetsonProxy _proxy;
+    private Lights _lights;
 
     private Robot _robot;
-    private Catapult _catapult;
-    private Intake _intake;
-    private Climber _climber;
+    //private Catapult _catapult;
+    //private Intake _intake;
+    //private Climber _climber;
     private DriveTrain _driveTrain;
     private boolean _hold;
 
@@ -42,17 +40,18 @@ public class RobotContainer extends OutliersContainer {
         // initialize peripherals. Do this before subsystems.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
-        _catapult = new Catapult(this);
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
-        _intake = new Intake(this);
-        _climber = new Climber(this);
+        //_catapult = new Catapult(this);
         _proxy = new JetsonProxy(10);
+        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
+        //_intake = new Intake(this);
+        //_climber = new Climber(this);
+        _lights = new Lights(this, 1);
 
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
+        _oi.initializeButtons(_driveTrain);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
     }
@@ -111,8 +110,9 @@ public class RobotContainer extends OutliersContainer {
         //_driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
 //        _driveTrain.updateDashboard();
-        _catapult.updateDashboard();
-        _climber.updateDashboard();
+        //_catapult.updateDashboard();
+        //_climber.updateDashboard();
+        _lights.updateDashboard();
     }
 
     public void controllerPeriodic() {

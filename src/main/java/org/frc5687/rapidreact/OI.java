@@ -62,7 +62,7 @@ public class OI extends OutliersProxy {
 
     }
 
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult , Intake intake, Climber climber) {
+    public void initializeButtons(DriveTrain driveTrain) {
         
 //        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
 //        _lowerArm.whenPressed(catapult::lockArm);
@@ -70,13 +70,13 @@ public class OI extends OutliersProxy {
 //        _shootButtonTest.whenPressed(new Reset(catapult));
 //        _release.whenPressed(catapult::releaseArm);
 //        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
-        _intakeButton.whenHeld(new Intaker(intake, false));
+      //_intakeButton.whenHeld(new Intaker(intake, false));
 //        _dropArm.whenHeld(new Feed(servoStop));
-        _stow.whenPressed(new Stow(climber));
-        _prepClimb.whenPressed(new SequentialCommandGroup(new Stow(climber), new PrepToClimb(climber)));
-        _firstStage.whenPressed(new AttachMidRungCommand(climber));
-        _secondStage.whenPressed(new AttachHighRungCommand(climber));
-        _third.whenPressed(new AttachTraversalRungCommand(climber));
+        //_stow.whenPressed(new Stow(climber));
+        //_prepClimb.whenPressed(new SequentialCommandGroup(new Stow(climber), new PrepToClimb(climber)));
+        //_firstStage.whenPressed(new AttachMidRungCommand(climber));
+        //_secondStage.whenPressed(new AttachHighRungCommand(climber));
+        //_third.whenPressed(new AttachTraversalRungCommand(climber));
 
 
     }
