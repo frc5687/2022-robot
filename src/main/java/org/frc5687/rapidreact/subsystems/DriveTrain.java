@@ -142,9 +142,10 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Goal Distance", getDistanceToGoal());
-        metric("Goal Angle", getAngleToGoal());
-        metric("Has goal", hasGoal());
+        //TODO: might uncomment this if i feel like it.
+        //metric("Goal Distance", getDistanceToGoal());
+        // metric("Goal Angle", getAngleToGoal());
+        // metric("Has goal", hasGoal());
 
         metric("NW/Encoder Angle", _northWest.getModuleAngle());
         metric("SW/Encoder Angle", _southWest.getModuleAngle());
@@ -260,6 +261,7 @@ public class DriveTrain extends OutliersSubsystem {
         }
         return _proxy.getLatestFrame().getTargetDistance();
     }
+
     public double getAngleToGoal() {
         if (_proxy.getLatestFrame() == null) {
             return Double.NaN;
@@ -284,8 +286,28 @@ public class DriveTrain extends OutliersSubsystem {
         setNorthEastModuleState(moduleStates[NORTH_EAST]);
     }
 
+    public void poseFollower(Pose2d pose, Rotation2d heading, double vel) {
+        ChassisSpeeds adjustedSpeeds = _controller.calculate(_odometry.getPoseMeters(), pose, vel, pose.getRotation());
+        SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveTrain.MAX_MPS);
+        setNorthWestModuleState(moduleStates[NORTH_WEST]);
+        setSouthWestModuleState(moduleStates[SOUTH_WEST]);
+        setSouthEastModuleState(moduleStates[SOUTH_EAST]);
+        setNorthEastModuleState(moduleStates[NORTH_EAST]);
+    }
+
+    public boolean isAtPose(Pose2d pose) {
+        double diffX = getOdometryPose().getX() - pose.getX();
+        double diffY = getOdometryPose().getY() - pose.getY();
+        return (Math.abs(diffX) <= 0.01) && (Math.abs(diffY) < 0.01);
+    }
+
     public Pose2d getOdometryPose() {
         return _odometry.getPoseMeters();
+    }
+
+    public void resetOdometry(Pose2d position) {
+        _odometry.resetPosition(position, getHeading());
     }
 
     public void startModules() {
