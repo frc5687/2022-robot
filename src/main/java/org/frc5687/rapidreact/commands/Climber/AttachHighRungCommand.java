@@ -66,7 +66,7 @@ public class AttachHighRungCommand extends OutliersCommand{
                 break;
         }
 
-        _climber.runControllers();
+//        _climber.runControllers();
     }
 
 

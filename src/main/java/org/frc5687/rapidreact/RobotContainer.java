@@ -3,7 +3,8 @@ package org.frc5687.rapidreact;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.SPI;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,15 +15,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import org.frc5687.rapidreact.commands.*;
 import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.commands.OutliersCommand;
-import org.frc5687.rapidreact.commands.Shoot;
-import org.frc5687.rapidreact.commands.auto.DriveForTime;
 import org.frc5687.rapidreact.commands.auto.DropIntake;
 import org.frc5687.rapidreact.commands.auto.OneBallAuto;
 import org.frc5687.rapidreact.commands.auto.Wait;
 import org.frc5687.rapidreact.commands.auto.ZeroBallAuto;
+import org.frc5687.rapidreact.commands.DriveCatapult;
+import org.frc5687.rapidreact.commands.IdleIntake;
+import org.frc5687.rapidreact.commands.Climber.IdleClimber;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -40,12 +41,13 @@ public class RobotContainer extends OutliersContainer {
     private JetsonProxy _proxy;
 
     private Robot _robot;
+    private DriveTrain _driveTrain;
     private Catapult _catapult;
     private Intake _intake;
     private Climber _climber;
-    private DriveTrain _driveTrain;
     private boolean _hold;
     private AutoChooser _autoChooser;
+    private UsbCamera _cam;
 
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
@@ -57,6 +59,9 @@ public class RobotContainer extends OutliersContainer {
         // initialize peripherals. Do this before subsystems.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
+        // proxy need to be before drivetrain as drivetrain requires it.
+        _proxy = new JetsonProxy(10);
+
         _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
         _intake = new Intake(this);
@@ -64,8 +69,13 @@ public class RobotContainer extends OutliersContainer {
         _proxy = new JetsonProxy(10);
         _autoChooser = new AutoChooser();
 
+        initializeCamera();
+        
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
+        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _oi));
+        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
         _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
@@ -90,6 +100,22 @@ public class RobotContainer extends OutliersContainer {
     public void autonomousInit() {
 //        _catapult.setState(CatapultState.AUTO);
         _hold = true;
+    }
+
+    /**
+     * Initialize web camera mounted on the robot.
+     * Either use auto web exposure or use custom exposure
+     */
+    public void initializeCamera(){
+        _cam = CameraServer.startAutomaticCapture();
+        _cam.setBrightness(Constants.Camera.BRIGHTNESS);
+        _cam.setResolution(Constants.Camera.HEIGHT, Constants.Camera.WIDTH);
+        _cam.setFPS(Constants.Camera.FPS_LIMIT);
+        if(Constants.Camera.AUTO_EXPOSURE){
+            _cam.setExposureAuto();
+        }else{
+            _cam.setExposureManual(Constants.Camera.EXPOSURE);
+        }
     }
 
     private void setDefaultCommand(OutliersSubsystem subSystem, OutliersCommand command) {
@@ -145,7 +171,7 @@ public class RobotContainer extends OutliersContainer {
             case ZeroBall:
             return new ZeroBallAuto(_driveTrain, destinationsZeroBall[0], rotationsZeroBall[0]);
             case OneBall:
-            return new OneBallAuto(_driveTrain, destinationsOneBall[0], rotationsOneBall[0]);
+            return new OneBallAuto(_driveTrain, _catapult, destinationsOneBall[0], rotationsOneBall[0]);
             default:
                 return new Wait(15);
         }
@@ -191,20 +217,10 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
-        //TODO: uncomment this, or don't...
-        // if (_proxy.getLatestFrame() != null) {
-        //     metric("Millis", _proxy.getLatestFrame().getMillis());
-        //     metric("Has goal", _proxy.getLatestFrame().hasTarget());
-        //     metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
-        //     metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
-        // }
         //Updates the driver station
         _driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
 //        _driveTrain.updateDashboard();
-        _catapult.updateDashboard();
-        _climber.updateDashboard();
-        //_catapult.updateDashboard();
     }
 
     public void controllerPeriodic() {

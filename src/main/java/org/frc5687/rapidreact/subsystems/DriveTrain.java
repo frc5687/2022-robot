@@ -46,6 +46,9 @@ public class DriveTrain extends OutliersSubsystem {
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
 
+
+    private boolean _isClimbing = false;
+
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, AHRS imu) {
         super(container);
         try {
@@ -184,6 +187,14 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getYaw() {
         return _imu.getYaw();
+    }
+
+    public void setIsClimbing(boolean climbing){
+        _isClimbing = climbing;
+    }
+
+    public boolean isClimbing(){
+        return _isClimbing;
     }
 
     // yaw is negative to follow wpi coordinate system.
