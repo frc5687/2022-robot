@@ -11,8 +11,11 @@ public class Lights extends OutliersSubsystem{
     
     public Lights(OutliersContainer container, int port) {
         super(container);
-        _blinkens = new Spark(8);
+        _blinkens = new Spark(0);
         _running = true;
+    }
+
+    public void setLight(){
         _blinkens.set(0.87);
     }
 

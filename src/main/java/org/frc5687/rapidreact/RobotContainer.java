@@ -17,6 +17,7 @@ import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
@@ -34,6 +35,7 @@ public class RobotContainer extends OutliersContainer {
     private Climber _climber;
     private boolean _hold;
     private UsbCamera _cam;
+    private Lights _lights;
 
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
@@ -47,26 +49,28 @@ public class RobotContainer extends OutliersContainer {
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         // proxy need to be before drivetrain as drivetrain requires it.
         _proxy = new JetsonProxy(10);
+        _lights = new Lights(this, 1);
 
-        _catapult = new Catapult(this);
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
-        _intake = new Intake(this);
-        _climber = new Climber(this);
+        // _catapult = new Catapult(this);
+        // _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
+        // _intake = new Intake(this);
+        // _climber = new Climber(this);
         initializeCamera();
         
-        //The robots default command will run so long as another command isn't activated
-        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
-        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _oi));
-        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
+        // The robots default command will run so long as another command isn't activated
+        // setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+        // setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
+        // setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _oi));
+        // setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
+        // _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
     }
 
     public void periodic() {
+        _lights.setLight();
     }
 
     public void disabledPeriodic() {
