@@ -51,7 +51,7 @@ public class RobotContainer extends OutliersContainer {
         _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
         _intake = new Intake(this);
-        _climber = new Climber(this);
+        _climber = new Climber(this, _driveTrain);
         initializeCamera();
         
         //The robots default command will run so long as another command isn't activated

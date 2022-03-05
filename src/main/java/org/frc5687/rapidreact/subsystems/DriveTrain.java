@@ -47,7 +47,7 @@ public class DriveTrain extends OutliersSubsystem {
     private ProfiledPIDController _angleController;
 
 
-    private boolean _isClimbing = false;
+    private boolean _limitSpeed = false;
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, AHRS imu) {
         super(container);
@@ -189,11 +189,11 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void setIsClimbing(boolean climbing){
-        _isClimbing = climbing;
+        _limitSpeed = climbing;
     }
 
     public boolean isClimbing(){
-        return _isClimbing;
+        return _limitSpeed;
     }
 
     // yaw is negative to follow wpi coordinate system.
@@ -304,5 +304,9 @@ public class DriveTrain extends OutliersSubsystem {
         _southWest.start();
         _southEast.start();
         _northEast.start();
+    }
+
+    public void setSpeedLimit(boolean limit) {
+        _limitSpeed = limit;
     }
 }

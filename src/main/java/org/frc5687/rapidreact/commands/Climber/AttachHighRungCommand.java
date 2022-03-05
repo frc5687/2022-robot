@@ -22,6 +22,7 @@ public class AttachHighRungCommand extends OutliersCommand{
     @Override
     public void initialize(){
         super.initialize();
+        _climber.setStep(Climber.ClimberStep.ATTACH_HIGH);
         info("Initialized AttachHighRungCommand");
         _step = Step.START;
     }
@@ -66,7 +67,6 @@ public class AttachHighRungCommand extends OutliersCommand{
                 break;
         }
 
-//        _climber.runControllers();
     }
 
 
@@ -74,6 +74,7 @@ public class AttachHighRungCommand extends OutliersCommand{
     public boolean isFinished(){
         super.isFinished();
         if (_step == Step.WAIT_STATIONARY && _climber.isStaAtGoal()) {
+            _climber.setStep(Climber.ClimberStep.ATTACHED_HIGH);
             info("Finished AttachHighRungCommand.");
             return true;
         }; 
@@ -84,7 +85,6 @@ public class AttachHighRungCommand extends OutliersCommand{
     public void end(boolean interrupted) {
         super.end(interrupted);
         _climber.stop();
-        error("Ended AttachHighRungCommand.");
     }
 
     public enum Step{

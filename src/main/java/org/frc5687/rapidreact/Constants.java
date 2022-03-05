@@ -289,7 +289,7 @@ public class Constants {
         public static final double MAX_ACCELERATION_MPSS = MAX_VELOCITY_MPS * 50.0; // heuristic
         public static final double TOLERANCE = 0.005; // meters.
 
-        public static final double CLIMB_DRIVE_SPEED = 1.75; //The speed of the drivetrain during climbing
+        public static final double CLIMB_DRIVE_SPEED = -1.0; //The speed of the drivetrain during climbing
 
         public static final int COUNTS_PER_REVOLUTION = 8196;
 
