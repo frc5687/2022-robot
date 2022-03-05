@@ -5,12 +5,13 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -27,6 +28,7 @@ import org.frc5687.rapidreact.commands.auto.ZeroBallAuto;
 import org.frc5687.rapidreact.commands.DriveCatapult;
 import org.frc5687.rapidreact.commands.IdleIntake;
 import org.frc5687.rapidreact.commands.Climber.IdleClimber;
+
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -55,24 +57,27 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private Climber _climber;
     private boolean _hold;
+    
     private AutoChooser _autoChooser;
     AutoChooser.Position autoPosition;
     AutoChooser.Mode autoMode;
 
-
     private UsbCamera _cam;
-
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
         _robot = robot;
     }
 
+    /** Run once when robot code starts. */
     public void init() {
         // initialize peripherals. Do this before subsystems.
         info("Running RobotContainer.init()");
+
+        // Display starting position value
         SmartDashboard.putString("DB/String 0", "Starting Position:");
         SmartDashboard.putString("DB/String 5", "Unknown");
+   
         // Display auto mode value
         SmartDashboard.putString("DB/String 1", "Auto Mode:");
         String _automodeString = SmartDashboard.getString("Auto Selector", "Unknown");
@@ -81,8 +86,6 @@ public class RobotContainer extends OutliersContainer {
         // Auto mode chooser
         String [] modes = { "Zero Ball", "One Ball", "Two Ball", "Three Ball", "Four Ball", "Five Ball" };
         SmartDashboard.putStringArray("Auto List", modes);
-
-       
 
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
@@ -111,6 +114,7 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void periodic() {
+
         // Check starting position buttons
         Boolean _positionOne = SmartDashboard.getBoolean("DB/Button 0", false);
         Boolean _positionTwo = SmartDashboard.getBoolean("DB/Button 1", false);
@@ -139,6 +143,23 @@ public class RobotContainer extends OutliersContainer {
             SmartDashboard.putString("DB/String 5", "Unknown");
         }
 
+        // Set auto mode based on Smart Dashboard pull down
+        String _automode = SmartDashboard.getString("Auto Selector", "Unknown");
+        switch(_automode) {
+            case "Zero Ball":
+                autoMode = AutoChooser.Mode.ZeroBall;
+                break;
+            case "One Ball":
+                autoMode = AutoChooser.Mode.OneBall;
+                break;
+            case "Two Ball":
+            case "Three Ball":
+            case "Four Ball":
+            case "Five Ball":
+            default:
+                autoMode = AutoChooser.Mode.Unknown;
+        }
+
         // Display auto mode selector
         String _automodeString = SmartDashboard.getString("Auto Selector", "Unknown");
         SmartDashboard.putString("DB/String 6", _automodeString);
@@ -147,6 +168,7 @@ public class RobotContainer extends OutliersContainer {
     public void disabledPeriodic() {
         //Runs every 20ms during disabled
     }
+
     @Override
     public void disabledInit() {}
 
@@ -159,9 +181,6 @@ public class RobotContainer extends OutliersContainer {
         // Run once when entering auto mode
         info("Running RobotContainer.autonomousInit()");
 
-        // Set state of subsystems
-        _indexer.setState(Indexer.IndexerState.DEPLOYED);
-        _intake.setState(Intake.IntakeState.STOWED);
     }
 
     /**
@@ -193,10 +212,9 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command getAutonomousCommand() {
-        // _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
-        // return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
-        AutoChooser.Position autoPosition = Position.First;//_autoChooser.getSelectedPosition()
-        AutoChooser.Mode autoMode = Mode.ZeroBall;//_autoChooser.getSelectedMode();
+
+        // Return command sequence based on starting position and auto mode selectded
+
         Pose2d[] destinationsZeroBall = { new Pose2d(), new Pose2d(), new Pose2d() };
         Pose2d[] destinationsOneBall = { new Pose2d() };
         Rotation2d[] rotationsZeroBall = { new Rotation2d() };
@@ -244,43 +262,6 @@ public class RobotContainer extends OutliersContainer {
                 return new Wait(15);
         }
 
-    //     switch(autoPosition) {
-    //         case First:
-    //             _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
-    //             switch(autoMode) {
-    //                 case ZeroBall:
-    //                     return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
-    //                 case OneBall:
-    //                     return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_ONE, new Rotation2d());
-    //             }
-    //         case Second:
-    //             _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
-    //             switch(autoMode) {
-    //                 case ZeroBall:
-    //                     return new ZeroBallAuto(_driveTrain, Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST, new Rotation2d());
-    //                 case OneBall:
-    //                     return new OneBallAuto(_driveTrain, Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST, new Rotation2d());
-    //             }
-    //         case Third:
-    //             _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
-    //             switch(autoMode) {
-    //                 case ZeroBall:
-    //                     return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
-    //                 case OneBall:
-    //             }       return new OneBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
-    //         case Fourth:
-    //             _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
-    //             switch(autoMode) {
-    //                 case ZeroBall:
-    //                     return new ZeroBallAuto(_driveTrain, Constants.Auto.FieldPositions.SAFE_BALL_THREE, new Rotation2d());
-    //                 case OneBall:
-    //                     return new OneBallAuto(_driveTrain, Constants.Auto.FieldPositions.SAFE_BALL_THREE, new Rotation2d());
-    //             }
-    //         default:
-    //             info("Couldn't find position switch, waiting.");
-    //             return new Wait(15);
-                
-    //     }
     }
 
     @Override
