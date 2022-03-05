@@ -21,7 +21,7 @@ public class AutoChooser extends OutliersProxy {
     }
 
     public Mode getSelectedMode() {
-        int raw = _autoSwitch.get();
+        int raw = _autoSwitch.get() / 3;
         if (raw >= Mode.values().length) {
             raw = 0;
         }
@@ -33,7 +33,7 @@ public class AutoChooser extends OutliersProxy {
     }
 
     public Position getSelectedPosition() {
-        int raw = _positionSwitch.get();
+        int raw = _positionSwitch.get() / 2;
         if (raw >= Position.values().length) {
             raw = 0;
         }
@@ -67,13 +67,14 @@ public class AutoChooser extends OutliersProxy {
         }
     }
     public enum Mode {
-        Unknown(-1), ZeroBall(0), OneBall(1);
+        Unknown(-1), 
+        ZeroBall(0), 
+        OneBall(1);
 
         private int _value;
 
         Mode(int value) {
             _value = value;
-//            _metric.put("Auto Mode", label);
         }
 
         public int getValue() {

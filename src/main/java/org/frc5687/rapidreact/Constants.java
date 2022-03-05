@@ -116,7 +116,7 @@ public class Constants {
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
-        public static final double ANGLE_kP = 3.5;
+        public static final double ANGLE_kP = 3.0;
         public static final double ANGLE_kI = 0.0;
         public static final double ANGLE_kD = 0.0;
 
@@ -256,6 +256,7 @@ public class Constants {
             public static Pose2d ROBOT_POS_ONE_DEST = new Pose2d(5.75, 6.3, new Rotation2d());
             public static Pose2d ROBOT_POS_TWO_DEST = new Pose2d(4.63, 3.65, new Rotation2d());
             public static Pose2d ROBOT_POS_THREE_DEST = new Pose2d(5.95, 1.42, new Rotation2d());
+            public static Pose2d PARALLEL_PARK = new Pose2d(8.42, 0.4, new Rotation2d());
         }
         public static class BallPositions {
             public static Pose2d BALL_ONE = new Pose2d(4.8, 6.2, new Rotation2d());

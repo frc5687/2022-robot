@@ -66,6 +66,7 @@ public class OI extends OutliersProxy {
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
         _intakeButton.whenHeld(new Intaker(intake, false));
+        _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new SemiAutoClimb(climber));
     }
 

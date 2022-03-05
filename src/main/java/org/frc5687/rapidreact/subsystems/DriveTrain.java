@@ -167,6 +167,8 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Odometry/y", getOdometryPose().getY());
         metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());
         metric("Odometry/Pose", getOdometryPose().toString());
+
+        metric("IMU angle", _imu.getYaw());
     }
 
     public void setNorthEastModuleState(SwerveModuleState state) {

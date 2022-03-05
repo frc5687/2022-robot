@@ -14,9 +14,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.commands.OutliersCommand;
+import org.frc5687.rapidreact.commands.SetState;
 import org.frc5687.rapidreact.commands.auto.DropIntake;
 import org.frc5687.rapidreact.commands.auto.OneBallAuto;
 import org.frc5687.rapidreact.commands.auto.Wait;
@@ -129,14 +131,14 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command wrapCommand(Command command) {
-        return new SequentialCommandGroup(new DropIntake(_intake), command);
+        return new SequentialCommandGroup(new DropIntake(_intake), new WaitCommand(0.5), command, new SetState(_catapult, Catapult.CatapultState.ZEROING));
     }
 
     public Command getAutonomousCommand() {
         // _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
         // return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
-        AutoChooser.Position autoPosition = Position.Third;//_autoChooser.getSelectedPosition()
-        AutoChooser.Mode autoMode = Mode.OneBall;//_autoChooser.getSelectedMode();
+        AutoChooser.Position autoPosition = Position.Fourth;//_autoChooser.getSelectedPosition()
+        AutoChooser.Mode autoMode = Mode.ZeroBall;//_autoChooser.getSelectedMode();
         Pose2d[] destinationsZeroBall = { new Pose2d(), new Pose2d(), new Pose2d() };
         Pose2d[] destinationsOneBall = { new Pose2d() };
         Rotation2d[] rotationsZeroBall = { new Rotation2d() };
@@ -147,22 +149,28 @@ public class RobotContainer extends OutliersContainer {
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
                 destinationsZeroBall[0] = Constants.Auto.BallPositions.BALL_ONE;
                 destinationsOneBall[0] = Constants.Auto.BallPositions.BALL_ONE;
+                rotationsZeroBall[0] = new Rotation2d();
+                rotationsOneBall[0] = new Rotation2d();
                 break;
             case Second:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
                 destinationsZeroBall[0] = Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST;
                 destinationsOneBall[0] = Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST;
+                rotationsZeroBall[0] = new Rotation2d();
+                rotationsOneBall[0] = new Rotation2d();
                 break;
             case Third:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
                 destinationsZeroBall[0] = Constants.Auto.BallPositions.BALL_TWO;
                 destinationsOneBall[0] = Constants.Auto.BallPositions.BALL_TWO;
+                rotationsZeroBall[0] = new Rotation2d();
+                rotationsOneBall[0] = new Rotation2d();
                 break;
             case Fourth:
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
-                destinationsZeroBall[0] = Constants.Auto.FieldPositions.SAFE_BALL_THREE;
+                destinationsZeroBall[0] = Constants.Auto.FieldPositions.PARALLEL_PARK;
                 destinationsOneBall[0] = Constants.Auto.FieldPositions.SAFE_BALL_THREE;
-                rotationsZeroBall[0] = Constants.Auto.Rotations.BALL_THREE_FROM_FOURTH;
+                rotationsZeroBall[0] = new Rotation2d();
                 rotationsOneBall[0] = Constants.Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 break;
             default:
@@ -220,6 +228,7 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void updateDashboard() {
         //Updates the driver station
+        _autoChooser.updateDashboard();
         _driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
 //        _driveTrain.updateDashboard();

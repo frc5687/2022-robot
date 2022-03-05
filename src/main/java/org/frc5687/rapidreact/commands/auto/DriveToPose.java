@@ -59,7 +59,11 @@ public class DriveToPose extends OutliersCommand {
 
     @Override
     public boolean isFinished() {
-        return _driveTrain.isAtPose(_destination);
+        if (_driveTrain.isAtPose(_destination)) {
+            _driveTrain.drive(0,0,0,true);
+            return true;
+        }
+        return false;
     }
 
     @Override
