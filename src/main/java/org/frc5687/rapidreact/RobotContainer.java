@@ -6,7 +6,8 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.SPI;
-
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -29,6 +30,7 @@ import org.frc5687.rapidreact.commands.Climber.IdleClimber;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
@@ -39,7 +41,9 @@ import org.frc5687.rapidreact.util.AutoChooser.Mode;
 import org.frc5687.rapidreact.util.AutoChooser.Position;
 
 public class RobotContainer extends OutliersContainer {
-
+    private SendableChooser<Pose2d> m_chooser_position;
+    private SendableChooser<Command> m_chooser_mode;
+    
     private OI _oi;
     private AHRS _imu;
     private JetsonProxy _proxy;
@@ -47,10 +51,15 @@ public class RobotContainer extends OutliersContainer {
     private Robot _robot;
     private DriveTrain _driveTrain;
     private Catapult _catapult;
+    private Indexer _indexer;
     private Intake _intake;
     private Climber _climber;
     private boolean _hold;
     private AutoChooser _autoChooser;
+    AutoChooser.Position autoPosition;
+    AutoChooser.Mode autoMode;
+
+
     private UsbCamera _cam;
 
 
@@ -61,6 +70,20 @@ public class RobotContainer extends OutliersContainer {
 
     public void init() {
         // initialize peripherals. Do this before subsystems.
+        info("Running RobotContainer.init()");
+        SmartDashboard.putString("DB/String 0", "Starting Position:");
+        SmartDashboard.putString("DB/String 5", "Unknown");
+        // Display auto mode value
+        SmartDashboard.putString("DB/String 1", "Auto Mode:");
+        String _automodeString = SmartDashboard.getString("Auto Selector", "Unknown");
+        SmartDashboard.putString("DB/String 6", _automodeString);
+
+        // Auto mode chooser
+        String [] modes = { "Zero Ball", "One Ball", "Two Ball", "Three Ball", "Four Ball", "Five Ball" };
+        SmartDashboard.putStringArray("Auto List", modes);
+
+       
+
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         // proxy need to be before drivetrain as drivetrain requires it.
@@ -88,6 +111,37 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void periodic() {
+        // Check starting position buttons
+        Boolean _positionOne = SmartDashboard.getBoolean("DB/Button 0", false);
+        Boolean _positionTwo = SmartDashboard.getBoolean("DB/Button 1", false);
+        Boolean _positionThree = SmartDashboard.getBoolean("DB/Button 2", false);
+        Boolean _positionFour = SmartDashboard.getBoolean("DB/Button 3", false);
+
+        // Set position to highest value that is selected
+        autoPosition = AutoChooser.Position.Unknown;
+        if (_positionOne) {
+            autoPosition = AutoChooser.Position.First;
+            SmartDashboard.putString("DB/String 5", "One");
+        }
+        if (_positionTwo) {
+            autoPosition = AutoChooser.Position.Second;
+            SmartDashboard.putString("DB/String 5", "Two");
+        }
+        if (_positionThree) {
+            autoPosition = AutoChooser.Position.Third;
+            SmartDashboard.putString("DB/String 5", "Three");
+        }
+        if (_positionFour) {
+            autoPosition = AutoChooser.Position.Fourth;
+            SmartDashboard.putString("DB/String 5", "Four");
+        }
+        if (autoPosition == AutoChooser.Position.Unknown) {
+            SmartDashboard.putString("DB/String 5", "Unknown");
+        }
+
+        // Display auto mode selector
+        String _automodeString = SmartDashboard.getString("Auto Selector", "Unknown");
+        SmartDashboard.putString("DB/String 6", _automodeString);
     }
 
     public void disabledPeriodic() {
@@ -102,8 +156,12 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void autonomousInit() {
-//        _catapult.setState(CatapultState.AUTO);
-        _hold = true;
+        // Run once when entering auto mode
+        info("Running RobotContainer.autonomousInit()");
+
+        // Set state of subsystems
+        _indexer.setState(Indexer.IndexerState.DEPLOYED);
+        _intake.setState(Intake.IntakeState.STOWED);
     }
 
     /**
@@ -137,7 +195,7 @@ public class RobotContainer extends OutliersContainer {
     public Command getAutonomousCommand() {
         // _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
         // return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
-        AutoChooser.Position autoPosition = Position.Fourth;//_autoChooser.getSelectedPosition()
+        AutoChooser.Position autoPosition = Position.First;//_autoChooser.getSelectedPosition()
         AutoChooser.Mode autoMode = Mode.ZeroBall;//_autoChooser.getSelectedMode();
         Pose2d[] destinationsZeroBall = { new Pose2d(), new Pose2d(), new Pose2d() };
         Pose2d[] destinationsOneBall = { new Pose2d() };

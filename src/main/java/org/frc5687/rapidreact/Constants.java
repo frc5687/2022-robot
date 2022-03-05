@@ -259,7 +259,7 @@ public class Constants {
             public static Pose2d PARALLEL_PARK = new Pose2d(8.42, 0.4, new Rotation2d());
         }
         public static class BallPositions {
-            public static Pose2d BALL_ONE = new Pose2d(4.8, 6.2, new Rotation2d());
+            public static Pose2d BALL_ONE = new Pose2d(4.8, 5.8, new Rotation2d());
             public static Pose2d BALL_TWO = new Pose2d(5.1, 1.77, new Rotation2d());
             public static Pose2d BALL_THREE = new Pose2d(7.7, 0.28, new Rotation2d());
         }
