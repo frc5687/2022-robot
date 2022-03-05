@@ -2,14 +2,11 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
-
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import org.frc5687.rapidreact.commands.Climber.*;
-import org.frc5687.rapidreact.commands.Intaker;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.frc5687.rapidreact.commands.ShootSetpoint;
+import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
+import org.frc5687.rapidreact.commands.Intaker;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -30,16 +27,11 @@ public class OI extends OutliersProxy {
     private JoystickButton _exitKill;
 
     private JoystickButton _stow;
-    private JoystickButton _prepClimb;
-    private JoystickButton _firstStage;
-    private JoystickButton _secondStage;
-    private JoystickButton _third;
 
     private JoystickButton _deployRetract;
     private JoystickButton _intakeButton;
 
     private JoystickButton  _setState;
-    private JoystickButton resetNavX;
     private JoystickButton _resetNavX;
     private JoystickButton _dropArm;
     private JoystickButton _readyToClimb;
@@ -52,33 +44,29 @@ public class OI extends OutliersProxy {
         _rotation = new Joystick(1);
         _debug = new Gamepad(2);
 
-        _intakeButton = new JoystickButton(_rotation, 1);
-        _stow = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
-        _prepClimb = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _secondStage = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
-        _third = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
-        _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
-//        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
+        // debug gamepad
+        _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
+        _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
+        _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
 //        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+
+        // rotation joystick
+        _intakeButton = new JoystickButton(_rotation, 1);
+        _deployRetract = new JoystickButton(_rotation, 3);
+        // translation joystick
+        _shootButton= new JoystickButton(_translation, 1);
+        _release = new JoystickButton(_translation, 2);
+        _dropArm = new JoystickButton(_translation, 3);
+        _resetNavX = new JoystickButton(_translation, 5);
+        _exitKill = new JoystickButton(_translation, 9);
+        _kill = new JoystickButton(_translation, 10);
 
     }
 
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult , Intake intake, Climber climber) {
-        
-//        _shootButton.whenPressed(new TestSpring(catapult, 0.105, 0.245));
-//        _lowerArm.whenPressed(catapult::lockArm);
-//        _lowerArm.whenPressed(new LowerCatapult(catapult));
-//        _shootButtonTest.whenPressed(new Reset(catapult));
-//        _release.whenPressed(catapult::releaseArm);
-//        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
-//        _intakeButton.whenHeld(new Intaker(intake, false));
-//        _dropArm.whenHeld(new Feed(servoStop));
-//        _stow.whenPressed(new Stow(climber));
-        _prepClimb.whenPressed(new SemiAutoClimb(climber));
-//        _prepClimb.whenPressed(new SequentialCommandGroup(new Stow(climber), new PrepToClimb(climber)));
-//        _firstStage.whenPressed(new AttachMidRungCommand(climber));
-//        _secondStage.whenPressed(new AttachHighRungCommand(climber));
-//        _third.whenPressed(new AttachTraversalRungCommand(climber));
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
+        _intakeButton.whenHeld(new Intaker(intake, false));
+        _readyToClimb.whenPressed(new SemiAutoClimb(climber));
     }
 
     public boolean readyToClimb() {return _readyToClimb.get(); }

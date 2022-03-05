@@ -234,7 +234,7 @@ public class Constants {
         public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 20.0; // heuristic.
         public static final double WINCH_TOLERANCE = 0.001; // m
 
-        // Shoot constants
+        // DriveCatapult constants
         public static final double LOWERING_SPEED = 1.0;
         public static final double SPRING_ZERO_SPEED = -0.5;
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
@@ -327,5 +327,14 @@ public class Constants {
         public static final double TICKS_TO_METERS = 0.00000149489; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double CRUISE_VELOCITY = 50000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double ACCELERATION = 90000; // TODO: Needs to be calibrated via Phoenix tuner
+    }
+
+    public static class Camera{
+        public static final int BRIGHTNESS = 60;
+        public static final int FPS_LIMIT = 15;
+        public static final boolean AUTO_EXPOSURE = true;
+        public static final int EXPOSURE = 70;
+        public static final int HEIGHT = 320;
+        public static final int WIDTH = 240;
     }
 }
