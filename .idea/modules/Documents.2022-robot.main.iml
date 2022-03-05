@@ -22,6 +22,8 @@
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.12.4" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2022.3.1" level="project" />
     <orderEntry type="library" name="Gradle: com.revrobotics.frc:REVLib-java:2022.1.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.photonvision:PhotonLib-java:v2022.1.4" level="project" />
+    <orderEntry type="library" name="Gradle: org.photonvision:PhotonTargeting-java:v2022.1.4" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:api-java:5.20.2" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:wpiapi-java:5.20.2" level="project" />
     <orderEntry type="library" name="Gradle: com.kauailabs.navx.frc:navx-java:4.0.442" level="project" />

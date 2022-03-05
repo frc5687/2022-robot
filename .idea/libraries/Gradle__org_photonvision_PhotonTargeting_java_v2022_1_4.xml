@@ -1,7 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: org.photonvision:PhotonTargeting-java:v2022.1.4">
-    <CLASSES />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.photonvision/PhotonTargeting-java/v2022.1.4/b6e0463eda6490904c34f3526683daa63f01c6b7/PhotonTargeting-java-v2022.1.4.jar!/" />
+    </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.photonvision/PhotonTargeting-java/v2022.1.4/9dec71927fe9249d602f3bd996c1bf4348cf501/PhotonTargeting-java-v2022.1.4-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

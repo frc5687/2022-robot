@@ -17,6 +17,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.JetsonProxy;
+import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
@@ -24,12 +25,12 @@ public class RobotContainer extends OutliersContainer {
     private OI _oi;
     private AHRS _imu;
     private JetsonProxy _proxy;
+    private Limelight _limelight;
 
     private Robot _robot;
     private Catapult _catapult;
     private Intake _intake;
     private DriveTrain _driveTrain;
-    private boolean _hold;
 
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
@@ -42,11 +43,11 @@ public class RobotContainer extends OutliersContainer {
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
-
+        _limelight = new Limelight("limelight");
 
         // then subsystems
         _catapult = new Catapult(this);
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
+        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
         _intake = new Intake(this);
         //The robots default command will run so long as another command isn't activated
         //The robots default command will run so long as another command isn't activated
@@ -76,7 +77,6 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void autonomousInit() {
 //        _catapult.setState(CatapultState.AUTO);
-        _hold = true;
     }
 
     private void setDefaultCommand(OutliersSubsystem subSystem, OutliersCommand command) {

@@ -19,6 +19,7 @@ import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.util.JetsonProxy;
+import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class DriveTrain extends OutliersSubsystem {
@@ -41,16 +42,18 @@ public class DriveTrain extends OutliersSubsystem {
 
     private AHRS _imu;
     private JetsonProxy _proxy;
+    private Limelight _limelight;
     private OI _oi;
 
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
 
-    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, AHRS imu) {
+    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
         try {
             _oi = oi;
             _proxy = proxy;
+            _limelight = limelight;
             _imu = imu;
             _northWest =
                     new DiffSwerveModule(
