@@ -6,7 +6,7 @@ import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
-public class Shoot extends OutliersCommand {
+public class DriveCatapult extends OutliersCommand {
 
     private final Catapult _catapult;
     private final Intake _intake;
@@ -16,7 +16,7 @@ public class Shoot extends OutliersCommand {
     private boolean _shoot;
     private Catapult.CatapultState _prevState;
 
-    public Shoot(Catapult catapult, Intake intake, OI oi) {
+    public DriveCatapult(Catapult catapult, Intake intake, OI oi) {
         _catapult = catapult;
         _intake = intake;
         _oi = oi;

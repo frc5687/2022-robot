@@ -1,7 +1,10 @@
 package org.frc5687.rapidreact.commands.Climber;
 
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
+import org.frc5687.rapidreact.subsystems.DriveTrain;
 
 /**
  * Dispatch class to run through the steps of the auto-climb one step at a time.
@@ -12,8 +15,7 @@ import org.frc5687.rapidreact.subsystems.Climber;
  */
 public class SemiAutoClimb extends OutliersCommand {
 
-    Climber _climber;
-
+    private Climber _climber;
     public SemiAutoClimb(Climber climber) {
         _climber = climber;
     }
