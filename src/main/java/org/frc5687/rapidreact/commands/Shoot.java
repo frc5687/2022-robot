@@ -13,6 +13,7 @@ public class Shoot extends OutliersCommand {
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
+        info("Start shooting");
         super.initialize();
         _catapult.releaseArm();
     }
@@ -20,6 +21,6 @@ public class Shoot extends OutliersCommand {
     @Override
     public boolean isFinished() {
         // TODO Auto-generated method stub
-        return true;
+        return !_catapult.isArmLowered();
     }
 }

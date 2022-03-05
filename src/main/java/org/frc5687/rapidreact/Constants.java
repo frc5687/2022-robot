@@ -243,8 +243,8 @@ public class Constants {
         public static final double SPRING_ZERO_SPEED = -0.5;
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
         public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
-        public static final double INITIAL_BALL_WINCH_GOAL = 0.245;
-        public static final double INITIAL_BALL_SPRING_GOAL = 0.08;
+        public static final double INITIAL_BALL_WINCH_GOAL = 0.24;
+        public static final double INITIAL_BALL_SPRING_GOAL = 0.095;
 
 
     }

@@ -33,6 +33,8 @@ import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.AutoChooser;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
+import org.frc5687.rapidreact.util.AutoChooser.Mode;
+import org.frc5687.rapidreact.util.AutoChooser.Position;
 
 public class RobotContainer extends OutliersContainer {
 
@@ -131,12 +133,12 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command getAutonomousCommand() {
-        //_driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
-        //return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
-        AutoChooser.Position autoPosition = _autoChooser.getSelectedPosition();
-        AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
-        Pose2d[] destinationsZeroBall = {};
-        Pose2d[] destinationsOneBall = {};
+        // _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
+        // return new ZeroBallAuto(_driveTrain, Constants.Auto.BallPositions.BALL_TWO, new Rotation2d());
+        AutoChooser.Position autoPosition = Position.Third;//_autoChooser.getSelectedPosition()
+        AutoChooser.Mode autoMode = Mode.OneBall;//_autoChooser.getSelectedMode();
+        Pose2d[] destinationsZeroBall = { new Pose2d(), new Pose2d(), new Pose2d() };
+        Pose2d[] destinationsOneBall = { new Pose2d() };
         Rotation2d[] rotationsZeroBall = { new Rotation2d() };
         Rotation2d[] rotationsOneBall = { new Rotation2d() };
         
