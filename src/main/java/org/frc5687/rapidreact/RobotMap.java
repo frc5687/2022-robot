@@ -30,8 +30,8 @@ public class RobotMap {
             public static final int NORTH_WEST_OUTER = 8;
             public static final int INTAKE_ROLLER = 13;
 
-            public static final int STATIONARY_CLIMBER = 14;
-            public static final int ROCKER_CLIMBER = 15;
+            public static final int STATIONARY_CLIMBER = 15;
+            public static final int ROCKER_CLIMBER = 14;
         }
 
         public static class SPARKMAX {

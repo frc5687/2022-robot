@@ -28,14 +28,14 @@ public class AttachMidRungCommand extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        _climber.runControllers();
+        _climber.setStaSpeed(-1.0);
     }
 
 
     @Override
     public boolean isFinished(){
         super.isFinished();
-        if (_climber.isStaAtGoal() || _climber.isStaArmDown()) {
+        if (_climber.isStaArmDown()) {
             error("Finished AttachMidRungCommand");
             return true;
         };
