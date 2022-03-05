@@ -42,6 +42,7 @@ public class OI extends OutliersProxy {
     private JoystickButton resetNavX;
     private JoystickButton _resetNavX;
     private JoystickButton _dropArm;
+    private JoystickButton _readyToClimb;
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -54,9 +55,9 @@ public class OI extends OutliersProxy {
         _intakeButton = new JoystickButton(_rotation, 1);
         _stow = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _prepClimb = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _firstStage = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
         _secondStage = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _third = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+        _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
 //        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
 //        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 
@@ -70,17 +71,17 @@ public class OI extends OutliersProxy {
 //        _shootButtonTest.whenPressed(new Reset(catapult));
 //        _release.whenPressed(catapult::releaseArm);
 //        _setState.whenPressed(new SetState(catapult, Catapult.CatapultState.AIMING));
-        _intakeButton.whenHeld(new Intaker(intake, false));
+//        _intakeButton.whenHeld(new Intaker(intake, false));
 //        _dropArm.whenHeld(new Feed(servoStop));
-        _stow.whenPressed(new Stow(climber));
-        _prepClimb.whenPressed(new SequentialCommandGroup(new Stow(climber), new PrepToClimb(climber)));
-        _firstStage.whenPressed(new AttachMidRungCommand(climber));
-        _secondStage.whenPressed(new AttachHighRungCommand(climber));
-        _third.whenPressed(new AttachTraversalRungCommand(climber));
-
-
+//        _stow.whenPressed(new Stow(climber));
+        _prepClimb.whenPressed(new SemiAutoClimb(climber));
+//        _prepClimb.whenPressed(new SequentialCommandGroup(new Stow(climber), new PrepToClimb(climber)));
+//        _firstStage.whenPressed(new AttachMidRungCommand(climber));
+//        _secondStage.whenPressed(new AttachHighRungCommand(climber));
+//        _third.whenPressed(new AttachTraversalRungCommand(climber));
     }
 
+    public boolean readyToClimb() {return _readyToClimb.get(); }
     public boolean isShootButtonPressed() { return _shootButton.get(); }
     public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
     public boolean preloadCatapult() { return _preloadButton.get(); }
@@ -129,6 +130,18 @@ public class OI extends OutliersProxy {
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }
+
+    public double getStationarySpeed() {
+        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
+        speed = applyDeadband(speed, Constants.DEADBAND);
+        return speed;
+    }
+    public double getRockerSpeed() {
+        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_Y.getNumber());
+        speed = applyDeadband(speed, Constants.DEADBAND);
+        return speed;
+    }
+
 
     protected double getSpeedFromAxis(Joystick gamepad, int axisNumber) {
         return gamepad.getRawAxis(axisNumber);

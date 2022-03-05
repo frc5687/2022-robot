@@ -31,8 +31,8 @@ public class PrepToClimb extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-         _climber.setStep(ClimberStep.PREP_TO_CLIMB);
-        _climber.runControllers();
+//         _climber.setStep(ClimberStep.PREP_TO_CLIMB);
+//        _climber.runControllers();
         
         metric("Stationary/Speed", _climber.getStaSpeed());
         metric("Stationary/Position", _climber.getStaPositionMeters());

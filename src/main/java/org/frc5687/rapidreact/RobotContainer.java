@@ -7,10 +7,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import org.frc5687.rapidreact.commands.Drive;
-import org.frc5687.rapidreact.commands.IdleIntake;
-import org.frc5687.rapidreact.commands.OutliersCommand;
-import org.frc5687.rapidreact.commands.Shoot;
+import org.frc5687.rapidreact.commands.*;
+import org.frc5687.rapidreact.commands.Climber.IdleClimber;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -42,14 +40,16 @@ public class RobotContainer extends OutliersContainer {
         // initialize peripherals. Do this before subsystems.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
+        // proxy need to be before drivetrain as drivetrain requires it.
+        _proxy = new JetsonProxy(10);
         _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
         _intake = new Intake(this);
         _climber = new Climber(this);
-        _proxy = new JetsonProxy(10);
 
         //The robots default command will run so long as another command isn't activated
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
         _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
