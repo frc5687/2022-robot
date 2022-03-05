@@ -286,7 +286,7 @@ public class DriveTrain extends OutliersSubsystem {
         setNorthEastModuleState(moduleStates[NORTH_EAST]);
     }
 
-    public void poseFollower(Pose2d pose, Rotation2d heading, double vel) {
+    public void poseFollower(Pose2d pose, double vel) {
         ChassisSpeeds adjustedSpeeds = _controller.calculate(_odometry.getPoseMeters(), pose, vel, pose.getRotation());
         SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveTrain.MAX_MPS);

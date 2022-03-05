@@ -15,15 +15,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import org.frc5687.rapidreact.commands.*;
-import org.frc5687.rapidreact.commands.Autos.DriveForTime;
-import org.frc5687.rapidreact.commands.Autos.DropIntake;
-import org.frc5687.rapidreact.commands.Autos.OneBallAuto;
-import org.frc5687.rapidreact.commands.Autos.Wait;
-import org.frc5687.rapidreact.commands.Autos.ZeroBallAuto;
 import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.commands.Shoot;
-
+import org.frc5687.rapidreact.commands.auto.DriveForTime;
+import org.frc5687.rapidreact.commands.auto.DropIntake;
+import org.frc5687.rapidreact.commands.auto.OneBallAuto;
+import org.frc5687.rapidreact.commands.auto.Wait;
+import org.frc5687.rapidreact.commands.auto.ZeroBallAuto;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -112,6 +111,8 @@ public class RobotContainer extends OutliersContainer {
         AutoChooser.Mode autoMode = _autoChooser.getSelectedMode();
         Pose2d[] destinationsZeroBall = {};
         Pose2d[] destinationsOneBall = {};
+        Rotation2d[] rotationsZeroBall = { new Rotation2d() };
+        Rotation2d[] rotationsOneBall = { new Rotation2d() };
         
         switch(autoPosition) {
             case First:
@@ -133,6 +134,8 @@ public class RobotContainer extends OutliersContainer {
                 _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
                 destinationsZeroBall[0] = Constants.Auto.FieldPositions.SAFE_BALL_THREE;
                 destinationsOneBall[0] = Constants.Auto.FieldPositions.SAFE_BALL_THREE;
+                rotationsZeroBall[0] = Constants.Auto.Rotations.BALL_THREE_FROM_FOURTH;
+                rotationsOneBall[0] = Constants.Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 break;
             default:
                 return new Wait(15);
@@ -140,9 +143,9 @@ public class RobotContainer extends OutliersContainer {
 
         switch (autoMode) {
             case ZeroBall:
-                return new ZeroBallAuto(_driveTrain, destinationsZeroBall[0], new Rotation2d());
+            return new ZeroBallAuto(_driveTrain, destinationsZeroBall[0], rotationsZeroBall[0]);
             case OneBall:
-                return new OneBallAuto(_driveTrain, destinationsOneBall[0], new Rotation2d());
+            return new OneBallAuto(_driveTrain, destinationsOneBall[0], rotationsOneBall[0]);
             default:
                 return new Wait(15);
         }

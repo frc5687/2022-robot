@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import org.frc5687.rapidreact.commands.Autos.DropIntake;
+import org.frc5687.rapidreact.commands.auto.DropIntake;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.util.*;
 

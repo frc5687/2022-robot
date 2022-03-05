@@ -252,7 +252,7 @@ public class Constants {
     public static class Auto {
         
         public static class FieldPositions {
-            public static Pose2d SAFE_BALL_THREE = new Pose2d(7.7, 1.42, new Rotation2d());
+            public static Pose2d SAFE_BALL_THREE = new Pose2d(7.7, 0.8, new Rotation2d());
             public static Pose2d ROBOT_POS_ONE_DEST = new Pose2d(5.75, 6.3, new Rotation2d());
             public static Pose2d ROBOT_POS_TWO_DEST = new Pose2d(4.63, 3.65, new Rotation2d());
             public static Pose2d ROBOT_POS_THREE_DEST = new Pose2d(5.95, 1.42, new Rotation2d());
@@ -269,6 +269,11 @@ public class Constants {
             public static Pose2d THIRD = new Pose2d(6.9, 2.5, new Rotation2d());
             public static Pose2d FOURTH = new Pose2d(8.25, 1.9, new Rotation2d());
         }
+
+        public static class Rotations {
+            public static Rotation2d BALL_THREE_FROM_FOURTH = new Rotation2d(0.5 * Math.PI);
+        }
+
         public static final double DRIVETRAIN_POWER = 0.5;
  }
     public static class IntakeBlocker{

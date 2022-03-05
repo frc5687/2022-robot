@@ -1,4 +1,4 @@
-package org.frc5687.rapidreact.commands.Autos;
+package org.frc5687.rapidreact.commands.auto;
 
 import java.security.DrbgParameters.Reseed;
 
