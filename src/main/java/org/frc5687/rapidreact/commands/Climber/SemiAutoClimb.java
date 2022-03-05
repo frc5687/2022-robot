@@ -1,5 +1,6 @@
 package org.frc5687.rapidreact.commands.Climber;
 
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
@@ -15,13 +16,8 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 public class SemiAutoClimb extends OutliersCommand {
 
     private Climber _climber;
-    private DriveTrain _driveTrain;
-    private OI _oi;
-
-    public SemiAutoClimb(Climber climber, DriveTrain driveTrain, OI oi) {
+    public SemiAutoClimb(Climber climber) {
         _climber = climber;
-        _driveTrain = driveTrain;
-        _oi = oi;
     }
 
     @Override
@@ -34,14 +30,11 @@ public class SemiAutoClimb extends OutliersCommand {
                 break;
             case STOW:
                 (new PrepToClimb(_climber)).schedule();
-                _driveTrain.setIsClimbing(true);
                 _climber.setStep(Climber.ClimberStep.PREP_TO_CLIMB);
                 break;
             case PREP_TO_CLIMB:
-                if(_oi.readyToClimb()){
-                    (new AttachMidRungCommand(_climber)).schedule();
-                    _climber.setStep(Climber.ClimberStep.ATTACH_MID);
-                }
+                (new AttachMidRungCommand(_climber)).schedule();
+                _climber.setStep(Climber.ClimberStep.ATTACH_MID);
                 break;
             case ATTACH_MID:
                 (new AttachHighRungCommand(_climber)).schedule();
