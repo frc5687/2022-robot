@@ -74,6 +74,10 @@ public class RobotContainer extends OutliersContainer {
         // initialize peripherals. Do this before subsystems.
         info("Running RobotContainer.init()");
 
+        // Initialize starting position and mode to unknown
+        autoPosition = AutoChooser.Position.Unknown;
+        autoMode = AutoChooser.Mode.Unknown;
+
         // Display starting position value
         SmartDashboard.putString("DB/String 0", "Starting Position:");
         SmartDashboard.putString("DB/String 5", "Unknown");
