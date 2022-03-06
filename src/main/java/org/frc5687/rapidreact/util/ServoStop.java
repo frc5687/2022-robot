@@ -15,7 +15,7 @@ public class ServoStop {
         //Lowers the blocking arm
         //Lets balls enter the catapult
         feeding = false;
-        stopper.setAngle(40);
+        stopper.setAngle(70);
     }
 
     public void raise(){
