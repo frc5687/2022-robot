@@ -19,6 +19,7 @@ import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.util.JetsonProxy;
+import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class DriveTrain extends OutliersSubsystem {
@@ -41,16 +42,20 @@ public class DriveTrain extends OutliersSubsystem {
 
     private AHRS _imu;
     private JetsonProxy _proxy;
+    private Limelight _limelight;
     private OI _oi;
 
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
 
-    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, AHRS imu) {
+    private boolean _isClimbing = false;
+
+    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
         try {
             _oi = oi;
             _proxy = proxy;
+            _limelight = limelight;
             _imu = imu;
             _northWest =
                     new DiffSwerveModule(
@@ -142,9 +147,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Goal Distance", getDistanceToGoal());
-        metric("Goal Angle", getAngleToGoal());
-        metric("Has goal", hasGoal());
+        metric("Goal Distance", getDistanceToTarget());
+        metric("Goal Angle", getAngleToTarget());
+        metric("Has goal", hasTarget());
 
         metric("NW/Encoder Angle", _northWest.getModuleAngle());
         metric("SW/Encoder Angle", _southWest.getModuleAngle());
@@ -183,6 +188,14 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getYaw() {
         return _imu.getYaw();
+    }
+
+    public void setIsClimbing(boolean climbing){
+        _isClimbing = climbing;
+    }
+
+    public boolean isClimbing(){
+        return _isClimbing;
     }
 
     // yaw is negative to follow wpi coordinate system.
@@ -247,24 +260,24 @@ public class DriveTrain extends OutliersSubsystem {
     public SwerveDriveKinematicsConstraint getKinematicConstraint() {
         return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
     }
-    public boolean hasGoal() {
-        if (_proxy.getLatestFrame() == null) {
-            return false;
+    public boolean hasTarget() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetDistance() != -1;
         }
-        return _proxy.getLatestFrame().hasTarget();
+        return false;
     }
 
-    public double getDistanceToGoal() {
-        if (_proxy.getLatestFrame() == null) {
-            return Double.NaN;
+    public double getDistanceToTarget() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetDistance();
         }
-        return _proxy.getLatestFrame().getTargetDistance();
+        return Double.NaN;
     }
-    public double getAngleToGoal() {
-        if (_proxy.getLatestFrame() == null) {
-            return Double.NaN;
+    public double getAngleToTarget() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetAngle();
         }
-        return _proxy.getLatestFrame().getTargetAngle();
+        return Double.NaN;
     }
 
     public TrajectoryConfig getConfig() {

@@ -46,11 +46,19 @@ public class ColorSensor {
             colorString = "Blue";
             SmartDashboard.putString("Color String", colorString);
             return colorString;
-          } else if (match.color == kRedTarget) {
+        } else if (match.color == kRedTarget) {
             colorString = "Red";
             SmartDashboard.putString("Color String", colorString);
             return colorString;
-          } else {
+        } else if (match.color == kYellowTarget) {
+            colorString = "Yellow";
+            SmartDashboard.putString("Color String", colorString);
+            return colorString;
+        } else if (match.color == kGreenTarget) {
+            colorString = "Green";
+            SmartDashboard.putString("Color String", colorString);
+            return colorString;
+        } else {
             colorString = "Unknown";
             SmartDashboard.putString("Color String", colorString);
             return colorString;
@@ -67,14 +75,6 @@ public class ColorSensor {
 
     public boolean isGreen(){
         return getColor().equals("Green");
-    }
-
-    public double getGreen(){
-        return _colorSensor.getGreen();
-    }
-
-    public double getBlue(){
-        return _colorSensor.getBlue();
     }
 
     public double getProximity(){
