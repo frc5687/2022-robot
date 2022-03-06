@@ -124,6 +124,12 @@ public class Constants {
         public static final double PROFILE_CONSTRAINT_VEL = 3.0 * Math.PI;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
 
+        public static final double VISION_kP = 4.0;
+        public static final double VISION_kI = 0.1;
+        public static final double VISION_kD = 0.3;
+        public static final double VISION_IRANGE = 1.0;
+        public static final double VISION_TOLERANCE = 0.01;
+
     }
 
     public static class DifferentialSwerveModule {
@@ -252,12 +258,11 @@ public class Constants {
     public static class Intake{
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
-        public static final double THE_BEANS = 0.8;
+        public static final double THE_BEANS = 0.7;
         public static final double GEAR_RATIO = 5.0;
         public static final double MAX_RPM = 6300 * GEAR_RATIO;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
     }
-
     public static class Auto{
             public static final double DRIVETRAIN_POWER = 0.5;
     }

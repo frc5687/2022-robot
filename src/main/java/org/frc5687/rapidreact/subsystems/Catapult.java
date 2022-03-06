@@ -321,10 +321,24 @@ public class Catapult extends OutliersSubsystem {
         return angularVelocity * ARM_LENGTH;
     }
 
+    // calculate linear regression.
+    public double calculateIdealSpring(double dist) {
+        return (-0.010290809 * (dist * dist * dist)) +
+                (0.153682323 * (dist * dist))
+                - (0.714436098 * dist) + 1.314831828;
+    }
+
+    // calculated from linear regression
+    public double calculateIdealString(double dist) {
+        dist = Units.metersToFeet(dist);
+        return (0.005404763 * (dist * dist * dist)) -
+                (0.079955861 * (dist * dist )) +
+                (0.394134242 * dist) - 0.394134242;
+    }
+
     public boolean isReleasePinLocked() {
         return _releasePin.get() == PinPosition.LOCKED.getSolenoidValue();
     }
-
     public boolean isReleasePinReleased() {
         return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
     }

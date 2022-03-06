@@ -19,6 +19,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.JetsonProxy;
+import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class RobotContainer extends OutliersContainer {
@@ -26,6 +27,7 @@ public class RobotContainer extends OutliersContainer {
     private OI _oi;
     private AHRS _imu;
     private JetsonProxy _proxy;
+    private Limelight _limelight;
 
     private Robot _robot;
     private DriveTrain _driveTrain;
@@ -34,7 +36,6 @@ public class RobotContainer extends OutliersContainer {
     private Climber _climber;
     private boolean _hold;
     private UsbCamera _cam;
-
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
@@ -45,19 +46,21 @@ public class RobotContainer extends OutliersContainer {
         // initialize peripherals. Do this before subsystems.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
-        // proxy need to be before drivetrain as drivetrain requires it.
         _proxy = new JetsonProxy(10);
+        _limelight = new Limelight("limelight");
 
+        // then subsystems
         _catapult = new Catapult(this);
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
+        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
         _intake = new Intake(this);
         _climber = new Climber(this);
-        initializeCamera();
-        
         //The robots default command will run so long as another command isn't activated
+        //The robots default command will run so long as another command isn't activated
+        initializeCamera();
+
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _oi));
+        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
         setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
@@ -82,7 +85,6 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void autonomousInit() {
 //        _catapult.setState(CatapultState.AUTO);
-        _hold = true;
     }
 
     /**
@@ -126,6 +128,14 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
+        if (_proxy.getLatestFrame() != null) {
+            metric("Millis", _proxy.getLatestFrame().getMillis());
+            metric("Has goal", _proxy.getLatestFrame().hasTarget());
+            metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
+            metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
+        }
+        _driveTrain.updateDashboard();
+        _catapult.updateDashboard();
         //Updates the driver station
         //_driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
