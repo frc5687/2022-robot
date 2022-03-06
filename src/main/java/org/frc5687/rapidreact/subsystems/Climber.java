@@ -72,7 +72,8 @@ public class Climber extends OutliersSubsystem{
 
         _driveTrain = driveTrain;
         
-        logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
+        // logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
+        logMetrics("Step", "Rocker/Position", "Rocker/Speed", "Rocker/Down", "Rocker/Current", "Rocker/StallCycles", "Rockers/Velocity", "Stationary/Position", "Stationary/Speed", "Stationary/Down", "Stationary/Current", "Stationary/StallCycles", "Stationary/Velocity");
 
         _stationaryArmWinch = new TalonFX(RobotMap.CAN.TALONFX.STATIONARY_CLIMBER);
         _stationaryArmWinch.setNeutralMode(NeutralMode.Brake);
@@ -362,6 +363,10 @@ public class Climber extends OutliersSubsystem{
         metric("Stationary/Speed", _staSpeed); 
         metric("Stationary/Up", _staArmUp.get());
         metric("Stationary/Down", _staArmDown.get());
+        metric("Stationary/Current", _stationaryArmWinch.getSupplyCurrent());
+        metric("Stationary/StallCycles", _staStallCycles);
+        metric("Stationary/Velocity", (_stationaryArmWinch.getSelectedSensorVelocity());
+
         metric("Rocker/Position", getRockPositionMeters());
         metric("Rocker/Goal", _rockGoal);
         metric("Rocker/Enabled", _rockControllerEnabled);
@@ -370,6 +375,10 @@ public class Climber extends OutliersSubsystem{
         metric("Rocker/Encoder", _rockerArmWinch.getSelectedSensorPosition());
         metric("Rocker/Down", isRockArmDown());
         metric("Rocker Cylinder", getRockerLabel());
+
+        metric("Rocker/Current", _rockerArmWinch.getSupplyCurrent());
+        metric("Rocker/StallCycles", _rockStallCycles);
+        metric("Rocker/Velocity", _rockerArmWinch.getSelectedSensorVelocity());
 
         metric("Step", _step.name());
         metric("Climber stopped", _climberStopped);
