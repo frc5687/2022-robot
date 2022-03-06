@@ -93,13 +93,13 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
 
     public abstract void updateDashboard();
 
-    protected void enableMetrics() {
+    public void enableMetrics() {
         if (_metricTracker != null) {
             _metricTracker.enable();
         }
     }
 
-    protected void disableMetrics() {
+    public void disableMetrics() {
         if (_metricTracker != null) {
             _metricTracker.disable();
         }

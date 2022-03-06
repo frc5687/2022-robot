@@ -113,7 +113,7 @@ public class RioLogger {
 
     protected void logint(LogLevel level, String source, String message) {
         if (level.getValue() >= _dsLogLevel.getValue()) {
-            DriverStation.reportError(level.toString() + "\t" + source + "\t" + message, false);
+            DriverStation.reportWarning(level.toString() + "\t" + source + "\t" + message, false);
         }
         if (_fileLogLevel == LogLevel.none) {
             return;

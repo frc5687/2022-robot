@@ -270,4 +270,76 @@ public class Constants {
     public static class ColorSensor{
         public static final double COLOR_PROXIMITY_BUFFER = 130;
     }
+
+    public static class Climber{
+        public static final double FALCON_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(6300);
+        public static final int FALCON_INTEGRATED_ENCODER_TICKS = 2048;
+        public static final double GEAR_REDUCTION = 25.0;
+        public static final double MAX_SPEED_WITH_GEAR_BOX = FALCON_RAD_PER_SEC / GEAR_REDUCTION;
+        public static final double WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.12) * Math.PI; // meters
+        public static final double ENCODER_RATIO = Units.inchesToMeters(26) / 498.0; 
+        // public static final double ENCODER_RATIO  = ;
+        public static final boolean STATIONARY_ARM_REVERSED = false;
+        public static final int ARM_CURRENT_LIMIT = 50; // amps
+
+        public static final boolean ROCKER_ARM_REVERSED = true;
+        public static final int ROCKER_ARM_CURRENT_LIMIT = 40; // amps
+
+        public static final int MOTION_MAGIC_SLOT = 0;
+        public static final double kP = 0.8; // 40.0;
+        public static final double kI = 0.0; // 15.0;
+        public static final double kD = 0.05;
+        public static final double kF = 0.0;
+        public static final double MAX_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI) * WINCH_DRUM_CIRCUMFERENCE);
+        public static final double MAX_ACCELERATION_MPSS = MAX_VELOCITY_MPS * 50.0; // heuristic
+        public static final double TOLERANCE = 0.005; // meters.
+
+        public static final double CLIMB_DRIVE_SPEED = 1.75; //The speed of the drivetrain during climbing
+
+        public static final int COUNTS_PER_REVOLUTION = 8196;
+
+
+
+
+        // These distances are in METERS
+        public static final double STATIONARY_RETRACTED_METERS = 0.0; 
+        public static final double STATIONARY_CLOSE_METERS = 0.46;
+        public static final double STATIONARY_EXTENDED_METERS = 0.6604; // TODO: Needs to be confirmed
+
+        public static final double ROCKER_RETRACTED_METERS = 0.0;
+        public static final double ROCKER_CLOSE_METERS = 0.4064;
+        public static final double ROCKER_MID_METERS = 0.51; // 0.4826
+        public static final double ROCKER_EXTENDED_METERS = 0.69; // TODO: Needs to be confirmed
+
+        public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
+        public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
+        public static final long ROCKER_PISTON_WAIT = 250;
+        public static final double ARM_STOW_SPEED = -0.3;
+
+        public static final boolean ROCKER_ENCODER_INVERTED = false; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final boolean STATIONARY_ENCODER_INVERTED = false; // TODO: Needs to be calibrated via Phoenix tuner
+
+        public static final double ARM_TOLERANCE = 0.005;
+        public static final double ARM_IZONE = 30.0;
+
+        public static final int MAX_STALL_CYCLES = 10;
+        public static final double STALL_CURRENT = 40.0;
+        public static final double STALL_MIN_RPM = 20.0;
+        public static final double ARM_THRES_TIME = 0.5;
+        public static final double CURRENT_THRES = 15;
+        public static final boolean ROCKER_ENCODER_REVERSED = false; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final boolean STATIONARY_ENCODER_REVERSED = false; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final double TICKS_TO_METERS = 0.00000149489; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final double CRUISE_VELOCITY = 50000; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final double ACCELERATION = 90000; // TODO: Needs to be calibrated via Phoenix tuner
+    }
+
+    public static class Camera{
+        public static final int BRIGHTNESS = 60;
+        public static final int FPS_LIMIT = 15;
+        public static final boolean AUTO_EXPOSURE = true;
+        public static final int EXPOSURE = 70;
+        public static final int HEIGHT = 320;
+        public static final int WIDTH = 240;
+    }
 }
