@@ -30,6 +30,7 @@ public class Drive extends OutliersCommand {
                 VISION_kD
         );
         _visionController.setIntegratorRange(-VISION_IRANGE, VISION_IRANGE);
+        _visionController.setTolerance(VISION_TOLERANCE);
         addRequirements(_driveTrain);
         logMetrics("vx","vy");
         enableMetrics();
