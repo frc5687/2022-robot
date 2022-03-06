@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.photonvision:PhotonLib-java:v2022.1.4">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.photonvision/PhotonLib-java/v2022.1.4/901fa3d044597fc85eb81503500874c3a755683a/PhotonLib-java-v2022.1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.photonvision/PhotonLib-java/v2022.1.4/4180e0fd0db8dea00b5e8edf6f11ea759c1878d9/PhotonLib-java-v2022.1.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

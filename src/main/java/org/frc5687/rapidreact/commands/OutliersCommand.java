@@ -4,11 +4,37 @@ package org.frc5687.rapidreact.commands;
 import org.frc5687.rapidreact.util.ILoggingSource;
 import org.frc5687.rapidreact.util.MetricTracker;
 import org.frc5687.rapidreact.util.RioLogger;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public abstract class OutliersCommand extends CommandBase implements ILoggingSource {
+/**
+ * The OutliersCommand base class introduces logging and metric tracking capabilities for Commands.
+ * 
+ * See ILoggingSource for logging details.
+ * 
+ * See MetricTracker for metrics details.
+ * 
+ * Example of metrics collection. In a child class's constructor:
+ * 
+ * public SampleCommand() {
+ *    logMetrics("foo", "bar", "baz");
+ * }
+ * 
+ * Later on in the child class, eg in run():
+ * 
+ * ...
+ * metric("foo", 123);
+ * metric("bar", "elvis");
+ * metric("baz", 42.42);
+ * metric("pants", 99);    <~ This metric won't get written to USB storage because it wasn't registered.
+ * ...
+ * 
+ * Note that metric logging is expensive, so it is turned OFF by default.
+ * To turn it on, either call enableMetrics() from code (eg at the start of an auto command)
+ * or set Metrics/[SubSystemName] to true in the SmartDashboard 
+ * 
+ */
+ public abstract class OutliersCommand extends CommandBase implements ILoggingSource {
     private MetricTracker _metricTracker;
 
     public OutliersCommand() {}

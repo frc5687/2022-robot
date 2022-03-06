@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: edu.wpi.first.ntcore:ntcore-java:2022.3.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/2022.3.1/e27bfac4384f167f01e4855f84f29490a763334e/ntcore-java-2022.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/edu/wpi/first/ntcore/ntcore-java/2022.3.1/ntcore-java-2022.3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/2022.3.1/23014df5e337dca5819f062f2e054fe9877b6d56/ntcore-java-2022.3.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/edu/wpi/first/ntcore/ntcore-java/2022.3.1/ntcore-java-2022.3.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
