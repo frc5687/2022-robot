@@ -2,14 +2,12 @@ package org.frc5687.rapidreact.commands;
 
 import org.frc5687.rapidreact.subsystems.Intake;
 
-public class Intaker extends OutliersCommand {
+public class AutoIntake extends OutliersCommand {
 
     private Intake _intake;
-    private boolean _reversed;
 
-    public Intaker(Intake intake, boolean reversed){
+    public AutoIntake(Intake intake){
         _intake = intake;
-        _reversed = reversed;
         addRequirements(_intake);
     }
 

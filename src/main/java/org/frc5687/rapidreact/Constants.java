@@ -253,13 +253,14 @@ public class Constants {
         
         public static class FieldPositions {
             public static Pose2d SAFE_BALL_THREE = new Pose2d(7.7, 0.8, new Rotation2d());
-            public static Pose2d ROBOT_POS_ONE_DEST = new Pose2d(5.75, 6.3, new Rotation2d());
+            public static Pose2d ROBOT_POS_ONE_DEST = new Pose2d(6.505, 5.685, new Rotation2d());
             public static Pose2d ROBOT_POS_TWO_DEST = new Pose2d(4.63, 3.65, new Rotation2d());
             public static Pose2d ROBOT_POS_THREE_DEST = new Pose2d(5.95, 1.42, new Rotation2d());
             public static Pose2d PARALLEL_PARK = new Pose2d(8.42, 0.4, new Rotation2d());
+
         }
         public static class BallPositions {
-            public static Pose2d BALL_ONE = new Pose2d(4.8, 5.8, new Rotation2d());
+            public static Pose2d BALL_ONE = new Pose2d(4.755, 6.085, new Rotation2d());
             public static Pose2d BALL_TWO = new Pose2d(5.1, 1.77, new Rotation2d());
             public static Pose2d BALL_THREE = new Pose2d(7.7, 0.28, new Rotation2d());
         }
