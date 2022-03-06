@@ -318,6 +318,13 @@ public class Climber extends OutliersSubsystem{
         } else {
             _rockStallCycles=0;
         }
+
+        metric("Rocker/Current", _rockerArmWinch.getSupplyCurrent());
+        metric("Rocker/StallCycles", _rockStallCycles);
+        metric("Rocker/Velocity", _rockerArmWinch.getSelectedSensorVelocity());
+
+
+        info("Rocker current " +_rockerArmWinch.getSupplyCurrent() + "  rocker velocity " +  _rockerArmWinch.getSelectedSensorVelocity() + " rocker cycles " + _rockStallCycles);
         return _rockStallCycles > Constants.Climber.MAX_STALL_CYCLES;
     }
 
@@ -365,7 +372,7 @@ public class Climber extends OutliersSubsystem{
         metric("Stationary/Down", _staArmDown.get());
         metric("Stationary/Current", _stationaryArmWinch.getSupplyCurrent());
         metric("Stationary/StallCycles", _staStallCycles);
-        metric("Stationary/Velocity", (_stationaryArmWinch.getSelectedSensorVelocity());
+        metric("Stationary/Velocity", _stationaryArmWinch.getSelectedSensorVelocity());
 
         metric("Rocker/Position", getRockPositionMeters());
         metric("Rocker/Goal", _rockGoal);
