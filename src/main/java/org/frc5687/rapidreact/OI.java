@@ -34,6 +34,7 @@ public class OI extends OutliersProxy {
     private JoystickButton  _setState;
     private JoystickButton _resetNavX;
     private JoystickButton _dropArm;
+    private JoystickButton _autoAim;
     private JoystickButton _readyToClimb;
     // "Raw" joystick values
     private double yIn = 0;
@@ -53,15 +54,17 @@ public class OI extends OutliersProxy {
 
         // rotation joystick
         _intakeButton = new JoystickButton(_rotation, 1);
+        _autoAim = new JoystickButton(_rotation, 2);
         _deployRetract = new JoystickButton(_rotation, 3);
         // translation joystick
         _shootButton= new JoystickButton(_translation, 1);
         _release = new JoystickButton(_translation, 2);
+
         _dropArm = new JoystickButton(_translation, 3);
         _resetNavX = new JoystickButton(_translation, 5);
         _exitKill = new JoystickButton(_translation, 9);
         _kill = new JoystickButton(_translation, 10);
-
+        
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
@@ -78,6 +81,7 @@ public class OI extends OutliersProxy {
     public boolean intakeDeployRetract() { return _deployRetract.get(); }
     public boolean exitKill() { return _exitKill.get(); }
     public boolean kill() { return _kill.get(); }
+    public boolean autoAim() { return _autoAim.get(); }
 
 
     public double getDriveY() {
@@ -103,13 +107,13 @@ public class OI extends OutliersProxy {
     }
 
     public double getRotationX() {
-        double speed = getSpeedFromAxis(_rotation, _rotation.getXChannel());
+        double speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }
 
     public double getSpringMotorSpeed() {
-        double speed = -getSpeedFromAxis(_debug, _debug.getYChannel());
+        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }
@@ -121,13 +125,15 @@ public class OI extends OutliersProxy {
     }
 
     public double getStationarySpeed() {
-        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
+        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
+        speed = 0;
         return speed;
     }
     public double getRockerSpeed() {
         double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
+        speed = 0;
         return speed;
     }
 

@@ -28,9 +28,10 @@ public class TwoBallAuto extends SequentialCommandGroup {
         _newPose = new Pose2d(destination.getX(), destination.getY(), _rotation);
         addCommands(
                 new Shoot(catapult),
-                new ParallelDeadlineGroup(new AutoIntake(intake), new DriveToPose(driveTrain, _newPose, 0.2)),
+                new ParallelDeadlineGroup(new DriveToPose(driveTrain, _newPose, 0.2), new AutoIntake(intake)),
                 new LowerCatapult(catapult, true),
-                new ShootSetpoint(catapult, 0.11, 0.245)
+                new ShootSetpoint(catapult, 0.11, 0.245),
+                new ReleaseArm(catapult)
         );
     }
 }

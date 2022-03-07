@@ -23,7 +23,7 @@ public class AutoShoot extends OutliersCommand {
 
     @Override
     public void execute() {
-        if (_driveTrain.hasGoal()) {
+        if (_driveTrain.hasTarget()) {
 //            _catapult.setWinchGoal(); // TODO: distance calc from linear regression
 //            _catapult.setSpringGoal(); // TODO: distance calc from linear regression
         }
@@ -33,7 +33,7 @@ public class AutoShoot extends OutliersCommand {
     public boolean isFinished() {
         if (_catapult.isWinchAtGoal() &&
                 _catapult.isSpringAtPosition() &&
-                Math.abs(_driveTrain.getAngleToGoal()) < VISION_TOLERANCE
+                Math.abs(_driveTrain.getAngleToTarget()) < VISION_TOLERANCE
         ) {
             return true;
         }

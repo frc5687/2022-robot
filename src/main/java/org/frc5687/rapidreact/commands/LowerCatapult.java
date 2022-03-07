@@ -17,7 +17,7 @@ public class LowerCatapult extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-        _catapult.setWinchGoal(Constants.Catapult.WINCH_BOTTOM_LIMIT);
+//        _catapult.setWinchGoal(Constants.Catapult.WINCH_BOTTOM_LIMIT);
     }
 
     @Override
@@ -26,6 +26,12 @@ public class LowerCatapult extends OutliersCommand {
         if (_zeroing) {
             _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
             _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
+            if (_catapult.isArmLowered()) {
+                _catapult.setWinchMotorSpeed(0);
+            }
+            if (_catapult.isSpringHallTriggered()) {
+                _catapult.setSpringMotorSpeed(0);
+            }
         } else {
             _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
         }
@@ -35,11 +41,19 @@ public class LowerCatapult extends OutliersCommand {
 
     @Override
     public boolean isFinished() {
-        if (_catapult.isArmLowered()) {
-            if (_zeroing) {
+        if (_zeroing) {
+            if (_catapult.isSpringHallTriggered() && _catapult.isArmLowered()) {
                 _catapult.zeroWinchEncoder();
+                _catapult.setWinchMotorSpeed(0);
+                _catapult.setSpringMotorSpeed(0);
+                _catapult.zeroSpringEncoder();
+                _catapult.lockArm();// latch ;
+                return true;
             }
+        }
+        if (_catapult.isArmLowered() && !_zeroing) {
             error("exiting command");
+            _catapult.setWinchMotorSpeed(0);
             _catapult.lockArm();// latch ;
             return true;
         }

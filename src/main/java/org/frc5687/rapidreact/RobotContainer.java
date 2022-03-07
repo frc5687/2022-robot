@@ -31,6 +31,7 @@ import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 import org.frc5687.rapidreact.util.AutoChooser;
 import org.frc5687.rapidreact.util.JetsonProxy;
+import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 import org.frc5687.rapidreact.util.AutoChooser.Mode;
 import org.frc5687.rapidreact.util.AutoChooser.Position;
@@ -42,6 +43,7 @@ public class RobotContainer extends OutliersContainer {
     private OI _oi;
     private AHRS _imu;
     private JetsonProxy _proxy;
+    private Limelight _limelight;
 
     private Robot _robot;
     private DriveTrain _driveTrain;
@@ -86,22 +88,23 @@ public class RobotContainer extends OutliersContainer {
 
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
-        // proxy need to be before drivetrain as drivetrain requires it.
         _proxy = new JetsonProxy(10);
+        _limelight = new Limelight("limelight");
 
+        // then subsystems
         _catapult = new Catapult(this);
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
+        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
         _intake = new Intake(this);
         _climber = new Climber(this);
         _proxy = new JetsonProxy(10);
         _autoChooser = new AutoChooser();
 
         initializeCamera();
-        
-        //The robots default command will run so long as another command isn't activated
+
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _oi));
+        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
+//        setDefaultCommand(_catapult, new IdleCatapult(_catapult, _oi));
         setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
@@ -177,7 +180,6 @@ public class RobotContainer extends OutliersContainer {
     public void autonomousInit() {
         // Run once when entering auto mode
         info("Running RobotContainer.autonomousInit()");
-
     }
 
     /**
@@ -205,7 +207,7 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command wrapCommand(Command command) {
-        return new SequentialCommandGroup(new DropIntake(_intake), new WaitCommand(0.2), command, new SetState(_catapult, Catapult.CatapultState.ZEROING)); }
+        return new SequentialCommandGroup(new DropIntake(_intake), new WaitCommand(0.5), command); }
 
     public Command getAutonomousCommand() {
 
@@ -265,6 +267,14 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
+        if (_proxy.getLatestFrame() != null) {
+            metric("Millis", _proxy.getLatestFrame().getMillis());
+            metric("Has goal", _proxy.getLatestFrame().hasTarget());
+            metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
+            metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
+        }
+        _driveTrain.updateDashboard();
+        _catapult.updateDashboard();
         //Updates the driver station
         _autoChooser.updateDashboard();
         _driveTrain.updateDashboard();
