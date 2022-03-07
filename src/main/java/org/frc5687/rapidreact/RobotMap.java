@@ -91,7 +91,6 @@ public class RobotMap {
         public static final int ARM_HALL_EFFECT = 5;
         public static final int INTAKE_HALL_EFFECT = 22;
 
-
         public static final int STATIONARY_ARM_TOP_HALL = 6;
         public static final int STATIONARY_ARM_BOTTOM_HALL = 8;
 
