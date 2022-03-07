@@ -5,10 +5,7 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import org.frc5687.rapidreact.commands.auto.DropIntake;
-import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.util.*;
 
 /**
@@ -27,10 +24,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
     private double _prevTime;
     private double _time;
 
-    /**
-     * This function is setRollerSpeed when the robot is first started up and should be used for any
-     * initialization code.
-     */
+    /** Run once when robot is turned on */
     @Override
     public void robotInit() {
         super.robotInit();
@@ -57,19 +51,14 @@ public class Robot extends OutliersRobot implements ILoggingSource {
         ourPeriodic();
     }
 
-    /**
-     * This autonomous (along with the chooser code above) shows how to select between different
-     * autonomous modes using the dashboard. The sendable chooser code works with the Java
-     * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-     * uncomment the getString line to get the auto name from the text box below the Gyro
-     *
-     * <p>You can add additional auto modes by adding additional comparisons to the switch structure
-     * below with additional strings. If using the SendableChooser make sure to add them to the
-     * chooser code above as well.
+    /** Run once every time entering autonomous mode
+     * 
+     * <p> Autonomous command set in RobotContainer
      */
     @Override
     public void autonomousInit() {
         //wrapCommand drops intake before the autocommand.
+        // Jack did this to save typing in robotContainer
         _autoCommand = _robotContainer.wrapCommand(_robotContainer.getAutonomousCommand());
         _fmsConnected = DriverStation.isFMSAttached();
         _robotContainer.autonomousInit();
@@ -80,9 +69,15 @@ public class Robot extends OutliersRobot implements ILoggingSource {
 
     public void teleopInit() {
         _fmsConnected = DriverStation.isFMSAttached();
-        _robotContainer.teleopInit();
 
-        // _limelight.disableLEDs();
+        // Good practice to cancel the autonomous command that may still be running.
+        // If you want the autonomous to continue until interrupted by another command,
+        // comment the following out.
+        if (_autoCommand != null) {
+            _autoCommand.cancel();
+        }
+
+        _robotContainer.teleopInit();
     }
 
     /** This function is called periodically during autonomous. */
