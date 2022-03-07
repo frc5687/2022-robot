@@ -42,6 +42,7 @@ public class RobotContainer extends OutliersContainer {
     public void init() {
         // initialize peripherals. Do this before subsystems.
         _oi = new OI();
+        //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
         _limelight = new Limelight("limelight");
@@ -74,7 +75,9 @@ public class RobotContainer extends OutliersContainer {
         //Runs every 20ms during disabled
     }
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        //Runs once during disabled
+    }
 
     @Override
     public void teleopInit() {

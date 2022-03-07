@@ -1,4 +1,8 @@
-/* Team 5687 (C)2020-2021 */
+/** Team 5687 (C)2021-2022
+ * Joystick and gamepad control for the robot.
+ * Also has button inits.
+ * Has some instructions on how to switch controls.
+*/
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
@@ -100,7 +104,6 @@ public class OI extends OutliersProxy {
         xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
         //xIn = -getSpeedFromAxis(Gamepad, Gamepad.getXChannel());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
-
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0; // numbers from empirical testing.
         return xOut;
