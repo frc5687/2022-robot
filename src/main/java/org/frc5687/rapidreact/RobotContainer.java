@@ -68,7 +68,6 @@ public class RobotContainer extends OutliersContainer {
         _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
-        _oi.initializeButtons(_driveTrain);
     }
 
     public void periodic() {
