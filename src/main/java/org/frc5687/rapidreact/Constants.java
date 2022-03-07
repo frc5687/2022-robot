@@ -318,7 +318,7 @@ public class Constants {
         public static final double ARM_IZONE = 30.0;
 
         public static final int MAX_STALL_CYCLES = 10;
-        public static final double STALL_CURRENT = 40.0;
+        public static final double STALL_CURRENT = 20.0;
         public static final double STALL_MIN_RPM = 20.0;
         public static final double ARM_THRES_TIME = 0.5;
         public static final double CURRENT_THRES = 15;
