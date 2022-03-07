@@ -323,6 +323,16 @@ public class DriveTrain extends OutliersSubsystem {
         return _odometry.getPoseMeters();
     }
 
+    /** Reset position and gyroOffset of odometry
+     * 
+     * @param position is a Pose2d (Translation2d, Rotation2d)
+     * 
+     * <p> Translation2d resets odometry (X,Y) coordinates
+     * 
+     * <p> Rotation2d - gyroAngle = gyroOffset
+     * 
+     * <p> If Rotation2d <> gyroAngle, then robot heading will no longer equal IMU heading.
+     */
     public void resetOdometry(Pose2d position) {
         _odometry.resetPosition(position, getHeading());
     }
