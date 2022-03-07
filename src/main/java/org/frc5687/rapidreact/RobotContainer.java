@@ -22,6 +22,8 @@ import org.frc5687.rapidreact.commands.*;
 import org.frc5687.rapidreact.commands.auto.*;
 import org.frc5687.rapidreact.commands.Climber.IdleClimber;
 
+import org.frc5687.rapidreact.config.Auto;
+
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -223,7 +225,7 @@ public class RobotContainer extends OutliersContainer {
         if (_bypass) {
             _driveTrain.resetOdometry(new Pose2d(6.505, 5.685, new Rotation2d()));
             Rotation2d rot = Rotation2d.fromDegrees(10);
-            return new TwoBallAuto(_driveTrain, _catapult, _intake, Constants.Auto.BallPositions.BALL_ONE, rot);
+            return new TwoBallAuto(_driveTrain, _catapult, _intake, Auto.BallPositions.BALL_ONE, rot);
         }
 
         // Return command sequence based on starting position and auto mode selectded
@@ -235,32 +237,32 @@ public class RobotContainer extends OutliersContainer {
 
         switch(autoPosition) {
             case First:
-                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FIRST);
-                destinationsZeroBall[0] = Constants.Auto.BallPositions.BALL_ONE;
-                destinationsOneBall[0] = Constants.Auto.BallPositions.BALL_ONE;
+                _driveTrain.resetOdometry(Auto.RobotPositions.FIRST);
+                destinationsZeroBall[0] = Auto.BallPositions.BALL_ONE;
+                destinationsOneBall[0] = Auto.BallPositions.BALL_ONE;
                 rotationsZeroBall[0] = new Rotation2d();
                 rotationsOneBall[0] = new Rotation2d();
                 break;
             case Second:
-                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.SECOND);
-                destinationsZeroBall[0] = Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST;
-                destinationsOneBall[0] = Constants.Auto.FieldPositions.ROBOT_POS_TWO_DEST;
+                _driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
+                destinationsZeroBall[0] = Auto.FieldPositions.ROBOT_POS_TWO_DEST;
+                destinationsOneBall[0] = Auto.FieldPositions.ROBOT_POS_TWO_DEST;
                 rotationsZeroBall[0] = new Rotation2d();
                 rotationsOneBall[0] = new Rotation2d();
                 break;
             case Third:
-                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.THIRD);
-                destinationsZeroBall[0] = Constants.Auto.BallPositions.BALL_TWO;
-                destinationsOneBall[0] = Constants.Auto.BallPositions.BALL_TWO;
+                _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
+                destinationsZeroBall[0] = Auto.BallPositions.BALL_TWO;
+                destinationsOneBall[0] = Auto.BallPositions.BALL_TWO;
                 rotationsZeroBall[0] = new Rotation2d();
                 rotationsOneBall[0] = new Rotation2d();
                 break;
             case Fourth:
-                _driveTrain.resetOdometry(Constants.Auto.RobotPositions.FOURTH);
-                destinationsZeroBall[0] = Constants.Auto.FieldPositions.PARALLEL_PARK;
-                destinationsOneBall[0] = Constants.Auto.FieldPositions.SAFE_BALL_THREE;
+                _driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
+                destinationsZeroBall[0] = Auto.FieldPositions.PARALLEL_PARK;
+                destinationsOneBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
                 rotationsZeroBall[0] = new Rotation2d();
-                rotationsOneBall[0] = Constants.Auto.Rotations.BALL_THREE_FROM_FOURTH;
+                rotationsOneBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 break;
             default:
                 return new Wait(15);
