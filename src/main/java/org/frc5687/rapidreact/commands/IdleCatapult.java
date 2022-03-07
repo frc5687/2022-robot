@@ -28,11 +28,7 @@ public class IdleCatapult extends OutliersCommand {
 //        double speedSpring = _oi.getSpringMotorSpeed();
 //        metric("spring speed", speedSpring);
 //        _catapult.setSpringMotorSpeed(0.0);
-        if (!_catapult.isSpringHallTriggered()) {
-            _catapult.setSpringMotorSpeed(_catapult.getSpringControllerOutput());
-        } else {
-            _catapult.setSpringMotorSpeed(0.0);
-        }
+        _catapult.setSpringMotorSpeed(_oi.getSpringMotorSpeed());
 
     }
 

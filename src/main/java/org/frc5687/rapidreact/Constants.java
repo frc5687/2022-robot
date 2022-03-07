@@ -188,13 +188,15 @@ public class Constants {
         public static final int COUNTS_PER_REVOLUTION = 8196;
 
         public static final double GEAR_REDUCTION = 64.0;
+        public static final double FALCON_GEAR_REDUCTION = 25.0;
 //        public static final double GEAR_REDUCTION_VP = 50.0;
 
         public static final double BABY_NEO_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(11710);
-        public static final double NEO_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(5500);
+        public static final double FALCON_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(6300);
+        public static final int FALCON_TICKS = 2048;
+
         public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
-//        public static final double MAX_SPEED_WITH_GEAR_BOX_VP = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION_VP;
-        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
+        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.855) * Math.PI; // meters
         public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.437) * Math.PI; // meters
         public static final int WINCH_CURRENT_LIMIT = 25; //amps
 
@@ -222,15 +224,16 @@ public class Constants {
         public static final double WINCH_BOTTOM_LIMIT = 0;
 
         // Controller Parameters
-        // spring
-        public static final double SPRING_kP = 40.0; // Always start with kP
-        public static final double SPRING_kI = 28.0; // If possible avoid kI
+        public static final int MOTION_MAGIC_SLOT = 0;
+        public static final double SPRING_kP = 0.8; // Always start with kP
+        public static final double SPRING_kI = 0.0; // If possible avoid kI
         public static final double SPRING_kD = 0.0; // 2nd Kd
-        public static final double MAX_SPRING_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * SPRING_WINCH_DRUM_CIRCUMFERENCE; // divide by 2 PI as that is one rotation.
-        public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS * 20; // heuristic.
+        public static final double SPRING_kF = 0.01; // 2nd Kd
         public static final double SPRING_IZONE = 30.0;
+        public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);
+        public static final double CRUISE_VELOCITY = 50000; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final double ACCELERATION = 90000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double SPRING_TOLERANCE = 0.001; // m
-        public static final double SPRING_DISPLACEMENT_FACTOR = -0.0; // TODO: magic number
         // winch
         public static final double WINCH_kP = 20.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
@@ -297,8 +300,6 @@ public class Constants {
         public static final double CLIMB_DRIVE_SPEED = 1.75; //The speed of the drivetrain during climbing
 
         public static final int COUNTS_PER_REVOLUTION = 8196;
-
-
 
 
         // These distances are in METERS
