@@ -113,7 +113,7 @@ public class OI extends OutliersProxy {
     }
 
     public double getSpringMotorSpeed() {
-        double speed = -getSpeedFromAxis(_debug, _debug.getYChannel());
+        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }
@@ -125,13 +125,15 @@ public class OI extends OutliersProxy {
     }
 
     public double getStationarySpeed() {
-        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
+        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
+        speed = 0;
         return speed;
     }
     public double getRockerSpeed() {
         double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
+        speed = 0;
         return speed;
     }
 
