@@ -214,7 +214,8 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command wrapCommand(Command command) {
-        return new SequentialCommandGroup(new DropIntake(_intake), new WaitCommand(0.5), command); }
+        return new SequentialCommandGroup(new DropIntake(_intake), new WaitCommand(0.5), command);
+    }
 
     public Command getAutonomousCommand() {
 
