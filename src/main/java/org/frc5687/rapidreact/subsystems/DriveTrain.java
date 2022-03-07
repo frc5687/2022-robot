@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -334,7 +335,10 @@ public class DriveTrain extends OutliersSubsystem {
      * <p> If Rotation2d <> gyroAngle, then robot heading will no longer equal IMU heading.
      */
     public void resetOdometry(Pose2d position) {
-        _odometry.resetPosition(position, getHeading());
+        Translation2d _translation = position.getTranslation();
+        Rotation2d _rotation = getHeading();
+        Pose2d _reset = new Pose2d(_translation, _rotation);
+        _odometry.resetPosition(_reset, getHeading());
     }
 
     public void startModules() {
