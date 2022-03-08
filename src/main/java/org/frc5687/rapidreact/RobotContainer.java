@@ -156,12 +156,15 @@ public class RobotContainer extends OutliersContainer {
         switch(_automode) {
             case "Zero Ball":
                 autoMode = AutoChooser.Mode.ZeroBall;
+                metric("Zero Ball", true);
                 break;
             case "One Ball":
                 autoMode = AutoChooser.Mode.OneBall;
+                metric("One ball", true);
                 break;
             case "Two Ball":
                 autoMode = AutoChooser.Mode.TwoBall;
+                metric("Two ball", true);
             case "Three Ball":
             case "Four Ball":
             case "Five Ball":
@@ -222,15 +225,14 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command getAutonomousCommand() {
-
         // This is just for testing so Dennis and Jack can bypass chooser code
-        Boolean _bypass = false;
+        Boolean _bypass = true;
 
         // Set _bypass to true to set autonomous command here instead of using Drive Station
         if (_bypass) {
-            _driveTrain.resetOdometry(new Pose2d(6.505, 5.685, new Rotation2d()));
-            Rotation2d rot = Rotation2d.fromDegrees(10);
-            return new TwoBallAuto(_driveTrain, _catapult, _intake, Auto.BallPositions.BALL_ONE, rot);
+            _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
+            Rotation2d rot = Rotation2d.fromDegrees(40);
+            return new TwoBallAuto(_driveTrain, _catapult, _intake, Auto.BallPositions.BALL_TWO, rot);
         }
 
         // Return command sequence based on starting position and auto mode selectded
@@ -242,7 +244,7 @@ public class RobotContainer extends OutliersContainer {
         Rotation2d[] rotationsZeroBall = { new Rotation2d() };
         Rotation2d[] rotationsOneBall = { new Rotation2d() };
         Rotation2d[] rotationsTwoBall = { new Rotation2d() };
-
+        metric("autoPose", autoPosition.toString());
         switch(autoPosition) {
             case First:
                 _driveTrain.resetOdometry(Auto.RobotPositions.FIRST);
