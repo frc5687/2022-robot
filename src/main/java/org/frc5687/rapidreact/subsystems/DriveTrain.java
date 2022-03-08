@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -147,6 +148,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
+        //TODO: might uncomment this if i feel like it.
+        //metric("Goal Distance", getDistanceToGoal());
+        // metric("Goal Angle", getAngleToGoal());
         metric("Goal Distance", getDistanceToTarget());
         metric("Goal Angle", getAngleToTarget());
         metric("Has goal", hasTarget());
@@ -168,6 +172,8 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Odometry/y", getOdometryPose().getY());
         metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());
         metric("Odometry/Pose", getOdometryPose().toString());
+
+        metric("IMU angle", _imu.getYaw());
     }
 
     public void setNorthEastModuleState(SwerveModuleState state) {
@@ -273,6 +279,7 @@ public class DriveTrain extends OutliersSubsystem {
         }
         return Double.NaN;
     }
+
     public double getAngleToTarget() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().getTargetAngle();
@@ -297,8 +304,41 @@ public class DriveTrain extends OutliersSubsystem {
         setNorthEastModuleState(moduleStates[NORTH_EAST]);
     }
 
+    public void poseFollower(Pose2d pose, double vel) {
+        ChassisSpeeds adjustedSpeeds = _controller.calculate(_odometry.getPoseMeters(), pose, vel, pose.getRotation());
+        SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveTrain.MAX_MPS);
+        setNorthWestModuleState(moduleStates[NORTH_WEST]);
+        setSouthWestModuleState(moduleStates[SOUTH_WEST]);
+        setSouthEastModuleState(moduleStates[SOUTH_EAST]);
+        setNorthEastModuleState(moduleStates[NORTH_EAST]);
+    }
+
+    public boolean isAtPose(Pose2d pose) {
+        double diffX = getOdometryPose().getX() - pose.getX();
+        double diffY = getOdometryPose().getY() - pose.getY();
+        return (Math.abs(diffX) <= Constants.DriveTrain.POSITION_TOLERANCE) && (Math.abs(diffY) < Constants.DriveTrain.POSITION_TOLERANCE);
+    }
+
     public Pose2d getOdometryPose() {
         return _odometry.getPoseMeters();
+    }
+
+    /** Reset position and gyroOffset of odometry
+     * 
+     * @param position is a Pose2d (Translation2d, Rotation2d)
+     * 
+     * <p> Translation2d resets odometry (X,Y) coordinates
+     * 
+     * <p> Rotation2d - gyroAngle = gyroOffset
+     * 
+     * <p> If Rotation2d <> gyroAngle, then robot heading will no longer equal IMU heading.
+     */
+    public void resetOdometry(Pose2d position) {
+        Translation2d _translation = position.getTranslation();
+        Rotation2d _rotation = getHeading();
+        Pose2d _reset = new Pose2d(_translation, _rotation);
+        _odometry.resetPosition(_reset, getHeading());
     }
 
     public void startModules() {

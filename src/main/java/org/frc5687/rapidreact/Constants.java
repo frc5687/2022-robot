@@ -1,8 +1,12 @@
 /* Team 5687 (C)2020-2022 */
 package org.frc5687.rapidreact;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+
+import org.frc5687.rapidreact.config.Auto;
 
 public class Constants {
     public static final int TICKS_PER_UPDATE = 1;
@@ -114,22 +118,24 @@ public class Constants {
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
-        public static final double ANGLE_kP = 3.5;
+        public static final double ANGLE_kP = 3.0;
         public static final double ANGLE_kI = 0.0;
         public static final double ANGLE_kD = 0.0;
 
-        public static final double kP = 10.5;
+        public static final double kP = 11.5;
         public static final double kI = 0.0;
         public static final double kD = 0.5;
         public static final double PROFILE_CONSTRAINT_VEL = 3.0 * Math.PI;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
 
+        // Vision PID controller
+        public static final double VISION_TOLERANCE = 0.01; // rads
         public static final double VISION_kP = 4.0;
         public static final double VISION_kI = 0.1;
         public static final double VISION_kD = 0.3;
         public static final double VISION_IRANGE = 1.0;
-        public static final double VISION_TOLERANCE = 0.01;
-
+        public static final double POSITION_TOLERANCE = 0.02;
+        public static final double ANGLE_TOLERANCE = 0.02;
     }
 
     public static class DifferentialSwerveModule {
@@ -248,11 +254,12 @@ public class Constants {
         public static final double SPRING_ZERO_SPEED = -0.5;
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
         public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
-        public static final double INITIAL_BALL_WINCH_GOAL = 0.245;
-        public static final double INITIAL_BALL_SPRING_GOAL = 0.08;
+        public static final double INITIAL_BALL_WINCH_GOAL = 0.24;
+        public static final double INITIAL_BALL_SPRING_GOAL = 0.095;
 
 
     }
+
     public static class IntakeBlocker{
         public static final double DOWN_POSITION = 180;
         public static final double UP_POSITION = 50;
@@ -266,10 +273,6 @@ public class Constants {
         public static final double MAX_RPM = 6300 * GEAR_RATIO;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
     }
-    public static class Auto{
-            public static final double DRIVETRAIN_POWER = 0.5;
-    }
-
     public static class ColorSensor{
         public static final double COLOR_PROXIMITY_BUFFER = 130;
     }

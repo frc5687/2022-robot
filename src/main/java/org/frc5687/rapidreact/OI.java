@@ -6,12 +6,11 @@
 package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
-import org.frc5687.rapidreact.commands.Intaker;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
-import org.frc5687.rapidreact.commands.Intaker;
+import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -20,27 +19,28 @@ import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
 public class OI extends OutliersProxy {
+
+    // Joysticks and gamepads
     private Joystick _translation;
     private Joystick _rotation;
     private Gamepad _debug;
-    private Button _catapultDebugButton;
-    private Button _preloadButton;
-    private JoystickButton _shootButton;
-    private Button _release;
 
-    private JoystickButton _kill;
+    // Buttons
+    private JoystickButton _autoAim;
+    private JoystickButton _catapultDebugButton;
+    private JoystickButton _deployRetract;
+    private JoystickButton _dropArm;
     private JoystickButton _exitKill;
-
+    private JoystickButton _intakeButton;
+    private JoystickButton _kill;
+    private JoystickButton _preloadButton;
+    private JoystickButton _readyToClimb;
+    private JoystickButton _release;
+    private JoystickButton _resetNavX;
+    private JoystickButton  _setState;
+    private JoystickButton _shootButton;
     private JoystickButton _stow;
 
-    private JoystickButton _deployRetract;
-    private JoystickButton _intakeButton;
-
-    private JoystickButton  _setState;
-    private JoystickButton _resetNavX;
-    private JoystickButton _dropArm;
-    private JoystickButton _autoAim;
-    private JoystickButton _readyToClimb;
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -61,10 +61,10 @@ public class OI extends OutliersProxy {
         _intakeButton = new JoystickButton(_rotation, 1);
         _autoAim = new JoystickButton(_rotation, 2);
         _deployRetract = new JoystickButton(_rotation, 3);
+
         // translation joystick
         _shootButton= new JoystickButton(_translation, 1);
         _release = new JoystickButton(_translation, 2);
-
         _dropArm = new JoystickButton(_translation, 3);
         _resetNavX = new JoystickButton(_translation, 5);
         _exitKill = new JoystickButton(_translation, 9);
@@ -73,11 +73,12 @@ public class OI extends OutliersProxy {
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
-        _intakeButton.whenHeld(new Intaker(intake, false));
+        _intakeButton.whenHeld(new AutoIntake(intake));
+        _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new SemiAutoClimb(climber));
     }
 
-    public boolean readyToClimb() {return _readyToClimb.get(); }
+    public boolean readyToClimb() { return _readyToClimb.get(); }
     public boolean isShootButtonPressed() { return _shootButton.get(); }
     public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
     public boolean preloadCatapult() { return _preloadButton.get(); }
@@ -86,7 +87,6 @@ public class OI extends OutliersProxy {
     public boolean exitKill() { return _exitKill.get(); }
     public boolean kill() { return _kill.get(); }
     public boolean autoAim() { return _autoAim.get(); }
-
 
     public double getDriveY() {
         //Comment for gamepad control
@@ -133,13 +133,13 @@ public class OI extends OutliersProxy {
         speed = 0;
         return speed;
     }
+    
     public double getRockerSpeed() {
         double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
         speed = 0;
         return speed;
     }
-
 
     protected double getSpeedFromAxis(Joystick gamepad, int axisNumber) {
         return gamepad.getRawAxis(axisNumber);
