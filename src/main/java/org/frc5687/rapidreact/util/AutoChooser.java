@@ -69,7 +69,8 @@ public class AutoChooser extends OutliersProxy {
     public enum Mode {
         Unknown(-1), 
         ZeroBall(0), 
-        OneBall(1);
+        OneBall(1),
+        TwoBall(2);
 
         private int _value;
 

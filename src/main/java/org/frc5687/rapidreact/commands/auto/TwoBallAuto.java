@@ -18,7 +18,6 @@ public class TwoBallAuto extends SequentialCommandGroup {
             DriveTrain driveTrain,
             Catapult catapult,
             Intake intake,
-            //Intake intake,
             Pose2d destination,
             Rotation2d rotation
     ) {

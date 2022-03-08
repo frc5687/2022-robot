@@ -161,6 +161,7 @@ public class RobotContainer extends OutliersContainer {
                 autoMode = AutoChooser.Mode.OneBall;
                 break;
             case "Two Ball":
+                autoMode = AutoChooser.Mode.TwoBall;
             case "Three Ball":
             case "Four Ball":
             case "Five Ball":
@@ -236,37 +237,48 @@ public class RobotContainer extends OutliersContainer {
 
         Pose2d[] destinationsZeroBall = { new Pose2d() };
         Pose2d[] destinationsOneBall = { new Pose2d() };
+        Pose2d[] destinationsTwoBall = { new Pose2d() };
+
         Rotation2d[] rotationsZeroBall = { new Rotation2d() };
         Rotation2d[] rotationsOneBall = { new Rotation2d() };
+        Rotation2d[] rotationsTwoBall = { new Rotation2d() };
 
         switch(autoPosition) {
             case First:
                 _driveTrain.resetOdometry(Auto.RobotPositions.FIRST);
                 destinationsZeroBall[0] = Auto.BallPositions.BALL_ONE;
                 destinationsOneBall[0] = Auto.BallPositions.BALL_ONE;
+                destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
                 rotationsZeroBall[0] = new Rotation2d();
                 rotationsOneBall[0] = new Rotation2d();
+                rotationsTwoBall[0] = new Rotation2d();
                 break;
             case Second:
                 _driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
                 destinationsZeroBall[0] = Auto.FieldPositions.ROBOT_POS_TWO_DEST;
                 destinationsOneBall[0] = Auto.FieldPositions.ROBOT_POS_TWO_DEST;
+                destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
                 rotationsZeroBall[0] = new Rotation2d();
                 rotationsOneBall[0] = new Rotation2d();
+                rotationsTwoBall[0] = new Rotation2d();
                 break;
             case Third:
                 _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
                 destinationsZeroBall[0] = Auto.BallPositions.BALL_TWO;
                 destinationsOneBall[0] = Auto.BallPositions.BALL_TWO;
+                destinationsTwoBall[0] = Auto.BallPositions.BALL_TWO;
                 rotationsZeroBall[0] = new Rotation2d();
                 rotationsOneBall[0] = new Rotation2d();
+                rotationsTwoBall[0] = new Rotation2d();
                 break;
             case Fourth:
                 _driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
                 destinationsZeroBall[0] = Auto.FieldPositions.PARALLEL_PARK;
                 destinationsOneBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
+                destinationsTwoBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
                 rotationsZeroBall[0] = new Rotation2d();
                 rotationsOneBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
+                rotationsTwoBall[0] = new Rotation2d();
                 break;
             default:
                 return new Wait(15);
@@ -277,6 +289,8 @@ public class RobotContainer extends OutliersContainer {
                 return new ZeroBallAuto(_driveTrain, destinationsZeroBall[0], rotationsZeroBall[0]);
             case OneBall:
                 return new OneBallAuto(_driveTrain, _catapult, destinationsOneBall[0], rotationsOneBall[0]);
+            case TwoBall:
+                return new TwoBallAuto(_driveTrain, _catapult, _intake, destinationsTwoBall[0], rotationsTwoBall[0]);
             default:
                 return new Wait(15);
         }
