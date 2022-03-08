@@ -86,6 +86,7 @@ public class RobotContainer extends OutliersContainer {
         SmartDashboard.putStringArray("Auto List", modes);
 
         _oi = new OI();
+        //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
         _limelight = new Limelight("limelight");
@@ -177,7 +178,9 @@ public class RobotContainer extends OutliersContainer {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        //Runs once during disabled
+    }
 
     @Override
     public void teleopInit() {
