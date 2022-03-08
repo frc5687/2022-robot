@@ -28,9 +28,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
         addCommands(
                 new Shoot(catapult),
                 new ParallelDeadlineGroup(new DriveToPose(driveTrain, _newPose, 0.2), new AutoIntake(intake)),
-                new LowerCatapult(catapult, true),
-                new ShootSetpoint(catapult, 0.11, 0.245),
-                new ReleaseArm(catapult)
+                new Shoot(catapult)
         );
     }
 }

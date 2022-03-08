@@ -49,6 +49,8 @@ public class Catapult extends OutliersSubsystem {
 
     private double _springGoal;
 
+    private boolean _autoShoot;
+
     public enum CatapultState {
         // Robot starts in ZEROING state, assuming the following:
         // - no tension on spring (should trigger spring Hall effect)
@@ -388,5 +390,21 @@ public class Catapult extends OutliersSubsystem {
         metric("Arm state", _state.name());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
+    }
+
+    /**
+     * Pass true here to trigger a shot from autonomous.
+     * @param value
+     */
+    public void setAutoshoot(boolean value) {
+        _autoShoot = value;
+    }
+
+    public boolean isAutoShoot() {
+        if (_autoShoot) {
+            _autoShoot = false;
+            return true;
+        }
+        return false;
     }
 }

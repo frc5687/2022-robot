@@ -7,7 +7,6 @@ public class Shoot extends OutliersCommand {
 
     public Shoot(Catapult catapult) {
         _catapult = catapult;
-        addRequirements(_catapult);
     }
 
     @Override
@@ -15,12 +14,12 @@ public class Shoot extends OutliersCommand {
         // TODO Auto-generated method stub
         info("Start shooting");
         super.initialize();
-        _catapult.releaseArm();
+        _catapult.setAutoshoot(true);
     }
 
     @Override
     public boolean isFinished() {
         // TODO Auto-generated method stub
-        return !_catapult.isArmLowered();
+        return _catapult.getState() == Catapult.CatapultState.LOADING;
     }
 }
