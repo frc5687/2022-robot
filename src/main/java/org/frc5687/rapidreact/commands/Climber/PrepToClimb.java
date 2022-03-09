@@ -21,7 +21,7 @@ public class PrepToClimb extends OutliersCommand{
         info("Initialized PrepToClimb");
         _climber.setStep(ClimberStep.PREP_TO_CLIMB);
         _climber.enableMetrics();
-        _climber.dropDriveSpeed();
+        _climber.dropDriveSpeed(true);
         _climber.setRockGoalMeters(Constants.Climber.ROCKER_EXTENDED_METERS);
         _climber.setStaGoalMeters(Constants.Climber.STATIONARY_EXTENDED_METERS);
         _climber.rockerIn();
