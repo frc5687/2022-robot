@@ -197,7 +197,7 @@ public class Catapult extends OutliersSubsystem {
 
         if (isArmLowered() && (_winchMotor.getAppliedOutput() > 0)) {
             setWinchMotorSpeed(0);
-            setWinchGoal(0);
+//            setWinchGoal(0);
         }
         if (_winchMotor.getOutputCurrent() > WINCH_CURRENT_LIMIT) {
             setWinchMotorSpeed(0);
@@ -316,18 +316,17 @@ public class Catapult extends OutliersSubsystem {
     }
 
     // calculate linear regression.
-    public double calculateIdealSpring(double dist) {
-        return (-0.010290809 * (dist * dist * dist)) +
-                (0.153682323 * (dist * dist))
-                - (0.714436098 * dist) + 1.314831828;
+    public double calculateIdealString(double dist) {
+        return (-0.0081481481 * (dist * dist * dist)) +
+                (0.1132539683 * (dist * dist))
+                - (0.4818121693 * dist) + 0.9078174603;
     }
 
     // calculated from linear regression
-    public double calculateIdealString(double dist) {
-        dist = Units.metersToFeet(dist);
-        return (0.005404763 * (dist * dist * dist)) -
-                (0.079955861 * (dist * dist )) +
-                (0.394134242 * dist) - 0.394134242;
+    public double calculateIdealSpring(double dist) {
+        return (0.0008888889 * (dist * dist * dist)) -
+                (0.0143095238 * (dist * dist )) +
+                (0.0820515873 * dist) - 0.0838690476;
     }
 
     public boolean isReleasePinLocked() {

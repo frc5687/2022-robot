@@ -32,8 +32,8 @@ public class Drive extends OutliersCommand {
         _visionController.setIntegratorRange(-VISION_IRANGE, VISION_IRANGE);
         _visionController.setTolerance(VISION_TOLERANCE);
         addRequirements(_driveTrain);
-        logMetrics("vx","vy");
-        enableMetrics();
+//        logMetrics("vx","vy");
+//        enableMetrics();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Drive extends OutliersCommand {
         metric("has Target", _driveTrain.hasTarget());
         double rot =
                 (_oi.autoAim() && _driveTrain.hasTarget())
-                        ? _visionController.calculate(-_driveTrain.getAngleToTarget())
+                        ? _visionController.calculate(-_driveTrain.getAngleToTarget(), 0)
                         : _oi.getRotationX() * MAX_ANG_VEL;
         _driveTrain.drive(vx, vy, rot, true);
     }
