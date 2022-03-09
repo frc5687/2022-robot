@@ -369,5 +369,7 @@ public class Constants {
                 public static final double SOLID_HOT_PINK = 0.57;
         
                 public static final double CONFETTI = -0.87;
+
+                public static final double RAINBOW = -0.97;
     }
 }

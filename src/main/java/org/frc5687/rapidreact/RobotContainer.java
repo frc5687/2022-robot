@@ -49,12 +49,12 @@ public class RobotContainer extends OutliersContainer {
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         // proxy need to be before drivetrain as drivetrain requires it.
         _proxy = new JetsonProxy(10);
-        _lights = new Lights(this, 1);
+        _lights = new Lights(this, 0);
 
-        // _catapult = new Catapult(this);
-        // _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
-        // _intake = new Intake(this);
-        // _climber = new Climber(this);
+        _catapult = new Catapult(this);
+        _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
+        _intake = new Intake(this, _lights);
+        _climber = new Climber(this);
         initializeCamera();
         
         // The robots default command will run so long as another command isn't activated
@@ -70,14 +70,15 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void periodic() {
-        _lights.setLight();
     }
 
     public void disabledPeriodic() {
         //Runs every 20ms during disabled
     }
+
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+    }
 
     @Override
     public void teleopInit() {
@@ -130,6 +131,7 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
+        _lights.base();
         //Updates the driver station
         //_driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());

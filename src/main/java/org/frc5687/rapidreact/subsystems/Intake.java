@@ -17,13 +17,15 @@ public class Intake extends OutliersSubsystem{
     private DoubleSolenoid _solenoid;
     private boolean _deployed;
     private HallEffect _intakeHall;
+    private Lights _lights;
     
-    public Intake(OutliersContainer container) {
+    public Intake(OutliersContainer container, Lights lights) {
         super(container);
         _deployed = false;
         _roller = new TalonFX(RobotMap.CAN.TALONFX.INTAKE_ROLLER);
         _solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.INTAKE_HIGH, RobotMap.PCH.INTAKE_LOW);
         _intakeHall = new HallEffect(RobotMap.DIO.INTAKE_HALL_EFFECT);
+        _lights = lights;
     }
 
     /**
@@ -37,6 +39,7 @@ public class Intake extends OutliersSubsystem{
      * Spin up the intake
      */
     public void spinUpRoller(){
+        _lights.intake();
         _roller.set(TalonFXControlMode.PercentOutput, Constants.Intake.THE_BEANS);
     }
 
