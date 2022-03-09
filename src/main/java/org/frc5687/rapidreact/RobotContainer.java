@@ -50,6 +50,8 @@ public class RobotContainer extends OutliersContainer {
         // proxy need to be before drivetrain as drivetrain requires it.
         _proxy = new JetsonProxy(10);
         _lights = new Lights(this, RobotMap.PWM.BLINKENS);
+        //Set the base mode for the blinkens
+        _lights.base();
 
         _catapult = new Catapult(this, _lights);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
