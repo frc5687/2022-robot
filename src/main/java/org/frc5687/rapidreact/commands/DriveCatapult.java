@@ -79,16 +79,20 @@ public class DriveCatapult extends OutliersCommand {
                 // has a proximity sensor built it.
                 if (_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
                     _catapult.setState(Catapult.CatapultState.AIMING);
+                    _catapult.rightBall();
                     _catapult.lowerGate();
                 } else if (_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
                     _catapult.setState(Catapult.CatapultState.WRONG_BALL);
+                    _catapult.wrongBall();
                     _catapult.lowerGate();
                 }
                 if (!_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
                     _catapult.setState(Catapult.CatapultState.AIMING);
+                    _catapult.rightBall();
                     _catapult.lowerGate();
                 } else if (!_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
                     _catapult.setState(Catapult.CatapultState.WRONG_BALL);
+                    _catapult.wrongBall();
                     _catapult.lowerGate();
                 }
             }

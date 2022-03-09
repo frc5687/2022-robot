@@ -371,5 +371,7 @@ public class Constants {
                 public static final double CONFETTI = -0.87;
 
                 public static final double RAINBOW = -0.97;
+
+                public static final double STROBE_WHITE = -0.05;
     }
 }

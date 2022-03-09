@@ -25,6 +25,7 @@ public class ShootSetpoint extends OutliersCommand {
     @Override
     public void execute() {
         super.execute();
+        _catapult.shootingLights();
     }
 
     @Override

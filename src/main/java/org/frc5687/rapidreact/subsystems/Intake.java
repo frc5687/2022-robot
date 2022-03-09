@@ -55,6 +55,7 @@ public class Intake extends OutliersSubsystem{
      * Deploy the intake
      */
     public void deploy(){
+        _lights.intake();
         _solenoid.set(Value.kForward);
         _deployed = true;
     }

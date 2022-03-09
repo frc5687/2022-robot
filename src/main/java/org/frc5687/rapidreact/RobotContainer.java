@@ -51,7 +51,7 @@ public class RobotContainer extends OutliersContainer {
         _proxy = new JetsonProxy(10);
         _lights = new Lights(this, RobotMap.PWM.BLINKENS);
 
-        _catapult = new Catapult(this);
+        _catapult = new Catapult(this, _lights);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
         _intake = new Intake(this, _lights);
         _climber = new Climber(this);
@@ -70,6 +70,7 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void periodic() {
+        _lights.base();
     }
 
     public void disabledPeriodic() {
@@ -131,7 +132,6 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
-        _lights.base();
         //Updates the driver station
         //_driveTrain.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());

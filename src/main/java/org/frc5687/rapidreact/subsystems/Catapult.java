@@ -49,6 +49,8 @@ public class Catapult extends OutliersSubsystem {
 
     private DriverStation.Alliance _alliance;
 
+    private Lights _lights;
+
     public enum CatapultState {
         // Robot starts in ZEROING state, assuming the following:
         // - no tension on spring (should trigger spring Hall effect)
@@ -121,8 +123,9 @@ public class Catapult extends OutliersSubsystem {
 
 
     /** Catapult constructor */
-    public Catapult(OutliersContainer container) {
+    public Catapult(OutliersContainer container, Lights lights) {
         super(container);
+        _lights = lights;
 
         // Motor controllers (Spark Maxes)
 
@@ -213,6 +216,24 @@ public class Catapult extends OutliersSubsystem {
             setWinchMotorSpeed(0);
         }
 
+    }
+
+    /**
+     * Sets the lights to shooting mode
+     */
+    public void shootingLights(){
+        _lights.shooting();
+    }
+
+    /**
+     * Set colors according to ball color.
+     */
+    public void rightBall(){
+        _lights.rightBall();
+    }
+
+    public void wrongBall(){
+        _lights.wrongBall();
     }
 
     public void setSpringMotorSpeed(double speed) {
