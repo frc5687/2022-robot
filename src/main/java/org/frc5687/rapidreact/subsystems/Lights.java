@@ -17,18 +17,32 @@ public class Lights extends OutliersSubsystem{
     }
 
     /**
+     * Sets the color of the blinkens
+     * @param color
+     */
+    public void set(double color){
+        _blinkens.set(color);
+    }
+
+    /**
      * The basic setting for the lights
      */
     public void base(){
-        _blinkens.set(Constants.Blinkens.PULSING_RED);
         _mode = Mode.BASE;
+    }
+
+    /**
+     * Gets the current blinkens mode
+     * @return
+     */
+    public Mode getMode(){
+        return _mode;
     }
 
     /**
      * The robot has picked up the wrong ball
      */
     public void wrongBall(){
-        _blinkens.set(Constants.Blinkens.SOLID_HOT_PINK);
         _mode = Mode.WRONG_BALL;
     }
 
@@ -36,7 +50,6 @@ public class Lights extends OutliersSubsystem{
      * The robot has picked up the right ball
      */
     public void rightBall(){
-        _blinkens.set(Constants.Blinkens.BEATING_GREEN);
         _mode = Mode.RIGHT_BALL;
     }
 
@@ -44,7 +57,6 @@ public class Lights extends OutliersSubsystem{
      * The robot is in shooting mode
      */
     public void shooting(){
-        _blinkens.set(Constants.Blinkens.BEATING_ORANGE);
         _mode = Mode.SHOOTING;
     }
 
@@ -52,7 +64,6 @@ public class Lights extends OutliersSubsystem{
      * The intake is deployed
      */
     public void intake(){
-        _blinkens.set(Constants.Blinkens.RAINBOW);
         _mode = Mode.INTAKE;
     }
 

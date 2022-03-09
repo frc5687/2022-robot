@@ -70,7 +70,25 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void periodic() {
-        _lights.base();
+        switch(_lights.getMode()){
+            case UNKNOW:
+            break;
+            case BASE:
+                _lights.set(Constants.Blinkens.SOLID_PURPLE);
+            break;
+            case WRONG_BALL:
+                _lights.set(Constants.Blinkens.STROBE_WHITE);
+            break;
+            case RIGHT_BALL:
+                _lights.set(Constants.Blinkens.STROBE_BLUE);
+            break;
+            case SHOOTING:
+                _lights.set(Constants.Blinkens.SOLID_GREEN);
+            break;
+            case INTAKE:
+                _lights.set(Constants.Blinkens.BEATING_BLUE);
+            break;
+        }
     }
 
     public void disabledPeriodic() {

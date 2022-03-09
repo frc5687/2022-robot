@@ -373,5 +373,6 @@ public class Constants {
                 public static final double RAINBOW = -0.97;
 
                 public static final double STROBE_WHITE = -0.05;
+                public static final double STROBE_BLUE = -0.09;
     }
 }
