@@ -59,14 +59,14 @@ public class RobotContainer extends OutliersContainer {
         _climber = new Climber(this);
         initializeCamera();
         
-        // The robots default command will run so long as another command isn't activated
-        // setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
-        // setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-        // setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _oi));
-        // setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
+        // // The robots default command will run so long as another command isn't activated
+        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
+        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _oi));
+        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
-        // _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
+        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
         _imu.reset();
     }
