@@ -68,6 +68,29 @@ public class Lights extends OutliersSubsystem{
     }
 
     @Override
+    public void periodic(){
+        switch(getMode()){
+            case UNKNOW:
+            break;
+            case BASE:
+                set(Constants.Blinkens.SOLID_PURPLE);
+            break;
+            case WRONG_BALL:
+                set(Constants.Blinkens.STROBE_WHITE);
+            break;
+            case RIGHT_BALL:
+                set(Constants.Blinkens.STROBE_BLUE);
+            break;
+            case SHOOTING:
+                set(Constants.Blinkens.SOLID_GREEN);
+            break;
+            case INTAKE:
+                set(Constants.Blinkens.BEATING_BLUE);
+            break;
+        }
+    }
+
+    @Override
     public void updateDashboard() {
         metric("Blikens done", _running);
         metric("Blinken mode", _mode.toString());
