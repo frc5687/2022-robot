@@ -12,6 +12,7 @@ import org.frc5687.rapidreact.commands.Shoot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class TwoBallAuto extends SequentialCommandGroup {
     public TwoBallAuto(
@@ -27,7 +28,13 @@ public class TwoBallAuto extends SequentialCommandGroup {
         _newPose = new Pose2d(destination.getX(), destination.getY(), _rotation);
         addCommands(
                 new Shoot(catapult),
-                new ParallelDeadlineGroup(new DriveToPose(driveTrain, _newPose, 0.2), new AutoIntake(intake)),
+                new ParallelDeadlineGroup( 
+                    new SequentialCommandGroup(
+                        new DriveToPose(driveTrain, _newPose, 0.2), 
+                        new WaitCommand(1)
+                    ),
+                    new AutoIntake(intake)
+                ),
                 new Shoot(catapult)
         );
     }
