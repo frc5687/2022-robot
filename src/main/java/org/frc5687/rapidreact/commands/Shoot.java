@@ -20,6 +20,6 @@ public class Shoot extends OutliersCommand {
     @Override
     public boolean isFinished() {
         // TODO Auto-generated method stub
-        return _catapult.getState() == Catapult.CatapultState.LOADING;
+        return _catapult.getState() == Catapult.CatapultState.LOADING || _catapult.getState() == Catapult.CatapultState.AIMING;
     }
 }

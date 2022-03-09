@@ -104,6 +104,7 @@ public class DriveCatapult extends OutliersCommand {
                     _catapult.setSpringDistance(0.105);
 //                }
                 if ((_catapult.isAutoShoot() || _oi.isShootButtonPressed())  && _catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
+                    _catapult.setAutoshoot(false);
                     _catapult.setState(Catapult.CatapultState.SHOOTING);
                 }
 //             check if we are in the correct position and aiming at the goal.

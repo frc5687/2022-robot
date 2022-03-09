@@ -401,10 +401,6 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public boolean isAutoShoot() {
-        if (_autoShoot) {
-            _autoShoot = false;
-            return true;
-        }
-        return false;
+        return _autoShoot;
     }
 }
