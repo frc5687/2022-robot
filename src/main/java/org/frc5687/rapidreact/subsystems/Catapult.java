@@ -148,8 +148,6 @@ public class Catapult extends OutliersSubsystem {
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
         _winchMotor.setSmartCurrentLimit(WINCH_CURRENT_LIMIT);
 
-        //Save changes into flash memory of spark maxes
-        _winchMotor.burnFlash();
 
         // Pneumatics (catapult locking pin)
         _releasePin = new DoubleSolenoid(PneumaticsModuleType.REVPH,
@@ -162,6 +160,7 @@ public class Catapult extends OutliersSubsystem {
 
         // Encoders
         _winchEncoder = _winchMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, COUNTS_PER_REVOLUTION);
+
 
         // PID controllers
         _springMotor.config_kP(MOTION_MAGIC_SLOT, SPRING_kP);
@@ -180,6 +179,8 @@ public class Catapult extends OutliersSubsystem {
         );
         _winchController.setTolerance(WINCH_TOLERANCE);
 
+        //Save changes into flash memory of spark maxes
+        _winchMotor.burnFlash();
         // set state
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;

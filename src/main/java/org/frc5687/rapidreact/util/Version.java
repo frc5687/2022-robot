@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Catapult/#82-Calibration";
-    public static final String REVISION = "08c6905";
+    public static final String REVISION = "f525b2a";
     public static final String MODIFIED = " *";
 }
