@@ -49,7 +49,7 @@ public class RobotContainer extends OutliersContainer {
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         // proxy need to be before drivetrain as drivetrain requires it.
         _proxy = new JetsonProxy(10);
-        _lights = new Lights(this, 0);
+        _lights = new Lights(this, RobotMap.PWM.BLINKENS);
 
         _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _imu);
