@@ -13,7 +13,7 @@ public class Constants {
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
     public static final double EPSILON = 0.00001;
-    public static final double DEADBAND = 0.1;
+    public static final double DEADBAND = 0.15;
     // Separate constants into individual inner classes corresponding
     // to subsystems or robot modes, to keep variable names shorter.
 

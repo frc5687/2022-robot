@@ -99,13 +99,13 @@ public class DriveCatapult extends OutliersCommand {
             case AIMING: {
                 checkLockOut();
                 checkKill();
-//                if (_driveTrain.hasTarget()) {
-//                    _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
-//                    _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
-//                } else {
+                if (_driveTrain.hasTarget()) {
+                    _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
+                    _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
+                } else {
                     _catapult.setWinchGoal(0.325);
                     _catapult.setSpringDistance(0.0835);
-//                }
+                }
                 if (_oi.isShootButtonPressed() && _catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
                     _catapult.setState(Catapult.CatapultState.SHOOTING);
                 }
