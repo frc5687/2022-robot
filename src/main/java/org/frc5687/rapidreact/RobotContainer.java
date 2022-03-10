@@ -29,7 +29,6 @@ import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
-import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 import org.frc5687.rapidreact.util.AutoChooser;
@@ -55,9 +54,8 @@ public class RobotContainer extends OutliersContainer {
     private AutoChooser _autoChooser;
     AutoChooser.Position autoPosition;
     AutoChooser.Mode autoMode;
-    private UsbCamera _cam;
-    private Lights _lights;
 
+    private UsbCamera _cam;
 
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
@@ -94,24 +92,15 @@ public class RobotContainer extends OutliersContainer {
         _limelight = new Limelight("limelight");
 
         // then subsystems
-        _catapult = new Catapult(this, _lights);
+        _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
-        _intake = new Intake(this, _lights);
-        _lights = new Lights(this, RobotMap.PWM.BLINKENS);
-        //Set the base mode for the blinkens
-        _lights.base();
-        _limelight.LEDOff();
-
-        _catapult = new Catapult(this, _lights);
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
-        _intake = new Intake(this, _lights);
-        _climber = new Climber(this);
+        _intake = new Intake(this);
+        _climber = new Climber(this, _driveTrain);
         _proxy = new JetsonProxy(10);
         _autoChooser = new AutoChooser();
+
         initializeCamera();
 
-        
-        // // The robots default command will run so long as another command isn't activated
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
         setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));

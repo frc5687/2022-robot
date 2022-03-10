@@ -114,6 +114,7 @@ public class Constants {
 
         // Maximum rates of motion
         public static final double MAX_MPS = 3.0; // Max speed of robot (m/s)
+        public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
 
@@ -313,7 +314,7 @@ public class Constants {
         public static final double ROCKER_RETRACTED_METERS = 0.0;
         public static final double ROCKER_CLOSE_METERS = 0.4064;
         public static final double ROCKER_MID_METERS = 0.51; // 0.4826
-        public static final double ROCKER_EXTENDED_METERS = 0.69; // TODO: Needs to be confirmed
+        public static final double ROCKER_EXTENDED_METERS = 0.67; // TODO: Needs to be confirmed
 
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
