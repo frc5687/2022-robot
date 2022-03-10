@@ -277,6 +277,10 @@ public class Constants {
         public static final double COLOR_PROXIMITY_BUFFER = 130;
     }
 
+    public static class ProximitySensor {
+        // not sure if there are any settings but just in case
+    }
+
     public static class Climber{
         public static final double FALCON_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(6300);
         public static final int FALCON_INTEGRATED_ENCODER_TICKS = 2048;
