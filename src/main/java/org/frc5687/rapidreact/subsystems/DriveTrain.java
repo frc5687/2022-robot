@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -19,6 +20,7 @@ import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.util.JetsonProxy;
+import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 public class DriveTrain extends OutliersSubsystem {
@@ -41,19 +43,25 @@ public class DriveTrain extends OutliersSubsystem {
 
     private AHRS _imu;
     private JetsonProxy _proxy;
+    private Limelight _limelight;
     private OI _oi;
 
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
 
+<<<<<<< HEAD
 
     private boolean _limitSpeed = false;
+=======
+    private boolean _isClimbing = false;
+>>>>>>> main
 
-    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, AHRS imu) {
+    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
         try {
             _oi = oi;
             _proxy = proxy;
+            _limelight = limelight;
             _imu = imu;
             _northWest =
                     new DiffSwerveModule(
@@ -145,9 +153,12 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Goal Distance", getDistanceToGoal());
-        metric("Goal Angle", getAngleToGoal());
-        metric("Has goal", hasGoal());
+        //TODO: might uncomment this if i feel like it.
+        //metric("Goal Distance", getDistanceToGoal());
+        // metric("Goal Angle", getAngleToGoal());
+        metric("Goal Distance", getDistanceToTarget());
+        metric("Goal Angle", getAngleToTarget());
+        metric("Has goal", hasTarget());
 
         metric("NW/Encoder Angle", _northWest.getModuleAngle());
         metric("SW/Encoder Angle", _southWest.getModuleAngle());
@@ -166,6 +177,8 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Odometry/y", getOdometryPose().getY());
         metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());
         metric("Odometry/Pose", getOdometryPose().toString());
+
+        metric("IMU angle", _imu.getYaw());
     }
 
     public void setNorthEastModuleState(SwerveModuleState state) {
@@ -258,24 +271,25 @@ public class DriveTrain extends OutliersSubsystem {
     public SwerveDriveKinematicsConstraint getKinematicConstraint() {
         return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
     }
-    public boolean hasGoal() {
-        if (_proxy.getLatestFrame() == null) {
-            return false;
+    public boolean hasTarget() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetDistance() != -1;
         }
-        return _proxy.getLatestFrame().hasTarget();
+        return false;
     }
 
-    public double getDistanceToGoal() {
-        if (_proxy.getLatestFrame() == null) {
-            return Double.NaN;
+    public double getDistanceToTarget() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetDistance();
         }
-        return _proxy.getLatestFrame().getTargetDistance();
+        return Double.NaN;
     }
-    public double getAngleToGoal() {
-        if (_proxy.getLatestFrame() == null) {
-            return Double.NaN;
+
+    public double getAngleToTarget() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetAngle();
         }
-        return _proxy.getLatestFrame().getTargetAngle();
+        return Double.NaN;
     }
 
     public TrajectoryConfig getConfig() {
@@ -295,8 +309,41 @@ public class DriveTrain extends OutliersSubsystem {
         setNorthEastModuleState(moduleStates[NORTH_EAST]);
     }
 
+    public void poseFollower(Pose2d pose, double vel) {
+        ChassisSpeeds adjustedSpeeds = _controller.calculate(_odometry.getPoseMeters(), pose, vel, pose.getRotation());
+        SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveTrain.MAX_MPS);
+        setNorthWestModuleState(moduleStates[NORTH_WEST]);
+        setSouthWestModuleState(moduleStates[SOUTH_WEST]);
+        setSouthEastModuleState(moduleStates[SOUTH_EAST]);
+        setNorthEastModuleState(moduleStates[NORTH_EAST]);
+    }
+
+    public boolean isAtPose(Pose2d pose) {
+        double diffX = getOdometryPose().getX() - pose.getX();
+        double diffY = getOdometryPose().getY() - pose.getY();
+        return (Math.abs(diffX) <= Constants.DriveTrain.POSITION_TOLERANCE) && (Math.abs(diffY) < Constants.DriveTrain.POSITION_TOLERANCE);
+    }
+
     public Pose2d getOdometryPose() {
         return _odometry.getPoseMeters();
+    }
+
+    /** Reset position and gyroOffset of odometry
+     * 
+     * @param position is a Pose2d (Translation2d, Rotation2d)
+     * 
+     * <p> Translation2d resets odometry (X,Y) coordinates
+     * 
+     * <p> Rotation2d - gyroAngle = gyroOffset
+     * 
+     * <p> If Rotation2d <> gyroAngle, then robot heading will no longer equal IMU heading.
+     */
+    public void resetOdometry(Pose2d position) {
+        Translation2d _translation = position.getTranslation();
+        Rotation2d _rotation = getHeading();
+        Pose2d _reset = new Pose2d(_translation, _rotation);
+        _odometry.resetPosition(_reset, getHeading());
     }
 
     public void startModules() {
