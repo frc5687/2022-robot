@@ -57,9 +57,9 @@ public class Climber extends OutliersSubsystem{
             case UNKNOWN:
             case STOW:
             case STOWED:
-                _driveTrain.setSpeedLimit(false);
+                _driveTrain.dropDriveSpeed(false);
             default:
-                _driveTrain.setSpeedLimit(true);
+                _driveTrain.dropDriveSpeed(true);
         }
     }
  

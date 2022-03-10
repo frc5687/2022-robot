@@ -50,8 +50,6 @@ public class DriveTrain extends OutliersSubsystem {
     private ProfiledPIDController _angleController;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
->>>>>>> main
-
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
