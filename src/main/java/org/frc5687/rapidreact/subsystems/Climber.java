@@ -69,6 +69,7 @@ public class Climber extends OutliersSubsystem{
     
     public Climber(OutliersContainer container, DriveTrain driveTrain) {
         super(container);
+        _driveTrain = driveTrain;
 
         _driveTrain = driveTrain;
         
@@ -261,9 +262,9 @@ public class Climber extends OutliersSubsystem{
         _rocker.set(Value.kReverse);
     }
 
-    public void dropDriveSpeed(){
-        //Drop driveTrain speed 
-        // Constants.DriveTrain.MAX_MPS = Constants.Climber.CLIMB_DRIVE_SPEED;
+    public void dropDriveSpeed(boolean value){
+        //Drop driveTrain speed
+        _driveTrain.dropDriveSpeed(value); 
     }
 
     /**

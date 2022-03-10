@@ -23,7 +23,6 @@ public class AttachMidRungCommand extends OutliersCommand{
         info("Initialized AttachMidRungCommand");
         _climber.setStep(Climber.ClimberStep.ATTACH_MID);
         _climber.enableMetrics();
-        _climber.setStaGoalMeters(Constants.Climber.STATIONARY_RETRACTED_METERS);
     }
 
     @Override
