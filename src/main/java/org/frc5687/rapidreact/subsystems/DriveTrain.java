@@ -49,7 +49,8 @@ public class DriveTrain extends OutliersSubsystem {
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
 
-    private boolean _isClimbing = false;
+    private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
+
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
@@ -196,14 +197,6 @@ public class DriveTrain extends OutliersSubsystem {
         return _imu.getYaw();
     }
 
-    public void setIsClimbing(boolean climbing){
-        _isClimbing = climbing;
-    }
-
-    public boolean isClimbing(){
-        return _isClimbing;
-    }
-
     // yaw is negative to follow wpi coordinate system.
     public Rotation2d getHeading() {
         return Rotation2d.fromDegrees(-getYaw());
@@ -346,5 +339,17 @@ public class DriveTrain extends OutliersSubsystem {
         _southWest.start();
         _southEast.start();
         _northEast.start();
+    }
+
+    public double getSpeed() {
+        return _driveSpeed;
+    }
+
+    /**
+     * Called by the Climber to tell the drivetrain to slow down during a climb.
+     * @param value
+     */
+    public void dropDriveSpeed(boolean value) {
+        _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_DURING_CLIMB : Constants.DriveTrain.MAX_MPS; 
     }
 }

@@ -44,6 +44,8 @@ public class Climber extends OutliersSubsystem{
     private double _staGoal = 0.0;
     private double _rockGoal = 0.0;
 
+    private DriveTrain _driveTrain;
+
     public void setStep(ClimberStep step){
         //Sets the current step of the climbing process
         _step = step;
@@ -53,8 +55,9 @@ public class Climber extends OutliersSubsystem{
         return _step;
     }
     
-    public Climber(OutliersContainer container) {
+    public Climber(OutliersContainer container, DriveTrain driveTrain) {
         super(container);
+        _driveTrain = driveTrain;
 
 //        logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
 
@@ -244,9 +247,9 @@ public class Climber extends OutliersSubsystem{
         _rocker.set(Value.kReverse);
     }
 
-    public void dropDriveSpeed(){
-        //Drop driveTrain speed 
-        // Constants.DriveTrain.MAX_MPS = Constants.Climber.CLIMB_DRIVE_SPEED;
+    public void dropDriveSpeed(boolean value){
+        //Drop driveTrain speed
+        _driveTrain.dropDriveSpeed(value); 
     }
 
     /**

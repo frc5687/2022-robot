@@ -46,8 +46,8 @@ public class Drive extends OutliersCommand {
     public void execute() {
         super.execute();
         //  driveX and driveY are swapped due to coordinate system that WPILib uses.
-        double vx = _vxFilter.calculate(-_oi.getDriveY()) * (_driveTrain.isClimbing() ? Constants.DriveTrain.MAX_MPS/4 : Constants.DriveTrain.MAX_MPS);
-        double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.isClimbing() ? Constants.DriveTrain.MAX_MPS/4 : Constants.DriveTrain.MAX_MPS);
+        double vx = _vxFilter.calculate(-_oi.getDriveY()) * (_driveTrain.getSpeed());
+        double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
         metric("vx", vx);
         metric("vy", vy);
 //        double rot = 0;
