@@ -29,6 +29,7 @@ import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 import org.frc5687.rapidreact.util.AutoChooser;
@@ -50,6 +51,7 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private Climber _climber;
     private boolean _hold;
+    private Lights _lights;
     
     private AutoChooser _autoChooser;
     AutoChooser.Position autoPosition;
@@ -60,6 +62,7 @@ public class RobotContainer extends OutliersContainer {
     public RobotContainer(Robot robot, IdentityMode identityMode) {
         super(identityMode);
         _robot = robot;
+
     }
 
     /** Run once when robot code starts. */
@@ -90,14 +93,16 @@ public class RobotContainer extends OutliersContainer {
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
         _limelight = new Limelight("limelight");
+        _lights = new Lights(this, RobotMap.PWM.BLINKENS);
 
         // then subsystems
-        _catapult = new Catapult(this);
+        _catapult = new Catapult(this, _lights);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
-        _intake = new Intake(this);
+        _intake = new Intake(this, _lights);
         _climber = new Climber(this, _driveTrain);
         _proxy = new JetsonProxy(10);
         _autoChooser = new AutoChooser();
+        _lights.base();
 
         initializeCamera();
 
@@ -117,6 +122,7 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void periodic() {
+        //_lights.base();
 
         // Poll Drive Station for starting position and auto mode selector
 
