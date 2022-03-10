@@ -226,6 +226,13 @@ public class Catapult extends OutliersSubsystem {
     }
 
     /**
+     * Sets the blinkens back to base mode
+     */
+    public void setBase(){
+        _lights.base();
+    }
+
+    /**
      * Set colors according to ball color.
      */
     public void rightBall(){

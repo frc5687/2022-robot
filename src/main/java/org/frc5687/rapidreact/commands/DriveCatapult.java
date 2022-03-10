@@ -98,6 +98,7 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case AIMING: {
+                _catapult.setBase();
                 checkLockOut();
                 checkKill();
 //             check if we are in the correct position and aiming at the goal.
