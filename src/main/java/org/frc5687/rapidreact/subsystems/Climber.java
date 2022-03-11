@@ -30,9 +30,7 @@ public class Climber extends OutliersSubsystem{
     private TalonFX _rockerArmWinch;
     private DoubleSolenoid _rocker;
 
-    private HallEffect _staArmUp;
     private HallEffect _staArmDown;
-    private HallEffect _rockArmUp;
     private HallEffect _rockArmDown;
     private ClimberStep _step = ClimberStep.UNKNOWN;
     private boolean _climberStopped = true;
@@ -114,10 +112,10 @@ public class Climber extends OutliersSubsystem{
 
         _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
 
-        _staArmUp = new HallEffect(RobotMap.DIO.STATIONARY_ARM_TOP_HALL);
+        //_staArmUp = new HallEffect(RobotMap.DIO.STATIONARY_ARM_TOP_HALL);
         _staArmDown = new HallEffect(RobotMap.DIO.STATIONARY_ARM_BOTTOM_HALL);
 
-        _rockArmUp = new HallEffect(RobotMap.DIO.ROCKER_ARM_TOP_HALL);
+        //_rockArmUp = new HallEffect(RobotMap.DIO.ROCKER_ARM_TOP_HALL);
         _rockArmDown = new HallEffect(RobotMap.DIO.ROCKER_ARM_BOTTOM_HALL);
 
         // Setup PID stuff
@@ -153,7 +151,6 @@ public class Climber extends OutliersSubsystem{
         //_rockerArmWinch.set(TalonFXControlMode.MotionMagic, speed);
         _rockerArmWinch.set(TalonFXControlMode.PercentOutput, _rockSpeed);
             
-        info("Rocker arm speed set to " + speed);
     }
 
 
@@ -265,30 +262,12 @@ public class Climber extends OutliersSubsystem{
     }
 
     /**
-     * Checks the stationary arm "up" hall-effect sensor.
-     * @return true if the sensor is triggered
-     */
-    public boolean isStaArmUp(){
-        return _staArmUp.get();
-    }
-
-    /**
      * Checks the stationary arm "down" hall-effect sensor.
      * @return true if the sensor is triggered or if the arm is stalled
      */
     public boolean isStaArmDown(){
         return _staArmDown.get() || isStaArmStalled();
     }
-
-    /**
-     * Checks the rocker arm "up" hall-effect sensor.
-     * @return true if the sensor is triggered
-     */
-    public boolean isRockArmUp(){
-        return _rockArmUp.get()
-        || isRockArmStalled();
-    }
-
 
     private int _staStallCycles = 0;
     private int _rockStallCycles = 0;
@@ -348,7 +327,6 @@ public class Climber extends OutliersSubsystem{
      */
     public void zeroStationaryArmEncoder(){
         _stationaryArmWinch.setSelectedSensorPosition(0);
-        info("Stationary Zeroed");
     }
 
     /**
@@ -356,7 +334,6 @@ public class Climber extends OutliersSubsystem{
      */
     public void zeroRockerArmEncoder() {
         _rockerArmWinch.setSelectedSensorPosition(0);
-        info("Rocker Zeroed");
     }
 
     @Override
@@ -366,7 +343,6 @@ public class Climber extends OutliersSubsystem{
         metric("Stationary/Enabled", _staControllerEnabled);
         metric("Stationary/Encoder", _stationaryArmWinch.getSelectedSensorPosition());
         metric("Stationary/Speed", _staSpeed); 
-        metric("Stationary/Up", _staArmUp.get());
         metric("Stationary/Down", _staArmDown.get());
         metric("Stationary/Current", _stationaryArmWinch.getSupplyCurrent());
         metric("Stationary/StallCycles", _staStallCycles);
@@ -376,7 +352,6 @@ public class Climber extends OutliersSubsystem{
         metric("Rocker/Goal", _rockGoal);
         metric("Rocker/Enabled", _rockControllerEnabled);
         metric("Rocker/Speed", _rockSpeed);
-        metric("Rocker/Up", isRockArmUp()); 
         metric("Rocker/Encoder", _rockerArmWinch.getSelectedSensorPosition());
         metric("Rocker/Down", isRockArmDown());
         metric("Rocker Cylinder", getRockerLabel());

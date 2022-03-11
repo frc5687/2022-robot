@@ -26,8 +26,6 @@ public class AutoClimb extends OutliersCommand {
         switch(_climber.getStep()) {
             case UNKNOWN:
             case STOW:
-                group.addCommands(new Stow(_climber));
-                break;
             case STOWED:
                 group.addCommands(new PrepToClimb(_climber));
                 break;
