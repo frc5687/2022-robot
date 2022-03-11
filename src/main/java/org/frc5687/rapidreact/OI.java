@@ -89,6 +89,10 @@ public class OI extends OutliersProxy {
     public boolean kill() { return _kill.get(); }
     public boolean autoAim() { return _autoAim.get(); }
 
+    /**
+     * Gets the y axis speed
+     * @return y axis speed
+     */
     public double getDriveY() {
         //Comment for gamepad control
         yIn = getSpeedFromAxis(_translation, _translation.getYChannel());
@@ -100,6 +104,10 @@ public class OI extends OutliersProxy {
         return yOut;
     }
 
+    /**
+     * Gets the x axis speed
+     * @return x axis speed
+     */
     public double getDriveX() {
         //Comment for gamepad control
         xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
