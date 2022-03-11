@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.ColorSensor;
+import org.frc5687.rapidreact.util.ProximitySensor;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
 import org.frc5687.rapidreact.util.ServoStop;
