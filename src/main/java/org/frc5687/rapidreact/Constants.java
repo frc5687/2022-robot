@@ -302,7 +302,7 @@ public class Constants {
         public static final double MAX_ACCELERATION_MPSS = MAX_VELOCITY_MPS * 50.0; // heuristic
         public static final double TOLERANCE = 0.005; // meters.
 
-        public static final double CLIMB_DRIVE_SPEED = 1.75; //The speed of the drivetrain during climbing
+        public static final double CLIMB_DRIVE_SPEED = -1.0; //The speed of the drivetrain during climbing
 
         public static final int COUNTS_PER_REVOLUTION = 8196;
 
@@ -320,6 +320,7 @@ public class Constants {
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final long ROCKER_PISTON_WAIT = 250;
+        public static final long ROCKER_PISTON_SETTLE = 500; // The time it takes the robot to rock from one side to the other
         public static final double ARM_STOW_SPEED = -0.3;
 
         public static final boolean ROCKER_ENCODER_INVERTED = false; // TODO: Needs to be calibrated via Phoenix tuner
@@ -329,7 +330,7 @@ public class Constants {
         public static final double ARM_IZONE = 30.0;
 
         public static final int MAX_STALL_CYCLES = 10;
-        public static final double STALL_CURRENT = 40.0;
+        public static final double STALL_CURRENT = 20.0;
         public static final double STALL_MIN_RPM = 20.0;
         public static final double ARM_THRES_TIME = 0.5;
         public static final double CURRENT_THRES = 15;

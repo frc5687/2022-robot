@@ -51,7 +51,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
 
-
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
         try {

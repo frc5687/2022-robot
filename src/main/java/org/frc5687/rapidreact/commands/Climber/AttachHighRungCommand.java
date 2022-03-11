@@ -22,6 +22,7 @@ public class AttachHighRungCommand extends OutliersCommand{
     @Override
     public void initialize(){
         super.initialize();
+        _climber.setStep(Climber.ClimberStep.ATTACH_HIGH);
         info("Initialized AttachHighRungCommand");
         _step = Step.START;
     }
@@ -63,17 +64,30 @@ public class AttachHighRungCommand extends OutliersCommand{
                 info("AttachHighRungCommand advancing to WAIT_STATIONARY step.");
                 break;
             case WAIT_STATIONARY:
+                if (_climber.isStaAtGoal()) {
+                    _step = Step.WAIT_SETTLE;
+                    _waitUntil = System.currentTimeMillis() + Constants.Climber.ROCKER_PISTON_SETTLE;
+                    info("AttachHighRungCommand advancing to WAIT_SETTLE step.");
+                }
+                break;
+            case WAIT_SETTLE:
+                if ( System.currentTimeMillis() > _waitUntil) {
+                    _step = Step.DONE;
+                    info("AttachHighRungCommand advancing to DONE step.");
+                }
+                break;
+            case DONE:
                 break;
         }
 
-//        _climber.runControllers();
     }
 
 
     @Override
     public boolean isFinished(){
         super.isFinished();
-        if (_step == Step.WAIT_STATIONARY && _climber.isStaAtGoal()) {
+        if (_step == Step.DONE) {
+            _climber.setStep(Climber.ClimberStep.ATTACHED_HIGH);
             info("Finished AttachHighRungCommand.");
             return true;
         }; 
@@ -84,7 +98,6 @@ public class AttachHighRungCommand extends OutliersCommand{
     public void end(boolean interrupted) {
         super.end(interrupted);
         _climber.stop();
-        error("Ended AttachHighRungCommand.");
     }
 
     public enum Step{
@@ -94,7 +107,9 @@ public class AttachHighRungCommand extends OutliersCommand{
         RETRACT_ROCKER(3),
         WAIT_ROCKER(4),
         EXTEND_STATIONARY(5),
-        WAIT_STATIONARY(6);
+        WAIT_STATIONARY(6),
+        WAIT_SETTLE(7),
+        DONE(8);
 
         private final int _value;
         Step(int value) { 

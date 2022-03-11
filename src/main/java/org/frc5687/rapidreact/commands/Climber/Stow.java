@@ -46,6 +46,7 @@ public class Stow extends OutliersCommand{
         if  (_climber.isRockArmDown() && _climber.isStaArmDown()) {
             _climber.zeroStationaryArmEncoder();
             _climber.zeroRockerArmEncoder();
+            _climber.setStep(Climber.ClimberStep.STOWED);
             info("Stow finished.");
             return true;
         };
