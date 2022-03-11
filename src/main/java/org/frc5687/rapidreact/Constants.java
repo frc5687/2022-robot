@@ -233,15 +233,15 @@ public class Constants {
 
         // Controller Parameters
         public static final int MOTION_MAGIC_SLOT = 0;
-        public static final double SPRING_kP = 1.005; // Always start with kP
+        public static final double SPRING_kP = 1.01; // Always start with kP
         public static final double SPRING_kI = 0.0001; // If possible avoid kI
-        public static final double SPRING_kD = 0.01; // 2nd Kd
-        public static final double SPRING_kF = 0.011; // 2nd Kd
+        public static final double SPRING_kD = 0.0005; // 2nd Kd
+        public static final double SPRING_kF = 0.0; // 2nd Kd
         public static final double SPRING_IZONE = 30.0;
         public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);
         public static final double CRUISE_VELOCITY = 50000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double ACCELERATION = 90000; // TODO: Needs to be calibrated via Phoenix tuner
-        public static final double SPRING_TOLERANCE = 0.001; // m
+        public static final double SPRING_TOLERANCE = 0.005; // m
         // winch
         public static final double WINCH_kP = 20.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
@@ -270,7 +270,7 @@ public class Constants {
     public static class Intake{
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
-        public static final double THE_BEANS = 0.75;
+        public static final double THE_BEANS = 0.8;
         public static final double GEAR_RATIO = 5.0;
         public static final double MAX_RPM = 6300 * GEAR_RATIO;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
