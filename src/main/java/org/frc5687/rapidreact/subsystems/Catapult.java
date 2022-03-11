@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.ColorSensor;
-import org.frc5687.rapidreact.util.ProximitySensor;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
 import org.frc5687.rapidreact.util.ServoStop;
@@ -44,7 +43,6 @@ public class Catapult extends OutliersSubsystem {
     private CatapultState _state;
 
     private ColorSensor _colorSensor;
-    private ProximitySensor _proximitySensor;
     private ServoStop _gate;
 
     private DriverStation.Alliance _alliance;
@@ -161,9 +159,6 @@ public class Catapult extends OutliersSubsystem {
         // Hall effects (sense position of springs and catapult arm)
         _springHall = new HallEffect(RobotMap.DIO.SPRING_HALL_EFFECT);
         _armHall = new HallEffect(RobotMap.DIO.ARM_HALL_EFFECT);
-
-        // Proximity sensor (sense if ball on catapult arm)
-        _proximitySensor = new ProximitySensor(RobotMap.DIO.PROXIMITY_SENSOR);
 
         // Encoders
         _winchEncoder = _winchMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, COUNTS_PER_REVOLUTION);
@@ -343,17 +338,12 @@ public class Catapult extends OutliersSubsystem {
     public boolean isReleasePinReleased() {
         return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
     }
-
-    public boolean isBallDetected() {
-        return _proximitySensor.get();
-    }
-
     public boolean isBlueBallDetected() {
-        return _colorSensor.isBlue() && isBallDetected();
+        return _colorSensor.isBlue() && _colorSensor.hasBall();
     }
 
     public boolean isRedBallDetected() {
-        return _colorSensor.isRed() && isBallDetected();
+        return _colorSensor.isRed() && _colorSensor.hasBall();
     }
 
     public boolean isRedAlliance() {
@@ -400,7 +390,6 @@ public class Catapult extends OutliersSubsystem {
         metric("Arm state", _state.name());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
-        metric("Ball detected", isBallDetected());
     }
 
 
