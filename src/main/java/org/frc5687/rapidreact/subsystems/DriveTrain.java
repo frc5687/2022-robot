@@ -49,7 +49,7 @@ public class DriveTrain extends OutliersSubsystem {
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
 
-    private boolean _isClimbing = false;
+    private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
@@ -155,18 +155,18 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Goal Angle", getAngleToTarget());
         metric("Has goal", hasTarget());
 
-        metric("NW/Encoder Angle", _northWest.getModuleAngle());
-        metric("SW/Encoder Angle", _southWest.getModuleAngle());
-        metric("SE/Encoder Angle", _southEast.getModuleAngle());
-        metric("NE/Encoder Angle", _northEast.getModuleAngle());
-
-        metric("SW/Predicted Angle", _southWest.getPredictedAzimuthAngle());
-
-        metric("SW/Encoder Azimuth Vel", _southWest.getAzimuthAngularVelocity());
-        metric("SW/Predicted Azimuth Vel", _southWest.getPredictedAzimuthAngularVelocity());
-
-        metric("SE/Encoder Wheel Vel", _southEast.getWheelVelocity());
-        metric("SE/Predicted Wheel Vel", _southEast.getPredictedWheelVelocity());
+//        metric("NW/Encoder Angle", _northWest.getModuleAngle());
+//        metric("SW/Encoder Angle", _southWest.getModuleAngle());
+//        metric("SE/Encoder Angle", _southEast.getModuleAngle());
+//        metric("NE/Encoder Angle", _northEast.getModuleAngle());
+//
+//        metric("SW/Predicted Angle", _southWest.getPredictedAzimuthAngle());
+//
+//        metric("SW/Encoder Azimuth Vel", _southWest.getAzimuthAngularVelocity());
+//        metric("SW/Predicted Azimuth Vel", _southWest.getPredictedAzimuthAngularVelocity());
+//
+//        metric("SE/Encoder Wheel Vel", _southEast.getWheelVelocity());
+//        metric("SE/Predicted Wheel Vel", _southEast.getPredictedWheelVelocity());
 
         metric("Odometry/x", getOdometryPose().getX());
         metric("Odometry/y", getOdometryPose().getY());
@@ -194,14 +194,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getYaw() {
         return _imu.getYaw();
-    }
-
-    public void setIsClimbing(boolean climbing){
-        _isClimbing = climbing;
-    }
-
-    public boolean isClimbing(){
-        return _isClimbing;
     }
 
     // yaw is negative to follow wpi coordinate system.
@@ -346,5 +338,17 @@ public class DriveTrain extends OutliersSubsystem {
         _southWest.start();
         _southEast.start();
         _northEast.start();
+    }
+
+    public double getSpeed() {
+        return _driveSpeed;
+    }
+
+    /**
+     * Called by the Climber to tell the drivetrain to slow down during a climb.
+     * @param value
+     */
+    public void dropDriveSpeed(boolean value) {
+        _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_DURING_CLIMB : Constants.DriveTrain.MAX_MPS; 
     }
 }

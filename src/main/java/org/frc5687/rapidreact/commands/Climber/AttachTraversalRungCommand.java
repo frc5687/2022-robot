@@ -22,6 +22,7 @@ public class AttachTraversalRungCommand extends OutliersCommand{
     @Override
     public void initialize(){
         super.initialize();
+        _climber.setStep(Climber.ClimberStep.ATTACH_TRAVERSAL);
         _step = Step.START;
         info("Initialized AttachTraversalRungCommand");
     }
@@ -47,15 +48,13 @@ public class AttachTraversalRungCommand extends OutliersCommand{
                 }
                 break;
             case RETRACT_ROCKER:
-//                _climber.setRockGoalMeters(Constants.Climber.ROCKER_RETRACTED_METERS);
-                _climber.setRockSpeed(-1.0);
+                _climber.setRockSpeed(Constants.Climber.CLIMB_DRIVE_SPEED);
                 _step = Step.WAIT_ROCKER;
                 info("AttachTraversalRungCommand advancing to WAIT_ROCKER step.");
                 break;
             case WAIT_ROCKER:
-                _climber.setRockSpeed(-1.0);
+                _climber.setRockSpeed(Constants.Climber.CLIMB_DRIVE_SPEED);
                 if (_climber.isRockArmDown()) {
-//                    _climber.setRockSpeed(0);
                     _climber.stopRockerArm();
                     _step = Step.ROCKIN;
                     info("AttachTraversalRungCommand advancing to ROCKIN step.");
@@ -81,7 +80,6 @@ public class AttachTraversalRungCommand extends OutliersCommand{
             case WAIT_FINISH:
                 break;
         }
-//        _climber.runControllers();
     }
 
 
@@ -90,6 +88,7 @@ public class AttachTraversalRungCommand extends OutliersCommand{
         super.isFinished();
         
         if (_step == Step.WAIT_FINISH && _climber.isRockAtGoal()) {
+            _climber.setStep(Climber.ClimberStep.ATTACHED_TRAVERSAL);
             info("Finished AttachTraversalRungCommand.");
             return true;
         }; 
@@ -100,7 +99,6 @@ public class AttachTraversalRungCommand extends OutliersCommand{
     public void end(boolean interrupted) {
         super.end(interrupted);
         _climber.stop();
-        error("Ended AttachTraversalRungCommand.");
     }
 
     public enum Step{

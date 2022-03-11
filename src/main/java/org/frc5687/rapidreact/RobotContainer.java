@@ -46,11 +46,9 @@ public class RobotContainer extends OutliersContainer {
     private Robot _robot;
     private DriveTrain _driveTrain;
     private Catapult _catapult;
-    private Indexer _indexer;
     private Intake _intake;
     private Climber _climber;
-    private boolean _hold;
-    
+
     private AutoChooser _autoChooser;
     AutoChooser.Position autoPosition;
     AutoChooser.Mode autoMode;
@@ -65,14 +63,14 @@ public class RobotContainer extends OutliersContainer {
     /** Run once when robot code starts. */
     public void init() {
         // initialize peripherals. Do this before subsystems.
-        info("Running RobotContainer.init()");
+//        info("Running RobotContainer.init()");
 
         // Initialize starting position and mode to unknown
         // Later we will poll Drive Station for values
         autoPosition = AutoChooser.Position.Unknown;
         autoMode = AutoChooser.Mode.Unknown;
-
-        // Display starting position value
+//
+//         Display starting position value
         SmartDashboard.putString("DB/String 0", "Starting Position:");
         SmartDashboard.putString("DB/String 5", "Unknown");
    
@@ -92,11 +90,10 @@ public class RobotContainer extends OutliersContainer {
         _limelight = new Limelight("limelight");
 
         // then subsystems
-        _catapult = new Catapult(this);
         _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
         _intake = new Intake(this);
-        _climber = new Climber(this);
-        _proxy = new JetsonProxy(10);
+        _climber = new Climber(this, _driveTrain);
+        _catapult = new Catapult(this);
         _autoChooser = new AutoChooser();
 
         initializeCamera();
@@ -301,19 +298,18 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
-        if (_proxy.getLatestFrame() != null) {
-            metric("Millis", _proxy.getLatestFrame().getMillis());
-            metric("Has goal", _proxy.getLatestFrame().hasTarget());
-            metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
-            metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
-        }
-        _driveTrain.updateDashboard();
+//        if (_proxy.getLatestFrame() != null) {
+//            metric("Millis", _proxy.getLatestFrame().getMillis());
+//            metric("Has goal", _proxy.getLatestFrame().hasTarget());
+//            metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
+//            metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
+//        }
+//        _driveTrain.updateDashboard();
         _catapult.updateDashboard();
         //Updates the driver station
-        _autoChooser.updateDashboard();
-        _driveTrain.updateDashboard();
+//        _autoChooser.updateDashboard();
         //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
-//        _driveTrain.updateDashboard();
+        _driveTrain.updateDashboard();
     }
 
     public void controllerPeriodic() {

@@ -7,6 +7,8 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class DriveCatapult extends OutliersCommand {
 
     private final Catapult _catapult;
@@ -44,6 +46,7 @@ public class DriveCatapult extends OutliersCommand {
                 if (_catapult.isSpringHallTriggered()) {
                     _catapult.setSpringMotorSpeed(0.0);
                     _catapult.zeroSpringEncoder();
+                    _catapult.setSpringDistance(0);
                 }
                 if (_catapult.isArmLowered()) {
                     _catapult.zeroWinchEncoder();
@@ -51,6 +54,8 @@ public class DriveCatapult extends OutliersCommand {
                     _catapult.setWinchGoal(0.0);
                 }
                 if (_catapult.isArmLowered() && _catapult.isSpringHallTriggered()) {
+                    _catapult.zeroSpringEncoder();
+                    _catapult.zeroWinchEncoder();
                     _catapult.setSpringMotorSpeed(0.0);
                     _catapult.setWinchMotorSpeed(0.0);
                     _catapult.setWinchGoal(0.0);
@@ -96,14 +101,14 @@ public class DriveCatapult extends OutliersCommand {
             case AIMING: {
                 checkLockOut();
                 checkKill();
-//                if (_driveTrain.hasTarget()) {
-//                    _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
-//                    _catapult.setSpringGoal(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
-//                } else {
-                    _catapult.setWinchGoal(0.245);
-                    _catapult.setSpringDistance(0.105);
-//                }
-                if ((_catapult.isAutoShoot() || _oi.isShootButtonPressed())  && _catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
+                if (_driveTrain.hasTarget()) {
+                    _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
+                    _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
+                } else {
+                    _catapult.setWinchGoal(0.325);
+                    _catapult.setSpringDistance(0.0835);
+                }
+                if (isShootTriggered() && _catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
                     _catapult.setAutoshoot(false);
                     _catapult.setState(Catapult.CatapultState.SHOOTING);
                 }
@@ -183,6 +188,14 @@ public class DriveCatapult extends OutliersCommand {
                 if(!_catapult.isArmLowered()){
                     _catapult.setState(CatapultState.ZEROING);
                 }
+        }
+    }
+
+    boolean isShootTriggered() {
+        if (DriverStation.isAutonomous()) {
+            return _catapult.isAutoShoot();    
+        } else {
+            return _oi.isShootButtonPressed();
         }
     }
 

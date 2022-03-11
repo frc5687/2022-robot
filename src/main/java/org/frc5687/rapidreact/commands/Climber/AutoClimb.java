@@ -1,10 +1,9 @@
 package org.frc5687.rapidreact.commands.Climber;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import org.frc5687.rapidreact.OI;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Climber;
-import org.frc5687.rapidreact.subsystems.DriveTrain;
 
 /**
  * Dispatch class to run through the steps of the auto-climb one step at a time.
@@ -13,41 +12,39 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
  * Because we may need to retry or reverse the state machine, we'll actually maintain the state on
  * the climber itself. 
  */
-public class SemiAutoClimb extends OutliersCommand {
+public class AutoClimb extends OutliersCommand {
 
     private Climber _climber;
-    public SemiAutoClimb(Climber climber) {
+    public AutoClimb(Climber climber) {
         _climber = climber;
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        SequentialCommandGroup group = new SequentialCommandGroup(); 
         switch(_climber.getStep()) {
             case UNKNOWN:
             case STOW:
-                (new Stow(_climber)).schedule();
-                _climber.setStep(Climber.ClimberStep.STOW);
+                group.addCommands(new Stow(_climber));
                 break;
             case STOWED:
-            case PREP_TO_CLIMB:
-                (new PrepToClimb(_climber)).schedule();
-                _climber.setStep(Climber.ClimberStep.PREP_TO_CLIMB);
+                group.addCommands(new PrepToClimb(_climber));
                 break;
             case READY_TO_CLIMB:
             case ATTACH_MID:
-                (new AttachMidRungCommand(_climber)).schedule();
-                _climber.setStep(Climber.ClimberStep.ATTACH_MID);
+                group.addCommands(new AttachMidRungCommand(_climber));
+                group.addCommands(new AttachHighRungCommand(_climber));
+                group.addCommands(new AttachTraversalRungCommand(_climber));
                 break;
             case ATTACHED_MID:
             case ATTACH_HIGH:
-                (new AttachHighRungCommand(_climber)).schedule();
-                _climber.setStep(Climber.ClimberStep.ATTACH_HIGH);
+                group.addCommands(new AttachHighRungCommand(_climber));
+                group.addCommands(new AttachTraversalRungCommand(_climber));
                 break;
             case ATTACHED_HIGH:
             case ATTACH_TRAVERSAL:
-                (new AttachTraversalRungCommand(_climber)).schedule();
-                _climber.setStep(Climber.ClimberStep.ATTACH_TRAVERSAL);
+                group.addCommands(new AttachTraversalRungCommand(_climber));
                 break;
             case ATTACHED_TRAVERSAL:
                 _climber.setStep(Climber.ClimberStep.DONE);
@@ -55,6 +52,7 @@ public class SemiAutoClimb extends OutliersCommand {
             case DONE:
                 break;
         }
+        group.schedule();
     }     
 
     @Override

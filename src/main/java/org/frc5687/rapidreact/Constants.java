@@ -13,7 +13,7 @@ public class Constants {
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
     public static final double EPSILON = 0.00001;
-    public static final double DEADBAND = 0.1;
+    public static final double DEADBAND = 0.15;
     // Separate constants into individual inner classes corresponding
     // to subsystems or robot modes, to keep variable names shorter.
 
@@ -114,6 +114,7 @@ public class Constants {
 
         // Maximum rates of motion
         public static final double MAX_MPS = 3.0; // Max speed of robot (m/s)
+        public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
 
@@ -130,10 +131,11 @@ public class Constants {
 
         // Vision PID controller
         public static final double VISION_TOLERANCE = 0.01; // rads
-        public static final double VISION_kP = 4.0;
+        public static final double VISION_kP = 4.5;
         public static final double VISION_kI = 0.1;
         public static final double VISION_kD = 0.3;
         public static final double VISION_IRANGE = 1.0;
+
         public static final double POSITION_TOLERANCE = 0.02;
         public static final double ANGLE_TOLERANCE = 0.02;
     }
@@ -202,7 +204,7 @@ public class Constants {
         public static final int FALCON_TICKS = 2048;
 
         public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
-        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.855) * Math.PI; // meters
+        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.75) * Math.PI; // meters
         public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.437) * Math.PI; // meters
         public static final int WINCH_CURRENT_LIMIT = 25; //amps
 
@@ -231,10 +233,10 @@ public class Constants {
 
         // Controller Parameters
         public static final int MOTION_MAGIC_SLOT = 0;
-        public static final double SPRING_kP = 0.8; // Always start with kP
-        public static final double SPRING_kI = 0.0; // If possible avoid kI
-        public static final double SPRING_kD = 0.0; // 2nd Kd
-        public static final double SPRING_kF = 0.01; // 2nd Kd
+        public static final double SPRING_kP = 1.005; // Always start with kP
+        public static final double SPRING_kI = 0.0001; // If possible avoid kI
+        public static final double SPRING_kD = 0.01; // 2nd Kd
+        public static final double SPRING_kF = 0.011; // 2nd Kd
         public static final double SPRING_IZONE = 30.0;
         public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);
         public static final double CRUISE_VELOCITY = 50000; // TODO: Needs to be calibrated via Phoenix tuner
@@ -300,7 +302,7 @@ public class Constants {
         public static final double MAX_ACCELERATION_MPSS = MAX_VELOCITY_MPS * 50.0; // heuristic
         public static final double TOLERANCE = 0.005; // meters.
 
-        public static final double CLIMB_DRIVE_SPEED = 1.75; //The speed of the drivetrain during climbing
+        public static final double CLIMB_DRIVE_SPEED = -1.0; //The speed of the drivetrain during climbing
 
         public static final int COUNTS_PER_REVOLUTION = 8196;
 
@@ -313,11 +315,12 @@ public class Constants {
         public static final double ROCKER_RETRACTED_METERS = 0.0;
         public static final double ROCKER_CLOSE_METERS = 0.4064;
         public static final double ROCKER_MID_METERS = 0.51; // 0.4826
-        public static final double ROCKER_EXTENDED_METERS = 0.69; // TODO: Needs to be confirmed
+        public static final double ROCKER_EXTENDED_METERS = 0.67; // TODO: Needs to be confirmed
 
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final long ROCKER_PISTON_WAIT = 250;
+        public static final long ROCKER_PISTON_SETTLE = 1000; // The time it takes the robot to rock from one side to the other
         public static final double ARM_STOW_SPEED = -0.3;
 
         public static final boolean ROCKER_ENCODER_INVERTED = false; // TODO: Needs to be calibrated via Phoenix tuner
@@ -327,7 +330,7 @@ public class Constants {
         public static final double ARM_IZONE = 30.0;
 
         public static final int MAX_STALL_CYCLES = 10;
-        public static final double STALL_CURRENT = 40.0;
+        public static final double STALL_CURRENT = 20.0;
         public static final double STALL_MIN_RPM = 20.0;
         public static final double ARM_THRES_TIME = 0.5;
         public static final double CURRENT_THRES = 15;
