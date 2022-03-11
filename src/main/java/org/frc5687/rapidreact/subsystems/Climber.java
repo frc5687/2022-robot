@@ -153,7 +153,6 @@ public class Climber extends OutliersSubsystem{
         //_rockerArmWinch.set(TalonFXControlMode.MotionMagic, speed);
         _rockerArmWinch.set(TalonFXControlMode.PercentOutput, _rockSpeed);
             
-        info("Rocker arm speed set to " + speed);
     }
 
 
@@ -348,7 +347,6 @@ public class Climber extends OutliersSubsystem{
      */
     public void zeroStationaryArmEncoder(){
         _stationaryArmWinch.setSelectedSensorPosition(0);
-        info("Stationary Zeroed");
     }
 
     /**
@@ -356,7 +354,6 @@ public class Climber extends OutliersSubsystem{
      */
     public void zeroRockerArmEncoder() {
         _rockerArmWinch.setSelectedSensorPosition(0);
-        info("Rocker Zeroed");
     }
 
     @Override

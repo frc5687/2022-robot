@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.ProximitySensor;
 import org.frc5687.rapidreact.util.HallEffect;
@@ -50,6 +51,12 @@ public class Catapult extends OutliersSubsystem {
     private DriverStation.Alliance _alliance;
 
     private double _springGoal;
+
+    private boolean _autoShoot;
+
+    private boolean _initialized = false;
+
+    private CatapultSetpoint _setpoint = CatapultSetpoint.NONE;
 
     public enum CatapultState {
         // Robot starts in ZEROING state, assuming the following:
@@ -372,6 +379,14 @@ public class Catapult extends OutliersSubsystem {
         _state = state;
     }
 
+    public void setInitialized(boolean initialized) {
+        _initialized = initialized;
+    }
+
+    public boolean isInitialized() {
+        return _initialized;
+    }
+    
     @Override
     public void updateDashboard() {
         // Spring values
@@ -399,4 +414,66 @@ public class Catapult extends OutliersSubsystem {
         metric("Arm Hall Effect", isArmLowered());
         metric("Ball detected", isBallDetected());
     }
+
+    /**
+     * Pass true here to trigger a shot from autonomous.
+     * @param value
+     */
+    public void setAutoshoot(boolean value) {
+        _autoShoot = value;
+    }
+
+    public boolean isAutoShoot() {
+        return _autoShoot;
+    }
+
+    public void setSetpoint(CatapultSetpoint setpoint) {
+        _setpoint = setpoint;
+        info("Setting setpoint to " + setpoint.toString());
+    }
+
+    public CatapultSetpoint getSetpoint() {
+        return _setpoint;
+    }
+
+    public enum CatapultSetpoint {
+        NONE(0),
+        NEAR(1),
+        MID(2),
+        FAR(3);
+
+        private final int _value;
+        CatapultSetpoint(int value) { 
+            _value = value; 
+        }
+
+        public int getValue() { 
+            return _value; 
+        }
+    }
+
+
+    public void setStaticGoals() {
+        switch(_setpoint) {
+            case NEAR:
+                setWinchGoal(Auto.StaticShots.NEAR_WINCH);
+                setSpringDistance(Auto.StaticShots.NEAR_SPRING);
+                break;
+            case MID:
+                setWinchGoal(Auto.StaticShots.MID_WINCH);
+                setSpringDistance(Auto.StaticShots.MID_SPRING);
+                break;
+            case FAR:
+                setWinchGoal(Auto.StaticShots.FAR_WINCH);
+                setSpringDistance(Auto.StaticShots.FAR_SPRING);
+                break;
+            default:
+                setWinchGoal(Auto.StaticShots.DEFAULT_WINCH);
+                setSpringDistance(Auto.StaticShots.DEFAULT_SPRING);
+                break;
+        }
+        
+    }
+
+    
 }

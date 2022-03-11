@@ -20,8 +20,12 @@ public class DropIntake extends OutliersCommand{
 
     @Override
     public boolean isFinished(){
-        info("Finishing");
-        return !_intake.isIntakeUp();
+        if (!_intake.isIntakeUp()) {
+            info("DropIntake finished");
+            return true;
+        }
+        info("Intake is still up.");
+        return false;
     }
 
     @Override
