@@ -71,22 +71,25 @@ public class Lights extends OutliersSubsystem{
     public void periodic(){
         switch(getMode()){
             case UNKNOW:
-            break;
+                break;
             case BASE:
                 set(Constants.Blinkens.SOLID_PURPLE);
-            break;
+                break;
             case WRONG_BALL:
                 set(Constants.Blinkens.STROBE_WHITE);
-            break;
+                break;
             case RIGHT_BALL:
                 set(Constants.Blinkens.STROBE_BLUE);
-            break;
+                break;
             case SHOOTING:
                 set(Constants.Blinkens.SOLID_GREEN);
-            break;
+                break;
             case INTAKE:
                 set(Constants.Blinkens.BEATING_BLUE);
-            break;
+                break;
+            case CLIMBING:
+                set(Constants.Blinkens.RAINBOW);
+                break;
         }
     }
 
@@ -105,6 +108,7 @@ public class Lights extends OutliersSubsystem{
         RIGHT_BALL,
         WRONG_BALL,
         SHOOTING,
-        INTAKE
+        INTAKE,
+        CLIMBING
     }
 }

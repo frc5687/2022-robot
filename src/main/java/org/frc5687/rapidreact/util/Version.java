@@ -6,7 +6,7 @@ package org.frc5687.rapidreact.util;
  */
 
 public class Version {
-    public static final String BRANCH = "Auto/#55-MoveCode";
-    public static final String REVISION = "4d37ad8";
+    public static final String BRANCH = "Lights/#63-Blinkins";
+    public static final String REVISION = "01ac0e0";
     public static final String MODIFIED = " *";
 }
