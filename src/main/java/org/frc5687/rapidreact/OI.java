@@ -44,6 +44,7 @@ public class OI extends OutliersProxy {
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
+    private double zIn = 0;
 
     public OI() {
         _translation = new Joystick(0);
@@ -107,6 +108,18 @@ public class OI extends OutliersProxy {
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0; // numbers from empirical testing.
         return xOut;
+    }
+
+    /**
+     * Gets the z axis speed
+     * @return z axis speed
+     */
+    public double getDriveZ(){
+        zIn = -getSpeedFromAxis(_translation, _translation.getZChannel());
+        zIn = applyDeadband(zIn, Constants.DEADBAND);
+        double zOut = zIn / (Math.sqrt(zIn * zIn + (zIn * zIn)) + Constants.EPSILON);
+        zOut = (zOut + (zIn * 2)) / 3.0;
+        return zOut;
     }
 
     public double getRotationX() {

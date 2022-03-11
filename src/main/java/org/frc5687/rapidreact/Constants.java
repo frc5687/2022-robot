@@ -51,6 +51,8 @@ public class Constants {
 
         // Control
         public static final double DEADBAND = 0.2; // Avoid unintentional joystick movement
+        // The speed control deadband
+        public static final double SPEED_DEADBAND = 0.2;
 
         // Size of the robot chassis in meters
         public static final double WIDTH = 0.6223; // meters
@@ -257,8 +259,6 @@ public class Constants {
         public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
         public static final double INITIAL_BALL_WINCH_GOAL = 0.24;
         public static final double INITIAL_BALL_SPRING_GOAL = 0.095;
-
-
     }
 
     public static class IntakeBlocker{
