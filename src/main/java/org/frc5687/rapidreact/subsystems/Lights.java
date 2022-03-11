@@ -61,6 +61,13 @@ public class Lights extends OutliersSubsystem{
     }
 
     /**
+     * Sets robot into aiming possible
+     */
+    public void aiming(){
+        _mode = Mode.AIMING;
+    }
+
+    /**
      * The intake is deployed
      */
     public void intake(){
@@ -90,6 +97,9 @@ public class Lights extends OutliersSubsystem{
             case CLIMBING:
                 set(Constants.Blinkens.RAINBOW);
                 break;
+            case AIMING:
+                set(Constants.Blinkens.SOLID_HOT_PINK);
+                break;
         }
     }
 
@@ -109,6 +119,7 @@ public class Lights extends OutliersSubsystem{
         WRONG_BALL,
         SHOOTING,
         INTAKE,
-        CLIMBING
+        CLIMBING,
+        AIMING
     }
 }

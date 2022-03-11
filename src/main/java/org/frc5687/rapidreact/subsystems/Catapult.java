@@ -401,6 +401,13 @@ public class Catapult extends OutliersSubsystem {
     }
 
     /**
+     * Sets the lights the aiming mode
+     */
+    public void aiming(){
+        _lights.aiming();
+    }
+
+    /**
      * Set lights for base
      */
     public void setBase() {
