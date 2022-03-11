@@ -30,6 +30,7 @@ public class RobotMap {
             public static final int NORTH_WEST_OUTER = 8;
             public static final int CATAPULT_SPRING = 9;
             public static final int INTAKE_ROLLER = 13;
+
             public static final int STATIONARY_CLIMBER = 15;
             public static final int ROCKER_CLIMBER = 14;
         }
@@ -45,7 +46,6 @@ public class RobotMap {
      */
     public static class PWM {
         public static final int INTAKE_STOPPER = 0;
-        public static final int BLINKENS = 1;
     }
 
     /**
@@ -96,5 +96,6 @@ public class RobotMap {
 
         public static final int ROCKER_ARM_TOP_HALL = 9; 
         public static final int ROCKER_ARM_BOTTOM_HALL = 7;
+
     }
 }
