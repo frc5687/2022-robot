@@ -48,6 +48,7 @@ public class Catapult extends OutliersSubsystem {
     private DriverStation.Alliance _alliance;
 
     private double _springGoal;
+    private Lights _lights;
 
     public enum CatapultState {
         // Robot starts in ZEROING state, assuming the following:
@@ -121,8 +122,9 @@ public class Catapult extends OutliersSubsystem {
 
 
     /** Catapult constructor */
-    public Catapult(OutliersContainer container) {
+    public Catapult(OutliersContainer container, Lights lights) {
         super(container);
+        _lights = lights;
 
         // Motor controllers (Spark Maxes)
         // Spring motor
@@ -388,5 +390,26 @@ public class Catapult extends OutliersSubsystem {
         metric("Arm state", _state.name());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
+    }
+
+
+    /**
+     * Set the lights to
+     * shooting
+     * right ball
+     * wrong ball
+     */
+    public void shootingLights() {
+        _lights.shooting();
+    }
+
+
+    public void rightBall() {
+        _lights.rightBall();
+    }
+
+
+    public void wrongBall() {
+        _lights.wrongBall();
     }
 }
