@@ -98,7 +98,7 @@ public class Lights extends OutliersSubsystem{
                 set(Constants.Lights.RAINBOW_LAVA);
                 break;
             case AIMING:
-                set(Constants.Blinkens.SOLID_HOT_PINK);
+                set(Constants.Lights.STROBE_BLUE);
                 break;
         }
     }
