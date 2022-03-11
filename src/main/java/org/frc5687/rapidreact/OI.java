@@ -59,6 +59,7 @@ public class OI extends OutliersProxy {
         _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
         _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
+        _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 //        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 
         // rotation joystick
