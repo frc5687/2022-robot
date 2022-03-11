@@ -114,10 +114,10 @@ public class Climber extends OutliersSubsystem{
 
         _rocker = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.CLIMBER_IN, RobotMap.PCH.CLIMBER_OUT);
 
-        _staArmUp = new HallEffect(RobotMap.DIO.STATIONARY_ARM_TOP_HALL);
+        // _staArmUp = new HallEffect(RobotMap.DIO.STATIONARY_ARM_TOP_HALL);
         _staArmDown = new HallEffect(RobotMap.DIO.STATIONARY_ARM_BOTTOM_HALL);
 
-        _rockArmUp = new HallEffect(RobotMap.DIO.ROCKER_ARM_TOP_HALL);
+        // _rockArmUp = new HallEffect(RobotMap.DIO.ROCKER_ARM_TOP_HALL);
         _rockArmDown = new HallEffect(RobotMap.DIO.ROCKER_ARM_BOTTOM_HALL);
 
         // Setup PID stuff
