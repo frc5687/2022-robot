@@ -257,7 +257,7 @@ public class Constants {
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
         public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
         public static final double INITIAL_BALL_WINCH_GOAL = 0.26;
-        public static final double INITIAL_BALL_SPRING_GOAL = 0.06;
+        public static final double INITIAL_BALL_SPRING_GOAL = 0.05;
 
 
     }
