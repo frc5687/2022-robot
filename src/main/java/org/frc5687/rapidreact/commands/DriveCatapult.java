@@ -99,7 +99,7 @@ public class DriveCatapult extends OutliersCommand {
             case AIMING: {
                 checkLockOut();
                 checkKill();
-                if (_driveTrain.hasTarget()) {
+                if (_driveTrain.hasTarget() && !_driveTrain.useLimelight()) {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
                 } else {
