@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.frc5687.rapidreact.commands.Climber.AutoClimb;
 import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
+import org.frc5687.rapidreact.commands.Climber.Stow;
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
@@ -80,7 +81,7 @@ public class OI extends OutliersProxy {
         _intakeButton.whenHeld(new AutoIntake(intake));
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
-        _stowClimber.whenPressed(new StowClimber(climber));
+        _stowClimber.whenPressed(new Stow(climber));
     }
 
     public boolean readyToClimb() { return _readyToClimb.get(); }
