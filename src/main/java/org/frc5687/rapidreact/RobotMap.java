@@ -91,11 +91,11 @@ public class RobotMap {
         public static final int ARM_HALL_EFFECT = 5;
         public static final int INTAKE_HALL_EFFECT = 22;
 
-        public static final int STATIONARY_ARM_TOP_HALL = 6;
-        public static final int STATIONARY_ARM_BOTTOM_HALL = 8;
+        public static final int PROXIMITY_SENSOR = 6;
 
-        public static final int ROCKER_ARM_TOP_HALL = 9; 
+        // public static final int ROCKER_ARM_TOP_HALL = 9; 
         public static final int ROCKER_ARM_BOTTOM_HALL = 7;
+        public static final int STATIONARY_ARM_BOTTOM_HALL = 8;
 
     }
 }
