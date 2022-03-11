@@ -347,11 +347,11 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public boolean isBlueBallDetected() {
-        return _colorSensor.isBlue() && _colorSensor.hasBall();
+        return _colorSensor.isBlue() && isBallDetected();
     }
 
     public boolean isRedBallDetected() {
-        return _colorSensor.isRed() && _colorSensor.hasBall();
+        return _colorSensor.isRed() && isBallDetected();
     }
 
     public boolean isRedAlliance() {
@@ -398,5 +398,6 @@ public class Catapult extends OutliersSubsystem {
         metric("Arm state", _state.name());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
+        metric("Ball detected", isBallDetected());
     }
 }
