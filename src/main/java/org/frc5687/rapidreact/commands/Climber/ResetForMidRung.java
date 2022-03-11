@@ -34,12 +34,12 @@ public class ResetForMidRung extends OutliersCommand{
     @Override
     public boolean isFinished(){
         super.isFinished();
-        if (_climber.isStaArmUp() || _climber.isStaArmUp()) {
-            _climber.setStep(Climber.ClimberStep.READY_TO_CLIMB);
-            info("Finished ResetForMidRung");
+//        if (_climber.isStaArmUp() || _climber.isStaArmUp()) {
+//            _climber.setStep(Climber.ClimberStep.READY_TO_CLIMB);
+//            info("Finished ResetForMidRung");
             return true;
-        }
-        return false;
+//        }
+//        return false;
     }
 
     @Override
