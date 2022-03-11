@@ -353,4 +353,42 @@ public class Constants {
         public static final int HEIGHT = 320;
         public static final int WIDTH = 240;
     }
+
+    public static class Blinkens{
+                // Values obtained from page 16- of http://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
+                public static final double SOLID_BLUE = 0.87;
+                public static final double PULSING_BLUE = -0.09;
+                public static final double BEATING_BLUE = 0.23;
+        
+                public static final double SOLID_RED = 0.61;
+                public static final double PULSING_RED = -0.11;
+                public static final double BEATING_RED = 0.25;
+        
+                public static final double SOLID_GREEN = 0.77;
+                public static final double PULSING_GREEN = 0.77; // replace
+                public static final double BEATING_GREEN = 0.00; // unused
+        
+                public static final double SOLID_PURPLE = 0.91;
+                public static final double PULSING_PURPLE = 0.05;
+                public static final double BEATING_PURPLE = 0.00;
+        
+                public static final double SOLID_ORANGE = 0.06;
+                public static final double PULSING_ORANGE = 0.07;
+                public static final double BEATING_ORANGE = 0.08;
+        
+                public static final double SOLID_YELLOW = 0.69;
+                public static final double PULSING_YELLOW = 0.10;
+                public static final double BEATING_YELLOW = 0.11;
+        
+                public static final double SOLID_BLACK = 0.99;
+        
+                public static final double SOLID_HOT_PINK = 0.57;
+        
+                public static final double CONFETTI = -0.87;
+
+                public static final double RAINBOW = -0.97;
+
+                public static final double STROBE_WHITE = -0.05;
+                public static final double STROBE_BLUE = -0.09;
+    }
 }
