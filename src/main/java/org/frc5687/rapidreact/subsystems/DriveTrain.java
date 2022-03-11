@@ -51,7 +51,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
 
-
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
         try {
@@ -156,18 +155,18 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Goal Angle", getAngleToTarget());
         metric("Has goal", hasTarget());
 
-        metric("NW/Encoder Angle", _northWest.getModuleAngle());
-        metric("SW/Encoder Angle", _southWest.getModuleAngle());
-        metric("SE/Encoder Angle", _southEast.getModuleAngle());
-        metric("NE/Encoder Angle", _northEast.getModuleAngle());
-
-        metric("SW/Predicted Angle", _southWest.getPredictedAzimuthAngle());
-
-        metric("SW/Encoder Azimuth Vel", _southWest.getAzimuthAngularVelocity());
-        metric("SW/Predicted Azimuth Vel", _southWest.getPredictedAzimuthAngularVelocity());
-
-        metric("SE/Encoder Wheel Vel", _southEast.getWheelVelocity());
-        metric("SE/Predicted Wheel Vel", _southEast.getPredictedWheelVelocity());
+//        metric("NW/Encoder Angle", _northWest.getModuleAngle());
+//        metric("SW/Encoder Angle", _southWest.getModuleAngle());
+//        metric("SE/Encoder Angle", _southEast.getModuleAngle());
+//        metric("NE/Encoder Angle", _northEast.getModuleAngle());
+//
+//        metric("SW/Predicted Angle", _southWest.getPredictedAzimuthAngle());
+//
+//        metric("SW/Encoder Azimuth Vel", _southWest.getAzimuthAngularVelocity());
+//        metric("SW/Predicted Azimuth Vel", _southWest.getPredictedAzimuthAngularVelocity());
+//
+//        metric("SE/Encoder Wheel Vel", _southEast.getWheelVelocity());
+//        metric("SE/Predicted Wheel Vel", _southEast.getPredictedWheelVelocity());
 
         metric("Odometry/x", getOdometryPose().getX());
         metric("Odometry/y", getOdometryPose().getY());

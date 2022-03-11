@@ -31,8 +31,6 @@ public class PrepToClimb extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-//         _climber.setStep(ClimberStep.PREP_TO_CLIMB);
-//        _climber.runControllers();
         
         metric("Stationary/Speed", _climber.getStaSpeed());
         metric("Stationary/Position", _climber.getStaPositionMeters());
@@ -49,11 +47,10 @@ public class PrepToClimb extends OutliersCommand{
     public boolean isFinished(){
         super.isFinished();
         if (_climber.isRockAtGoal() || _climber.isRockArmUp()) {
+            _climber.setStep(Climber.ClimberStep.READY_TO_CLIMB);
             info("Finished PrepToClimb");
-            metric("Finished", true);
             return true;
         }
-        metric("Finished", false);
         return false;
     }
 
@@ -62,6 +59,5 @@ public class PrepToClimb extends OutliersCommand{
         super.end(interrupted);
         _climber.stop();
         _climber.disableMetrics();
-        error("Ended PrepToClimb");
     }
 }

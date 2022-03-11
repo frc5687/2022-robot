@@ -4,7 +4,9 @@ package org.frc5687.rapidreact.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.frc5687.rapidreact.Constants;
+import org.frc5687.rapidreact.RobotContainer;
 import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.commands.Climber.AttachHighRungCommand.Step;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -49,6 +51,16 @@ public class Climber extends OutliersSubsystem{
     public void setStep(ClimberStep step){
         //Sets the current step of the climbing process
         _step = step;
+
+        // If we are not STOWING set the drivetrain speed limit
+        switch(_step) {
+            case UNKNOWN:
+            case STOW:
+            case STOWED:
+                _driveTrain.dropDriveSpeed(false);
+            default:
+                _driveTrain.dropDriveSpeed(true);
+        }
     }
  
     public ClimberStep getStep() {
@@ -59,7 +71,7 @@ public class Climber extends OutliersSubsystem{
         super(container);
         _driveTrain = driveTrain;
 
-        logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
+//        logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
 
         _stationaryArmWinch = new TalonFX(RobotMap.CAN.TALONFX.STATIONARY_CLIMBER);
         _stationaryArmWinch.setNeutralMode(NeutralMode.Brake);
@@ -304,6 +316,13 @@ public class Climber extends OutliersSubsystem{
         } else {
             _rockStallCycles=0;
         }
+
+        metric("Rocker/Current", _rockerArmWinch.getSupplyCurrent());
+        metric("Rocker/StallCycles", _rockStallCycles);
+        metric("Rocker/Velocity", _rockerArmWinch.getSelectedSensorVelocity());
+
+
+        info("Rocker current " +_rockerArmWinch.getSupplyCurrent() + "  rocker velocity " +  _rockerArmWinch.getSelectedSensorVelocity() + " rocker cycles " + _rockStallCycles);
         return _rockStallCycles > Constants.Climber.MAX_STALL_CYCLES;
     }
 
@@ -349,6 +368,10 @@ public class Climber extends OutliersSubsystem{
         metric("Stationary/Speed", _staSpeed); 
         metric("Stationary/Up", _staArmUp.get());
         metric("Stationary/Down", _staArmDown.get());
+        metric("Stationary/Current", _stationaryArmWinch.getSupplyCurrent());
+        metric("Stationary/StallCycles", _staStallCycles);
+        metric("Stationary/Velocity", _stationaryArmWinch.getSelectedSensorVelocity());
+
         metric("Rocker/Position", getRockPositionMeters());
         metric("Rocker/Goal", _rockGoal);
         metric("Rocker/Enabled", _rockControllerEnabled);
@@ -357,6 +380,10 @@ public class Climber extends OutliersSubsystem{
         metric("Rocker/Encoder", _rockerArmWinch.getSelectedSensorPosition());
         metric("Rocker/Down", isRockArmDown());
         metric("Rocker Cylinder", getRockerLabel());
+
+        metric("Rocker/Current", _rockerArmWinch.getSupplyCurrent());
+        metric("Rocker/StallCycles", _rockStallCycles);
+        metric("Rocker/Velocity", _rockerArmWinch.getSelectedSensorVelocity());
 
         metric("Step", _step.name());
         metric("Climber stopped", _climberStopped);
@@ -405,11 +432,19 @@ public class Climber extends OutliersSubsystem{
     public enum ClimberStep {
         UNKNOWN(0),
         STOW(1),
-        PREP_TO_CLIMB(2),
-        ATTACH_MID(2),
-        ATTACH_HIGH(3),
-        ATTACH_TRAVERSAL(4),
-        DONE(5);
+        STOWED(2),
+        PREP_TO_CLIMB(3),
+        READY_TO_CLIMB(4),
+        RESET_TO_MID(5),
+        ATTACH_MID(6),
+        ATTACHED_MID(7),
+        RESET_TO_HIGH(8),
+        ATTACH_HIGH(9),
+        ATTACHED_HIGH(10),
+        RESET_TO_TRAVERSE(11),
+        ATTACH_TRAVERSAL(12),
+        ATTACHED_TRAVERSAL(13),
+        DONE(14);
 
         private final int _value;
         ClimberStep(int value) { 
