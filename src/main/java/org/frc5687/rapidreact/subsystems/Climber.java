@@ -71,10 +71,7 @@ public class Climber extends OutliersSubsystem{
         super(container);
         _driveTrain = driveTrain;
 
-        _driveTrain = driveTrain;
-        
-        // logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
-        logMetrics("Step", "Rocker/Position", "Rocker/Speed", "Rocker/Down", "Rocker/Current", "Rocker/StallCycles", "Rockers/Velocity", "Stationary/Position", "Stationary/Speed", "Stationary/Down", "Stationary/Current", "Stationary/StallCycles", "Stationary/Velocity");
+//        logMetrics("Stationary/Position", "Stationary/Goal", "Stationary/Enabled", "Stationary/Speed", "Stationary/Up", "Stationary/Up", "Rocker/Position", "Rocker/Goal", "Rocker/Enabled", "Rocker/Speed", "Rocker/Up", "Rocker/Down", "Rocker Cylinder");
 
         _stationaryArmWinch = new TalonFX(RobotMap.CAN.TALONFX.STATIONARY_CLIMBER);
         _stationaryArmWinch.setNeutralMode(NeutralMode.Brake);

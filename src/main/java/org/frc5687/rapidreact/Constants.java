@@ -13,7 +13,7 @@ public class Constants {
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
     public static final double EPSILON = 0.00001;
-    public static final double DEADBAND = 0.1;
+    public static final double DEADBAND = 0.15;
     // Separate constants into individual inner classes corresponding
     // to subsystems or robot modes, to keep variable names shorter.
 
@@ -131,10 +131,11 @@ public class Constants {
 
         // Vision PID controller
         public static final double VISION_TOLERANCE = 0.01; // rads
-        public static final double VISION_kP = 4.0;
+        public static final double VISION_kP = 4.5;
         public static final double VISION_kI = 0.1;
         public static final double VISION_kD = 0.3;
         public static final double VISION_IRANGE = 1.0;
+
         public static final double POSITION_TOLERANCE = 0.02;
         public static final double ANGLE_TOLERANCE = 0.02;
     }
@@ -203,7 +204,7 @@ public class Constants {
         public static final int FALCON_TICKS = 2048;
 
         public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
-        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.855) * Math.PI; // meters
+        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.75) * Math.PI; // meters
         public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.437) * Math.PI; // meters
         public static final int WINCH_CURRENT_LIMIT = 25; //amps
 
@@ -232,10 +233,10 @@ public class Constants {
 
         // Controller Parameters
         public static final int MOTION_MAGIC_SLOT = 0;
-        public static final double SPRING_kP = 0.8; // Always start with kP
-        public static final double SPRING_kI = 0.0; // If possible avoid kI
-        public static final double SPRING_kD = 0.0; // 2nd Kd
-        public static final double SPRING_kF = 0.01; // 2nd Kd
+        public static final double SPRING_kP = 1.005; // Always start with kP
+        public static final double SPRING_kI = 0.0001; // If possible avoid kI
+        public static final double SPRING_kD = 0.01; // 2nd Kd
+        public static final double SPRING_kF = 0.011; // 2nd Kd
         public static final double SPRING_IZONE = 30.0;
         public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);
         public static final double CRUISE_VELOCITY = 50000; // TODO: Needs to be calibrated via Phoenix tuner
