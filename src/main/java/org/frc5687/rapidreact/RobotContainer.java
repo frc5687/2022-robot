@@ -29,6 +29,7 @@ import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 import org.frc5687.rapidreact.util.AutoChooser;
@@ -48,6 +49,7 @@ public class RobotContainer extends OutliersContainer {
     private Catapult _catapult;
     private Intake _intake;
     private Climber _climber;
+    private Lights _lights;
 
     private AutoChooser _autoChooser;
     AutoChooser.Position autoPosition;
@@ -88,12 +90,14 @@ public class RobotContainer extends OutliersContainer {
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
         _limelight = new Limelight("limelight");
+        _lights = new Lights(this, RobotMap.PWM.BLINKENS);
+        _lights.base();
 
         // then subsystems
         _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
-        _intake = new Intake(this);
+        _intake = new Intake(this, _lights);
         _climber = new Climber(this, _driveTrain);
-        _catapult = new Catapult(this);
+        _catapult = new Catapult(this, _lights);
         _autoChooser = new AutoChooser();
 
         initializeCamera();

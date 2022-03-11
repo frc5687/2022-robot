@@ -25,6 +25,7 @@ public class ShootSetpoint extends OutliersCommand {
     @Override
     public void execute() {
         super.execute();
+        _catapult.shootingLights();
         _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
     }
 
@@ -36,5 +37,6 @@ public class ShootSetpoint extends OutliersCommand {
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        _catapult.setBase();
     }
 }
