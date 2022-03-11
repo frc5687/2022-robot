@@ -54,13 +54,9 @@ public class DriveCatapult extends OutliersCommand {
                 _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
                 if (_catapult.isSpringHallTriggered()) {
                     _catapult.setSpringMotorSpeed(0.0);
-                    _catapult.zeroSpringEncoder();
-                    _catapult.setSpringDistance(0);
                 }
                 if (_catapult.isArmLowered()) {
-                    _catapult.zeroWinchEncoder();
                     _catapult.setWinchMotorSpeed(0.0);
-                    _catapult.setWinchGoal(0.0);
                 }
                 if (_catapult.isArmLowered() && _catapult.isSpringHallTriggered()) {
                     _catapult.zeroSpringEncoder();
