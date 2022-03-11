@@ -92,6 +92,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
     @Override
     public void initialize() {
         super.initialize();
+        info("Initialized");
         if (_metricTracker != null) {
             _metricTracker.resume();
         }
@@ -100,6 +101,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
+        info("Ended");
         if (_metricTracker != null) {
             _metricTracker.pause();
         }
