@@ -18,7 +18,7 @@ public class ShootSetpoint extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
-//        _catapult.setSpringPosition(_position);
+        _catapult.setSpringDistance(_position);
         _catapult.setWinchGoal(_angle);
     }
 
@@ -26,11 +26,12 @@ public class ShootSetpoint extends OutliersCommand {
     public void execute() {
         super.execute();
         _catapult.shootingLights();
+        _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
     }
 
     @Override
     public boolean isFinished() {
-        return _catapult.isSpringAtPosition();
+        return _catapult.isSpringAtPosition() && _catapult.isWinchAtGoal();
     }
 
     @Override

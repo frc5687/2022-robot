@@ -1,9 +1,10 @@
-package org.frc5687.rapidreact.commands.Autos;
+package org.frc5687.rapidreact.commands.auto;
 
 import java.security.DrbgParameters.Reseed;
 
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.commands.OutliersCommand;
+import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 
 public class DriveForTime extends OutliersCommand{
@@ -25,7 +26,7 @@ public class DriveForTime extends OutliersCommand{
     public void initialize(){
         super.initialize();
         _endMillis = System.currentTimeMillis() + _timeMs;
-        _pow = (_reversed ? -1.0 : 1.0) * Constants.Auto.DRIVETRAIN_POWER;
+        _pow = (_reversed ? -1.0 : 1.0) * Auto.DRIVETRAIN_POWER;
     }
 
     @Override

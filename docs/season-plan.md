@@ -18,7 +18,7 @@ The goals of the controls team (programming) are
 
 # Core Competencies of Wizards
 
-We will use wizardry exams to ensure that students learn the knowledge and skills necessary to control robots. By the end of the season, every level 3 wizard will know how to do the following:
+We will use wizardry exams to ensure that students learn the knowledge and skills necessary to control robots. By the end of the season, every level 4 wizard will know how to do the following:
 
 - Create a subsystem with one sensor and one actuator.
 - Create a default command to run the subsystem based on operator input.
@@ -54,51 +54,11 @@ Mentors will define controls milestones to ensure we have a robot that works for
 
 A milestone is complete when the main branch of the code in the 2022-robot repo successfully controls a robot to achieve the milestone requirements.
 
-## Milestone 1 - "Joystick Control of Translation and Rotation"
-
-The swerve-base code assumes a game pad controlller.
-
-1. Deploy code from a branch of the 2022-robot repo to a robot.
-2. Get OI working so that a driver and an operator can move the robot around using two joy sticks.
-3. Document the process for changing controllers. If we want to use a game pad instead of joysticks how do we do that?
-
-## Milestone 2 - "Zero-Ball Taxi Auto"
-
-Each ROBOT whose BUMPERS have completely left the TARMAC from which it started at any point during AUTO scores 2 points.
-
-- Create four auto routines that taxi the robot autonomously within 15 seconds of game start. This means move the robot so that its bumpers have completely left the tarmac from which it started.
- 1. Starting on the right side of the 2-ball tarmac.
- 2. Starting on the left side of the 2-ball tarmac.
- 3. Starting on the right side of the 1-ball tarmac.
- 4. Starting on the left side of the 1-ball tarmac.
-- Document how to select which auto routine will run.
-- Create a way to start auto mode.
-- Place the robot on one of four starting positions and successfully run the corresponding auto routine.
-- Put the robot in teleop mode 15 seconds after game start.
-
-## Milestone 3 - "Move to All the Balls Auto"
-
-The game starts with robots in the tarmac and balls stationary on the ground at set positions. "Zero-ball" and "One-ball" auto don't require picking up any additional balls, but all other autos do. The first step in picking up additional balls is moving to the correct location.
-
-- Create an auto routine that moves the robot autonomously from the right or left side of the 2-ball tarmac in a set path that would allow it to pick up three balls (the wall ball, the field ball, and the terminal ball) within 15 seconds.
-- Document how to select which starting point.
-- Create a way to start auto mode.
-- Place the robot on one of two starting positions and successfully run the corresponding auto routine.
-- Put the robot in teleop mode after 15 seconds.
-
-## Milestone 4 - "Light Up One-Ball Auto"
-
-Until we have an intake and a shooting mechanism we can't run commands to control those subsystems on the robot. But we can issue commands to light up lights on the robot as a placeholder until those mechanisms are ready. "One-ball" auto requires issuing the following sequence of commands: shoot a ball, taxi out of the tarmac to the position we want to be in to start teleop mode, enter teleop mode after 15 seconds.
-
-- Create an auto routine that lights up lights on the robot to indicate when we would shoot a ball, then move the robot autonomously out of the tarmac from any of the four possible starting positions.
-- Document how to select which starting point.
-- Create a way to start auto mode.
-- Place the robot on one of four starting positions and successfully run the corresponding auto routine.
-- Put the robot in teleop mode after 15 seconds.
+See [ROADMAP](ROADMAP.md) for milestones.
 
 # Autonomous Strategies
 
-See "Autos" doc.
+See [autos](autos.md).
 
 # Notes
 

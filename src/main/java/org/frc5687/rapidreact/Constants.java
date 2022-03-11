@@ -1,8 +1,12 @@
 /* Team 5687 (C)2020-2022 */
 package org.frc5687.rapidreact;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+
+import org.frc5687.rapidreact.config.Auto;
 
 public class Constants {
     public static final int TICKS_PER_UPDATE = 1;
@@ -110,20 +114,29 @@ public class Constants {
 
         // Maximum rates of motion
         public static final double MAX_MPS = 3.0; // Max speed of robot (m/s)
+        public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
-        public static final double ANGLE_kP = 3.5;
+        public static final double ANGLE_kP = 3.0;
         public static final double ANGLE_kI = 0.0;
         public static final double ANGLE_kD = 0.0;
 
-        public static final double kP = 10.5;
+        public static final double kP = 11.5;
         public static final double kI = 0.0;
         public static final double kD = 0.5;
         public static final double PROFILE_CONSTRAINT_VEL = 3.0 * Math.PI;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
 
+        // Vision PID controller
+        public static final double VISION_TOLERANCE = 0.01; // rads
+        public static final double VISION_kP = 4.0;
+        public static final double VISION_kI = 0.1;
+        public static final double VISION_kD = 0.3;
+        public static final double VISION_IRANGE = 1.0;
+        public static final double POSITION_TOLERANCE = 0.02;
+        public static final double ANGLE_TOLERANCE = 0.02;
     }
 
     public static class DifferentialSwerveModule {
@@ -182,13 +195,15 @@ public class Constants {
         public static final int COUNTS_PER_REVOLUTION = 8196;
 
         public static final double GEAR_REDUCTION = 64.0;
+        public static final double FALCON_GEAR_REDUCTION = 25.0;
 //        public static final double GEAR_REDUCTION_VP = 50.0;
 
         public static final double BABY_NEO_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(11710);
-        public static final double NEO_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(5500);
+        public static final double FALCON_RAD_PER_SEC = Units.rotationsPerMinuteToRadiansPerSecond(6300);
+        public static final int FALCON_TICKS = 2048;
+
         public static final double MAX_SPEED_WITH_GEAR_BOX = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION;
-//        public static final double MAX_SPEED_WITH_GEAR_BOX_VP = BABY_NEO_RAD_PER_SEC / GEAR_REDUCTION_VP;
-        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.875) * Math.PI; // meters
+        public static final double SPRING_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(0.855) * Math.PI; // meters
         public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.437) * Math.PI; // meters
         public static final int WINCH_CURRENT_LIMIT = 25; //amps
 
@@ -216,15 +231,16 @@ public class Constants {
         public static final double WINCH_BOTTOM_LIMIT = 0;
 
         // Controller Parameters
-        // spring
-        public static final double SPRING_kP = 40.0; // Always start with kP
-        public static final double SPRING_kI = 28.0; // If possible avoid kI
+        public static final int MOTION_MAGIC_SLOT = 0;
+        public static final double SPRING_kP = 0.8; // Always start with kP
+        public static final double SPRING_kI = 0.0; // If possible avoid kI
         public static final double SPRING_kD = 0.0; // 2nd Kd
-        public static final double MAX_SPRING_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * SPRING_WINCH_DRUM_CIRCUMFERENCE; // divide by 2 PI as that is one rotation.
-        public static final double MAX_SPRING_ACCELERATION_MPSS = MAX_SPRING_VELOCITY_MPS * 20; // heuristic.
+        public static final double SPRING_kF = 0.01; // 2nd Kd
         public static final double SPRING_IZONE = 30.0;
+        public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);
+        public static final double CRUISE_VELOCITY = 50000; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final double ACCELERATION = 90000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double SPRING_TOLERANCE = 0.001; // m
-        public static final double SPRING_DISPLACEMENT_FACTOR = -0.0; // TODO: magic number
         // winch
         public static final double WINCH_kP = 20.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
@@ -239,11 +255,12 @@ public class Constants {
         public static final double SPRING_ZERO_SPEED = -0.5;
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
         public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
-        public static final double INITIAL_BALL_WINCH_GOAL = 0.245;
-        public static final double INITIAL_BALL_SPRING_GOAL = 0.08;
+        public static final double INITIAL_BALL_WINCH_GOAL = 0.24;
+        public static final double INITIAL_BALL_SPRING_GOAL = 0.095;
 
 
     }
+
     public static class IntakeBlocker{
         public static final double DOWN_POSITION = 180;
         public static final double UP_POSITION = 50;
@@ -252,16 +269,11 @@ public class Constants {
     public static class Intake{
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
-        public static final double THE_BEANS = 0.8;
+        public static final double THE_BEANS = 0.7;
         public static final double GEAR_RATIO = 5.0;
         public static final double MAX_RPM = 6300 * GEAR_RATIO;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
     }
-
-    public static class Auto{
-            public static final double DRIVETRAIN_POWER = 0.5;
-    }
-
     public static class ColorSensor{
         public static final double COLOR_PROXIMITY_BUFFER = 130;
     }
@@ -294,8 +306,6 @@ public class Constants {
         public static final int COUNTS_PER_REVOLUTION = 8196;
 
 
-
-
         // These distances are in METERS
         public static final double STATIONARY_RETRACTED_METERS = 0.0; 
         public static final double STATIONARY_CLOSE_METERS = 0.46;
@@ -304,7 +314,7 @@ public class Constants {
         public static final double ROCKER_RETRACTED_METERS = 0.0;
         public static final double ROCKER_CLOSE_METERS = 0.4064;
         public static final double ROCKER_MID_METERS = 0.51; // 0.4826
-        public static final double ROCKER_EXTENDED_METERS = 0.69; // TODO: Needs to be confirmed
+        public static final double ROCKER_EXTENDED_METERS = 0.67; // TODO: Needs to be confirmed
 
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
         public static final double ROCKER_ENCODER_CONVERSION_FACTOR = 0.05;

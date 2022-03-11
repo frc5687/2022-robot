@@ -1,7 +1,8 @@
 package org.frc5687.rapidreact.subsystems;
 
 
-import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
@@ -15,7 +16,6 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
-import org.frc5687.rapidreact.commands.Drive;
 import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
@@ -25,13 +25,11 @@ import static org.frc5687.rapidreact.Constants.Catapult.*;
 
 public class Catapult extends OutliersSubsystem {
 
-    private final CANSparkMax _springMotor;
+    private final TalonFX _springMotor;
     private final CANSparkMax _winchMotor;
 
-    private final RelativeEncoder _springEncoder;
     private final RelativeEncoder _winchEncoder;
 
-    private final ProfiledPIDController _springController;
     private final ProfiledPIDController _winchController;
 
     private final DoubleSolenoid _releasePin;
@@ -50,6 +48,7 @@ public class Catapult extends OutliersSubsystem {
     private DriverStation.Alliance _alliance;
 
     private Lights _lights;
+    private double _springGoal;
 
     public enum CatapultState {
         // Robot starts in ZEROING state, assuming the following:
@@ -128,15 +127,18 @@ public class Catapult extends OutliersSubsystem {
         _lights = lights;
 
         // Motor controllers (Spark Maxes)
-
         // Spring motor
-        _springMotor = new CANSparkMax(RobotMap.CAN.SPARKMAX.SPRING_BABY_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
-        _springMotor.restoreFactoryDefaults();
+        _springMotor = new TalonFX(RobotMap.CAN.TALONFX.CATAPULT_SPRING);
+        _springMotor .setNeutralMode(NeutralMode.Brake);
+//        _springMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, Constants.Climber.ARM_CURRENT_LIMIT, Constants.Climber.CURRENT_THRES, Constants.Climber.ARM_THRES_TIME));
+        _springMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         _springMotor.setInverted(SPRING_MOTOR_INVERTED);
-        _springMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        _springMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
-        _springMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-        _springMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+        _springMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
+        _springMotor.configMotionAcceleration(ACCELERATION);
+        _springMotor.configVoltageMeasurementFilter(8);
+        _springMotor.enableVoltageCompensation(true);
+        _springMotor.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
+        _springMotor.configClosedloopRamp(0,50);
 
         // Winch motor
         _winchMotor = new CANSparkMax(RobotMap.CAN.SPARKMAX.WINCH_BABY_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -149,7 +151,6 @@ public class Catapult extends OutliersSubsystem {
         _winchMotor.setSmartCurrentLimit(WINCH_CURRENT_LIMIT);
 
         //Save changes into flash memory of spark maxes
-        _springMotor.burnFlash();
         _winchMotor.burnFlash();
 
         // Pneumatics (catapult locking pin)
@@ -162,21 +163,13 @@ public class Catapult extends OutliersSubsystem {
         _armHall = new HallEffect(RobotMap.DIO.ARM_HALL_EFFECT);
 
         // Encoders
-        _springEncoder = _springMotor.getEncoder();
         _winchEncoder = _winchMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, COUNTS_PER_REVOLUTION);
 
         // PID controllers
-        _springController = new ProfiledPIDController(
-                SPRING_kP,
-                SPRING_kI,
-                SPRING_kD,
-                new TrapezoidProfile.Constraints(
-                        MAX_SPRING_VELOCITY_MPS,
-                        MAX_SPRING_ACCELERATION_MPSS
-                )
-        );
-        _springController.setTolerance(SPRING_TOLERANCE);
-        _springController.setIntegratorRange(-SPRING_IZONE, SPRING_IZONE);
+        _springMotor.config_kP(MOTION_MAGIC_SLOT, SPRING_kP);
+        _springMotor.config_kI(MOTION_MAGIC_SLOT, SPRING_kI);
+        _springMotor.config_kD(MOTION_MAGIC_SLOT, SPRING_kD);
+        _springMotor.config_kF(MOTION_MAGIC_SLOT, SPRING_kF);
 
         _winchController = new ProfiledPIDController(
                 WINCH_kP,
@@ -196,6 +189,7 @@ public class Catapult extends OutliersSubsystem {
         _gate = new ServoStop(RobotMap.PWM.INTAKE_STOPPER);
         _colorSensor = new ColorSensor(I2C.Port.kMXP);
         _alliance = DriverStation.getAlliance();
+        _springGoal = 0;
     }
 
 
@@ -203,11 +197,6 @@ public class Catapult extends OutliersSubsystem {
     public void periodic() {
         super.periodic();
 
-        if (isSpringHallTriggered()) {
-            _springEncoder.setPosition(Constants.Catapult.SPRING_BOTTOM_LIMIT);
-            _springEncoderZeroed = true;
-        }
-//
         if (isArmLowered() && (_winchMotor.getAppliedOutput() > 0)) {
             setWinchMotorSpeed(0);
             setWinchGoal(0);
@@ -218,57 +207,36 @@ public class Catapult extends OutliersSubsystem {
 
     }
 
-    /**
-     * Sets the lights to shooting mode
-     */
-    public void shootingLights(){
-        _lights.shooting();
-    }
-
-    /**
-     * Sets the blinkens back to base mode
-     */
-    public void setBase(){
-        _lights.base();
-    }
-
-    /**
-     * Set colors according to ball color.
-     */
-    public void rightBall(){
-        _lights.rightBall();
-    }
-
-    public void wrongBall(){
-        _lights.wrongBall();
+    public void zeroSpringEncoder() {
+        if (!_springEncoderZeroed) {
+            _springMotor.setSelectedSensorPosition(SPRING_BOTTOM_LIMIT);
+            _springEncoderZeroed = true;
+        }
     }
 
     public void setSpringMotorSpeed(double speed) {
-        _springMotor.set(speed);
+        _springMotor.set(TalonFXControlMode.PercentOutput, speed);
+    }
+    public void setSpringDistance(double goalMeters){
+        _springGoal = goalMeters;
+        _springMotor.set(ControlMode.MotionMagic, (_springGoal / TICKS_TO_METERS));
     }
 
-    public double getSpringEncoderRotation() {
-        return _springEncoder.getPosition();
+    public double getSpringEncoderTicks() {
+        return _springMotor.getSelectedSensorPosition();
     }
-    public double getSpringRailPosition() {
-        return (getSpringEncoderRotation() / GEAR_REDUCTION) * SPRING_WINCH_DRUM_CIRCUMFERENCE;
+
+    public double getSpringPosition() {
+        return getSpringEncoderTicks() * TICKS_TO_METERS;
     }
     public boolean isSpringZeroed() {
         return _springEncoderZeroed;
     }
-    public double springDisplacement() {
-        return getSpringRailPosition();
-    }
-    public double getSpringControllerOutput() {
-       return _springController.calculate(getSpringRailPosition()) + springDisplacement() * SPRING_DISPLACEMENT_FACTOR;
-    }
-    public void setSpringGoal(double position) {
-        _springController.setGoal(position);
-    }
 
     public boolean isSpringAtPosition() {
-        return _springController.atGoal();
+        return Math.abs(getSpringPosition() - _springGoal) < SPRING_TOLERANCE;
     }
+
     public boolean isSpringHallTriggered() { return _springHall.get(); }
 
 
@@ -349,10 +317,24 @@ public class Catapult extends OutliersSubsystem {
         return angularVelocity * ARM_LENGTH;
     }
 
+    // calculate linear regression.
+    public double calculateIdealSpring(double dist) {
+        return (-0.010290809 * (dist * dist * dist)) +
+                (0.153682323 * (dist * dist))
+                - (0.714436098 * dist) + 1.314831828;
+    }
+
+    // calculated from linear regression
+    public double calculateIdealString(double dist) {
+        dist = Units.metersToFeet(dist);
+        return (0.005404763 * (dist * dist * dist)) -
+                (0.079955861 * (dist * dist )) +
+                (0.394134242 * dist) - 0.394134242;
+    }
+
     public boolean isReleasePinLocked() {
         return _releasePin.get() == PinPosition.LOCKED.getSolenoidValue();
     }
-
     public boolean isReleasePinReleased() {
         return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
     }
@@ -387,9 +369,12 @@ public class Catapult extends OutliersSubsystem {
     public void updateDashboard() {
         // Spring values
 //        metric("Spring encoder rotations", getSpringEncoderRotation());
-        metric("Spring rail position", getSpringRailPosition());
-        metric("Spring motor output", _springMotor.getAppliedOutput());
-        metric("Spring goal", _springController.getGoal().position);
+        metric("Spring position", getSpringPosition());
+        metric("Spring goal ticks", _springGoal / TICKS_TO_METERS);
+        metric("spring zeroed", _springEncoderZeroed);
+        metric("Spring encoder ticks", getSpringEncoderTicks());
+        metric("Spring motor output", _springMotor.getMotorOutputPercent());
+        metric("Spring goal", _springGoal);
         metric("Spring Hall Effect", isSpringHallTriggered());
 
         // Winch values
@@ -405,5 +390,34 @@ public class Catapult extends OutliersSubsystem {
         metric("Arm state", _state.name());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
+    }
+
+
+    /**
+     * Set lights for shooting
+     */
+    public void shootingLights() {
+        _lights.shooting();
+    }
+
+    /**
+     * Set lights for base
+     */
+    public void setBase() {
+        _lights.base();
+    }
+
+    /**
+     * Set lights for right ball
+     */
+    public void rightBall() {
+        _lights.rightBall();
+    }
+
+    /**
+     * Set lights for wrong ball
+     */
+    public void wrongBall() {
+        _lights.wrongBall();
     }
 }

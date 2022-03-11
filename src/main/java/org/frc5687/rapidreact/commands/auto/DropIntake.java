@@ -1,4 +1,4 @@
-package org.frc5687.rapidreact.commands.Autos;
+package org.frc5687.rapidreact.commands.auto;
 
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Intake;
@@ -20,6 +20,7 @@ public class DropIntake extends OutliersCommand{
 
     @Override
     public boolean isFinished(){
+        info("Finishing");
         return !_intake.isIntakeUp();
     }
 
