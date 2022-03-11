@@ -32,8 +32,8 @@ public class Drive extends OutliersCommand {
         _visionController.setIntegratorRange(-VISION_IRANGE, VISION_IRANGE);
         _visionController.setTolerance(VISION_TOLERANCE);
         addRequirements(_driveTrain);
-        logMetrics("vx","vy");
-        enableMetrics();
+//        logMetrics("vx","vy");
+//        enableMetrics();
     }
 
     @Override
@@ -46,8 +46,8 @@ public class Drive extends OutliersCommand {
     public void execute() {
         super.execute();
         //  driveX and driveY are swapped due to coordinate system that WPILib uses.
-        double vx = _vxFilter.calculate(-_oi.getDriveY()) * (_driveTrain.isClimbing() ? Constants.DriveTrain.MAX_MPS/4 : Constants.DriveTrain.MAX_MPS);
-        double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.isClimbing() ? Constants.DriveTrain.MAX_MPS/4 : Constants.DriveTrain.MAX_MPS);
+        double vx = _vxFilter.calculate(-_oi.getDriveY()) * (_driveTrain.getSpeed());
+        double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
         metric("vx", vx);
         metric("vy", vy);
 //        double rot = 0;
@@ -56,7 +56,7 @@ public class Drive extends OutliersCommand {
         metric("has Target", _driveTrain.hasTarget());
         double rot =
                 (_oi.autoAim() && _driveTrain.hasTarget())
-                        ? _visionController.calculate(-_driveTrain.getAngleToTarget())
+                        ? _visionController.calculate(-_driveTrain.getAngleToTarget(), 0)
                         : _oi.getRotationX() * MAX_ANG_VEL;
         _driveTrain.drive(vx, vy, rot, true);
     }
