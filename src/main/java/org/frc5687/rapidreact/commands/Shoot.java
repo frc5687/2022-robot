@@ -1,9 +1,14 @@
 package org.frc5687.rapidreact.commands;
 
 import org.frc5687.rapidreact.subsystems.Catapult;
+import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
+
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 
 public class Shoot extends OutliersCommand {
     private Catapult _catapult;
+
+    private boolean _done = false;
 
     public Shoot(Catapult catapult) {
         _catapult = catapult;
@@ -12,14 +17,27 @@ public class Shoot extends OutliersCommand {
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
-        info("Start shooting");
+        info("Shoot initialized");
         super.initialize();
-        _catapult.setAutoshoot(true);
+    }
+
+    @Override
+    public void execute() {
+        if (!_done && _catapult.isInitialized()) {
+            info("Shooting");
+            _catapult.setState(CatapultState.AIMING);
+            _catapult.setAutoshoot(true);
+            _done = true;
+        }
     }
 
     @Override
     public boolean isFinished() {
-        // TODO Auto-generated method stub
-        return _catapult.getState() == Catapult.CatapultState.LOADING || _catapult.getState() == Catapult.CatapultState.AIMING;
+        if (_done && (_catapult.getState() == Catapult.CatapultState.LOADING || _catapult.getState() == Catapult.CatapultState.AIMING)) {
+            info("Shoot finished");
+            return true;
+        }
+        info("Shoot waiting for winch which is at " + _catapult.getWinchStringLength() );
+        return false;
     }
 }

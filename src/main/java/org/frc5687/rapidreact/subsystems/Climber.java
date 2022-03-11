@@ -347,7 +347,6 @@ public class Climber extends OutliersSubsystem{
      */
     public void zeroStationaryArmEncoder(){
         _stationaryArmWinch.setSelectedSensorPosition(0);
-        info("Stationary Zeroed");
     }
 
     /**
@@ -355,7 +354,6 @@ public class Climber extends OutliersSubsystem{
      */
     public void zeroRockerArmEncoder() {
         _rockerArmWinch.setSelectedSensorPosition(0);
-        info("Rocker Zeroed");
     }
 
     @Override

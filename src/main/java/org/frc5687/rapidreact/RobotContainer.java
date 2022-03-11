@@ -229,6 +229,7 @@ public class RobotContainer extends OutliersContainer {
         if (_bypass) {
             _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
             Rotation2d rot = Rotation2d.fromDegrees(40);
+            info("Running twoball.");
             return new TwoBallAuto(_driveTrain, _catapult, _intake, Auto.BallPositions.BALL_TWO, rot);
         }
 

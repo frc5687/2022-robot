@@ -51,6 +51,8 @@ public class Catapult extends OutliersSubsystem {
 
     private boolean _autoShoot;
 
+    private boolean _initialized = false;
+
     public enum CatapultState {
         // Robot starts in ZEROING state, assuming the following:
         // - no tension on spring (should trigger spring Hall effect)
@@ -365,6 +367,14 @@ public class Catapult extends OutliersSubsystem {
         _state = state;
     }
 
+    public void setInitialized(boolean initialized) {
+        _initialized = initialized;
+    }
+
+    public boolean isInitialized() {
+        return _initialized;
+    }
+    
     @Override
     public void updateDashboard() {
         // Spring values

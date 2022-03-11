@@ -39,6 +39,7 @@ public class DriveToPose extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
+        info("Drive to pose initialized.");
         _driveTrain.startModules();
     }
 
@@ -61,6 +62,7 @@ public class DriveToPose extends OutliersCommand {
     public boolean isFinished() {
         if (_driveTrain.isAtPose(_destination)) {
             _driveTrain.drive(0,0,0,true);
+            info("DriveToPose finished.");
             return true;
         }
         return false;

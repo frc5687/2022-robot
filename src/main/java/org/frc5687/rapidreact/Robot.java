@@ -59,9 +59,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
     public void autonomousInit() {
         //wrapCommand drops intake before the autocommand.
         // Jack did this to save typing in robotContainer
-        // TODO: rewrap before competition
-        // _autoCommand = _robotContainer.wrapCommand(_robotContainer.getAutonomousCommand());
-        _autoCommand = _robotContainer.getAutonomousCommand();
+        _autoCommand = _robotContainer.wrapCommand(_robotContainer.getAutonomousCommand());
         _fmsConnected = DriverStation.isFMSAttached();
         _robotContainer.autonomousInit();
         if (_autoCommand != null) {

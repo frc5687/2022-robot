@@ -14,10 +14,18 @@ public class SetState extends OutliersCommand {
     @Override
     public void initialize() {
         _catapult.setState(_state);
+        info("SetState initialized.");
     }
 
     @Override
     public void end(boolean interrupted) {
-        super.end(interrupted);
+        super.end(interrupted);        
     }
+
+    @Override
+    public boolean isFinished() {
+        info("SetState finished.");
+        return true;
+    }
+
 }

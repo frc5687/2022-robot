@@ -29,7 +29,8 @@ public class DriveCatapult extends OutliersCommand {
 
     @Override
     public void initialize() {
-
+        info("DriveCatapult initializing.");
+        _catapult.setInitialized(true);
     }
 
     @Override
