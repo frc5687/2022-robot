@@ -28,16 +28,26 @@ public class ColorSensor {
         _colorMatcher.addColorMatch(kGreenTarget);
     }
 
+    /**
+     * Returns the IR light from the sensor
+     * @return IR light
+     */
     public double getIR(){
-        //Returns to raw amount of IR light detected
         return _colorSensor.getIR();
     }
 
-    //Get the raw amounts of Red, Green, Blue detected
+    /**
+     * Gets the amount of red recived by the sensor
+     * @return red
+     */
     public double getRed(){
         return _colorSensor.getRed();
     }
 
+    /**
+     * Gets the color being detected by the sensor
+     * @return color
+     */
     public String getColor(){
         Color detectedColor = _colorSensor.getColor();
         String colorString;
@@ -65,23 +75,42 @@ public class ColorSensor {
         }
     }
 
+    /**
+     * Is the sensor detecting blue
+     * @return true/false
+     */
     public boolean isBlue(){
         return getColor().equals("Blue");
     }
 
+    /**
+    * Is the sensor detecting red
+    * @return true/false
+    */
     public boolean isRed(){
         return getColor().equals("Red");
     }
 
+    /**
+    * Is the sensor detecting green
+    * @return true/false
+    */
     public boolean isGreen(){
         return getColor().equals("Green");
     }
 
+    /**
+     * Get the proximity of an object to a object from the sensor
+     * @return proximity
+     */
     public double getProximity(){
-        //Get the robots proximity
         return _colorSensor.getProximity();
     }
 
+    /**
+     * There is a ball in the catapult
+     * @return true/false
+     */
     public boolean hasBall(){
         return !(getProximity() < Constants.ColorSensor.COLOR_PROXIMITY_BUFFER);
     }

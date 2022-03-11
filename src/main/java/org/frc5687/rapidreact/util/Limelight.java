@@ -13,36 +13,51 @@ public class Limelight {
         _camera = new PhotonCamera(cameraName);
     }
 
-
+    /**
+     * Get the latency of the camera
+     * @return latency in ms
+     */
     public double getLatency() {
-        //Gets the latency of the camera
         return _camera.getLatestResult().getLatencyMillis();
     }
 
+    /**
+     * Gets the yaw of the target
+     * @return yaw in rads
+     */
     public double getYaw() {
-        //Gets the realitive yaw of the target
         if(hasTarget()){
             return Units.degreesToRadians(_camera.getLatestResult().getBestTarget().getYaw());
         }
         return 0.0;
     }
 
+    /**
+     * Get the area of the targets
+     * @return area
+     */
     public double getArea(){
-        //Get area of bounding box of target
         if (hasTarget()) {
             return _camera.getLatestResult().getBestTarget().getArea();
         }
         return 0.0;
     }
 
+    /**
+     * Get the pitch of the target
+     * @return pitch
+     */
     public double getPitch(){
-        //Gets realitive pitch of target
         if (hasTarget()) {
             return _camera.getLatestResult().getBestTarget().getPitch();
         }
         return 0.0;
     }
 
+    /**
+     * Gets the skew of the target
+     * @return skew
+     */
     public double getSkew(){
         if (hasTarget()) {
             return _camera.getLatestResult().getBestTarget().getSkew();
@@ -50,29 +65,49 @@ public class Limelight {
         return 0.0;
     }
 
+    /**
+     * Check to see if the limelight has a target
+     * @return has target
+     */
     public boolean hasTarget() {
-        //Does the limelight have a target
         return _camera.getLatestResult().hasTargets();
     }
 
+    /**
+     * Sets the LEDS to on
+     */
     public void LEDOn(){
         _camera.setLED(VisionLEDMode.kOn);
     }
 
+    /**
+     * Sets the LEDS to off
+     */
     public void LEDOff(){
         _camera.setLED(VisionLEDMode.kOff);
     }
 
+    /**
+     * Blinks the LEDS
+     */
     public void LEDBlink(){
         _camera.setLED(VisionLEDMode.kBlink);
     }
 
+    /**
+     * Sets the robot into driver mode
+     * @param mode set to driver mode or not
+     */
     public void setDriverMode(boolean mode){
         _camera.setDriverMode(mode);
         _inDriverMode = mode;
     }
 
-    public boolean getMode(){
+    /**
+     * Returns true if in driver mode
+     * @return
+     */
+    public boolean getDriverMode(){
         return _inDriverMode;
     }
 }

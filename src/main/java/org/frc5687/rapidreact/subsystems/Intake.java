@@ -61,6 +61,13 @@ public class Intake extends OutliersSubsystem{
     }
 
     /**
+     * Set the lights to intake
+     */
+    public void intake(){
+        _lights.intake();
+    }
+
+    /**
      * Get the velocity of the roller
      * @return
      */
