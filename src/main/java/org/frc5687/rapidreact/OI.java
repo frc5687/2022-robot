@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.Climber.AutoClimb;
 import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
+import org.frc5687.rapidreact.commands.Climber.Stow;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
