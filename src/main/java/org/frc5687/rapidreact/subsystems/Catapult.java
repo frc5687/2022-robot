@@ -44,6 +44,7 @@ public class Catapult extends OutliersSubsystem {
     private CatapultState _state;
 
     private ColorSensor _colorSensor;
+    private ProximitySensor _proximitySensor;
     private ServoStop _gate;
 
     private DriverStation.Alliance _alliance;
@@ -162,6 +163,8 @@ public class Catapult extends OutliersSubsystem {
         // Encoders
         _winchEncoder = _winchMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, COUNTS_PER_REVOLUTION);
 
+        // Proximity sensor (sense if ball on catapult arm)
+        _proximitySensor = new ProximitySensor(RobotMap.DIO.PROXIMITY_SENSOR);
 
         // PID controllers
         _springMotor.config_kP(MOTION_MAGIC_SLOT, SPRING_kP);
@@ -337,12 +340,17 @@ public class Catapult extends OutliersSubsystem {
     public boolean isReleasePinReleased() {
         return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
     }
+
+    public boolean isBallDetected() {
+        return _proximitySensor.get();
+    }
+
     public boolean isBlueBallDetected() {
-        return _colorSensor.isBlue() && _colorSensor.hasBall();
+        return _colorSensor.isBlue() && isBallDetected();
     }
 
     public boolean isRedBallDetected() {
-        return _colorSensor.isRed() && _colorSensor.hasBall();
+        return _colorSensor.isRed() && isBallDetected();
     }
 
     public boolean isRedAlliance() {
@@ -389,5 +397,6 @@ public class Catapult extends OutliersSubsystem {
         metric("Arm state", _state.name());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
+        metric("Ball detected", isBallDetected());
     }
 }
