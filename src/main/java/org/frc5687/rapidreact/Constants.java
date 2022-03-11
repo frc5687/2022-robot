@@ -349,4 +349,13 @@ public class Constants {
         public static final int HEIGHT = 320;
         public static final int WIDTH = 240;
     }
+
+    public static class Lights{
+        public static final double SOLID_PURPLE = 0.91;
+        public static final double RIGHT_BALL = -0.09;
+        public static final double WRONG_BALL = -0.05;    
+        public static final double STROBE_GOLD = -0.07;
+        public static final double BEATING_BLUE = -0.15;
+        public static final double RAINBOW_LAVA = -0.93;
+    }
 }
