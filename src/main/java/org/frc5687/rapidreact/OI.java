@@ -38,6 +38,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _kill;
     private JoystickButton _preloadButton;
     private JoystickButton _readyToClimb;
+    private JoystickButton _stowClimber;
     private JoystickButton _release;
     private JoystickButton _resetNavX;
     private JoystickButton  _setState;
@@ -79,6 +80,7 @@ public class OI extends OutliersProxy {
         _intakeButton.whenHeld(new AutoIntake(intake));
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
+        _stowClimber.whenPressed(new Stow(climber));
     }
 
     public boolean readyToClimb() { return _readyToClimb.get(); }
