@@ -5,6 +5,7 @@ import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,6 +18,8 @@ public class DriveCatapult extends OutliersCommand {
     private final OI _oi;
 
     private Catapult.CatapultState _prevState;
+    private boolean _isFirstShot = true;
+    private CatapultState _lastLoggedState = null;
 
     public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, OI oi) {
         _catapult = catapult;
@@ -38,7 +41,12 @@ public class DriveCatapult extends OutliersCommand {
         metric("String from dist", _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
         metric("Spring from dist", _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
         metric("Intake down", _intake.isIntakeUp());
-        switch (_catapult.getState()) {
+        CatapultState newState =  _catapult.getState(); 
+        if (newState != _lastLoggedState) {
+            info("State changed to " + newState);
+            _lastLoggedState = newState;
+        } 
+        switch (newState) {
             case ZEROING: {
                 checkLockOut();
                 checkKill();
@@ -102,15 +110,15 @@ public class DriveCatapult extends OutliersCommand {
             case AIMING: {
                 checkLockOut();
                 checkKill();
-                if (_driveTrain.hasTarget()) {
+                if (_driveTrain.hasTarget() && _catapult.getSetpoint()==CatapultSetpoint.NONE) {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
                 } else {
-                    _catapult.setWinchGoal(0.325);
-                    _catapult.setSpringDistance(0.0835);
+                    _catapult.setStaticGoals();
                 }
-                if (isShootTriggered() && _catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
+                if (isShootTriggered() && (_isFirstShot ||  (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
                     _catapult.setAutoshoot(false);
+                    _isFirstShot = false;
                     _catapult.setState(Catapult.CatapultState.SHOOTING);
                 }
 //             check if we are in the correct position and aiming at the goal.
@@ -133,6 +141,7 @@ public class DriveCatapult extends OutliersCommand {
             case SHOOTING: {
                 checkLockOut();
                 checkKill();
+                _catapult.setSetpoint(CatapultSetpoint.NONE);
                 _catapult.releaseArm();
                 _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
             } break;

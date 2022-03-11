@@ -15,7 +15,6 @@ public class DropIntake extends OutliersCommand{
     @Override
     public void initialize(){
         super.initialize();
-        info("DropIntake initialized");
         _intake.deploy();
     }
 

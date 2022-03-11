@@ -4,11 +4,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.LowerCatapult;
+import org.frc5687.rapidreact.commands.SetSetpoint;
 import org.frc5687.rapidreact.commands.SetState;
 import org.frc5687.rapidreact.commands.ShootSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 import org.frc5687.rapidreact.commands.Shoot;
 
@@ -39,7 +41,10 @@ public class TwoBallAuto extends SequentialCommandGroup {
                     ),
                     new AutoIntake(intake)
                 ),
-                new Shoot(catapult)
+                new SetSetpoint(catapult, CatapultSetpoint.MID),
+                new Shoot(catapult),
+                new SetSetpoint(catapult, CatapultSetpoint.NONE)
+
         );
     }
 }

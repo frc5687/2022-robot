@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
@@ -52,6 +53,8 @@ public class Catapult extends OutliersSubsystem {
     private boolean _autoShoot;
 
     private boolean _initialized = false;
+
+    private CatapultSetpoint _setpoint = CatapultSetpoint.NONE;
 
     public enum CatapultState {
         // Robot starts in ZEROING state, assuming the following:
@@ -413,4 +416,54 @@ public class Catapult extends OutliersSubsystem {
     public boolean isAutoShoot() {
         return _autoShoot;
     }
+
+    public void setSetpoint(CatapultSetpoint setpoint) {
+        _setpoint = setpoint;
+        info("Setting setpoint to " + setpoint.toString());
+    }
+
+    public CatapultSetpoint getSetpoint() {
+        return _setpoint;
+    }
+
+    public enum CatapultSetpoint {
+        NONE(0),
+        NEAR(1),
+        MID(2),
+        FAR(3);
+
+        private final int _value;
+        CatapultSetpoint(int value) { 
+            _value = value; 
+        }
+
+        public int getValue() { 
+            return _value; 
+        }
+    }
+
+
+    public void setStaticGoals() {
+        switch(_setpoint) {
+            case NEAR:
+                setWinchGoal(Auto.StaticShots.NEAR_WINCH);
+                setSpringDistance(Auto.StaticShots.NEAR_SPRING);
+                break;
+            case MID:
+                setWinchGoal(Auto.StaticShots.MID_WINCH);
+                setSpringDistance(Auto.StaticShots.MID_SPRING);
+                break;
+            case FAR:
+                setWinchGoal(Auto.StaticShots.FAR_WINCH);
+                setSpringDistance(Auto.StaticShots.FAR_SPRING);
+                break;
+            default:
+                setWinchGoal(Auto.StaticShots.DEFAULT_WINCH);
+                setSpringDistance(Auto.StaticShots.DEFAULT_SPRING);
+                break;
+        }
+        
+    }
+
+    
 }

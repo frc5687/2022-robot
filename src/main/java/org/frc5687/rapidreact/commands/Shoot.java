@@ -17,7 +17,6 @@ public class Shoot extends OutliersCommand {
     @Override
     public void initialize() {
         // TODO Auto-generated method stub
-        info("Shoot initialized");
         super.initialize();
     }
 
@@ -33,7 +32,7 @@ public class Shoot extends OutliersCommand {
 
     @Override
     public boolean isFinished() {
-        if (_done && (_catapult.getState() == Catapult.CatapultState.LOADING || _catapult.getState() == Catapult.CatapultState.AIMING)) {
+        if (_done && (_catapult.getState() == Catapult.CatapultState.LOADING)) {
             info("Shoot finished");
             return true;
         }
