@@ -123,7 +123,6 @@ public class Robot extends OutliersRobot implements ILoggingSource {
     }
 
     public void updateDashboard() {
-        
         _updateTick++;
         if (_updateTick >= Constants.TICKS_PER_UPDATE) {
             _updateTick = 0;

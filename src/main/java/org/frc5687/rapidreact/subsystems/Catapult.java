@@ -47,7 +47,6 @@ public class Catapult extends OutliersSubsystem {
 
     private DriverStation.Alliance _alliance;
 
-    private Lights _lights;
     private double _springGoal;
 
     public enum CatapultState {
@@ -122,9 +121,8 @@ public class Catapult extends OutliersSubsystem {
 
 
     /** Catapult constructor */
-    public Catapult(OutliersContainer container, Lights lights) {
+    public Catapult(OutliersContainer container) {
         super(container);
-        _lights = lights;
 
         // Motor controllers (Spark Maxes)
         // Spring motor
@@ -390,41 +388,5 @@ public class Catapult extends OutliersSubsystem {
         metric("Arm state", _state.name());
         metric("Arm release angle", getArmReleaseAngle());
         metric("Arm Hall Effect", isArmLowered());
-    }
-
-
-    /**
-     * Set lights for shooting
-     */
-    public void shootingLights() {
-        _lights.shooting();
-    }
-
-    /**
-     * Sets the lights the aiming mode
-     */
-    public void aiming(){
-        _lights.aiming();
-    }
-
-    /**
-     * Set lights for base
-     */
-    public void setBase() {
-        _lights.base();
-    }
-
-    /**
-     * Set lights for right ball
-     */
-    public void rightBall() {
-        _lights.rightBall();
-    }
-
-    /**
-     * Set lights for wrong ball
-     */
-    public void wrongBall() {
-        _lights.wrongBall();
     }
 }
