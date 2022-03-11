@@ -256,8 +256,8 @@ public class Constants {
         public static final double SPRING_ZERO_SPEED = -0.5;
         public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
         public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
-        public static final double INITIAL_BALL_WINCH_GOAL = 0.24;
-        public static final double INITIAL_BALL_SPRING_GOAL = 0.095;
+        public static final double INITIAL_BALL_WINCH_GOAL = 0.255;
+        public static final double INITIAL_BALL_SPRING_GOAL = 0.06;
 
 
     }
@@ -270,7 +270,7 @@ public class Constants {
     public static class Intake{
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
-        public static final double THE_BEANS = 0.7;
+        public static final double THE_BEANS = 0.75;
         public static final double GEAR_RATIO = 5.0;
         public static final double MAX_RPM = 6300 * GEAR_RATIO;
         public static final double TICKS_TO_ROTATIONS = 2048.0;

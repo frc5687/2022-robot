@@ -3,18 +3,18 @@ package org.frc5687.rapidreact.commands;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.subsystems.Catapult;
 
-public class SetState extends OutliersCommand {
+public class SetSetpoint extends OutliersCommand {
     private Catapult _catapult;
-    private Catapult.CatapultState _state;
-    public SetState(Catapult catapult, Catapult.CatapultState state) {
+    private Catapult.CatapultSetpoint _setpoint;
+
+    public SetSetpoint(Catapult catapult, Catapult.CatapultSetpoint setpoint) {
         _catapult = catapult;
-        _state = state;
+        _setpoint = setpoint;
     }
 
     @Override
     public void initialize() {
-        _catapult.setState(_state);
-        info("SetState initialized.");
+        _catapult.setSetpoint(_setpoint);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class SetState extends OutliersCommand {
 
     @Override
     public boolean isFinished() {
-        info("SetState finished.");
+        info("SetSetpoint finished.");
         return true;
     }
 
