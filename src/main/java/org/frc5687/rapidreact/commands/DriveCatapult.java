@@ -106,6 +106,7 @@ public class DriveCatapult extends OutliersCommand {
             break;
             case AIMING: {
                 checkLockOut();
+                _catapult.setAimingLights();
                 checkKill();
                 if (_driveTrain.hasTarget() && _catapult.getSetpoint()==CatapultSetpoint.NONE) {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
@@ -123,6 +124,7 @@ public class DriveCatapult extends OutliersCommand {
             break;
             case WRONG_BALL: {
                 checkLockOut();
+                _catapult.setWrongBallLights();
                 checkKill();
                 _catapult.setWinchGoal(Constants.Catapult.REMOVE_BALL_WINCH_GOAL);
                 _catapult.setSpringDistance(Constants.Catapult.REMOVE_BALL_SPRING_GOAL);
@@ -136,6 +138,7 @@ public class DriveCatapult extends OutliersCommand {
             break;
             case SHOOTING: {
                 checkLockOut();
+                _catapult.setShootingLights();
                 checkKill();
                 _catapult.setSetpoint(CatapultSetpoint.NONE);
                 _catapult.releaseArm();
@@ -155,6 +158,7 @@ public class DriveCatapult extends OutliersCommand {
             } break;
             case PRELOAD: {
                 checkLockOut();
+                _catapult.setBaseLights();
                 if (!_catapult.isSpringHallTriggered() && !_catapult.isSpringZeroed()) {
                     _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
                 } else if (_catapult.isSpringHallTriggered()) {

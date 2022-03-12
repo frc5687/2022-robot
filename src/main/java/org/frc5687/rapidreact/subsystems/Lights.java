@@ -27,7 +27,7 @@ public class Lights extends OutliersSubsystem{
     /**
      * The basic setting for the lights
      */
-    public void base(){
+    public void setBase(){
         _mode = Mode.BASE;
     }
 
@@ -42,38 +42,48 @@ public class Lights extends OutliersSubsystem{
     /**
      * The robot has picked up the wrong ball
      */
-    public void wrongBall(){
+    public void setWrongBall(){
         _mode = Mode.WRONG_BALL;
     }
 
     /**
      * The robot has picked up the right ball
      */
-    public void rightBall(){
+    public void setRightBall(){
         _mode = Mode.RIGHT_BALL;
     }
 
     /**
      * The robot is in shooting mode
      */
-    public void shooting(){
+    public void setShooting(){
         _mode = Mode.SHOOTING;
     }
 
     /**
      * Sets robot into aiming possible
      */
-    public void aiming(){
+    public void setAiming(){
         _mode = Mode.AIMING;
     }
 
     /**
      * The intake is deployed
      */
-    public void intake(){
+    public void setIntake(){
         _mode = Mode.INTAKE;
     }
 
+    /**
+     * Sets the blinkens to climbing mode
+     */
+    public void setClimbingLights(){
+        _mode = Mode.CLIMBING;
+    }
+
+    /**
+     * Decide what color to set the blinkens to
+     */
     @Override
     public void periodic(){
         switch(getMode()){
@@ -110,7 +120,7 @@ public class Lights extends OutliersSubsystem{
     }
 
     /**
-     * To store all the possible modes
+     * The modes of the blinkens
      */
     public enum Mode{
         UNKNOW,
