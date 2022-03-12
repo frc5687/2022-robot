@@ -67,10 +67,10 @@ public class RobotContainer extends OutliersContainer {
     /** Run once when robot code starts. */
     public void init() {
         // initialize peripherals. Do this before subsystems.
-//        info("Running RobotContainer.init()");
+        // info("Running RobotContainer.init()");
 
         // Initialize starting position and mode to unknown
-        // Later we will poll Drive Station for values
+        // In disabledPeriodic() we will poll Drive Station for values
         _positionOne = false;
         _positionTwo = false;
         _positionThree = false;
@@ -78,8 +78,8 @@ public class RobotContainer extends OutliersContainer {
         autoPosition = AutoChooser.Position.Unknown;
         _autoModeString = "Unknown";
         autoMode = AutoChooser.Mode.Unknown;
-//
-//         Display starting position value
+
+        // Display starting position value
         SmartDashboard.putString("DB/String 0", "Starting Position:");
         SmartDashboard.putString("DB/String 5", "Unknown");
    
@@ -198,7 +198,7 @@ public class RobotContainer extends OutliersContainer {
     @Override
     public void autonomousInit() {
         // Run once when entering auto mode
-        info("Running RobotContainer.autonomousInit()");
+        // info("Running RobotContainer.autonomousInit()");
     }
 
     /**
@@ -241,7 +241,7 @@ public class RobotContainer extends OutliersContainer {
             return new TwoBallAuto(_driveTrain, _catapult, _intake, Auto.BallPositions.BALL_TWO, rot);
         }
 
-        // Return command sequence based on starting position and auto mode selectded
+        // Return command sequence based on starting position and auto mode selected
 
         Pose2d[] destinationsZeroBall = { new Pose2d() };
         Pose2d[] destinationsOneBall = { new Pose2d() };
