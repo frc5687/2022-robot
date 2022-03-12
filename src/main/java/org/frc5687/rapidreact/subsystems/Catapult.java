@@ -437,10 +437,11 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public enum CatapultSetpoint {
-        NONE(0),
-        NEAR(1),
-        MID(2),
-        FAR(3);
+        TARMAC(0),
+        NONE(1),
+        NEAR(2),
+        MID(3),
+        FAR(4);
 
         private final int _value;
         CatapultSetpoint(int value) { 
@@ -455,6 +456,10 @@ public class Catapult extends OutliersSubsystem {
 
     public void setStaticGoals() {
         switch(_setpoint) {
+            case TARMAC:
+                setWinchGoal(Auto.StaticShots.TARMAC_WINCH);
+                setWinchGoal(Auto.StaticShots.TARMAC_SPRNG);
+                break;
             case NEAR:
                 setWinchGoal(Auto.StaticShots.NEAR_WINCH);
                 setSpringDistance(Auto.StaticShots.NEAR_SPRING);
