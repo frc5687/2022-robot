@@ -74,7 +74,6 @@ public class OI extends OutliersProxy {
         _resetNavX = new JoystickButton(_translation, 5);
         _exitKill = new JoystickButton(_translation, 9);
         _kill = new JoystickButton(_translation, 10);
-        
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
