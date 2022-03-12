@@ -235,47 +235,36 @@ public class RobotContainer extends OutliersContainer {
 
         // Set _bypass to true to set autonomous command here instead of using Drive Station
         if (_bypass) {
-            _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
-            Rotation2d rot = Rotation2d.fromDegrees(40);
+            Pose2d _startingPosition = Auto.RobotPositions.THIRD;
             info("Running twoball.");
-            return new TwoBallAuto(_driveTrain, _catapult, _intake, Auto.BallPositions.BALL_TWO, rot);
+            return new TwoBallAuto(_driveTrain, _catapult, _intake, _startingPosition);
         }
 
         // Return command sequence based on starting position and auto mode selected
 
-        Pose2d[] destinationsOneBall = { new Pose2d() };
         Pose2d[] destinationsTwoBall = { new Pose2d() };
 
-        Rotation2d[] rotationsOneBall = { new Rotation2d() };
         Rotation2d[] rotationsTwoBall = { new Rotation2d() };
         metric("autoPose", autoPosition.toString());
         switch(autoPosition) {
             case First:
                 _driveTrain.resetOdometry(Auto.RobotPositions.FIRST);
-                destinationsOneBall[0] = Auto.BallPositions.BALL_ONE;
                 destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
-                rotationsOneBall[0] = new Rotation2d();
                 rotationsTwoBall[0] = new Rotation2d();
                 break;
             case Second:
                 _driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
-                destinationsOneBall[0] = Auto.FieldPositions.ROBOT_POS_TWO_DEST;
                 destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
-                rotationsOneBall[0] = new Rotation2d();
                 rotationsTwoBall[0] = new Rotation2d();
                 break;
             case Third:
                 _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
-                destinationsOneBall[0] = Auto.BallPositions.BALL_TWO;
                 destinationsTwoBall[0] = Auto.BallPositions.BALL_TWO;
-                rotationsOneBall[0] = new Rotation2d();
                 rotationsTwoBall[0] = new Rotation2d();
                 break;
             case Fourth:
                 _driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
-                destinationsOneBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
                 destinationsTwoBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
-                rotationsOneBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 rotationsTwoBall[0] = new Rotation2d();
                 break;
             default:
@@ -286,7 +275,7 @@ public class RobotContainer extends OutliersContainer {
             case ZeroBall:
                 return new ZeroBallAuto(_driveTrain, autoPosition);
             case OneBall:
-                return new OneBallAuto(_driveTrain, _catapult, destinationsOneBall[0], rotationsOneBall[0]);
+                return new OneBallAuto(_driveTrain, _catapult, autoPosition);
             case TwoBall:
                 return new TwoBallAuto(_driveTrain, _catapult, _intake, destinationsTwoBall[0], rotationsTwoBall[0]);
             default:
