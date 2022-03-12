@@ -40,7 +40,7 @@ public class RobotContainer extends OutliersContainer {
     
     private OI _oi;
     private AHRS _imu;
-    private JetsonProxy _proxy;
+//    private JetsonProxy _proxy;
     private Limelight _limelight;
 
     private Robot _robot;
@@ -86,11 +86,11 @@ public class RobotContainer extends OutliersContainer {
         _oi = new OI();
         //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
-        _proxy = new JetsonProxy(10);
+//        _proxy = new JetsonProxy(10);
         _limelight = new Limelight("limelight");
 
         // then subsystems
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
+        _driveTrain = new DriveTrain(this, _oi/*, _proxy*/, _limelight, _imu);
         _intake = new Intake(this);
         _climber = new Climber(this, _driveTrain);
         _catapult = new Catapult(this);
