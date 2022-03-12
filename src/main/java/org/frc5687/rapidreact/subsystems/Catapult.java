@@ -439,19 +439,19 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void setAimingLights(){
-        _lights.setAiming();
+        _lights.setShootingStatus(2);
     }
 
     public void setWrongBallLights(){
-        _lights.setWrongBall();
+        _lights.setShootingStatus(1);
     }
 
     public void setRightBallLights(){
-        _lights.setRightBall();
+        _lights.setShootingStatus(0);
     }
 
     public void setShootingLights(){
-        _lights.setShooting();
+        _lights.setShootingStatus(3);
     }
 
     public void setBaseLights(){

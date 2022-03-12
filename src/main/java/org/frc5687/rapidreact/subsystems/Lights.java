@@ -1,5 +1,7 @@
 package org.frc5687.rapidreact.subsystems;
 
+import java.sql.ClientInfoStatus;
+
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.util.OutliersContainer;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -40,44 +42,31 @@ public class Lights extends OutliersSubsystem{
     }
 
     /**
-     * The robot has picked up the wrong ball
+     * Set the status of the shooting
+     * @param status 0 - Right ball / 1 - Wrong ball / 2 - Aming / 3 - Shooting
      */
-    public void setWrongBall(){
-        _mode = Mode.WRONG_BALL;
+    public void setShootingStatus(int status){
+        switch(status){
+            case 0:
+                _mode = Mode.RIGHT_BALL;
+                break;
+            case 1:
+                _mode = Mode.WRONG_BALL;
+                break;
+            case 2:
+                _mode = Mode.AIMING;
+                break;
+            case 3:
+                _mode = Mode.SHOOTING;
+                break;
+        }
     }
 
-    /**
-     * The robot has picked up the right ball
-     */
-    public void setRightBall(){
-        _mode = Mode.RIGHT_BALL;
-    }
-
-    /**
-     * The robot is in shooting mode
-     */
-    public void setShooting(){
-        _mode = Mode.SHOOTING;
-    }
-
-    /**
-     * Sets robot into aiming possible
-     */
-    public void setAiming(){
-        _mode = Mode.AIMING;
-    }
-
-    /**
-     * The intake is deployed
-     */
-    public void setIntake(){
+    public void setIntakeStatus(){
         _mode = Mode.INTAKE;
     }
 
-    /**
-     * Sets the blinkens to climbing mode
-     */
-    public void setClimbingLights(){
+    public void setClimbingStatus(){
         _mode = Mode.CLIMBING;
     }
 
