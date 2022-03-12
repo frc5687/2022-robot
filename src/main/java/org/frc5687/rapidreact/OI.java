@@ -22,8 +22,6 @@ import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
-import javax.print.attribute.standard.JobHoldUntil;
-
 public class OI extends OutliersProxy {
 
     // Joysticks and gamepads
@@ -88,7 +86,6 @@ public class OI extends OutliersProxy {
 
         _exitKill = new JoystickButton(_translation, 6);
         _kill = new JoystickButton(_translation, 7);
-        
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
