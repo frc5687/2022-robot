@@ -240,6 +240,57 @@ public class RobotContainer extends OutliersContainer {
             return new TwoBallAuto(_driveTrain, _catapult, _intake, _startingPosition);
         }
 
+        // Return command sequence based on starting position and auto mode selectded
+
+        Pose2d[] destinationsZeroBall = { new Pose2d() };
+        Pose2d[] destinationsOneBall = { new Pose2d() };
+        Pose2d[] destinationsTwoBall = { new Pose2d() };
+
+        Rotation2d[] rotationsZeroBall = { new Rotation2d() };
+        Rotation2d[] rotationsOneBall = { new Rotation2d() };
+        Rotation2d[] rotationsTwoBall = { new Rotation2d() };
+        metric("autoPose", autoPosition.toString());
+        switch(autoPosition) {
+            case First:
+                _driveTrain.resetOdometry(Auto.RobotPositions.FIRST);
+                destinationsZeroBall[0] = Auto.BallPositions.BALL_ONE;
+                destinationsOneBall[0] = Auto.BallPositions.BALL_ONE;
+                destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
+                rotationsZeroBall[0] = Auto.Rotations.BALL_ONE_FROM_FIRST;
+                rotationsOneBall[0] = Auto.Rotations.BALL_ONE_FROM_FIRST;
+                rotationsTwoBall[0] = Auto.Rotations.BALL_ONE_FROM_FIRST;
+                break;
+            case Second:
+                _driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
+                destinationsZeroBall[0] = Auto.FieldPositions.ROBOT_POS_TWO_DEST;
+                destinationsOneBall[0] = Auto.FieldPositions.ROBOT_POS_TWO_DEST;
+                destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
+                rotationsZeroBall[0] = new Rotation2d();
+                rotationsOneBall[0] = new Rotation2d();
+                rotationsTwoBall[0] = new Rotation2d();
+                break;
+            case Third:
+                _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
+                destinationsZeroBall[0] = Auto.BallPositions.BALL_TWO;
+                destinationsOneBall[0] = Auto.BallPositions.BALL_TWO;
+                destinationsTwoBall[0] = Auto.BallPositions.BALL_TWO;
+                rotationsZeroBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
+                rotationsOneBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
+                rotationsTwoBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
+                break;
+            case Fourth:
+                _driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
+                destinationsZeroBall[0] = Auto.FieldPositions.PARALLEL_PARK;
+                destinationsOneBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
+                destinationsTwoBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
+                rotationsZeroBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
+                rotationsOneBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
+                rotationsTwoBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
+                break;
+            default:
+                return new Wait(15);
+        }
+
         // Return command sequence based on auto mode selected and pass in starting position
         switch (autoMode) {
             case ZeroBall:
