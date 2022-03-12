@@ -22,6 +22,7 @@ public class OneBallAuto extends SequentialCommandGroup {
 
     private Boolean _bypass;
 
+    /** Construct a OneBall Auto SequentialCommandGroup */
     public OneBallAuto (
         DriveTrain driveTrain,
         Catapult catapult,
@@ -77,6 +78,11 @@ public class OneBallAuto extends SequentialCommandGroup {
                 _rotation = Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 break;
             default:
+                _translation = new Translation2d (
+                    driveTrain.getOdometryPose().getX(),
+                    driveTrain.getOdometryPose().getY()
+                    );
+                _rotation = driveTrain.getOdometryPose().getRotation();
         }
 
         _destination = new Pose2d(_translation, _rotation);

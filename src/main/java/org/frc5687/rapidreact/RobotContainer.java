@@ -235,49 +235,19 @@ public class RobotContainer extends OutliersContainer {
 
         // Set _bypass to true to set autonomous command here instead of using Drive Station
         if (_bypass) {
-            Pose2d _startingPosition = Auto.RobotPositions.THIRD;
+            AutoChooser.Position _startingPosition = AutoChooser.Position.Third;
             info("Running twoball.");
             return new TwoBallAuto(_driveTrain, _catapult, _intake, _startingPosition);
         }
 
-        // Return command sequence based on starting position and auto mode selected
-
-        Pose2d[] destinationsTwoBall = { new Pose2d() };
-
-        Rotation2d[] rotationsTwoBall = { new Rotation2d() };
-        metric("autoPose", autoPosition.toString());
-        switch(autoPosition) {
-            case First:
-                _driveTrain.resetOdometry(Auto.RobotPositions.FIRST);
-                destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
-                rotationsTwoBall[0] = new Rotation2d();
-                break;
-            case Second:
-                _driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
-                destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
-                rotationsTwoBall[0] = new Rotation2d();
-                break;
-            case Third:
-                _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
-                destinationsTwoBall[0] = Auto.BallPositions.BALL_TWO;
-                rotationsTwoBall[0] = new Rotation2d();
-                break;
-            case Fourth:
-                _driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
-                destinationsTwoBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
-                rotationsTwoBall[0] = new Rotation2d();
-                break;
-            default:
-                return new Wait(15);
-        }
-
+        // Return command sequence based on auto mode selected and pass in starting position
         switch (autoMode) {
             case ZeroBall:
                 return new ZeroBallAuto(_driveTrain, autoPosition);
             case OneBall:
                 return new OneBallAuto(_driveTrain, _catapult, autoPosition);
             case TwoBall:
-                return new TwoBallAuto(_driveTrain, _catapult, _intake, destinationsTwoBall[0], rotationsTwoBall[0]);
+                return new TwoBallAuto(_driveTrain, _catapult, _intake, autoPosition);
             default:
                 return new Wait(15);
         }
