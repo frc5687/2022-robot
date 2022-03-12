@@ -2,7 +2,6 @@ package org.frc5687.rapidreact.commands.auto;
 
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
-import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.commands.Shoot;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,7 +25,6 @@ public class OneBallAuto extends SequentialCommandGroup {
     public OneBallAuto (
         DriveTrain driveTrain,
         Catapult catapult,
-        //Intake intake,
         AutoChooser.Position position
     ) {
         Double _velocity;
