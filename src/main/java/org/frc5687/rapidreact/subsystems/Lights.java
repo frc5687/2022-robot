@@ -80,7 +80,7 @@ public class Lights extends OutliersSubsystem{
             case UNKNOW:
                 break;
             case BASE:
-                set(Constants.Lights.SOLID_PURPLE);
+                set(Constants.Lights.BASE);
                 break;
             case WRONG_BALL:
                 set(Constants.Lights.WRONG_BALL);
@@ -89,16 +89,16 @@ public class Lights extends OutliersSubsystem{
                 set(Constants.Lights.RIGHT_BALL);
                 break;
             case SHOOTING:
-                set(Constants.Lights.STROBE_GOLD);
+                set(Constants.Lights.SHOOTING);
                 break;
             case INTAKE:
-                set(Constants.Lights.BEATING_BLUE);
+                set(Constants.Lights.INTAKE);
                 break;
             case CLIMBING:
-                set(Constants.Lights.RAINBOW_LAVA);
+                set(Constants.Lights.CLIMBING);
                 break;
             case AIMING:
-                set(Constants.Lights.STROBE_BLUE);
+                set(Constants.Lights.AIMING);
                 break;
         }
     }

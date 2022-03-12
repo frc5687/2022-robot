@@ -351,12 +351,12 @@ public class Constants {
     }
 
     public static class Lights{
-        public static final double BASE = 0.91; // SOLID PURPLE
+        public static final double BASE = 0.91; // Solid purple
         public static final double RIGHT_BALL = -0.15; // Strobe blue
-        public static final double WRONG_BALL = -0.11; // Strobe Red  
-        public static final double SHOOTING = -0.07; // STROBE GOLD
-        public static final double BEATING_BLUE = -0.15;
-        public static final double RAINBOW_LAVA = -0.93;
-        public static final double STROBE_BLUE = -0.09;
+        public static final double WRONG_BALL = -0.11; // Strobe red 
+        public static final double SHOOTING = -0.07; // Shooting
+        public static final double INTAKE = -0.15; // Intake
+        public static final double CLIMBING = -0.93; // Rainbow lava
+        public static final double AIMING = -0.09; //Aiming
     }
 }
