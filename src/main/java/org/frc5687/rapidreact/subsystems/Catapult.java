@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.util.ColorSensor;
@@ -49,6 +48,7 @@ public class Catapult extends OutliersSubsystem {
     private ServoStop _gate;
 
     private DriverStation.Alliance _alliance;
+    private Lights _lights;
 
     private double _springGoal;
 
@@ -130,9 +130,9 @@ public class Catapult extends OutliersSubsystem {
 
 
     /** Catapult constructor */
-    public Catapult(OutliersContainer container) {
+    public Catapult(OutliersContainer container, Lights lights) {
         super(container);
-
+        _lights = lights;
         // Motor controllers (Spark Maxes)
         // Spring motor
         _springMotor = new TalonFX(RobotMap.CAN.TALONFX.CATAPULT_SPRING);
@@ -328,6 +328,12 @@ public class Catapult extends OutliersSubsystem {
     }
 
     // calculate linear regression.
+
+
+
+
+
+    
     public double calculateIdealString(double dist) {
         return (-0.0081481481 * (dist * dist * dist)) +
                 (0.1132539683 * (dist * dist))
@@ -430,6 +436,26 @@ public class Catapult extends OutliersSubsystem {
     public void setSetpoint(CatapultSetpoint setpoint) {
         _setpoint = setpoint;
         info("Setting setpoint to " + setpoint.toString());
+    }
+
+    public void setAimingLights(){
+        _lights.setShootingStatus(2);
+    }
+
+    public void setWrongBallLights(){
+        _lights.setShootingStatus(1);
+    }
+
+    public void setRightBallLights(){
+        _lights.setShootingStatus(0);
+    }
+
+    public void setShootingLights(){
+        _lights.setShootingStatus(3);
+    }
+
+    public void setBaseLights(){
+        _lights.setBase();
     }
 
     public CatapultSetpoint getSetpoint() {
