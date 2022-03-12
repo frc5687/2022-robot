@@ -21,6 +21,7 @@ public class DriveCatapult extends OutliersCommand {
     private Catapult.CatapultState _prevState;
     private boolean _isFirstShot = true;
     private CatapultState _lastLoggedState = null;
+    private long _wait;
 
     public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, OI oi) {
         _catapult = catapult;
@@ -75,7 +76,7 @@ public class DriveCatapult extends OutliersCommand {
                 checkLockOut();
                 checkKill();
                 _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
-                if (_catapult.isArmLowered() && (Math.abs(_catapult.getWinchStringLength()) < 0.15)) {
+                if (_catapult.isArmLowered()) {
                     _catapult.setWinchMotorSpeed(0.0);
                     _catapult.lockArm();
 //                error("Switching state Loading");
@@ -132,7 +133,8 @@ public class DriveCatapult extends OutliersCommand {
                 if (_catapult.isWinchAtGoal()) {
                     _catapult.setWinchMotorSpeed(0.0);
                     _catapult.releaseArm();
-                    _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
+                    _wait = System.currentTimeMillis() + 250;
+                    _catapult.setState(CatapultState.WAIT_SHOT);
                 }
             }
             break;
@@ -145,7 +147,13 @@ public class DriveCatapult extends OutliersCommand {
                     _catapult.setState(CatapultState.ZEROING);
                     _isFirstShot = false;
                 } else {
-                    _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
+                    _wait = System.currentTimeMillis() + 250;
+                    _catapult.setState(Catapult.CatapultState.WAIT_SHOT);
+                }
+            } break;
+            case WAIT_SHOT: {
+                if (System.currentTimeMillis() > _wait) {
+                    _catapult.setState(CatapultState.LOWERING_ARM);
                 }
             } break;
             case LOCK_OUT: {
