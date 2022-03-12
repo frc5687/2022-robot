@@ -173,7 +173,9 @@ public class DriveCatapult extends OutliersCommand {
                     _catapult.setWinchGoal(Auto.StaticShots.NEAR_WINCH);
                 }
                 // TODO: zero needs to follow this if statement.
-                _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
+                if (_catapult.isWinchZeroed()){
+                    _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
+                }
                 if ((_catapult.isSpringAtPosition() && _catapult.isSpringZeroed()) && (_catapult.isWinchAtGoal() && _catapult.isWinchZeroed())) {
                     _catapult.setWinchMotorSpeed(0);
                     _catapult.setSpringMotorSpeed(0);
