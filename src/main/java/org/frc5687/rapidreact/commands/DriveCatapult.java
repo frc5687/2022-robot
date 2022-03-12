@@ -88,22 +88,26 @@ public class DriveCatapult extends OutliersCommand {
                 _catapult.raiseGate();
                 checkLockOut();
                 checkKill();
+                if (_catapult.isBallDetected()) {
+                    _catapult.lowerGate();
+                    _catapult.setState(Catapult.CatapultState.AIMING);
+                }
                 // in the future check if we have a ball and the ball color, REV Color Sensor
                 // has a proximity sensor built it.
-                if (_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
-                    _catapult.setState(Catapult.CatapultState.AIMING);
-                    _catapult.lowerGate();
-                } else if (_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
-                    _catapult.setState(Catapult.CatapultState.WRONG_BALL);
-                    _catapult.lowerGate();
-                }
-                if (!_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
-                    _catapult.setState(Catapult.CatapultState.AIMING);
-                    _catapult.lowerGate();
-                } else if (!_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
-                    _catapult.setState(Catapult.CatapultState.WRONG_BALL);
-                    _catapult.lowerGate();
-                }
+//                if (_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
+//                    _catapult.setState(Catapult.CatapultState.AIMING);
+//                    _catapult.lowerGate();
+//                } else if (_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
+//                    _catapult.setState(Catapult.CatapultState.WRONG_BALL);
+//                    _catapult.lowerGate();
+//                }
+//                if (!_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
+//                    _catapult.setState(Catapult.CatapultState.AIMING);
+//                    _catapult.lowerGate();
+//                } else if (!_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
+//                    _catapult.setState(Catapult.CatapultState.WRONG_BALL);
+//                    _catapult.lowerGate();
+//                }
             }
             break;
             case AIMING: {
