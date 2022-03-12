@@ -16,7 +16,7 @@ public class ZeroBallAuto extends SequentialCommandGroup {
     private Rotation2d _rotation;
     private Pose2d _destination;
 
-    private Boolean _testing;
+    private Boolean _bypass;
 
     /** Construct a ZeroBall Auto SequentialCommandGroup */
     public ZeroBallAuto(
@@ -25,8 +25,8 @@ public class ZeroBallAuto extends SequentialCommandGroup {
     ) {
         Double _velocity;
 
-        _testing = false;
-        if (_testing) {
+        _bypass = false;
+        if (_bypass) {
             // Hard code for testing
             _translation = new Translation2d(1.0, 1.0);
             _rotation = new Rotation2d(0.0);
