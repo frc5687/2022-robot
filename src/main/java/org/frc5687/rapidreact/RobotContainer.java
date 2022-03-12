@@ -22,14 +22,12 @@ import org.frc5687.rapidreact.commands.auto.*;
 import org.frc5687.rapidreact.commands.Climber.IdleClimber;
 
 import org.frc5687.rapidreact.config.Auto;
-
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
-
 import org.frc5687.rapidreact.util.AutoChooser;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.Limelight;
