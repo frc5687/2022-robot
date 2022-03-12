@@ -14,6 +14,7 @@ import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.Climber.AutoClimb;
 import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
 import org.frc5687.rapidreact.commands.Climber.Stow;
+import org.frc5687.rapidreact.commands.SetSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -41,9 +42,11 @@ public class OI extends OutliersProxy {
     private JoystickButton _stowClimber;
     private JoystickButton _release;
     private JoystickButton _resetNavX;
-    private JoystickButton  _setState;
     private JoystickButton _shootButton;
-    private JoystickButton _stow;
+
+    private JoystickButton _shootSetpointOne;
+    private JoystickButton _shootSetpointTwo;
+    private JoystickButton _shootSetpointThree;
 
     // "Raw" joystick values
     private double yIn = 0;
@@ -60,6 +63,9 @@ public class OI extends OutliersProxy {
         _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+
+        // adding buttons while driving: Ben pls look
+
 //        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 
         // rotation joystick
@@ -72,11 +78,22 @@ public class OI extends OutliersProxy {
         _release = new JoystickButton(_translation, 2);
         _dropArm = new JoystickButton(_translation, 3);
         _resetNavX = new JoystickButton(_translation, 5);
-        _exitKill = new JoystickButton(_translation, 9);
-        _kill = new JoystickButton(_translation, 10);
+
+        // while driving, ben check.
+        _shootSetpointOne = new JoystickButton(_translation, 9);
+        _shootSetpointTwo = new JoystickButton(_translation, 10);
+        _shootSetpointThree = new JoystickButton(_translation, 11);
+
+        _exitKill = new JoystickButton(_translation, 6);
+        _kill = new JoystickButton(_translation, 7);
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
+        // driving, Ben check pls.
+        _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
+        _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
+        _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
+
         _intakeButton.whenHeld(new AutoIntake(intake));
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
