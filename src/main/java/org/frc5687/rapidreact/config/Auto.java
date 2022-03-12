@@ -36,6 +36,9 @@ public class Auto {
         public static double DEFAULT_WINCH = 0.24;
         public static double DEFAULT_SPRING = 0.065;
 
+        public static double TARMAC_WINCH = 0.23;
+        public static double TARMAC_SPRING = 0.055;
+
         // 3.15m
         public static double NEAR_WINCH = 0.24;
         public static double NEAR_SPRING = 0.065;

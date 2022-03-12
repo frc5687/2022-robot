@@ -173,7 +173,7 @@ public class DriveCatapult extends OutliersCommand {
                     _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
                 } else if (_catapult.isSpringHallTriggered()) {
                     _catapult.zeroSpringEncoder();
-                    _catapult.setSpringDistance(Auto.StaticShots.NEAR_SPRING);
+                    _catapult.setSpringDistance(Auto.StaticShots.TARMAC_SPRING);
                 }
                 if (!_catapult.isArmLowered() && !_catapult.isWinchZeroed()) {
                     _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
@@ -182,7 +182,7 @@ public class DriveCatapult extends OutliersCommand {
                     _catapult.lockArm();
                 }
                 if ((_catapult.isArmLowered() && _catapult.isWinchZeroed()) && _catapult.isSpringZeroed()){
-                    _catapult.setWinchGoal(Auto.StaticShots.NEAR_WINCH);
+                    _catapult.setWinchGoal(Auto.StaticShots.TARMAC_WINCH);
                 }
                 // TODO: zero needs to follow this if statement.
                 if (_catapult.isWinchZeroed()){
