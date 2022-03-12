@@ -7,7 +7,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -50,6 +49,11 @@ public class RobotContainer extends OutliersContainer {
     private Climber _climber;
 
     private AutoChooser _autoChooser;
+    private Boolean _positionOne;
+    private Boolean _positionTwo;
+    private Boolean _positionThree;
+    private Boolean _positionFour;
+    private String _autoModeString;
     AutoChooser.Position autoPosition;
     AutoChooser.Mode autoMode;
 
@@ -67,7 +71,12 @@ public class RobotContainer extends OutliersContainer {
 
         // Initialize starting position and mode to unknown
         // Later we will poll Drive Station for values
+        _positionOne = false;
+        _positionTwo = false;
+        _positionThree = false;
+        _positionFour = false;
         autoPosition = AutoChooser.Position.Unknown;
+        _autoModeString = "Unknown";
         autoMode = AutoChooser.Mode.Unknown;
 //
 //         Display starting position value
@@ -76,11 +85,12 @@ public class RobotContainer extends OutliersContainer {
    
         // Display auto mode value
         SmartDashboard.putString("DB/String 1", "Auto Mode:");
-        String _automodeString = SmartDashboard.getString("Auto Selector", "Unknown");
+        String _automodeString = SmartDashboard.getString("Auto Selector", _autoModeString);
         SmartDashboard.putString("DB/String 6", _automodeString);
 
         // Auto mode chooser
-        String [] modes = { "Zero Ball", "One Ball", "Two Ball", "Three Ball", "Four Ball", "Five Ball" };
+        String [] modes = { "Zero Ball", "One Ball", "Two Ball" };
+        // String [] modes = { "Zero Ball", "One Ball", "Two Ball", "Three Ball", "Four Ball", "Five Ball" };
         SmartDashboard.putStringArray("Auto List", modes);
 
         _oi = new OI();
@@ -113,21 +123,22 @@ public class RobotContainer extends OutliersContainer {
         _imu.reset();
     }
 
-    public void periodic() {
+    public void periodic() {}
+
+    /** Run every cycle when robot disabled */
+    public void disabledPeriodic() {
 
         // Poll Drive Station for starting position and auto mode selector
 
-        // This could move to disabledPeriodic if we don't want to be doing
-        // this during auto, teleop or test mode.
+        // Use existing value as default so if WiFi drops we don't lose settings
 
-        // Check starting position buttons
-        Boolean _positionOne = SmartDashboard.getBoolean("DB/Button 0", false);
-        Boolean _positionTwo = SmartDashboard.getBoolean("DB/Button 1", false);
-        Boolean _positionThree = SmartDashboard.getBoolean("DB/Button 2", false);
-        Boolean _positionFour = SmartDashboard.getBoolean("DB/Button 3", false);
+        // Poll starting position buttons
+        _positionOne = SmartDashboard.getBoolean("DB/Button 0", _positionOne);
+        _positionTwo = SmartDashboard.getBoolean("DB/Button 1", _positionTwo);
+        _positionThree = SmartDashboard.getBoolean("DB/Button 2", _positionThree);
+        _positionFour = SmartDashboard.getBoolean("DB/Button 3", _positionFour);
 
         // Set position to highest value that is selected
-        autoPosition = AutoChooser.Position.Unknown;
         if (_positionOne) {
             autoPosition = AutoChooser.Position.First;
             SmartDashboard.putString("DB/String 5", "One");
@@ -149,8 +160,8 @@ public class RobotContainer extends OutliersContainer {
         }
 
         // Set auto mode based on Smart Dashboard pull down
-        String _automode = SmartDashboard.getString("Auto Selector", "Unknown");
-        switch(_automode) {
+        _autoModeString = SmartDashboard.getString("Auto Selector", _autoModeString);
+        switch(_autoModeString) {
             case "Zero Ball":
                 autoMode = AutoChooser.Mode.ZeroBall;
                 metric("Zero Ball", true);
@@ -171,12 +182,8 @@ public class RobotContainer extends OutliersContainer {
         }
 
         // Display auto mode selector
-        String _automodeString = SmartDashboard.getString("Auto Selector", "Unknown");
-        SmartDashboard.putString("DB/String 6", _automodeString);
-    }
+        SmartDashboard.putString("DB/String 6", _autoModeString);
 
-    public void disabledPeriodic() {
-        //Runs every 20ms during disabled
     }
 
     @Override
