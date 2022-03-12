@@ -249,9 +249,9 @@ public class RobotContainer extends OutliersContainer {
                 destinationsZeroBall[0] = Auto.BallPositions.BALL_ONE;
                 destinationsOneBall[0] = Auto.BallPositions.BALL_ONE;
                 destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
-                rotationsZeroBall[0] = new Rotation2d();
-                rotationsOneBall[0] = new Rotation2d();
-                rotationsTwoBall[0] = new Rotation2d();
+                rotationsZeroBall[0] = Auto.Rotations.BALL_ONE_FROM_FIRST;
+                rotationsOneBall[0] = Auto.Rotations.BALL_ONE_FROM_FIRST;
+                rotationsTwoBall[0] = Auto.Rotations.BALL_ONE_FROM_FIRST;
                 break;
             case Second:
                 _driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
@@ -267,18 +267,18 @@ public class RobotContainer extends OutliersContainer {
                 destinationsZeroBall[0] = Auto.BallPositions.BALL_TWO;
                 destinationsOneBall[0] = Auto.BallPositions.BALL_TWO;
                 destinationsTwoBall[0] = Auto.BallPositions.BALL_TWO;
-                rotationsZeroBall[0] = new Rotation2d();
-                rotationsOneBall[0] = new Rotation2d();
-                rotationsTwoBall[0] = new Rotation2d();
+                rotationsZeroBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
+                rotationsOneBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
+                rotationsTwoBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
                 break;
             case Fourth:
                 _driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
                 destinationsZeroBall[0] = Auto.FieldPositions.PARALLEL_PARK;
                 destinationsOneBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
                 destinationsTwoBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
-                rotationsZeroBall[0] = new Rotation2d();
+                rotationsZeroBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 rotationsOneBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
-                rotationsTwoBall[0] = new Rotation2d();
+                rotationsTwoBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 break;
             default:
                 return new Wait(15);
