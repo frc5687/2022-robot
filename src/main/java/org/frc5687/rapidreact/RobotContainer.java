@@ -162,6 +162,7 @@ public class RobotContainer extends OutliersContainer {
             case "Two Ball":
                 autoMode = AutoChooser.Mode.TwoBall;
                 metric("Two ball", true);
+                break;
             case "Three Ball":
             case "Four Ball":
             case "Five Ball":
@@ -223,7 +224,7 @@ public class RobotContainer extends OutliersContainer {
 
     public Command getAutonomousCommand() {
         // This is just for testing so Dennis and Jack can bypass chooser code
-        Boolean _bypass = true;
+        Boolean _bypass = false;
 
         // Set _bypass to true to set autonomous command here instead of using Drive Station
         if (_bypass) {
