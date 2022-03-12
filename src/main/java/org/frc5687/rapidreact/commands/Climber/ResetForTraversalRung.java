@@ -34,12 +34,12 @@ public class ResetForTraversalRung extends OutliersCommand{
     @Override
     public boolean isFinished(){
         super.isFinished();
-//        if (_climber.isStaArmUp() || _climber.isStaArmUp()) {
-//            _climber.setStep(Climber.ClimberStep.READY_TO_CLIMB);
-//            info("Finished ResetForTraversalRung");
+        if (_climber.isStaAtGoal()) {
+            _climber.setStep(Climber.ClimberStep.ATTACHED_HIGH);
+            info("Finished ResetForTraversalRung");
             return true;
-//        }
-//        return false;
+        }
+        return false;
     }
 
     @Override
