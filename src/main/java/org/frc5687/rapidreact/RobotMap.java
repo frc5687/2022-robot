@@ -46,7 +46,6 @@ public class RobotMap {
      */
     public static class PWM {
         public static final int INTAKE_STOPPER = 0;
-        public static final int BLINKENS = 1;
     }
 
     /**
