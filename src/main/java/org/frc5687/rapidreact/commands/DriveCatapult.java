@@ -42,6 +42,7 @@ public class DriveCatapult extends OutliersCommand {
         metric("String from dist", _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
         metric("Spring from dist", _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
         metric("Intake down", _intake.isIntakeUp());
+        metric("Setpoint value", _catapult.getSetpoint().toString());
         CatapultState newState =  _catapult.getState(); 
         if (newState != _lastLoggedState) {
             info("State changed to " + newState);
@@ -107,12 +108,13 @@ public class DriveCatapult extends OutliersCommand {
             case AIMING: {
                 checkLockOut();
                 checkKill();
-                if (_driveTrain.hasTarget() && _catapult.getSetpoint()==CatapultSetpoint.NONE) {
+                if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
                 } else {
                     _catapult.setStaticGoals();
                 }
+//                _catapult.setStaticGoals();
                 if (isShootTriggered() && (_isFirstShot ||  (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
                     _catapult.setAutoshoot(false);
                     _catapult.setState(Catapult.CatapultState.SHOOTING);
