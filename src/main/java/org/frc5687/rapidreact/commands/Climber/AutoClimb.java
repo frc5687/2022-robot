@@ -22,6 +22,7 @@ public class AutoClimb extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
+        _climber.setClimbingLights();
         SequentialCommandGroup group = new SequentialCommandGroup(); 
         switch(_climber.getStep()) {
             case UNKNOWN:
@@ -57,8 +58,4 @@ public class AutoClimb extends OutliersCommand {
     public boolean isFinished() {
         return true;
     }
-
-
-
-    
 }
