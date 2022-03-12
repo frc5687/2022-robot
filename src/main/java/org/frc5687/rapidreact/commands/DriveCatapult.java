@@ -75,7 +75,7 @@ public class DriveCatapult extends OutliersCommand {
                 checkLockOut();
                 checkKill();
                 _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
-                if (_catapult.isArmLowered() && (Math.abs(_catapult.getWinchStringLength()) < 0.05)) {
+                if (_catapult.isArmLowered() && (Math.abs(_catapult.getWinchStringLength()) < 0.15)) {
                     _catapult.setWinchMotorSpeed(0.0);
                     _catapult.lockArm();
 //                error("Switching state Loading");
