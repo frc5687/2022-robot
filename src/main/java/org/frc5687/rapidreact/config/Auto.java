@@ -33,16 +33,19 @@ public class Auto {
     public static final double DRIVETRAIN_POWER = 0.5;
 
     public static class StaticShots {
-        public static double DEFAULT_WINCH = 0.325;
-        public static double DEFAULT_SPRING = 0.0835;
+        public static double DEFAULT_WINCH = 0.24;
+        public static double DEFAULT_SPRING = 0.065;
 
+        // 3.15m
         public static double NEAR_WINCH = 0.24;
-        public static double NEAR_SPRING = 0.045;
-        
-        public static double MID_WINCH = 0.27;
-        public static double MID_SPRING = 0.067;
+        public static double NEAR_SPRING = 0.065;
 
-        public static double FAR_WINCH = 0.335;
-        public static double FAR_SPRING = 0.085;
+        // 5m
+        public static double MID_WINCH = 0.312;
+        public static double MID_SPRING = 0.079;
+
+        // 6m
+        public static double FAR_WINCH = 0.328;
+        public static double FAR_SPRING = 0.0935;
     }
 }
