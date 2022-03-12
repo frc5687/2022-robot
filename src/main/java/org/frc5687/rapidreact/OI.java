@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.Climber.AutoClimb;
+import org.frc5687.rapidreact.commands.Climber.RetryClimb;
 import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
 import org.frc5687.rapidreact.commands.Climber.Stow;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -38,6 +39,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _kill;
     private JoystickButton _preloadButton;
     private JoystickButton _readyToClimb;
+    private JoystickButton _retryClimb;
     private JoystickButton _stowClimber;
     private JoystickButton _release;
     private JoystickButton _resetNavX;
@@ -59,6 +61,7 @@ public class OI extends OutliersProxy {
         _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
         _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
+        _retryClimb = new JoystickButton(_debug, Gamepad.Buttons.LEFT_BUMPER.getNumber());
         _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 //        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
 
@@ -81,6 +84,7 @@ public class OI extends OutliersProxy {
         _intakeButton.whenHeld(new AutoIntake(intake));
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
+        _retryClimb.whenPressed(new RetryClimb(climber));
         _stowClimber.whenPressed(new Stow(climber));
     }
 
