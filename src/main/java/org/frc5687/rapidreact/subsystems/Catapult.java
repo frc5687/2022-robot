@@ -59,7 +59,52 @@ public class Catapult extends OutliersSubsystem {
     private CatapultSetpoint _setpoint = CatapultSetpoint.NONE;
 
     public enum CatapultState {
-        // Robot starts in ZEROING state, assuming the following:
+        // Robot starts in DEBUG state while we figure out state machine and track down bugs
+
+        // When code starts, catapult should be in the following physical configuration
+        // ("starting configuration"):
+        // - arm lowered
+        // - pin locked
+        // - spring tensioned for auto shot
+        // - winch string unwound to hard stop length for auto shot
+        // This allows auto to release pin to shoot ball one into hub
+
+        // PRELOADING should be putting catapult into starting configuration
+        // PRELOADED should be catapult in starting configuration
+
+        // To get catapult to work reliably, here is a recommended state machine:
+
+        // PRELOADED -- ready to start match in auto mode, waiting to release pin
+        // ZEROING -- pin released, first shot taken, spring encoder being zeroed
+
+        // LOWERING_ARM -- pin released, spring encoder zeroed, run winch to pull arm down
+        // LOCKING -- winch hall effect triggered, zero winch encoder, turn off winch motor, lock pin
+        // LOADING -- waiting for ball on arm (necessary to avoid dry firing)
+        // AIMING -- setting winch string and spring tension for next shot
+        // READY -- winch string set, spring tension set, waiting for shoot command to release pin
+
+        // From READY can go to AIMING if things change (i.e. we drive to a different position) or to
+        // LOWERING_ARM if shot taken
+
+        // Additional states:
+
+        // PRELOADING -- set winch string and spring tension for auto shot, then enter PRELOADED state
+        //  (make this available only in test mode so isn't accidentally done during a match)
+        // WAITING -- do nothing to allow catapult some cycles to transition to next state
+        //  (give it old and new state and time to wait as parameters)
+        // DEBUG -- allow manual control of winch motor (wind and unwind), spring motor (tension and release), and lock pin
+
+        // Recommended cycles:
+
+        // PRELOADED -> ZEROING -> WAITING -> LOWERING_ARM -> LOCKING -> LOADING -> AIMING -> READY => auto
+        // READY -> AIMING -> READY => robot moves so needs to aim again
+        // READY -> LOWERING_ARM -> LOCKING -> LOADING -> AIMING -> READY => robot shoots so needs to reset catapult
+
+        // DEBUG -> PRELOADING -> PRELOADED => only available when robot in test mode; do before each match
+
+        // Current state machine:
+
+        // ZEROING assumes the following:
         // - no tension on spring (should trigger spring Hall effect)
         // - catapult arm lowered
         // - pin locked
@@ -95,6 +140,7 @@ public class Catapult extends OutliersSubsystem {
 
         // if in debug, set the winch and spring settings for initial position
         PRELOAD(7),
+
         // Until we have figured out catapult, start in DEBUG state
         // Check that everything looks good, then press
         // button to get into ZEROING state
