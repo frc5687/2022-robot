@@ -6,7 +6,7 @@ package org.frc5687.rapidreact.util;
  */
 
 public class Version {
-    public static final String BRANCH = "Catapult/#99-Override-Setpoint";
-    public static final String REVISION = "8b4f0e7";
+    public static final String BRANCH = "Tarmac-shot";
+    public static final String REVISION = "bb9d04a";
     public static final String MODIFIED = " *";
 }
