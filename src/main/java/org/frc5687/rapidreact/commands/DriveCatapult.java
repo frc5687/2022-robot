@@ -85,6 +85,7 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case LOADING: {
+                _catapult.setBase();
                 _catapult.raiseGate();
                 checkLockOut();
                 checkKill();
@@ -111,6 +112,7 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case AIMING: {
+                _catapult.setAiming();
                 checkLockOut();
                 checkKill();
                 if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
@@ -143,6 +145,7 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case SHOOTING: {
+                _catapult.setShootingLights();
                 checkLockOut();
                 checkKill();
                 _catapult.setSetpoint(CatapultSetpoint.NONE);

@@ -56,6 +56,8 @@ public class Catapult extends OutliersSubsystem {
 
     private boolean _initialized = false;
 
+    private Lights _lights;
+
     private CatapultSetpoint _setpoint = CatapultSetpoint.NONE;
 
     public enum CatapultState {
@@ -133,9 +135,9 @@ public class Catapult extends OutliersSubsystem {
 
 
     /** Catapult constructor */
-    public Catapult(OutliersContainer container) {
+    public Catapult(OutliersContainer container, Lights lights) {
         super(container);
-
+        _lights = lights;
         // Motor controllers (Spark Maxes)
         // Spring motor
         _springMotor = new TalonFX(RobotMap.CAN.TALONFX.CATAPULT_SPRING);
@@ -478,5 +480,23 @@ public class Catapult extends OutliersSubsystem {
         
     }
 
-    
+    public void setShootingLights(){
+        _lights.setCatapultStatus(3);
+    }
+
+    public void setRightBall(){
+        _lights.setCatapultStatus(0);
+    }
+
+    public void setWrongBall(){
+        _lights.setCatapultStatus(1);
+    }
+
+    public void setAiming(){
+        _lights.setCatapultStatus(2);
+    }
+
+    public void setBase(){
+        _lights.setBase();
+    }
 }

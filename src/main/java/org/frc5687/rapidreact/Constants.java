@@ -1,12 +1,8 @@
 /* Team 5687 (C)2020-2022 */
 package org.frc5687.rapidreact;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-
-import org.frc5687.rapidreact.config.Auto;
 
 public class Constants {
     public static final int TICKS_PER_UPDATE = 1;
@@ -348,5 +344,15 @@ public class Constants {
         public static final int EXPOSURE = 70;
         public static final int HEIGHT = 320;
         public static final int WIDTH = 240;
+    }
+
+    public static class Lights{
+        public static final double BASE = 0.91; // Solid purple
+        public static final double RIGHT_BALL = -0.15; // Strobe blue
+        public static final double WRONG_BALL = -0.11; // Strobe red 
+        public static final double SHOOTING = -0.07; // Shooting
+        public static final double INTAKE = -0.15; // Intake
+        public static final double CLIMBING = -0.93; // Rainbow lava
+        public static final double AIMING = -0.09; //Aiming
     }
 }

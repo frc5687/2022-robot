@@ -45,6 +45,7 @@ public class Climber extends OutliersSubsystem{
     private double _rockGoal = 0.0;
 
     private DriveTrain _driveTrain;
+    private Lights _lights;
 
     public void setStep(ClimberStep step){
         //Sets the current step of the climbing process
@@ -65,7 +66,7 @@ public class Climber extends OutliersSubsystem{
         return _step;
     }
     
-    public Climber(OutliersContainer container, DriveTrain driveTrain) {
+    public Climber(OutliersContainer container, DriveTrain driveTrain, Lights lights) {
         super(container);
         _driveTrain = driveTrain;
 
@@ -128,6 +129,9 @@ public class Climber extends OutliersSubsystem{
         _rockerArmWinch.config_kI(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kI);
         _rockerArmWinch.config_kD(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kD);
         _rockerArmWinch.config_kF(Constants.Climber.MOTION_MAGIC_SLOT, Constants.Climber.kF);
+
+
+        _lights = lights;
     }
 
     /**
@@ -387,6 +391,10 @@ public class Climber extends OutliersSubsystem{
      */
     public double getStaSpeed() {
         return _staSpeed;
+    }
+
+    public void setClimbingLights(){
+        _lights.setClimbingStatus();
     }
 
 
