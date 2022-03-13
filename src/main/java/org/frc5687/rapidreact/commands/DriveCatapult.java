@@ -190,7 +190,6 @@ public class DriveCatapult extends OutliersCommand {
                 }
                 if ((_catapult.isSpringAtPosition() && _catapult.isSpringZeroed()) && (_catapult.isWinchAtGoal() && _catapult.isWinchZeroed())) {
                     _catapult.setWinchMotorSpeed(0);
-                    _catapult.setSpringMotorSpeed(0);
                     _catapult.setState(Catapult.CatapultState.DEBUG);
                 }
             } break;

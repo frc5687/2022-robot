@@ -233,14 +233,14 @@ public class Constants {
 
         // Controller Parameters
         public static final int MOTION_MAGIC_SLOT = 0;
-        public static final double SPRING_kP = 1.001; // Always start with kP
-        public static final double SPRING_kI = 0.000; // If possible avoid kI
-        public static final double SPRING_kD = 0.0001; // 2nd Kd
+        public static final double SPRING_kP = 0.9; // Always start with kP
+        public static final double SPRING_kI = 0.00; // If possible avoid kI
+        public static final double SPRING_kD = 0.0; // 2nd Kd
         public static final double SPRING_kF = 0.0; // 2nd Kd
         public static final double SPRING_IZONE = 30.0;
         public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);
-        public static final double CRUISE_VELOCITY = 50000; // TODO: Needs to be calibrated via Phoenix tuner
-        public static final double ACCELERATION = 90000; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final double CRUISE_VELOCITY = 80000; // TODO: Needs to be calibrated via Phoenix tuner
+        public static final double ACCELERATION = 100000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double SPRING_TOLERANCE = 0.005; // m
         // winch
         public static final double WINCH_kP = 20.0; // Always start with kP
