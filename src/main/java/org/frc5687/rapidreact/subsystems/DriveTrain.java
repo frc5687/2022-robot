@@ -42,7 +42,7 @@ public class DriveTrain extends OutliersSubsystem {
     private double _PIDAngle;
 
     private AHRS _imu;
-//    private JetsonProxy _proxy;
+    private JetsonProxy _proxy;
     private Limelight _limelight;
     private OI _oi;
 
@@ -51,11 +51,11 @@ public class DriveTrain extends OutliersSubsystem {
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
 
-    public DriveTrain(OutliersContainer container, OI oi/*,JetsonProxy proxy*/, Limelight limelight, AHRS imu) {
+    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
         try {
             _oi = oi;
-//            _proxy = proxy;
+            _proxy = proxy;
             _limelight = limelight;
             _imu = imu;
             _northWest =
@@ -259,23 +259,23 @@ public class DriveTrain extends OutliersSubsystem {
         return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
     }
     public boolean hasTarget() {
-//        if (_proxy.getLatestFrame() != null) {
-//            return _proxy.getLatestFrame().getTargetDistance() != -1;
-//        }
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetDistance() != -1;
+        }
         return false;
     }
 
     public double getDistanceToTarget() {
-//        if (_proxy.getLatestFrame() != null) {
-//            return _proxy.getLatestFrame().getTargetDistance();
-//        }
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetDistance();
+        }
         return Double.NaN;
     }
 
     public double getAngleToTarget() {
-//        if (_proxy.getLatestFrame() != null) {
-//            return _proxy.getLatestFrame().getTargetAngle();
-//        }
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getTargetAngle();
+        }
         return Double.NaN;
     }
 
