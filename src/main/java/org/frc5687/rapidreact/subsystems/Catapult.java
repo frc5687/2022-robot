@@ -25,6 +25,16 @@ import org.frc5687.rapidreact.util.ServoStop;
 
 import static org.frc5687.rapidreact.Constants.Catapult.*;
 
+/** Catapult shoots balls with a spring-loaded arm.
+ * 
+ * <ul>
+ *  <li>Pin solenoid latches or releases catapult arm.
+ *  <li>Baby neo winches catapult arm to lower arm and set release angle.
+ *  <li>Falcon motor tensions spring to set power.
+ *  <li>Proximity sensor senses ball on arm.
+ *  <li>Color sensor senses ball color.
+ * </ul>
+ */
 public class Catapult extends OutliersSubsystem {
 
     private final TalonFX _springMotor;
@@ -59,8 +69,9 @@ public class Catapult extends OutliersSubsystem {
 
     public enum CatapultState {
 
-        // When code starts, catapult should be in the following physical configuration
+        // When first catapult command gets scheduled, catapult should be in the following physical configuration
         // ("standard starting configuration"):
+        // - intake has been deployed at least once (intake either in SUBSEQUENT_STOWED or DEPLOYED state)
         // - arm lowered
         // - pin locked
         // - spring tensioned for auto shot
@@ -78,13 +89,27 @@ public class Catapult extends OutliersSubsystem {
         // When code starts, catapult state is assumed to be PRELOADED
 
         // PRELOADED -- ready to start match in auto mode, waiting to release pin
+        PRELOADED(0),
+
         // ZEROING -- pin released, first shot taken, spring encoder being zeroed
+        ZEROING(1),
 
         // LOWERING_ARM -- pin released, spring encoder zeroed, run winch to pull arm down
+        LOWERING_ARM(2),
+
         // LOCKING -- winch hall effect triggered, zero winch encoder, turn off winch motor, lock pin
+        LOCKING(3),
+
         // LOADING -- waiting for ball on arm (necessary to avoid dry firing)
+        LOADING(4),
+
+        // Catapult doesn't aim until it has a ball loaded.  This prevents wasting energy.
+
         // AIMING -- setting winch string and spring tension for next shot
+        AIMING(5),
+
         // READY -- winch string set, spring tension set, waiting for shoot command to release pin
+        READY(6),
 
         // From READY can go to
         // -> AIMING if things change (i.e. we drive to a different position) or to
@@ -94,15 +119,17 @@ public class Catapult extends OutliersSubsystem {
 
         // WAITING -- do nothing to allow catapult some cycles to transition to next state
         //  (keep track of old and new state and time remaining to wait)
-        // DEBUG -- allow manual control of all catapult hardware and state (test mode)
+        WAITING(7),
+
         // ERROR -- keep track of last state and reason for error
+        ERROR(8);
 
         // Cycles:
 
         // auto => PRELOADED -> ZEROING -> WAITING -> LOWERING_ARM -> LOCKING -> LOADING -> AIMING -> READY
         // robot moves so needs to aim again => READY -> AIMING -> READY
         // robot shoots so needs to reset catapult => READY -> LOWERING_ARM -> LOCKING -> LOADING -> AIMING -> READY
-        // available when robot in test mode; do before each match => DEBUG -> AIMING -> PRELOADED
+        // available when robot in test mode; do before each match => <ANY> -> AIMING -> PRELOADED
 
         // OLD state machine:
 
@@ -111,49 +138,48 @@ public class Catapult extends OutliersSubsystem {
         // - catapult arm lowered
         // - pin locked
         // If spring Hall effect is triggered, robot enters LOWERING_ARM 
-        ZEROING(0),
+        // ZEROING(0),
 
         // LOWERING_ARM checks if arm Hall effect is triggered.
         // ** DANGER ** winching too far will break robot
         // Winches down until arm Hall effect triggers.
         // If arm Hall effect is triggered, robot enters LOADING
-        LOWERING_ARM(1),
+        // LOWERING_ARM(1),
 
         // LOADING locks pin, check for which color ball we have.
         // Depending on the ball the robot enters the AIMING state or WRONG_BALL state.
-        LOADING(2),
+        // LOADING(2),
 
         // AIMING waited for the OI aim button and if the drivetrain is within tolerance.
         // Also have an override button if vision is not working.
         // Change state to SHOOTING.
-        AIMING(3),
+        // AIMING(3),
 
         // We have the wrong ball, set the Winch and Spring goal to remove the ball.
-        WRONG_BALL(4),
+        // WRONG_BALL(4),
 
         // Set the winch goal and spring goal.
         // SHOOTING waits for shoot button to be pressed and the goals to be in tolerance.
         // If shoot button pressed, releases pin
         // then enters LOWERING_ARM
-        SHOOTING(5),
+        // SHOOTING(5),
 
         // If intake is up lock the catapult;
-        LOCK_OUT(6),
+        // LOCK_OUT(6),
 
         // if in debug, set the winch and spring settings for initial position
-        PRELOAD(7),
+        // PRELOAD(7),
 
         // Until we have figured out catapult, start in DEBUG state
         // Check that everything looks good, then press
         // button to get into ZEROING state
         // Allow manual pin release and pin lock
-        DEBUG(8),
+        // DEBUG(8),
         // a button will stop all catapult movement, this is for the case if
         // a ball gets under the catapult.
-        KILL(9),
+        // KILL(9),
 
-        AUTO(10);
-
+        // AUTO(10);
 
         private final int _value;
         CatapultState(int value) { _value = value; }
@@ -176,13 +202,12 @@ public class Catapult extends OutliersSubsystem {
         }
     }
 
-
-    /** Catapult constructor */
+    /** Construct a Catapult */
     public Catapult(OutliersContainer container) {
         super(container);
 
-        // Motor controllers (Spark Maxes)
-        // Spring motor
+        // Spring motor (Falcon)
+        // See https://docs.ctre-phoenix.com/en/latest/index.html
         _springMotor = new TalonFX(RobotMap.CAN.TALONFX.CATAPULT_SPRING);
         _springMotor .setNeutralMode(NeutralMode.Brake);
 //        _springMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, Constants.Climber.ARM_CURRENT_LIMIT, Constants.Climber.CURRENT_THRES, Constants.Climber.ARM_THRES_TIME));
@@ -195,7 +220,13 @@ public class Catapult extends OutliersSubsystem {
         _springMotor.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, 10,20);
         _springMotor.configClosedloopRamp(0,50);
 
-        // Winch motor
+        // Spring PID controller settings
+        _springMotor.config_kP(MOTION_MAGIC_SLOT, SPRING_kP);
+        _springMotor.config_kI(MOTION_MAGIC_SLOT, SPRING_kI);
+        _springMotor.config_kD(MOTION_MAGIC_SLOT, SPRING_kD);
+        _springMotor.config_kF(MOTION_MAGIC_SLOT, SPRING_kF);
+
+        // Winch motor (Spark Max Baby Neo)
         _winchMotor = new CANSparkMax(RobotMap.CAN.SPARKMAX.WINCH_BABY_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
         _winchMotor.restoreFactoryDefaults();
         _winchMotor.setInverted(WINCH_MOTOR_INVERTED);
@@ -205,27 +236,11 @@ public class Catapult extends OutliersSubsystem {
         _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
         _winchMotor.setSmartCurrentLimit(WINCH_CURRENT_LIMIT);
 
+        // Save changes into flash memory of spark maxes
+        _winchMotor.burnFlash();
 
-        // Pneumatics (catapult locking pin)
-        _releasePin = new DoubleSolenoid(PneumaticsModuleType.REVPH,
-                RobotMap.PCH.RELEASE_PIN_HIGH,
-                RobotMap.PCH.RELEASE_PIN_LOW);
-
-        // Hall effects (sense position of springs and catapult arm)
-        _springHall = new HallEffect(RobotMap.DIO.SPRING_HALL_EFFECT);
-        _armHall = new HallEffect(RobotMap.DIO.ARM_HALL_EFFECT);
-
-        // Encoders
+        // Winch encoder (which type is it?)
         _winchEncoder = _winchMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, COUNTS_PER_REVOLUTION);
-
-        // Proximity sensor (sense if ball on catapult arm)
-        _proximitySensor = new ProximitySensor(RobotMap.DIO.PROXIMITY_SENSOR);
-
-        // PID controllers
-        _springMotor.config_kP(MOTION_MAGIC_SLOT, SPRING_kP);
-        _springMotor.config_kI(MOTION_MAGIC_SLOT, SPRING_kI);
-        _springMotor.config_kD(MOTION_MAGIC_SLOT, SPRING_kD);
-        _springMotor.config_kF(MOTION_MAGIC_SLOT, SPRING_kF);
 
         _winchController = new ProfiledPIDController(
                 WINCH_kP,
@@ -238,19 +253,33 @@ public class Catapult extends OutliersSubsystem {
         );
         _winchController.setTolerance(WINCH_TOLERANCE);
 
-        //Save changes into flash memory of spark maxes
-        _winchMotor.burnFlash();
+        // Hall effects (sense position of springs and catapult arm)
+        _springHall = new HallEffect(RobotMap.DIO.SPRING_HALL_EFFECT);
+        _armHall = new HallEffect(RobotMap.DIO.ARM_HALL_EFFECT);
+
+        // Pneumatics (catapult locking pin)
+        _releasePin = new DoubleSolenoid(
+            PneumaticsModuleType.REVPH,
+            RobotMap.PCH.RELEASE_PIN_HIGH,
+            RobotMap.PCH.RELEASE_PIN_LOW
+            );
+
+        // Indexer gate to allow 2nd onboard ball to drop onto catapult arm
+        _gate = new ServoStop(RobotMap.PWM.INTAKE_STOPPER);
+        // Proximity sensor (sense if ball on catapult arm)
+        _proximitySensor = new ProximitySensor(RobotMap.DIO.PROXIMITY_SENSOR);
+        // Color sensor (sense which color ball)
+        _colorSensor = new ColorSensor(I2C.Port.kMXP);
+
         // set state
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
-        _state = CatapultState.DEBUG;
-        _gate = new ServoStop(RobotMap.PWM.INTAKE_STOPPER);
-        _colorSensor = new ColorSensor(I2C.Port.kMXP);
+        _state = CatapultState.PRELOADED;
         _alliance = DriverStation.getAlliance();
         _springGoal = 0;
     }
 
-
+    /** Cycle through state machine */
     @Override
     public void periodic() {
         super.periodic();
