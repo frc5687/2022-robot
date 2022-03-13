@@ -60,14 +60,22 @@ public class Catapult extends OutliersSubsystem {
     public enum CatapultState {
 
         // When code starts, catapult should be in the following physical configuration
-        // ("starting configuration"):
+        // ("standard starting configuration"):
         // - arm lowered
         // - pin locked
         // - spring tensioned for auto shot
         // - winch string unwound to hard stop length for auto shot
         // This allows auto to release pin to shoot ball one into hub
 
+        // If catapult NOT in standard starting configuration, then
+        // - put robot in test mode
+        // - this runs CatapultDebug command
+        // - manually control all catapult hardware and state
+        // This allows catapult to be put into standard starting configuration
+
         // NEW state machine
+
+        // When code starts, catapult state is assumed to be PRELOADED
 
         // PRELOADED -- ready to start match in auto mode, waiting to release pin
         // ZEROING -- pin released, first shot taken, spring encoder being zeroed
@@ -86,7 +94,7 @@ public class Catapult extends OutliersSubsystem {
 
         // WAITING -- do nothing to allow catapult some cycles to transition to next state
         //  (keep track of old and new state and time remaining to wait)
-        // DEBUG -- allow manual control of all catapult hardware and state
+        // DEBUG -- allow manual control of all catapult hardware and state (test mode)
         // ERROR -- keep track of last state and reason for error
 
         // Cycles:
