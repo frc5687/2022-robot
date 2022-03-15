@@ -3,6 +3,7 @@ package org.frc5687.rapidreact.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.Timer;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.OI;
@@ -48,13 +49,6 @@ public class Drive extends OutliersCommand {
         //  driveX and driveY are swapped due to coordinate system that WPILib uses.
         double vx = _vxFilter.calculate(-_oi.getDriveY()) * (_driveTrain.getSpeed());
         double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
-        metric("vx", vx);
-        metric("vy", vy);
-//        double rot = 0;
-        metric("aim", _oi.autoAim());
-
-        metric("has Target", _driveTrain.hasTarget());
-//        if (_oi.autoAim() && !_driveTrain.hasTarget()) {
         if (_oi.autoAim()) {
             _driveTrain.enableLimelight();
         } else {

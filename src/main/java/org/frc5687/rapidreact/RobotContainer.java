@@ -54,8 +54,8 @@ public class RobotContainer extends OutliersContainer {
 
     private UsbCamera _cam;
 
-    public RobotContainer(Robot robot, IdentityMode identityMode) {
-        super(identityMode);
+    public RobotContainer(Robot robot, IdentityMode identityMode, boolean isLogging) {
+        super(identityMode, isLogging);
         _robot = robot;
     }
 
@@ -108,8 +108,7 @@ public class RobotContainer extends OutliersContainer {
 
         // Run periodic for each swerve module faster than regular cycle time
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
-        _limelight.enableLEDs();
-
+        _limelight.disableLEDs();
         _imu.reset();
     }
 
@@ -299,6 +298,7 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void updateDashboard() {
+        super.updateDashboard();
 //        if (_proxy.getLatestFrame() != null) {
 //            metric("Millis", _proxy.getLatestFrame().getMillis());
 //            metric("Has goal", _proxy.getLatestFrame().hasTarget());
@@ -306,11 +306,7 @@ public class RobotContainer extends OutliersContainer {
 //            metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
 //        }
 //        _driveTrain.updateDashboard();
-        _catapult.updateDashboard();
-        //Updates the driver station
-//        _autoChooser.updateDashboard();
-        //metric("Proxy/Millis", _proxy.getLatestFrame().getMillis());
-        _driveTrain.updateDashboard();
+//        _catapult.updateDashboard();
     }
 
     public void controllerPeriodic() {

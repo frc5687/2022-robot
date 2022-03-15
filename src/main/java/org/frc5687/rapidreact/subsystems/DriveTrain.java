@@ -150,9 +150,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        //TODO: might uncomment this if i feel like it.
-        //metric("Goal Distance", getDistanceToGoal());
-        // metric("Goal Angle", getAngleToGoal());
         metric("Goal Distance", getDistanceToTarget());
         metric("Goal Angle", getAngleToTarget());
         metric("Has goal", hasTarget());
@@ -173,9 +170,7 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Odometry/x", getOdometryPose().getX());
         metric("Odometry/y", getOdometryPose().getY());
         metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());
-        metric("Odometry/Pose", getOdometryPose().toString());
 
-        metric("IMU angle", _imu.getYaw());
     }
 
     public void setNorthEastModuleState(SwerveModuleState state) {
@@ -269,7 +264,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
-            info("Target Distance is: " + _proxy.getLatestFrame().getTargetDistance());
             return _proxy.getLatestFrame().getTargetDistance();
         }
         return Double.NaN;
@@ -277,7 +271,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getAngleToTarget() {
         if (_proxy.getLatestFrame() != null) {
-            info("Target Distance is: " + _proxy.getLatestFrame().getTargetAngle());
             return _proxy.getLatestFrame().getTargetAngle();
         } else if(_limelight.hasTarget()) {
             return Units.degreesToRadians(_limelight.getYaw());
