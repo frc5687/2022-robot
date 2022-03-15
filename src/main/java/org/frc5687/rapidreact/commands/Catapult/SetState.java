@@ -1,6 +1,7 @@
-package org.frc5687.rapidreact.commands;
+package org.frc5687.rapidreact.commands.Catapult;
 
 import org.frc5687.rapidreact.Constants;
+import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Catapult;
 
 public class SetState extends OutliersCommand {

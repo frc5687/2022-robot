@@ -188,7 +188,10 @@ public class Constants {
     }
 
     public static class Catapult {
-        public static final long DELAY = 100; // ms
+        public static final int CTRE_TIMEOUT = 20; // ms
+        public static final int CTRE_FRAME_PERIOD = 10; // ms
+
+        public static final long DELAY = 150; // ms
 
         public static final boolean SPRING_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = false;

@@ -2,9 +2,7 @@ package org.frc5687.rapidreact.commands.auto;
 
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
-import org.frc5687.rapidreact.subsystems.Intake;
-import org.frc5687.rapidreact.commands.Shoot;
-import org.frc5687.rapidreact.commands.auto.DriveToPose;
+import org.frc5687.rapidreact.commands.Catapult.Shoot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
