@@ -131,9 +131,9 @@ public class Constants {
 
         // Vision PID controller
         public static final double VISION_TOLERANCE = 0.01; // rads
-        public static final double VISION_kP = 1.5;
+        public static final double VISION_kP = 1.0;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.01;
+        public static final double VISION_kD = 0.0;
         public static final double VISION_IRANGE = 1.0;
 
         public static final double POSITION_TOLERANCE = 0.02;
