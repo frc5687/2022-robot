@@ -175,6 +175,8 @@ public class RobotContainer extends OutliersContainer {
                 metric("Two ball", true);
                 break;
             case "Three Ball":
+                autoMode = AutoChooser.Mode.ThreeBall;
+                metric("Three ball", true);
             case "Four Ball":
             case "Five Ball":
             default:
@@ -231,13 +233,13 @@ public class RobotContainer extends OutliersContainer {
 
     public Command getAutonomousCommand() {
         // This is just for testing so Dennis and Jack can bypass chooser code
-        Boolean _bypass = false;
+        Boolean _bypass = true;
 
         // Set _bypass to true to set autonomous command here instead of using Drive Station
         if (_bypass) {
             AutoChooser.Position _startingPosition = AutoChooser.Position.Third;
-            info("Running twoball.");
-            return new TwoBallAuto(_driveTrain, _catapult, _intake, _startingPosition);
+            info("Running zeroball.");
+            return new ZeroBallAuto(_driveTrain, _startingPosition);
         }
 
         // Return command sequence based on starting position and auto mode selectded
@@ -245,10 +247,12 @@ public class RobotContainer extends OutliersContainer {
         Pose2d[] destinationsZeroBall = { new Pose2d() };
         Pose2d[] destinationsOneBall = { new Pose2d() };
         Pose2d[] destinationsTwoBall = { new Pose2d() };
+        Pose2d[] destinationsThreeBall = { new Pose2d(), new Pose2d() };
 
         Rotation2d[] rotationsZeroBall = { new Rotation2d() };
         Rotation2d[] rotationsOneBall = { new Rotation2d() };
         Rotation2d[] rotationsTwoBall = { new Rotation2d() };
+        Rotation2d[] rotationsThreeBall = { new Rotation2d(), new Rotation2d() };
         metric("autoPose", autoPosition.toString());
         switch(autoPosition) {
             case First:
@@ -273,19 +277,27 @@ public class RobotContainer extends OutliersContainer {
                 _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
                 destinationsZeroBall[0] = Auto.BallPositions.BALL_TWO;
                 destinationsOneBall[0] = Auto.BallPositions.BALL_TWO;
-                destinationsTwoBall[0] = Auto.BallPositions.BALL_TWO;
+                destinationsTwoBall[0] = Auto.BallPositions.BALL_FOUR;
+                destinationsThreeBall[0] = Auto.BallPositions.BALL_TWO;
+                destinationsThreeBall[1] = Auto.FieldPositions.SAFE_BALL_FOUR;
                 rotationsZeroBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
                 rotationsOneBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
                 rotationsTwoBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
+                rotationsThreeBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
+                rotationsThreeBall[1] = Auto.Rotations.BALL_FOUR;
                 break;
             case Fourth:
                 _driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
                 destinationsZeroBall[0] = Auto.FieldPositions.PARALLEL_PARK;
                 destinationsOneBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
                 destinationsTwoBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
+                destinationsThreeBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
+                destinationsThreeBall[1] = Auto.BallPositions.BALL_TWO;
                 rotationsZeroBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 rotationsOneBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 rotationsTwoBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
+                rotationsThreeBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
+                rotationsThreeBall[1] = Auto.Rotations.BALL_TWO_FROM_BALL_THREE;
                 break;
             default:
                 return new Wait(15);
@@ -299,6 +311,8 @@ public class RobotContainer extends OutliersContainer {
                 return new OneBallAuto(_driveTrain, _catapult, autoPosition);
             case TwoBall:
                 return new TwoBallAuto(_driveTrain, _catapult, _intake, autoPosition);
+            case ThreeBall:
+                return new ThreeBallAuto(_driveTrain, _catapult, _intake, autoPosition);
             default:
                 return new Wait(15);
         }

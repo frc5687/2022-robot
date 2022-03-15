@@ -61,7 +61,7 @@ public class ZeroBallAuto extends SequentialCommandGroup {
                     Auto.BallPositions.BALL_TWO.getX(),
                     Auto.BallPositions.BALL_TWO.getY()
                     );
-                _rotation = new Rotation2d();
+                _rotation = Auto.Rotations.BALL_TWO_FROM_THIRD;
                 break;
             case Fourth:
                 driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);

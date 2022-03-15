@@ -1,6 +1,7 @@
 package org.frc5687.rapidreact.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.SetSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -19,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.util.AutoChooser;
 
-/** Shoot first ball, taix out of tarmc, intake second ball, shoot it */
+/** Shoot first ball, taxi out of tarmac, intake second ball, shoot it */
 public class TwoBallAuto extends SequentialCommandGroup {
 
     private Translation2d _translation;
@@ -67,7 +68,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
                     Auto.BallPositions.BALL_ONE.getX(),
                     Auto.BallPositions.BALL_ONE.getY()
                     );
-                _rotation = new Rotation2d();
+                _rotation = Auto.Rotations.BALL_ONE_FROM_FIRST;
                 break;
             case Second:
                 driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
@@ -83,7 +84,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
                     Auto.BallPositions.BALL_TWO.getX(),
                     Auto.BallPositions.BALL_TWO.getY()
                     );
-                _rotation = new Rotation2d();
+                _rotation = Auto.Rotations.BALL_TWO_FROM_THIRD;
                 break;
             case Fourth:
                 driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
