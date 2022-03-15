@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import org.frc5687.rapidreact.commands.*;
-import org.frc5687.rapidreact.commands.Catapult.DriveCatapult;
+import org.frc5687.rapidreact.commands.catapult.DriveCatapult;
 import org.frc5687.rapidreact.commands.auto.*;
 import org.frc5687.rapidreact.commands.Climber.IdleClimber;
 

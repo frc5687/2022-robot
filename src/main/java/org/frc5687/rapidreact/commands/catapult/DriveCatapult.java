@@ -1,7 +1,6 @@
-package org.frc5687.rapidreact.commands.Catapult;
+package org.frc5687.rapidreact.commands.catapult;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.config.Auto;
@@ -45,34 +44,41 @@ public class DriveCatapult extends OutliersCommand {
     public void execute() {
         metric("String from dist", _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
         metric("Spring from dist", _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
-        metric("Intake down", _intake.isIntakeUp());
         metric("Setpoint value", _catapult.getSetpoint().toString());
+
         CatapultState newState =  _catapult.getState(); 
         if (newState != _lastLoggedState) {
             info("State changed to " + newState);
             _lastLoggedState = newState;
-        } 
+        }
+
         switch (newState) {
             case ZEROING: {
                 checkLockOut();
                 checkKill();
-                _catapult.setSpringMotorSpeed(SPRING_ZERO_SPEED);
-                _catapult.setWinchMotorSpeed(LOWERING_SPEED);
-                if (_catapult.isSpringHallTriggered()) {
-                    _catapult.setSpringMotorSpeed(0.0);
-                    _catapult.zeroSpringEncoder();
+                // Try Zeroing the spring first, then the winch.
+                if (zeroWinch()) {
+                    if (zeroSpring()) {
+                        _catapult.setState(LOWERING_ARM);
+                    }
                 }
-                if (_catapult.isArmLowered()) {
-                    _catapult.setWinchMotorSpeed(0.0);
-                    _catapult.zeroWinchEncoder();
-                }
-                if ((_catapult.isArmLowered() && _catapult.isWinchZeroed()) && (_catapult.isSpringHallTriggered() && _catapult.isSpringZeroed())) {
-                    _catapult.setSpringMotorSpeed(0.0);
-                    _catapult.setWinchMotorSpeed(0.0);
-                    _catapult.setWinchGoal(0.0);
-                    _catapult.setSpringDistance(0.0);
-                    _catapult.setState(LOWERING_ARM);
-                }
+//                _catapult.setSpringMotorSpeed(SPRING_ZERO_SPEED);
+//                _catapult.setWinchMotorSpeed(LOWERING_SPEED);
+//                if (_catapult.isSpringHallTriggered()) {
+//                    _catapult.setSpringMotorSpeed(0.0);
+//                    _catapult.zeroSpringEncoder();
+//                }
+//                if (_catapult.isArmLowered()) {
+//                    _catapult.setWinchMotorSpeed(0.0);
+//                    _catapult.zeroWinchEncoder();
+//                }
+//                if ((_catapult.isArmLowered() && _catapult.isWinchZeroed()) && (_catapult.isSpringHallTriggered() && _catapult.isSpringZeroed())) {
+//                    _catapult.setSpringMotorSpeed(0.0);
+//                    _catapult.setWinchMotorSpeed(0.0);
+//                    _catapult.setWinchGoal(0.0);
+//                    _catapult.setSpringDistance(0.0);
+//                    _catapult.setState(LOWERING_ARM);
+//                }
             }
             break;
             case LOWERING_ARM: {
@@ -204,6 +210,30 @@ public class DriveCatapult extends OutliersCommand {
                     _catapult.setState(ZEROING);
                 }
         }
+    }
+    protected boolean zeroWinch() {
+        if (!_catapult.isWinchZeroed()) {
+            _catapult.setWinchMotorSpeed(LOWERING_SPEED);
+            if (_catapult.isArmLowered()) {
+                _catapult.zeroWinchEncoder();
+                _catapult.lockArm();
+                _catapult.setWinchMotorSpeed(0);
+                _catapult.setWinchGoal(0);
+            }
+        }
+        return _catapult.isWinchZeroed() && _catapult.isArmLowered();
+    }
+
+    protected boolean zeroSpring() {
+        if (!_catapult.isSpringZeroed()) {
+            _catapult.setSpringMotorSpeed(SPRING_ZERO_SPEED);
+            if (_catapult.isSpringHallTriggered()) {
+                _catapult.zeroSpringEncoder();
+                _catapult.setSpringMotorSpeed(0);
+                _catapult.setSpringDistance(0);
+            }
+        }
+        return _catapult.isSpringZeroed() && _catapult.isSpringHallTriggered();
     }
 
     boolean isShootTriggered() {

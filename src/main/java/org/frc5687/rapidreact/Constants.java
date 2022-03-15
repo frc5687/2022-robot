@@ -236,9 +236,9 @@ public class Constants {
 
         // Controller Parameters
         public static final int MOTION_MAGIC_SLOT = 0;
-        public static final double SPRING_kP = 0.9; // Always start with kP
+        public static final double SPRING_kP = 1.0; // Always start with kP
         public static final double SPRING_kI = 0.00; // If possible avoid kI
-        public static final double SPRING_kD = 0.0; // 2nd Kd
+        public static final double SPRING_kD = 10.0; // 2nd Kd
         public static final double SPRING_kF = 0.0; // 2nd Kd
         public static final double SPRING_IZONE = 30.0;
         public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);

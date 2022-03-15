@@ -1,10 +1,8 @@
-package org.frc5687.rapidreact.commands.Catapult;
+package org.frc5687.rapidreact.commands.catapult;
 
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
-
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
 
 public class Shoot extends OutliersCommand {
     private Catapult _catapult;

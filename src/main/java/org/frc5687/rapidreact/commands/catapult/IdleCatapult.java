@@ -1,4 +1,4 @@
-package org.frc5687.rapidreact.commands.Catapult;
+package org.frc5687.rapidreact.commands.catapult;
 
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.commands.OutliersCommand;

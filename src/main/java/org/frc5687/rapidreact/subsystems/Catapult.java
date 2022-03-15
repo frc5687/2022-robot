@@ -100,6 +100,7 @@ public class Catapult extends OutliersSubsystem {
         _springMotor.config_kI(MOTION_MAGIC_SLOT, SPRING_kI);
         _springMotor.config_kD(MOTION_MAGIC_SLOT, SPRING_kD);
         _springMotor.config_kF(MOTION_MAGIC_SLOT, SPRING_kF);
+        _springMotor.config_IntegralZone(MOTION_MAGIC_SLOT, SPRING_IZONE);
 
         _winchController = new ProfiledPIDController(
                 WINCH_kP,
