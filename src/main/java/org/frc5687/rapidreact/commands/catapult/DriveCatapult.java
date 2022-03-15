@@ -62,23 +62,6 @@ public class DriveCatapult extends OutliersCommand {
                         _catapult.setState(LOWERING_ARM);
                     }
                 }
-//                _catapult.setSpringMotorSpeed(SPRING_ZERO_SPEED);
-//                _catapult.setWinchMotorSpeed(LOWERING_SPEED);
-//                if (_catapult.isSpringHallTriggered()) {
-//                    _catapult.setSpringMotorSpeed(0.0);
-//                    _catapult.zeroSpringEncoder();
-//                }
-//                if (_catapult.isArmLowered()) {
-//                    _catapult.setWinchMotorSpeed(0.0);
-//                    _catapult.zeroWinchEncoder();
-//                }
-//                if ((_catapult.isArmLowered() && _catapult.isWinchZeroed()) && (_catapult.isSpringHallTriggered() && _catapult.isSpringZeroed())) {
-//                    _catapult.setSpringMotorSpeed(0.0);
-//                    _catapult.setWinchMotorSpeed(0.0);
-//                    _catapult.setWinchGoal(0.0);
-//                    _catapult.setSpringDistance(0.0);
-//                    _catapult.setState(LOWERING_ARM);
-//                }
             }
             break;
             case LOWERING_ARM: {
@@ -162,27 +145,16 @@ public class DriveCatapult extends OutliersCommand {
             } break;
             case PRELOAD: {
                 checkLockOut();
-                if (!_catapult.isSpringHallTriggered() && !_catapult.isSpringZeroed()) {
-                    _catapult.setSpringMotorSpeed(SPRING_ZERO_SPEED);
-                } else if (_catapult.isSpringHallTriggered()) {
-                    _catapult.zeroSpringEncoder();
-                    _catapult.setSpringDistance(Auto.StaticShots.TARMAC_SPRING);
-                }
-                if (!_catapult.isArmLowered() && !_catapult.isWinchZeroed()) {
-                    _catapult.setWinchMotorSpeed(LOWERING_SPEED);
-                } else if (_catapult.isArmLowered()) {
-                    _catapult.zeroWinchEncoder();
-                    _catapult.lockArm();
-                }
-                if ((_catapult.isArmLowered() && _catapult.isWinchZeroed()) && _catapult.isSpringZeroed()){
-                    _catapult.setWinchGoal(Auto.StaticShots.TARMAC_WINCH);
-                }
-                if (_catapult.isWinchZeroed()){
-                    _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-                }
-                if ((_catapult.isSpringAtPosition() && _catapult.isSpringZeroed()) && (_catapult.isWinchAtGoal() && _catapult.isWinchZeroed())) {
-                    _catapult.setWinchMotorSpeed(0);
-                    _catapult.setState(DEBUG);
+                if (zeroWinch()) {
+                    if (zeroSpring()) {
+                        _catapult.setWinchGoal(Auto.StaticShots.TARMAC_WINCH);
+                        _catapult.setSpringDistance(Auto.StaticShots.TARMAC_SPRING);
+                        _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
+                        if (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
+                            _catapult.setWinchMotorSpeed(0);
+                            _catapult.setState(DEBUG);
+                        }
+                    }
                 }
             } break;
             case DEBUG: {
@@ -221,7 +193,7 @@ public class DriveCatapult extends OutliersCommand {
                 _catapult.setWinchGoal(0);
             }
         }
-        return _catapult.isWinchZeroed() && _catapult.isArmLowered();
+        return _catapult.isWinchZeroed();
     }
 
     protected boolean zeroSpring() {
@@ -233,7 +205,7 @@ public class DriveCatapult extends OutliersCommand {
                 _catapult.setSpringDistance(0);
             }
         }
-        return _catapult.isSpringZeroed() && _catapult.isSpringHallTriggered();
+        return _catapult.isSpringZeroed();
     }
 
     boolean isShootTriggered() {

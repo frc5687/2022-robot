@@ -41,10 +41,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
     private boolean _isLogging;
 
     public OutliersCommand() {
-        if (m_requirements.size() > 0) {
-            OutliersSubsystem s = (OutliersSubsystem) m_requirements.toArray()[0];
-            _isLogging = s.isLogging();
-        }
+        _isLogging = true;
     }
 
     public OutliersCommand(double timeout) {

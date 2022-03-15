@@ -9,7 +9,7 @@ import edu.wpi.first.math.util.Units;
 import org.frc5687.rapidreact.config.Auto;
 
 public class Constants {
-    public static final int TICKS_PER_UPDATE = 50;
+    public static final int TICKS_PER_UPDATE = 20;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
     public static final double EPSILON = 0.00001;
@@ -191,7 +191,7 @@ public class Constants {
         public static final int CTRE_TIMEOUT = 20; // ms
         public static final int CTRE_FRAME_PERIOD = 10; // ms
 
-        public static final long DELAY = 150; // ms
+        public static final long DELAY = 200; // ms
 
         public static final boolean SPRING_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = false;
@@ -246,7 +246,7 @@ public class Constants {
         public static final double ACCELERATION = 100000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double SPRING_TOLERANCE = 0.005; // m
         // winch
-        public static final double WINCH_kP = 20.0; // Always start with kP
+        public static final double WINCH_kP = 22.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
         public static final double WINCH_kD = 0.0; // 2nd Kd following
 //        public static final double MAX_WINCH_VELOCITY_MPS = ((NEO_RAD_PER_SEC / GEAR_REDUCTION)/ (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s

@@ -248,16 +248,16 @@ public class Catapult extends OutliersSubsystem {
 
     // calculate linear regression.
     public double calculateIdealString(double dist) {
-        return (-0.0081481481 * (dist * dist * dist)) +
-                (0.1132539683 * (dist * dist))
-                - (0.4818121693 * dist) + 0.9078174603;
+        return (0.0097637609 * (dist * dist * dist)) -
+                (0.1532236196 * (dist * dist))
+                + (0.8082997137* dist) - 1.117510786;
     }
 
     // calculated from linear regression
     public double calculateIdealSpring(double dist) {
-        return (0.0008888889 * (dist * dist * dist)) -
-                (0.0143095238 * (dist * dist )) +
-                (0.0820515873 * dist) - 0.0838690476;
+        return (0.0020307820 * (dist * dist * dist)) -
+                (0.0263073648 * (dist * dist )) +
+                (0.1187102788 * dist) - 0.1130071470 ;
     }
 
     public boolean isReleasePinLocked() {
@@ -304,7 +304,7 @@ public class Catapult extends OutliersSubsystem {
     @Override
     public void updateDashboard() {
         // Spring values
-//        metric("Spring position", getSpringPosition());
+        metric("Spring position", getSpringPosition());
         metric("Spring goal ticks", _springGoal / TICKS_TO_METERS);
         metric("spring zeroed", _springEncoderZeroed);
 //        metric("Spring encoder ticks", getSpringEncoderTicks());
