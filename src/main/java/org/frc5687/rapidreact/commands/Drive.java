@@ -54,11 +54,13 @@ public class Drive extends OutliersCommand {
         } else {
             _driveTrain.disableLimelight();
         }
+        metric("Aiming controller power", _visionController.calculate(-_driveTrain.getAngleToTarget(), 0));
         double rot =
                 (_oi.autoAim() && _driveTrain.hasTarget())
-                        ? _visionController.calculate(-_driveTrain.getAngleToTarget(), 0)
+                        ? _visionController.calculate(-_driveTrain.getAngleToTarget(), 0) * MAX_ANG_VEL
                         : _oi.getRotationX() * MAX_ANG_VEL;
         _driveTrain.drive(vx, vy, rot, true);
+
     }
 
     @Override
