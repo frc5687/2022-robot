@@ -269,7 +269,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
-            info("Target Distance is: " + _proxy.getLatestFrame().getTargetDistance());
+//            info("Target Distance is: " + _proxy.getLatestFrame().getTargetDistance());
             return _proxy.getLatestFrame().getTargetDistance();
         }
         return Double.NaN;
@@ -277,7 +277,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getAngleToTarget() {
         if (_proxy.getLatestFrame() != null) {
-            info("Target Distance is: " + _proxy.getLatestFrame().getTargetAngle());
+//            info("Target Distance is: " + _proxy.getLatestFrame().getTargetAngle());
             return _proxy.getLatestFrame().getTargetAngle();
         } else if(_limelight.hasTarget()) {
             return Units.degreesToRadians(_limelight.getYaw());

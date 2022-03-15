@@ -40,15 +40,14 @@ public class Auto {
         public static double TARMAC_SPRING = 0.055;
 
         // 3.15m
-        public static double NEAR_WINCH = 0.24;
-        public static double NEAR_SPRING = 0.065;
+        public static double NEAR_WINCH = 0.255;
+        public static double NEAR_SPRING = 0.072;
 
         // 4.35m
         public static double MID_WINCH = 0.315;
-        public static double MID_SPRING = 0.076;
-
+        public static double MID_SPRING = 0.077;
         // 6m
-        public static double FAR_WINCH = 0.328;
-        public static double FAR_SPRING = 0.0935;
+        public static double FAR_WINCH = 0.33;
+        public static double FAR_SPRING = 0.093;
     }
 }
