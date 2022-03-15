@@ -11,6 +11,13 @@ import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
+/** DriveCatapult is the default command for the catapult.  It runs when no other command
+ *  that requires the catapult is scheduled.
+ * 
+ * <p> Note: Every command that wants to use the catapult must check the state of the intake.
+ * If the intake has not been successfully deployed at least once, do not ask the catapult to
+ * shoot.  Shooting when intake is in initial stowed state can break the robot.
+ */
 public class DriveCatapult extends OutliersCommand {
 
     private final Catapult _catapult;

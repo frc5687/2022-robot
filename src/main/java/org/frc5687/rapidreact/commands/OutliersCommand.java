@@ -10,29 +10,41 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * The OutliersCommand base class introduces logging and metric tracking capabilities for Commands.
  * 
- * See ILoggingSource for logging details.
+ * <p> Commands are simple state machines that perform high-level robot functions using the methods
+ * defined by subsystems. Commands can be either idle, in which they do nothing, or scheduled,
+ * in which caseCommandScheduler will execute a specific set of the command’s code depending on the state
+ * of the command:
  * 
- * See MetricTracker for metrics details.
+ * <ol>
+ *  <li> initializing => initialize()
+ *  <li> executing => execute()
+ *  <li> ending => end()
+ * </ol> 
+ *
  * 
- * Example of metrics collection. In a child class's constructor:
+ * <p> Example of metrics collection. In a child class's constructor:
  * 
+ * <pre>
  * public SampleCommand() {
  *    logMetrics("foo", "bar", "baz");
  * }
+ * </pre>
  * 
  * Later on in the child class, eg in run():
  * 
- * ...
+ * <pre>
  * metric("foo", 123);
  * metric("bar", "elvis");
  * metric("baz", 42.42);
- * metric("pants", 99);    <~ This metric won't get written to USB storage because it wasn't registered.
- * ...
+ * metric("pants", 99); // This metric won't get written to USB storage because it wasn't registered.
+ * </pre>
  * 
- * Note that metric logging is expensive, so it is turned OFF by default.
+ * <p>Note that metric logging is expensive, so it is turned OFF by default.
  * To turn it on, either call enableMetrics() from code (eg at the start of an auto command)
  * or set Metrics/[SubSystemName] to true in the SmartDashboard 
  * 
+ * @see ILoggingSource ILoggingSource for logging details.
+ * @see MetricTracker MetricTracker for metrics details.
  */
  public abstract class OutliersCommand extends CommandBase implements ILoggingSource {
     private MetricTracker _metricTracker;

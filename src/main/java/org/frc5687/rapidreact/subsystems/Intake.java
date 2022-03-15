@@ -10,7 +10,11 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-
+/** Intake deploys to pick up balls, stows to be out of the way
+ * 
+ * <p> Initial stowe position locks out catapult.  After first successful deploy,
+ * catapult can be used.
+ */
 public class Intake extends OutliersSubsystem{
 
     private TalonFX _roller;
