@@ -1,6 +1,5 @@
 package org.frc5687.rapidreact.subsystems;
 
-
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -29,7 +28,7 @@ import static org.frc5687.rapidreact.Constants.Catapult.*;
  * 
  * <ul>
  *  <li>Pin solenoid latches or releases catapult arm.
- *  <li>Baby neo winches catapult arm to lower arm and set release angle.
+ *  <li>Baby neo winds and unwinds rope to lower arm and set release angle.
  *  <li>Falcon motor tensions spring to set power.
  *  <li>Proximity sensor senses ball on arm.
  *  <li>Color sensor senses ball color.
@@ -37,11 +36,14 @@ import static org.frc5687.rapidreact.Constants.Catapult.*;
  */
 public class Catapult extends OutliersSubsystem {
 
-    private final TalonFX _springMotor;
+    // We control catapult with two motors
+    private final TalonFX _springMotor; // Falcon motor controls spring tension
+    private final CANSparkMax _armMotor; // Baby Neo motor controls arm position
 
-    private final CANSparkMax _winchMotor;
-    private final RelativeEncoder _winchEncoder;
-    private final ProfiledPIDController _winchController;
+    // Spring motor uses integrated encoder and controller
+    // Arm motor uses relative encoder and PID controller
+    private final RelativeEncoder _armEncoder;
+    private final ProfiledPIDController _armController;
 
     private final DoubleSolenoid _releasePin;
 
@@ -49,7 +51,7 @@ public class Catapult extends OutliersSubsystem {
     private final HallEffect _armHall;
 
     private boolean _springEncoderZeroed = false;
-    private boolean _winchEncoderZeroed = false;
+    private boolean _armEncoderZeroed = false;
 
     private CatapultState _state;
     private CatapultState _state_prior; // for ERROR and other states that need to know
@@ -135,7 +137,7 @@ public class Catapult extends OutliersSubsystem {
 
         // Cycles:
 
-        // auto => LOCK_OUT -> PRELOADED -> ZEROING -> WAITING -> LOWERING_ARM -> LATCHING -> LOADING -> AIMING -> READY
+        // auto => LOCK_OUT -> PRELOADED -> ZEROING_WINCH -> ZEROING_SPRING -> LOADING -> AIMING -> READY
         // robot moves so needs to aim again => READY -> AIMING -> READY
         // robot shoots so needs to reset catapult => READY -> LOWERING_ARM -> LATCHING -> LOADING -> AIMING -> READY
         // available when robot in test mode; do before each match => <ANY> -> AIMING -> LOCK_OUT
@@ -236,22 +238,22 @@ public class Catapult extends OutliersSubsystem {
         _springMotor.config_kF(MOTION_MAGIC_SLOT, SPRING_kF);
 
         // Winch motor (Spark Max Baby Neo)
-        _winchMotor = new CANSparkMax(RobotMap.CAN.SPARKMAX.WINCH_BABY_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
-        _winchMotor.restoreFactoryDefaults();
-        _winchMotor.setInverted(WINCH_MOTOR_INVERTED);
-        _winchMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
-        _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
-        _winchMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
-        _winchMotor.setSmartCurrentLimit(WINCH_CURRENT_LIMIT);
+        _armMotor = new CANSparkMax(RobotMap.CAN.SPARKMAX.WINCH_BABY_NEO, CANSparkMaxLowLevel.MotorType.kBrushless);
+        _armMotor.restoreFactoryDefaults();
+        _armMotor.setInverted(WINCH_MOTOR_INVERTED);
+        _armMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        _armMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 20);
+        _armMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20);
+        _armMotor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20);
+        _armMotor.setSmartCurrentLimit(WINCH_CURRENT_LIMIT);
 
         // Save changes into flash memory of spark maxes
-        _winchMotor.burnFlash();
+        _armMotor.burnFlash();
 
         // Winch encoder (which type is it?)
-        _winchEncoder = _winchMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, COUNTS_PER_REVOLUTION);
+        _armEncoder = _armMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, COUNTS_PER_REVOLUTION);
 
-        _winchController = new ProfiledPIDController(
+        _armController = new ProfiledPIDController(
                 WINCH_kP,
                 WINCH_kI,
                 WINCH_kD,
@@ -260,7 +262,7 @@ public class Catapult extends OutliersSubsystem {
                         MAX_WINCH_ACCELERATION_MPSS
                 )
         );
-        _winchController.setTolerance(WINCH_TOLERANCE);
+        _armController.setTolerance(WINCH_TOLERANCE);
 
         // Hall effects (sense position of springs and catapult arm)
         _springHall = new HallEffect(RobotMap.DIO.SPRING_HALL_EFFECT);
@@ -282,7 +284,7 @@ public class Catapult extends OutliersSubsystem {
 
         // set state
         _springEncoderZeroed = false;
-        _winchEncoderZeroed = false;
+        _armEncoderZeroed = false;
         _state = CatapultState.LOCK_OUT;
         _alliance = DriverStation.getAlliance();
         _springGoal = 0;
@@ -310,12 +312,12 @@ public class Catapult extends OutliersSubsystem {
         // Failsafes
 
         // Prevent Baby Neo winch motor from burning out
-        if (isArmLowered() && (_winchMotor.getAppliedOutput() > 0)) {
-            setWinchMotorSpeed(0);
+        if (isArmLowered() && (_armMotor.getAppliedOutput() > 0)) {
+            setArmMotorSpeed(0);
         }
         // TODO: add a timer to allow short bursts above current limit
-        if (_winchMotor.getOutputCurrent() > WINCH_CURRENT_LIMIT) {
-            setWinchMotorSpeed(0);
+        if (_armMotor.getOutputCurrent() > WINCH_CURRENT_LIMIT) {
+            setArmMotorSpeed(0);
         }
 
         // TODO: failsafe for spring motor
@@ -327,12 +329,12 @@ public class Catapult extends OutliersSubsystem {
                 // Intake is in initial stowed position
                 // NOT safe to shoot ball
                 // Neither catapult motor should be moving
-                setWinchMotorSpeed(0);
+                setArmMotorSpeed(0);
                 setSpringMotorSpeed(0);
                 // Pin should be latched
                 if (isReleasePinReleased()) {
                     _state_prior = CatapultState.LOCK_OUT;
-                    _state_error = "Pin released during LOCK_OUT";
+                    _state_error = "Pin released";
                     _state = CatapultState.ERROR;
                     return;
                 }            
@@ -342,7 +344,7 @@ public class Catapult extends OutliersSubsystem {
                 // Intake has been deployed at least once
                 // Now it is safe to shoot ball
                 // Neither catapult motor should be moving
-                setWinchMotorSpeed(0);
+                setArmMotorSpeed(0);
                 setSpringMotorSpeed(0);
                 // Did we shoot first ball?
                 if (isReleasePinReleased()) {
@@ -353,7 +355,7 @@ public class Catapult extends OutliersSubsystem {
                 // Spring hall effect should not be triggered
                 if (isSpringHallTriggered()) {
                     _state_prior = CatapultState.PRELOADED;
-                    _state_error = "Spring hall triggered during PRELOADED";
+                    _state_error = "Spring hall triggered";
                     _state = CatapultState.ERROR;
                     return;
                 }
@@ -367,31 +369,42 @@ public class Catapult extends OutliersSubsystem {
                 // Have we already lowered arm?
                 if (isArmLowered()) {
                     // Stop winch motor
-                    setWinchMotorSpeed(0);
+                    setArmMotorSpeed(0);
+                    // Try to latch release pin
+                    lockArm();
                     // TODO: think more about what is going on with winch motor
                     // Momentum will carry it past the trigger point
                     // Do we want to wait to zero winch encoder?
                     // Will motor be oscillating trying to hold position?
                     // We're about where we want to be to zero encoder.
-                    zeroWinchEncoder();
-                    _state = CatapultState.ZEROING_SPRING;
+                    zeroArmEncoder();
+                    // Check if we successfully latched release pin
+                    if (isReleasePinLocked()) {
+                        _state = CatapultState.ZEROING_SPRING;
+                    } else {
+                        // We have a problem Houston
+                        _state_prior = CatapultState.ZEROING_WINCH;
+                        _state_error = "Release pin did not latch"; 
+                        _state = CatapultState.ERROR;
+                    }
                     return;
                 }
                 // Spring hall effect should not be triggered
                 if (isSpringHallTriggered()) {
                     _state_prior = CatapultState.ZEROING_WINCH;
-                    _state_error = "Spring hall triggered during ZEROING_WINCH";
+                    _state_error = "Spring hall triggered";
                     _state = CatapultState.ERROR;
                     return;
                 }
                 // Lower arm
-                setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
+                setArmMotorSpeed(Constants.Catapult.LOWERING_SPEED);
                 return;
             case ZEROING_SPRING:
                 // Winch motor has been zeroed
+                // Release pin has been latched
                 // Now release tension in spring to zero the spring encoder
                 // Winch motor should not be moving
-                setWinchMotorSpeed(0);
+                setArmMotorSpeed(0);
                 // Have we already released all tension in spring?
                 if (isSpringHallTriggered()) {
                     // Stop spring motor
@@ -402,7 +415,7 @@ public class Catapult extends OutliersSubsystem {
                     // Will motor be oscillating trying to hold position?
                     // We're about where we want to be to zero encoder.
                     zeroSpringEncoder();
-                    _state = CatapultState.LOWERING_ARM;
+                    _state = CatapultState.LOADING;
                     return;
                 }
                 // Release tension in spring
@@ -412,14 +425,21 @@ public class Catapult extends OutliersSubsystem {
                 // Check if arm lowered all the way
                 if (isArmLowered()) {
                     // Stop winching down arm
-                    setWinchMotorSpeed(0);
+                    setArmMotorSpeed(0);
                     // Try to latch release pin
                     lockArm();
                     // Set state to LATCHING
                     _state = CatapultState.LATCHING;
                 }
+                // Is release pin latched by mistake?
+                if (isReleasePinLocked()) {
+                    _state_prior = CatapultState.LOWERING_ARM;
+                    _state_error = "Release pin locked during LOWERING_ARM";
+                    _state = CatapultState.ERROR;
+                    return;
+                }
                 // Lower arm
-                setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
+                setArmMotorSpeed(Constants.Catapult.LOWERING_SPEED);
                 return;
             case LATCHING:
                 // Try to latch pin if necessary
@@ -440,14 +460,14 @@ public class Catapult extends OutliersSubsystem {
                     _state = CatapultState.ERROR;
                     return;
                 }
-                zeroWinchEncoder();
+                zeroArmEncoder();
                 return;
             case AIMING:
             case READY:
             case WAITING:
             case ERROR:
                 // Neither catapult motor should be moving
-                setWinchMotorSpeed(0);
+                setArmMotorSpeed(0);
                 setSpringMotorSpeed(0);
                 return;          
             default:
@@ -492,21 +512,21 @@ public class Catapult extends OutliersSubsystem {
         return _springHall.get();
     }
 
-    public void setWinchMotorSpeed(double speed) {
-        _winchMotor.set(speed);
+    public void setArmMotorSpeed(double speed) {
+        _armMotor.set(speed);
     }
 
-    public double getWinchRotation() {
-        return _winchEncoder.getPosition();
+    public double getArmRotation() {
+        return _armEncoder.getPosition();
     }
 
     // meters
-    public double getWinchStringLength() {
-        return getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE;
+    public double getArmStringLength() {
+        return getArmRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE;
     }
 
     public double getArmReleaseAngle() {
-        return STOWED_ANGLE - stringLengthToAngle(getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE);
+        return STOWED_ANGLE - stringLengthToAngle(getArmRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE);
     }
     
     // meters and radians.
@@ -519,27 +539,27 @@ public class Catapult extends OutliersSubsystem {
         return (angle - STOWED_ANGLE + LINEAR_REGRESSION_OFFSET) / LINEAR_REGRESSION_SLOPE;
     }
 
-    public void zeroWinchEncoder() {
-        if (!_winchEncoderZeroed) {
-            _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT);
-            _winchEncoderZeroed = true;
+    public void zeroArmEncoder() {
+        if (!_armEncoderZeroed) {
+            _armEncoder.setPosition(WINCH_BOTTOM_LIMIT);
+            _armEncoderZeroed = true;
         }
     }
 
-    public boolean isWinchZeroed() {
-        return _winchEncoderZeroed;
+    public boolean isArmZeroed() {
+        return _armEncoderZeroed;
     }
 
-    public double getWinchControllerOutput() {
-        return _winchController.calculate(getWinchStringLength());
+    public double getArmControllerOutput() {
+        return _armController.calculate(getArmStringLength());
     }
 
-    public void setWinchGoal(double stringLength) {
-        _winchController.setGoal(-stringLength);
+    public void setArmGoal(double stringLength) {
+        _armController.setGoal(-stringLength);
     }
 
-    public boolean isWinchAtGoal() {
-        return _winchController.atGoal();
+    public boolean isArmAtGoal() {
+        return _armController.atGoal();
     }
 
     public boolean isArmLowered() {
@@ -646,12 +666,12 @@ public class Catapult extends OutliersSubsystem {
         metric("Spring Hall Effect", isSpringHallTriggered());
 
         // Winch values
-        metric("Winch rotation", getWinchRotation());
-        metric("Winch controller output", _winchMotor.getAppliedOutput());
-        metric("winch goal", _winchController.getGoal().position);
-        metric("Winch string length", getWinchStringLength());
+        metric("Winch rotation", getArmRotation());
+        metric("Winch controller output", _armMotor.getAppliedOutput());
+        metric("winch goal", _armController.getGoal().position);
+        metric("Winch string length", getArmStringLength());
 //        metric("String length", stringLengthToAngle(getArmReleaseAngle()));
-//        metric("Winch goal", Units.radiansToDegrees(stringLengthToAngle(_winchController.getGoal().position)));
+//        metric("Winch goal", Units.radiansToDegrees(stringLengthToAngle(_armController.getGoal().position)));
         metric("Blue", isBlueBallDetected());
         metric("Red", isRedBallDetected());
         // Catapult arm values
@@ -698,23 +718,22 @@ public class Catapult extends OutliersSubsystem {
         }
     }
 
-
     public void setStaticGoals() {
         switch(_setpoint) {
             case NEAR:
-                setWinchGoal(Auto.StaticShots.NEAR_WINCH);
+                setArmGoal(Auto.StaticShots.NEAR_WINCH);
                 setSpringDistance(Auto.StaticShots.NEAR_SPRING);
                 break;
             case MID:
-                setWinchGoal(Auto.StaticShots.MID_WINCH);
+                setArmGoal(Auto.StaticShots.MID_WINCH);
                 setSpringDistance(Auto.StaticShots.MID_SPRING);
                 break;
             case FAR:
-                setWinchGoal(Auto.StaticShots.FAR_WINCH);
+                setArmGoal(Auto.StaticShots.FAR_WINCH);
                 setSpringDistance(Auto.StaticShots.FAR_SPRING);
                 break;
             default:
-                setWinchGoal(Auto.StaticShots.DEFAULT_WINCH);
+                setArmGoal(Auto.StaticShots.DEFAULT_WINCH);
                 setSpringDistance(Auto.StaticShots.DEFAULT_SPRING);
                 break;
         }
