@@ -304,16 +304,16 @@ public class Catapult extends OutliersSubsystem {
     @Override
     public void updateDashboard() {
         // Spring values
-        metric("Spring position", getSpringPosition());
+//        metric("Spring position", getSpringPosition());
         metric("Spring goal ticks", _springGoal / TICKS_TO_METERS);
         metric("spring zeroed", _springEncoderZeroed);
-        metric("Spring encoder ticks", getSpringEncoderTicks());
+//        metric("Spring encoder ticks", getSpringEncoderTicks());
         metric("Spring motor output", _springMotor.getMotorOutputPercent());
         metric("Spring goal", _springGoal);
-        metric("Spring Hall Effect", isSpringHallTriggered());
+//        metric("Spring Hall Effect", isSpringHallTriggered());
 
         // Winch values
-        metric("Winch rotation", getWinchRotation());
+//        metric("Winch rotation", getWinchRotation());
         metric("Winch controller output", _winchMotor.getAppliedOutput());
         metric("winch goal", _winchController.getGoal().position);
         metric("Winch string length", getWinchStringLength());
@@ -321,8 +321,8 @@ public class Catapult extends OutliersSubsystem {
         metric("Red", isRedBallDetected());
         // Catapult arm values
         metric("Arm state", _state.name());
-        metric("Arm release angle", getArmReleaseAngle());
-        metric("Arm Hall Effect", isArmLowered());
+//        metric("Arm release angle", getArmReleaseAngle());
+//        metric("Arm Hall Effect", isArmLowered());
         metric("Ball detected", isBallDetected());
     }
 
@@ -340,7 +340,7 @@ public class Catapult extends OutliersSubsystem {
 
     public void setSetpoint(CatapultSetpoint setpoint) {
         _setpoint = setpoint;
-        info("Setting setpoint to " + setpoint.toString());
+//        info("Setting setpoint to " + setpoint.toString());
     }
 
     public CatapultSetpoint getSetpoint() {

@@ -236,11 +236,11 @@ public class Constants {
 
         // Controller Parameters
         public static final int MOTION_MAGIC_SLOT = 0;
-        public static final double SPRING_kP = 1.0; // Always start with kP
-        public static final double SPRING_kI = 0.00; // If possible avoid kI
+        public static final double SPRING_kP = 1.5; // Followed with CTRE docs
+        public static final double SPRING_kI = 0.001; // If possible avoid kI
         public static final double SPRING_kD = 10.0; // 2nd Kd
-        public static final double SPRING_kF = 0.0; // 2nd Kd
-        public static final double SPRING_IZONE = 30.0;
+        public static final double SPRING_kF = 0.0;
+        public static final double SPRING_IZONE = 50.0;
         public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);
         public static final double CRUISE_VELOCITY = 80000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double ACCELERATION = 100000; // TODO: Needs to be calibrated via Phoenix tuner
@@ -248,10 +248,10 @@ public class Constants {
         // winch
         public static final double WINCH_kP = 20.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
-        public static final double WINCH_kD = 0.0; // 2nd Kd
+        public static final double WINCH_kD = 0.0; // 2nd Kd following
 //        public static final double MAX_WINCH_VELOCITY_MPS = ((NEO_RAD_PER_SEC / GEAR_REDUCTION)/ (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
         public static final double MAX_WINCH_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
-        public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 20.0; // heuristic.
+        public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 50.0; // heuristic.
         public static final double WINCH_TOLERANCE = 0.001; // m
 
         // DriveCatapult constants
