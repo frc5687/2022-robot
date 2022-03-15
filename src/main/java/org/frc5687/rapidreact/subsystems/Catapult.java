@@ -99,8 +99,8 @@ public class Catapult extends OutliersSubsystem {
         // PRELOADED -- ready to shoot first ball in auto mode, waiting to release pin
         PRELOADED(1),
 
-        // ZEROING_WINCH -- pin released, first shot taken, winch encoder being zeroed
-        ZEROING_WINCH(2),
+        // ZEROING_ARM -- pin released, first shot taken, winch encoder being zeroed
+        ZEROING_ARM(2),
 
         // ZEROING_SPRING -- winch encoder zeroed, spring encoder being zeroed
         ZEROING_SPRING(3),
@@ -137,7 +137,7 @@ public class Catapult extends OutliersSubsystem {
 
         // Cycles:
 
-        // auto => LOCK_OUT -> PRELOADED -> ZEROING_WINCH -> ZEROING_SPRING -> LOADING -> AIMING -> READY
+        // auto => LOCK_OUT -> PRELOADED -> ZEROING_ARM -> ZEROING_SPRING -> LOADING -> AIMING -> READY
         // robot moves so needs to aim again => READY -> AIMING -> READY
         // robot shoots so needs to reset catapult => READY -> LOWERING_ARM -> LATCHING -> LOADING -> AIMING -> READY
         // available when robot in test mode; do before each match => <ANY> -> AIMING -> LOCK_OUT
@@ -348,8 +348,8 @@ public class Catapult extends OutliersSubsystem {
                 setSpringMotorSpeed(0);
                 // Did we shoot first ball?
                 if (isReleasePinReleased()) {
-                    // Time to zero winch motor
-                    _state = CatapultState.ZEROING_WINCH;
+                    // Time to zero arm motor
+                    _state = CatapultState.ZEROING_ARM;
                     return;
                 }
                 // Spring hall effect should not be triggered
@@ -361,9 +361,9 @@ public class Catapult extends OutliersSubsystem {
                 }
                 // Stay in this state until arm is released
                 return;
-            case ZEROING_WINCH:
+            case ZEROING_ARM:
                 // First ball has been shot
-                // Now lower arm to zero the winch encoder
+                // Now lower arm to zero the arm encoder
                 // Spring motor should not be moving
                 setSpringMotorSpeed(0);
                 // Have we already lowered arm?
@@ -383,7 +383,7 @@ public class Catapult extends OutliersSubsystem {
                         _state = CatapultState.ZEROING_SPRING;
                     } else {
                         // We have a problem Houston
-                        _state_prior = CatapultState.ZEROING_WINCH;
+                        _state_prior = CatapultState.ZEROING_ARM;
                         _state_error = "Release pin did not latch"; 
                         _state = CatapultState.ERROR;
                     }
@@ -391,7 +391,7 @@ public class Catapult extends OutliersSubsystem {
                 }
                 // Spring hall effect should not be triggered
                 if (isSpringHallTriggered()) {
-                    _state_prior = CatapultState.ZEROING_WINCH;
+                    _state_prior = CatapultState.ZEROING_ARM;
                     _state_error = "Spring hall triggered";
                     _state = CatapultState.ERROR;
                     return;
