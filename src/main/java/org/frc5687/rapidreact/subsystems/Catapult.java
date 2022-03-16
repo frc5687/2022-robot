@@ -214,6 +214,18 @@ public class Catapult extends OutliersSubsystem {
         if (_winchMotor.getOutputCurrent() > WINCH_CURRENT_LIMIT) {
             setWinchMotorSpeed(0);
         }
+        if (isBallDetected()){
+            _lights.setHasBall(true);
+            if (isRedAlliance() && isRedBallDetected()){
+                _lights.setRightColor(true);
+            } else if (!isRedAlliance() && isBlueBallDetected()){
+                _lights.setRightColor(true);
+            } else {
+                _lights.setRightColor(false);
+            }
+        } else {
+            _lights.setHasBall(false);
+        }
 
     }
 
@@ -436,26 +448,6 @@ public class Catapult extends OutliersSubsystem {
     public void setSetpoint(CatapultSetpoint setpoint) {
         _setpoint = setpoint;
         info("Setting setpoint to " + setpoint.toString());
-    }
-
-    public void setAimingLights(){
-        _lights.setShootingStatus(2);
-    }
-
-    public void setWrongBallLights(){
-        _lights.setShootingStatus(1);
-    }
-
-    public void setRightBallLights(){
-        _lights.setShootingStatus(0);
-    }
-
-    public void setShootingLights(){
-        _lights.setShootingStatus(3);
-    }
-
-    public void setBaseLights(){
-        _lights.setBase();
     }
 
     public CatapultSetpoint getSetpoint() {

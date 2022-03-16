@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.Limelight;
@@ -45,19 +46,21 @@ public class DriveTrain extends OutliersSubsystem {
     private JetsonProxy _proxy;
     private Limelight _limelight;
     private OI _oi;
+    private Lights _lights;
 
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
 
-    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
+    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu, Lights lights) {
         super(container);
         try {
             _oi = oi;
             _proxy = proxy;
             _limelight = limelight;
             _imu = imu;
+            _lights = lights;
             _northWest =
                     new DiffSwerveModule(
                             Constants.DriveTrain.NORTH_WEST,
@@ -144,6 +147,7 @@ public class DriveTrain extends OutliersSubsystem {
                 _southEast.getState(),
                 _northEast.getState()
         );
+        _lights.setOnTarget(isOnTarget());
     }
 
     @Override
@@ -277,6 +281,10 @@ public class DriveTrain extends OutliersSubsystem {
             return _proxy.getLatestFrame().getTargetAngle();
         }
         return Double.NaN;
+    }
+
+    public boolean isOnTarget() {
+        return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE;
     }
 
     public TrajectoryConfig getConfig() {

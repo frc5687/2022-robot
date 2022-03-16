@@ -57,8 +57,11 @@ public class Climber extends OutliersSubsystem{
             case STOW:
             case STOWED:
                 _driveTrain.dropDriveSpeed(false);
+                _lights.setClimbing(false);
+                break;
             default:
                 _driveTrain.dropDriveSpeed(true);
+                _lights.setClimbing(true);
         }
     }
  
@@ -247,14 +250,6 @@ public class Climber extends OutliersSubsystem{
         info("Setting Rocker in");
 
         _rocker.set(Value.kForward);
-    }
-
-    public void setClimbingLights(){
-        _lights.setClimbingLights();
-    }
-
-    public void setBase(){
-        _lights.setBase();
     }
 
     /**

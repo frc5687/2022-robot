@@ -46,7 +46,7 @@ public class Intake extends OutliersSubsystem{
      * Stowe the intake
      */
     public void stowe(){
-        _lights.setBase();
+        _lights.setIntakeRunning(false);
         _solenoid.set(Value.kReverse);
         _deployed = false;
     }
@@ -55,7 +55,7 @@ public class Intake extends OutliersSubsystem{
      * Deploy the intake
      */
     public void deploy(){
-        _lights.setIntakeStatus();
+        _lights.setIntakeRunning(true);
         _solenoid.set(Value.kForward);
         _deployed = true;
     }

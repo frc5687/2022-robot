@@ -39,6 +39,7 @@ public class RobotContainer extends OutliersContainer {
     private AHRS _imu;
     private JetsonProxy _proxy;
     private Limelight _limelight;
+    private Lights _lights;
 
     private Robot _robot;
     private DriveTrain _driveTrain;
@@ -46,7 +47,7 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private Climber _climber;
 
-    private Lights _lights;
+    
     private AutoChooser _autoChooser;
     AutoChooser.Position autoPosition;
     AutoChooser.Mode autoMode;
@@ -88,7 +89,7 @@ public class RobotContainer extends OutliersContainer {
         _limelight = new Limelight("limelight");
         _lights = new Lights(this, RobotMap.PWM.BLINKENS);
         // then subsystems
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
+        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu, _lights);
         _intake = new Intake(this, _lights);
         _climber = new Climber(this, _driveTrain, _lights);
         _catapult = new Catapult(this, _lights);

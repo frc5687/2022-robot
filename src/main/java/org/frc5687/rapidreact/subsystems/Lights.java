@@ -10,7 +10,11 @@ public class Lights extends OutliersSubsystem{
 
     private Spark _blinkens;
     private boolean _running;
-    private Mode _mode = Mode.UNKNOW;
+    private boolean _hasBall = false;
+    private boolean _rightColor = false;
+    private boolean _climbing = false;
+    private boolean _intakeRunning = false;
+    private boolean _onTarget = false;
     
     public Lights(OutliersContainer container, int port) {
         super(container);
@@ -26,48 +30,41 @@ public class Lights extends OutliersSubsystem{
         _blinkens.set(color);
     }
 
-    /**
-     * The basic setting for the lights
-     */
-    public void setBase(){
-        _mode = Mode.BASE;
+    public void setHasBall(boolean value){
+        _hasBall = value;
     }
 
-    /**
-     * Gets the current blinkens mode
-     * @return
-     */
-    public Mode getMode(){
-        return _mode;
+    public void setRightColor(boolean value){
+        _rightColor = value;
     }
 
-    /**
-     * Set the status of the shooting
-     * @param status 0 - Right ball / 1 - Wrong ball / 2 - Aming / 3 - Shooting
-     */
-    public void setShootingStatus(int status){
-        switch(status){
-            case 0:
-                _mode = Mode.RIGHT_BALL;
-                break;
-            case 1:
-                _mode = Mode.WRONG_BALL;
-                break;
-            case 2:
-                _mode = Mode.AIMING;
-                break;
-            case 3:
-                _mode = Mode.SHOOTING;
-                break;
+    public void setIntakeRunning(boolean value){
+        _intakeRunning = value;
+    }
+
+    public void setClimbing(boolean value){
+        _climbing = value;
+    }
+
+    public void setOnTarget(boolean value){
+        _onTarget = value;
+    }
+
+    private double getColor(){
+        if(_climbing){
+            return Constants.Lights.CLIMBING;
         }
-    }
+        if(_hasBall && _rightColor){
+            return _onTarget ? Constants.Lights.RIGHT_BALL_ON_TARGET: Constants.Lights.RIGHT_BALL;
+        }
+        if(_hasBall && !_rightColor){
+            return _onTarget ? Constants.Lights.WRONG_BALL_ON_TARGET: Constants.Lights.WRONG_BALL;
+        }
+        if(_intakeRunning){
+            return Constants.Lights.INTAKE;
+        }
 
-    public void setIntakeStatus(){
-        _mode = Mode.INTAKE;
-    }
-
-    public void setClimbingStatus(){
-        _mode = Mode.CLIMBING;
+        return Constants.Lights.BASE;
     }
 
     /**
@@ -75,50 +72,11 @@ public class Lights extends OutliersSubsystem{
      */
     @Override
     public void periodic(){
-        switch(getMode()){
-            case UNKNOW:
-                break;
-            case BASE:
-                set(Constants.Lights.BASE);
-                break;
-            case WRONG_BALL:
-                set(Constants.Lights.WRONG_BALL);
-                break;
-            case RIGHT_BALL:
-                set(Constants.Lights.RIGHT_BALL);
-                break;
-            case SHOOTING:
-                set(Constants.Lights.SHOOTING);
-                break;
-            case INTAKE:
-                set(Constants.Lights.INTAKE);
-                break;
-            case CLIMBING:
-                set(Constants.Lights.CLIMBING);
-                break;
-            case AIMING:
-                set(Constants.Lights.AIMING);
-                break;
+        set(getColor());
         }
-    }
 
     @Override
     public void updateDashboard() {
         metric("Blikens done", _running);
-        metric("Blinken mode", _mode.toString());
-    }
-
-    /**
-     * The modes of the blinkens
-     */
-    public enum Mode{
-        UNKNOW,
-        BASE,
-        RIGHT_BALL,
-        WRONG_BALL,
-        SHOOTING,
-        INTAKE,
-        CLIMBING,
-        AIMING
     }
 }
