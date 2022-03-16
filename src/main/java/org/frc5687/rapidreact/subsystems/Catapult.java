@@ -214,20 +214,19 @@ public class Catapult extends OutliersSubsystem {
         if (_winchMotor.getOutputCurrent() > WINCH_CURRENT_LIMIT) {
             setWinchMotorSpeed(0);
         }
-        if (isBallDetected()){
-            _lights.setHasBall(true);
+       
             if (isRedAlliance() && isRedBallDetected()){
                 _lights.setRightColor(true);
             } else if (!isRedAlliance() && isBlueBallDetected()){
                 _lights.setRightColor(true);
-            } else {
+            } else if (isBallDetected()){
                 _lights.setRightColor(false);
+            } else {
+                _lights.setHasBall(false);
             }
-        } else {
-            _lights.setHasBall(false);
-        }
-
     }
+
+    
 
     public void zeroSpringEncoder() {
         if (!_springEncoderZeroed) {
