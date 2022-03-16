@@ -10,6 +10,7 @@ public class Lights extends OutliersSubsystem{
 
     private Spark _blinkens;
     private boolean _running;
+    
     private boolean _hasBall = false;
     private boolean _rightColor = false;
     private boolean _climbing = false;
@@ -23,10 +24,11 @@ public class Lights extends OutliersSubsystem{
     }
 
     /**
-     * Sets the color of the blinkens
+     * Sets the color of the blinkens.
+     * Marking this as private to avoid confusion, since we don't want other subsystems calling it directly.
      * @param color
      */
-    public void set(double color){
+    private void set(double color){
         _blinkens.set(color);
     }
 

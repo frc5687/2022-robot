@@ -218,15 +218,19 @@ public class Catapult extends OutliersSubsystem {
             setWinchMotorSpeed(0);
         }
        
+        if (isBallDetected()) {
+            _lights.setHasBall(true);
+
             if (isRedAlliance() && isRedBallDetected()){
                 _lights.setRightColor(true);
             } else if (!isRedAlliance() && isBlueBallDetected()){
                 _lights.setRightColor(true);
-            } else if (isBallDetected()){
-                _lights.setRightColor(false);
             } else {
-                _lights.setHasBall(false);
-            }
+                _lights.setRightColor(false);
+            } 
+        } else {
+            _lights.setHasBall(false);
+        }
     }
 
     
