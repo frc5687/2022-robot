@@ -95,27 +95,12 @@ public class DriveCatapult extends OutliersCommand {
                 } else {
                     _catapult.setStaticGoals();
                 }
-//                _catapult.setStaticGoals();
                 if (isShootTriggered() && (_isFirstShot ||  (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
                     _catapult.setAutoshoot(false);
                     _catapult.setState(SHOOTING);
                 }
 //             check if we are in the correct position and aiming at the goal.
               _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-            }
-            break;
-            case WRONG_BALL: {
-                checkLockOut();
-                checkKill();
-                _catapult.setWinchGoal(REMOVE_BALL_WINCH_GOAL);
-                _catapult.setSpringDistance(REMOVE_BALL_SPRING_GOAL);
-                _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-                if (_catapult.isWinchAtGoal()) {
-                    _catapult.setWinchMotorSpeed(0.0);
-                    _catapult.releaseArm();
-                    _wait = System.currentTimeMillis() + DELAY;
-                    _catapult.setState(CatapultState.WAIT_SHOT);
-                }
             }
             break;
             case SHOOTING: {

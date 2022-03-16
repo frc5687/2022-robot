@@ -296,19 +296,6 @@ public class RobotContainer extends OutliersContainer {
 
     }
 
-    @Override
-    public void updateDashboard() {
-        super.updateDashboard();
-//        if (_proxy.getLatestFrame() != null) {
-//            metric("Millis", _proxy.getLatestFrame().getMillis());
-//            metric("Has goal", _proxy.getLatestFrame().hasTarget());
-//            metric("Object Distance", _proxy.getLatestFrame().getTargetDistance());
-//            metric("Object Angle", _proxy.getLatestFrame().getTargetAngle());
-//        }
-//        _driveTrain.updateDashboard();
-//        _catapult.updateDashboard();
-    }
-
     public void controllerPeriodic() {
         if (_driveTrain != null) {
             _driveTrain.controllerPeriodic();
