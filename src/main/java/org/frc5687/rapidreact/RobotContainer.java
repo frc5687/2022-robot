@@ -108,6 +108,7 @@ public class RobotContainer extends OutliersContainer {
 
         // Run periodic for each swerve module faster than regular cycle time
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
+        _limelight.enableLEDs();
 
         _imu.reset();
     }

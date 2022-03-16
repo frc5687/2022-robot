@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import edu.wpi.first.math.util.Units;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.subsystems.Lights;
@@ -52,6 +53,7 @@ public class DriveTrain extends OutliersSubsystem {
     private ProfiledPIDController _angleController;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
+    private boolean _useLimelight = false;
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu, Lights lights) {
         super(container);
@@ -271,6 +273,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
+            info("Target Distance is: " + _proxy.getLatestFrame().getTargetDistance());
             return _proxy.getLatestFrame().getTargetDistance();
         }
         return Double.NaN;
@@ -278,7 +281,10 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getAngleToTarget() {
         if (_proxy.getLatestFrame() != null) {
+            info("Target Distance is: " + _proxy.getLatestFrame().getTargetAngle());
             return _proxy.getLatestFrame().getTargetAngle();
+        } else if(_limelight.hasTarget()) {
+            return Units.degreesToRadians(_limelight.getYaw());
         }
         return Double.NaN;
     }
@@ -358,5 +364,17 @@ public class DriveTrain extends OutliersSubsystem {
      */
     public void dropDriveSpeed(boolean value) {
         _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_DURING_CLIMB : Constants.DriveTrain.MAX_MPS; 
+    }
+
+    public void enableLimelight() {
+        _useLimelight = true;
+        _limelight.enableLEDs();
+    }
+    public void disableLimelight() {
+        _useLimelight = false;
+        _limelight.disableLEDs();
+    }
+    public boolean useLimelight() {
+        return _useLimelight;
     }
 }

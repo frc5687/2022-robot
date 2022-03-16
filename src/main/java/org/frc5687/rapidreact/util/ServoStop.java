@@ -22,7 +22,7 @@ public class ServoStop {
         //Raises the blocking arm
         //Stops balls from enter the catapult
         feeding = true;
-        stopper.setAngle(100);
+        stopper.setAngle(120);
     }
 
     public boolean getMode(){
