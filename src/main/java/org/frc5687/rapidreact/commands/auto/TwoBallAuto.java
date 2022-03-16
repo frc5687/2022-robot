@@ -34,7 +34,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
         addCommands(
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
-                        new Shoot(catapult),
+                        new Shoot(catapult).withTimeout(5),
                         new DriveToPose(driveTrain, _newPose, 0.2),
                         new WaitCommand(1)
                     ),

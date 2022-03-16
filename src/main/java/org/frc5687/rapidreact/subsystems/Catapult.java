@@ -89,22 +89,25 @@ public class Catapult extends OutliersSubsystem {
         // If shoot button pressed, releases pin
         // then enters LOWERING_ARM
         SHOOTING(5),
+        // wait for the shot so we are sure arm is up and hall is not triggered
+        // If hall doesn't work use time delay.
+        WAIT_SHOT(6),
 
         // If intake is up lock the catapult;
-        LOCK_OUT(6),
+        LOCK_OUT(7),
 
         // if in debug, set the winch and spring settings for initial position
-        PRELOAD(7),
+        PRELOAD(8),
         // Until we have figured out catapult, start in DEBUG state
         // Check that everything looks good, then press
         // button to get into ZEROING state
         // Allow manual pin release and pin lock
-        DEBUG(8),
+        DEBUG(9),
         // a button will stop all catapult movement, this is for the case if
         // a ball gets under the catapult.
-        KILL(9),
+        KILL(10),
 
-        AUTO(10);
+        AUTO(11);
 
 
         private final int _value;

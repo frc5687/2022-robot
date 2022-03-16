@@ -1,15 +1,14 @@
 package org.frc5687.rapidreact.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.frc5687.rapidreact.commands.Drive;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static java.lang.Double.NaN;
 import static org.frc5687.rapidreact.Constants.UDPJetson.BUFFER;
 
 public class JetsonProxy {
@@ -17,13 +16,8 @@ public class JetsonProxy {
     public static final int JETSON_PORT = 27002;
     public static final int RIO_PORT = 27001;
     public static final int PERIOD = 10;
-    public static final String JETSON_IP = "10.56.87.20"; // this is the static ip now.
 
-    private Socket _socket;
-    private DataInputStream _input;
-    private DataOutputStream _output;
-
-
+    DatagramSocket outgoingSocket;
     private Thread _listenerThread;
 
     private int _period = PERIOD;
@@ -41,14 +35,12 @@ public class JetsonProxy {
     public JetsonProxy(int period) {
         _period = period;
         try {
-            _socket = new Socket(JETSON_IP, JETSON_PORT);
-            _input = new DataInputStream(_socket.getInputStream());
-            _output = new DataOutputStream(_socket.getOutputStream());
+            outgoingSocket = new DatagramSocket();
         } catch (IOException ioe) {
-            DriverStation.reportError(ioe.getMessage(), false);
+            outgoingSocket = null;
         }
 
-        _jetsonListener = new JetsonListener(this, _input, _rioPort);
+        _jetsonListener = new JetsonListener(this, _rioPort);
         _listenerThread = new Thread(_jetsonListener);
         _listenerThread.start();
 
@@ -57,22 +49,24 @@ public class JetsonProxy {
         _jetsonTimer.schedule(new JetsonTimerTask(this), _period, _period);
     }
     synchronized protected void collect() {
+        long rioMillis = System.currentTimeMillis();
         // Send the heartbeat to the pi
         if (_jetsonListener != null) {
-            try {
-//                DriverStation.reportError("sending data", false);
-                _output.writeUTF(_data);
-                _output.flush();
-            } catch (IOException ioe) {
-
+            InetAddress jetsonAddress = _jetsonListener.getJetsonAddress();
+            if (jetsonAddress != null) {
+                byte[] sendData = new byte[BUFFER];
+                sendData = _data.getBytes();
+                DatagramPacket sendPacket = new DatagramPacket(sendData, _data.length(), jetsonAddress, _jetsonPort);
+                try {
+                    outgoingSocket.send(sendPacket);
+                } catch (IOException ioe) {
+                }
             }
         }
         // latestFrame = _piListener==null?null:_piListener.getLatestFrame();
         // trackingPose = latestFrame==null?null: (OutliersPose)poseTracker.getRaw(latestFrame.adjustedMillis);
     }
-
     protected synchronized void setLatestFrame(Frame frame) {
-//        DriverStation.reportError("Setting frame", false);
         _latestFrame = frame;
     }
 
@@ -134,8 +128,8 @@ public class JetsonProxy {
         private double _estimatedY;
         private double _estimatedHeading;
         private boolean _hasTarget;
-        private double _targetDistance;
-        private double _targetAngle;
+        private double _goalDistance;
+        private double _goalAngle;
 
         public Frame(String packet) {
 //            DriverStation.reportError("string is: " + packet, false);
@@ -146,18 +140,17 @@ public class JetsonProxy {
                 _estimatedY = Double.parseDouble(a[2]);
                 _estimatedHeading = Double.parseDouble(a[3]);
                 _hasTarget = Boolean.parseBoolean(a[4]);
-                _targetDistance = Double.parseDouble(a[5]);
-                _targetAngle = Double.parseDouble(a[6]);
+                _goalDistance = Double.parseDouble(a[5]);
+                _goalAngle = Double.parseDouble(a[6]);
             }
         }
 
         public long getMillis() { return _millis; }
         public double getEstimatedX() { return _estimatedX; }
         public double getEstimatedY() { return _estimatedY; }
+        public double getTargetDistance() { return _goalDistance; }
+        public double getTargetAngle() { return _goalAngle; }
         public boolean hasTarget() { return _hasTarget; }
-        public double getTargetDistance() { return _targetDistance; }
-        public double getTargetAngle() { return _targetAngle; }
-
 
     }
     protected class JetsonTimerTask extends TimerTask {
@@ -174,31 +167,42 @@ public class JetsonProxy {
     }
     protected class JetsonListener implements Runnable {
         private JetsonProxy _proxy;
-        private DataInputStream _input;
+        private InetAddress _jetsonAddress = null;
+        private int _rioPort;
 
-        protected JetsonListener(JetsonProxy proxy, DataInputStream input, int rioPort) {
+        protected JetsonListener(JetsonProxy proxy, int rioPort) {
             _proxy = proxy;
-            _input = input;
             _rioPort = rioPort;
         }
 
         @Override
         public void run() {
+            DatagramSocket incomingSocket;
+            byte[] receiveData = new byte[BUFFER];
             try {
-                byte[] data = new byte[BUFFER];
+                incomingSocket = new DatagramSocket(_rioPort);
                 while (true) {
-                    if (_input.read(data) > 0) {
-                        String raw = new String(data);
-//                        DriverStation.reportError(raw,i false);
-                            Frame frame = new Frame(raw);
-                            _proxy.setLatestFrame(frame);
+                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                    incomingSocket.receive(receivePacket);
+                    if (receivePacket == null) {
+
+                    } else {
+                        synchronized (this) {
+                            _jetsonAddress = receivePacket.getAddress();
+                        }
+                        String raw = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                        Frame frame = new Frame(raw);
+                        _proxy.setLatestFrame(frame);
                     }
                 }
             } catch (IOException ioe) {
                 DriverStation.reportError("IOE Exception getting frame", false);
             } catch (Exception e) {
-                DriverStation.reportError("Exception getting frame [Error]: " + e.getMessage(), true);
+                DriverStation.reportError("Exception getting frame [Error]: " + e.getMessage(), false);
             }
+        }
+        public synchronized InetAddress getJetsonAddress() {
+            return _jetsonAddress;
         }
     }
 }

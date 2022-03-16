@@ -54,6 +54,12 @@ public class Drive extends OutliersCommand {
         metric("aim", _oi.autoAim());
 
         metric("has Target", _driveTrain.hasTarget());
+//        if (_oi.autoAim() && !_driveTrain.hasTarget()) {
+        if (_oi.autoAim()) {
+            _driveTrain.enableLimelight();
+        } else {
+            _driveTrain.disableLimelight();
+        }
         double rot =
                 (_oi.autoAim() && _driveTrain.hasTarget())
                         ? _visionController.calculate(-_driveTrain.getAngleToTarget(), 0)
