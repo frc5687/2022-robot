@@ -49,13 +49,13 @@ public class OneBallAuto extends SequentialCommandGroup {
                     Auto.BallPositions.BALL_ONE.getX(),
                     Auto.BallPositions.BALL_ONE.getY()
                     );
-                _rotation = new Rotation2d();
+                _rotation = Auto.Rotations.BALL_ONE_FROM_FIRST;
                 break;
             case Second:
                 driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
                 _translation = new Translation2d (
-                    Auto.FieldPositions.ROBOT_POS_TWO_DEST.getX(),
-                    Auto.FieldPositions.ROBOT_POS_TWO_DEST.getY()
+                    Auto.BallPositions.BALL_ONE.getX(),
+                    Auto.BallPositions.BALL_ONE.getY()
                     );
                 _rotation = new Rotation2d();
                 break;
@@ -65,7 +65,7 @@ public class OneBallAuto extends SequentialCommandGroup {
                     Auto.BallPositions.BALL_TWO.getX(),
                     Auto.BallPositions.BALL_TWO.getY()
                     );
-                _rotation = new Rotation2d();
+                _rotation = Auto.Rotations.BALL_TWO_FROM_THIRD;
                 break;
             case Fourth:
                 driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);

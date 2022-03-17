@@ -45,7 +45,7 @@ public class ZeroBallAuto extends SequentialCommandGroup {
                     Auto.BallPositions.BALL_ONE.getX(),
                     Auto.BallPositions.BALL_ONE.getY()
                     );
-                _rotation = new Rotation2d();
+                _rotation = Auto.Rotations.BALL_ONE_FROM_FIRST;
                 break;
             case Second:
                 driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
@@ -66,10 +66,10 @@ public class ZeroBallAuto extends SequentialCommandGroup {
             case Fourth:
                 driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
                 _translation = new Translation2d (
-                    Auto.FieldPositions.PARALLEL_PARK.getX(),
-                    Auto.FieldPositions.PARALLEL_PARK.getY()
+                    Auto.FieldPositions.SAFE_BALL_THREE.getX(),
+                    Auto.FieldPositions.SAFE_BALL_THREE.getY()
                     );
-                _rotation = new Rotation2d();
+                _rotation = Auto.Rotations.BALL_THREE_FROM_FOURTH;
                 break;
             default:
                 _translation = new Translation2d (
