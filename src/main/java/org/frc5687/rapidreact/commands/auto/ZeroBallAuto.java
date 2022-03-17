@@ -3,36 +3,87 @@ package org.frc5687.rapidreact.commands.auto;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-/**
- * ZeroBall auto will drive robot out of tarmac.
- */
+import org.frc5687.rapidreact.config.Auto;
+import org.frc5687.rapidreact.util.AutoChooser;
+
+/** Drive robot out of tarmac. */
 public class ZeroBallAuto extends SequentialCommandGroup {
 
-    private final Pose2d _destination;
-    private final Rotation2d _rotation;
-    private final Pose2d _newPose;
-    // private final Rotation2d _theta;
+    private Translation2d _translation;
+    private Rotation2d _rotation;
+    private Pose2d _destination;
 
+    private Boolean _bypass;
+
+    /** Construct a ZeroBall Auto SequentialCommandGroup */
     public ZeroBallAuto(
         DriveTrain driveTrain,
-        Pose2d destination,
-        Rotation2d rotation
+        AutoChooser.Position position
     ) {
         Double _velocity;
 
-        // Was hardcoded for testing
-        // _theta = new Rotation2d(0.0);
-        //_destination = new Pose2d(1.0, 1.0, _theta);
+        _bypass = false;
+        if (_bypass) {
+            // Hard code for testing
+            _translation = new Translation2d(1.0, 1.0);
+            _rotation = new Rotation2d(0.0);
+            _destination = new Pose2d(_translation, _rotation);
+            _velocity = 0.2;
+            addCommands(
+                new DriveToPose(driveTrain, _destination, _velocity)
+             );
+             return;    
+        }
 
-        // Now get destination from caller
-        _rotation = rotation;
-        _destination = destination;
+        switch(position) {
+            case First:
+                driveTrain.resetOdometry(Auto.RobotPositions.FIRST);
+                _translation = new Translation2d (
+                    Auto.BallPositions.BALL_ONE.getX(),
+                    Auto.BallPositions.BALL_ONE.getY()
+                    );
+                _rotation = new Rotation2d();
+                break;
+            case Second:
+                driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
+                _translation = new Translation2d (
+                    Auto.FieldPositions.ROBOT_POS_TWO_DEST.getX(),
+                    Auto.FieldPositions.ROBOT_POS_TWO_DEST.getY()
+                    );
+                _rotation = new Rotation2d();
+                break;
+            case Third:
+                driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
+                _translation = new Translation2d (
+                    Auto.BallPositions.BALL_TWO.getX(),
+                    Auto.BallPositions.BALL_TWO.getY()
+                    );
+                _rotation = Auto.Rotations.BALL_TWO_FROM_THIRD;
+                break;
+            case Fourth:
+                driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
+                _translation = new Translation2d (
+                    Auto.FieldPositions.PARALLEL_PARK.getX(),
+                    Auto.FieldPositions.PARALLEL_PARK.getY()
+                    );
+                _rotation = new Rotation2d();
+                break;
+            default:
+                _translation = new Translation2d (
+                    driveTrain.getOdometryPose().getX(),
+                    driveTrain.getOdometryPose().getY()
+                    );
+                _rotation = driveTrain.getOdometryPose().getRotation();
+        }
+
+        // Now set destination and velocity
+        _destination = new Pose2d(_translation, _rotation);
         _velocity = 0.2;
-        _newPose = new Pose2d(_destination.getX(), _destination.getY(), _rotation);
         addCommands(
-            new DriveToPose(driveTrain, _newPose, _velocity)
+            new DriveToPose(driveTrain, _destination, _velocity)
          );
     }
 
