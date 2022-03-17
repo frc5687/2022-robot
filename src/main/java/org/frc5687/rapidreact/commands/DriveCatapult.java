@@ -8,6 +8,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
+import org.frc5687.rapidreact.subsystems.Lights;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -22,8 +23,9 @@ public class DriveCatapult extends OutliersCommand {
     private boolean _isFirstShot = true;
     private CatapultState _lastLoggedState = null;
     private long _wait;
+    private Lights _lights;
 
-    public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, OI oi) {
+    public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, OI oi, Lights _lights) {
         _catapult = catapult;
         _intake = intake;
         _driveTrain = driveTrain;
@@ -116,6 +118,7 @@ public class DriveCatapult extends OutliersCommand {
                 if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
+                    _lights.setAiming(true);
                 } else {
                     _catapult.setStaticGoals();
                 }

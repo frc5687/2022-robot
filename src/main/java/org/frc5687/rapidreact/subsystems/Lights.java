@@ -16,6 +16,8 @@ public class Lights extends OutliersSubsystem{
     private boolean _climbing = false;
     private boolean _intakeRunning = false;
     private boolean _onTarget = false;
+    private boolean _aiming = false;
+    private boolean _shooting = false;
     
     public Lights(OutliersContainer container, int port) {
         super(container);
@@ -52,6 +54,14 @@ public class Lights extends OutliersSubsystem{
         _onTarget = value;
     }
 
+    public void setAiming(boolean value){
+        _aiming = value;
+    }
+
+    public void setShooting(boolean value){
+        _shooting = value;
+    }
+
     private double getColor(){
         if(_climbing){
             return Constants.Lights.CLIMBING;
@@ -64,6 +74,12 @@ public class Lights extends OutliersSubsystem{
         }
         if(_intakeRunning){
             return Constants.Lights.INTAKE;
+        }
+        if(_aiming){
+            return Constants.Lights.AIMING;
+        }
+        if(_shooting){
+            return Constants.Lights.SHOOTING;
         }
 
         return Constants.Lights.BASE;

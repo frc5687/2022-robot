@@ -2,6 +2,7 @@ package org.frc5687.rapidreact.commands;
 
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
+import org.frc5687.rapidreact.subsystems.Lights;
 
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 
@@ -9,6 +10,8 @@ public class Shoot extends OutliersCommand {
     private Catapult _catapult;
 
     private boolean _done = false;
+
+    private Lights _lights;
 
     public Shoot(Catapult catapult) {
         _catapult = catapult;
@@ -26,6 +29,7 @@ public class Shoot extends OutliersCommand {
             info("Shooting");
             _catapult.setState(CatapultState.AIMING);
             _catapult.setAutoshoot(true);
+            _lights.setShooting(true);
             _done = true;
         }
     }

@@ -228,6 +228,7 @@ public class Catapult extends OutliersSubsystem {
             } else {
                 _lights.setRightColor(false);
             } 
+        
         } else {
             _lights.setHasBall(false);
         }
