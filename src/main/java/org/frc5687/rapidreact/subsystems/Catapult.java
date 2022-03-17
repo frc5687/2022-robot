@@ -222,12 +222,10 @@ public class Catapult extends OutliersSubsystem {
             _lights.setHasBall(true);
 
             if (isRedAlliance() && isRedBallDetected()){
-                _lights.setRightColor(true);
+                _lights.setRedColor(true);
             } else if (!isRedAlliance() && isBlueBallDetected()){
-                _lights.setRightColor(true);
-            } else {
-                _lights.setRightColor(false);
-            } 
+                _lights.setBlueColor(true);
+            }
         
         } else {
             _lights.setHasBall(false);

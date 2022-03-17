@@ -12,7 +12,8 @@ public class Lights extends OutliersSubsystem{
     private boolean _running;
     
     private boolean _hasBall = false;
-    private boolean _rightColor = false;
+    private boolean _blueColor = false;
+    private boolean _redColor = false;
     private boolean _climbing = false;
     private boolean _intakeRunning = false;
     private boolean _onTarget = false;
@@ -38,8 +39,12 @@ public class Lights extends OutliersSubsystem{
         _hasBall = value;
     }
 
-    public void setRightColor(boolean value){
-        _rightColor = value;
+    public void setBlueColor(boolean value){
+        _blueColor = value;
+    }
+
+    public void setRedColor(boolean value){
+        _redColor = value;
     }
 
     public void setIntakeRunning(boolean value){
@@ -62,17 +67,23 @@ public class Lights extends OutliersSubsystem{
         _shooting = value;
     }
 
-    private double getColor(){
-        if(_climbing){
+    private double getColor(){ 
+        /**
+         * Used to get the current light value
+         * Commented out sections are ready to use, but unnecessary (as decided by Amory)
+         */
+        
+        /*if(_climbing){
             return Constants.Lights.CLIMBING;
+        }*/
+        if(_hasBall && _blueColor){
+            return _onTarget ? Constants.Lights.ON_TARGET: Constants.Lights.BLUE_BALL;
         }
-        if(_hasBall && _rightColor){
-            return _onTarget ? Constants.Lights.RIGHT_BALL_ON_TARGET: Constants.Lights.RIGHT_BALL;
+        if(_hasBall && _redColor){
+            return _onTarget ? Constants.Lights.ON_TARGET: Constants.Lights.RED_BALL;
         }
-        if(_hasBall && !_rightColor){
-            return _onTarget ? Constants.Lights.WRONG_BALL_ON_TARGET: Constants.Lights.WRONG_BALL;
-        }
-        if(_intakeRunning){
+
+        /*if(_intakeRunning){
             return Constants.Lights.INTAKE;
         }
         if(_aiming){
@@ -80,7 +91,7 @@ public class Lights extends OutliersSubsystem{
         }
         if(_shooting){
             return Constants.Lights.SHOOTING;
-        }
+        }*/
 
         return Constants.Lights.BASE;
     }
