@@ -52,6 +52,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
     private boolean _useLimelight = false;
+    private long _prevTime;
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
@@ -150,9 +151,20 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        metric("Goal Distance", getDistanceToTarget());
+        metric("Goal Distance From Top Plane", getDistanceToTarget());
+        metric("Goal Distance From Points", Math.sqrt(
+                (getTargetPosition()[0] * getTargetPosition()[0]) +
+                (getTargetPosition()[1] * getTargetPosition()[1]) +
+                (getTargetPosition()[2] * getTargetPosition()[2])
+                ));
         metric("Goal Angle", getAngleToTarget());
         metric("Has goal", hasTarget());
+        metric("Target vx", getTargetVelocity()[0]);
+        metric("Target vy", getTargetVelocity()[1]);
+        metric("Target vz", getTargetVelocity()[2]);
+        metric("Target x", getTargetPosition()[0]);
+        metric("Target y", getTargetPosition()[1]);
+        metric("Target z", getTargetPosition()[2]);
 
 //        metric("NW/Encoder Angle", _northWest.getModuleAngle());
 //        metric("SW/Encoder Angle", _southWest.getModuleAngle());
@@ -264,6 +276,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
+            _prevTime = _proxy.getLatestFrame().getMillis();
             return _proxy.getLatestFrame().getTargetDistance();
         }
         return Double.NaN;
@@ -276,6 +289,20 @@ public class DriveTrain extends OutliersSubsystem {
             return Units.degreesToRadians(_limelight.getYaw());
         }
         return Double.NaN;
+    }
+
+    public double[] getTargetPosition() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().targetPosition();
+        }
+        return new double[] {0, 0, 0};
+    }
+
+    public double[] getTargetVelocity() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().targetVelocity();
+        }
+        return new double[] {0, 0, 0};
     }
 
     public TrajectoryConfig getConfig() {

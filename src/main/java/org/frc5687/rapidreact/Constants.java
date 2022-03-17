@@ -9,7 +9,7 @@ import edu.wpi.first.math.util.Units;
 import org.frc5687.rapidreact.config.Auto;
 
 public class Constants {
-    public static final int TICKS_PER_UPDATE = 20;
+    public static final int TICKS_PER_UPDATE = 1;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
     public static final double EPSILON = 0.00001;
@@ -131,9 +131,9 @@ public class Constants {
 
         // Vision PID controller
         public static final double VISION_TOLERANCE = 0.01; // rads
-        public static final double VISION_kP = 1.1;
+        public static final double VISION_kP = 5.8;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.0;
+        public static final double VISION_kD = 1.0;
         public static final double VISION_IRANGE = 1.0;
 
         public static final double POSITION_TOLERANCE = 0.02;
@@ -191,7 +191,7 @@ public class Constants {
         public static final int CTRE_TIMEOUT = 20; // ms
         public static final int CTRE_FRAME_PERIOD = 10; // ms
 
-        public static final long DELAY = 200; // ms
+        public static final long DELAY = 1000; // ms
 
         public static final boolean SPRING_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = false;
