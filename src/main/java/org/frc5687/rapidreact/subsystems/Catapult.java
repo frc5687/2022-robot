@@ -232,6 +232,10 @@ public class Catapult extends OutliersSubsystem {
         } else {
             _lights.setHasBall(false);
         }
+        if (_state == CatapultState.AIMING){
+            _lights.setAiming(true);
+        }
+
     }
 
     

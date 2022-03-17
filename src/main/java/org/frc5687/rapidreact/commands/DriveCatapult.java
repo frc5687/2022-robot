@@ -23,7 +23,6 @@ public class DriveCatapult extends OutliersCommand {
     private boolean _isFirstShot = true;
     private CatapultState _lastLoggedState = null;
     private long _wait;
-    private Lights _lights;
 
     public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, OI oi, Lights _lights) {
         _catapult = catapult;
@@ -118,7 +117,6 @@ public class DriveCatapult extends OutliersCommand {
                 if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
-                    _lights.setAiming(true);
                 } else {
                     _catapult.setStaticGoals();
                 }
