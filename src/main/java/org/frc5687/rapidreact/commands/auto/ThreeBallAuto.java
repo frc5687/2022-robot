@@ -1,6 +1,7 @@
 package org.frc5687.rapidreact.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import org.frc5687.rapidreact.commands.AutoAim;
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -53,24 +54,29 @@ public class ThreeBallAuto extends SequentialCommandGroup{
             addCommands(
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
+                        new AutoAim(driveTrain),
                         new Shoot(catapult),
                         new DriveToPose(driveTrain, _destination1, _velocity),
                         new WaitCommand(1)
                     ),
-                    new AutoIntake(intake)
+                    new WaitCommand(0)
+//                    new AutoIntake(intake)
                 ),
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
                         new SetSetpoint(catapult, CatapultSetpoint.MID),
+                        new AutoAim(driveTrain),
                         new Shoot(catapult),
                         new DriveToPose(driveTrain, _destination2, _velocity),
                         new WaitCommand(1)
                     ),
-                    new AutoIntake(intake)
+                        new WaitCommand(0)
+//                    new AutoIntake(intake)
                 ),
+                new SetSetpoint(catapult, CatapultSetpoint.FAR),
+                new AutoAim(driveTrain),
                 new Shoot(catapult),
                 new SetSetpoint(catapult, CatapultSetpoint.NONE)
-
             );
         }
 
@@ -142,25 +148,29 @@ public class ThreeBallAuto extends SequentialCommandGroup{
         addCommands(
             new ParallelDeadlineGroup( 
                 new SequentialCommandGroup(
+                    new AutoAim(driveTrain),
                     new Shoot(catapult),
                     new DriveToPose(driveTrain, _destination1, _velocity),
                     new WaitCommand(1)
                 ),
-                new AutoIntake(intake)
+                    new WaitCommand(0)
+//                new AutoIntake(intake)
             ),
             new ParallelDeadlineGroup( 
                 new SequentialCommandGroup(
                     new SetSetpoint(catapult, CatapultSetpoint.MID),
+                    new AutoAim(driveTrain),
                     new Shoot(catapult),
                     new DriveToPose(driveTrain, _destination2, _velocity),
                     new WaitCommand(1)
                 ),
-                new AutoIntake(intake)
+                    new WaitCommand(0)
+//                new AutoIntake(intake)
             ),
-            new SetSetpoint(catapult, CatapultSetpoint.MID),
+            new SetSetpoint(catapult, CatapultSetpoint.FAR),
+            new AutoAim(driveTrain),
             new Shoot(catapult),
             new SetSetpoint(catapult, CatapultSetpoint.NONE)
-
         );
     }
 }

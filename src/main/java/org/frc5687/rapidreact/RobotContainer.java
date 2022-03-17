@@ -237,9 +237,9 @@ public class RobotContainer extends OutliersContainer {
 
         // Set _bypass to true to set autonomous command here instead of using Drive Station
         if (_bypass) {
-            AutoChooser.Position _startingPosition = AutoChooser.Position.Third;
+            AutoChooser.Position startingPosition = AutoChooser.Position.Third;
             info("Running zeroball.");
-            return new ZeroBallAuto(_driveTrain, _startingPosition);
+            return new ThreeBallAuto(_driveTrain, _catapult, _intake, startingPosition);
         }
 
         // Return command sequence based on starting position and auto mode selectded

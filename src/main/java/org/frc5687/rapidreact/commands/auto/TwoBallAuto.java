@@ -2,6 +2,7 @@ package org.frc5687.rapidreact.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 
+import org.frc5687.rapidreact.commands.AutoAim;
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -48,6 +49,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
             addCommands(
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
+                        new AutoAim(driveTrain),
                         new Shoot(catapult),
                         new DriveToPose(driveTrain, _destination, _velocity),
                         new WaitCommand(1)
@@ -108,12 +110,14 @@ public class TwoBallAuto extends SequentialCommandGroup {
         addCommands(
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
+                        new AutoAim(driveTrain),
                         new Shoot(catapult),
                         new DriveToPose(driveTrain, _destination, _velocity),
                         new WaitCommand(1)
                     ),
                     new AutoIntake(intake)
                 ),
+                new AutoAim(driveTrain),
                 new SetSetpoint(catapult, CatapultSetpoint.MID),
                 new Shoot(catapult),
                 new SetSetpoint(catapult, CatapultSetpoint.NONE)

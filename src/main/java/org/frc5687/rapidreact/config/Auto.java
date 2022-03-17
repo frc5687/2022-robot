@@ -8,13 +8,14 @@ public class Auto {
         
     public static class FieldPositions {
         public static Pose2d SAFE_BALL_THREE = new Pose2d(7.7, 0.8, new Rotation2d());
-        public static Pose2d SAFE_BALL_FOUR = new Pose2d(1.517, 1.59, new Rotation2d());
+        public static Pose2d SAFE_BALL_FOUR = new Pose2d(1.49, 1.25, new Rotation2d());
         public static Pose2d ROBOT_POS_ONE_DEST = new Pose2d(6.505, 5.685, new Rotation2d());
         public static Pose2d ROBOT_POS_TWO_DEST = new Pose2d(4.63, 3.65, new Rotation2d());
         public static Pose2d ROBOT_POS_THREE_DEST = new Pose2d(5.95, 1.42, new Rotation2d());
         public static Pose2d PARALLEL_PARK = new Pose2d(8.42, 0.4, new Rotation2d());
 
     }
+
     public static class BallPositions {
         //new super accurate poses from amory.
         public static Pose2d BALL_ONE = new Pose2d(4.93, 6.223, new Rotation2d());
@@ -33,7 +34,7 @@ public class Auto {
 
     public static class Rotations {
         public static Rotation2d BALL_ONE_FROM_FIRST = new Rotation2d(-0.25 * Math.PI);
-        public static Rotation2d BALL_TWO_FROM_THIRD = new Rotation2d(0.610865 * Math.PI);
+        public static Rotation2d BALL_TWO_FROM_THIRD = new Rotation2d(Units.degreesToRadians(20));
         public static Rotation2d BALL_TWO_FROM_BALL_THREE = new Rotation2d(Units.degreesToRadians(-35));
         public static Rotation2d BALL_THREE_FROM_FOURTH = new Rotation2d(0.5 * Math.PI);
         public static Rotation2d BALL_FOUR = new Rotation2d(Units.degreesToRadians(40));
@@ -53,11 +54,11 @@ public class Auto {
         public static double NEAR_SPRING = 0.066; // 0.065
 
         // 4.35m
-        public static double MID_WINCH = 0.320; //0.315
-        public static double MID_SPRING = 0.078; //0.076
+        public static double MID_WINCH = 0.315; //0.315
+        public static double MID_SPRING = 0.076; //0.076
 
-        // 6m
-        public static double FAR_WINCH = 0.328; // 0.328
-        public static double FAR_SPRING = 0.0933; // 0.0935
+        // 6.5m
+        public static double FAR_WINCH = 0.32; // 0.328
+        public static double FAR_SPRING = 0.1; // 0.0935
     }
 }

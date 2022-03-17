@@ -24,6 +24,7 @@ import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
+
 public class DriveTrain extends OutliersSubsystem {
     // Order we define swerve modules in kinematics
     // NB: must be same order as we pass to SwerveDriveKinematics
@@ -49,6 +50,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
+    private PIDController _visionController;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
     private boolean _useLimelight = false;
@@ -121,6 +123,15 @@ public class DriveTrain extends OutliersSubsystem {
                             new TrapezoidProfile.Constraints(
                                     Constants.DriveTrain.PROFILE_CONSTRAINT_VEL, Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL));
             _angleController.enableContinuousInput(-Math.PI / 2.0, Math.PI / 2.0);
+
+            _visionController =
+                    new PIDController(
+                            Constants.DriveTrain.VISION_kP,
+                            Constants.DriveTrain.VISION_kI,
+                            Constants.DriveTrain.VISION_kD
+                    );
+            _visionController.setIntegratorRange(-Constants.DriveTrain.VISION_IRANGE, Constants.DriveTrain.VISION_IRANGE);
+            _visionController.setTolerance(Constants.DriveTrain.VISION_TOLERANCE);
         } catch (Exception e) {
             error(e.getMessage());
         }
@@ -332,6 +343,14 @@ public class DriveTrain extends OutliersSubsystem {
         setNorthEastModuleState(moduleStates[NORTH_EAST]);
     }
 
+    public double getVisionControllerOutput() {
+        return _visionController.calculate(-getAngleToTarget(), 0) * Constants.DriveTrain.MAX_ANG_VEL;
+    }
+
+    public boolean onTarget() {
+        return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE;
+    }
+
     public boolean isAtPose(Pose2d pose) {
         double diffX = getOdometryPose().getX() - pose.getX();
         double diffY = getOdometryPose().getY() - pose.getY();
@@ -352,6 +371,7 @@ public class DriveTrain extends OutliersSubsystem {
      * 
      * <p> If Rotation2d <> gyroAngle, then robot heading will no longer equal IMU heading.
      */
+
     public void resetOdometry(Pose2d position) {
         Translation2d _translation = position.getTranslation();
         Rotation2d _rotation = getHeading();

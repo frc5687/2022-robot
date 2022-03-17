@@ -21,7 +21,7 @@ public class Shoot extends OutliersCommand {
 
     @Override
     public void execute() {
-        if (!_done && _catapult.isInitialized()) {
+        if (!_done && _catapult.isInitialized() && _catapult.isBallDetected()) {
             info("Shooting");
             _catapult.setState(CatapultState.AIMING);
             _catapult.setAutoshoot(true);

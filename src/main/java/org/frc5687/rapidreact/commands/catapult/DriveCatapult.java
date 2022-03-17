@@ -108,17 +108,17 @@ public class DriveCatapult extends OutliersCommand {
                 checkKill();
                 _catapult.setSetpoint(CatapultSetpoint.NONE);
                 _catapult.releaseArm();
-                if (_isFirstShot) {
-                    _catapult.setState(CatapultState.ZEROING);
-                    _isFirstShot = false;
-                } else {
-                    _wait = System.currentTimeMillis() + DELAY;
-                    _catapult.setState(Catapult.CatapultState.WAIT_SHOT);
-                }
+                _wait = System.currentTimeMillis() + DELAY;
+                _catapult.setState(Catapult.CatapultState.WAIT_SHOT);
             } break;
             case WAIT_SHOT: {
                 if (System.currentTimeMillis() > _wait) {
-                    _catapult.setState(LOWERING_ARM);
+                    if (_isFirstShot) {
+                        _isFirstShot = false;
+                        _catapult.setState(ZEROING);
+                    } else {
+                        _catapult.setState(LOWERING_ARM);
+                    }
                 }
             } break;
             case LOCK_OUT: {

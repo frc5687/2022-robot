@@ -130,11 +130,11 @@ public class Constants {
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
 
         // Vision PID controller
-        public static final double VISION_TOLERANCE = 0.01; // rads
-        public static final double VISION_kP = 5.8;
+        public static final double VISION_TOLERANCE = 0.025; // rads
+        public static final double VISION_kP = 1.65;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 1.0;
-        public static final double VISION_IRANGE = 1.0;
+        public static final double VISION_kD = 0.1;
+        public static final double VISION_IRANGE = MAX_MPS / 2.0;
 
         public static final double POSITION_TOLERANCE = 0.02;
         public static final double ANGLE_TOLERANCE = 0.02;
@@ -151,7 +151,7 @@ public class Constants {
         public static final double GEAR_RATIO_WHEEL = 6.46875;
         public static final double GEAR_RATIO_STEER = 9.2;
         public static final double FALCON_RATE = 600.0;
-        public static final double WHEEL_RADIUS = 0.0508; // Meters with compression.
+        public static final double WHEEL_RADIUS = 0.04615; // Meters with compression.
         public static final double MAX_MODULE_SPEED_MPS =
                 (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL) * WHEEL_RADIUS;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
