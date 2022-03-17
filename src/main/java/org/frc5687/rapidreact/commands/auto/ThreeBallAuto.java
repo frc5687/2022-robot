@@ -2,12 +2,12 @@ package org.frc5687.rapidreact.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import org.frc5687.rapidreact.commands.AutoIntake;
-import org.frc5687.rapidreact.commands.SetSetpoint;
+import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
-import org.frc5687.rapidreact.commands.Shoot;
+import org.frc5687.rapidreact.commands.catapult.Shoot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Rotation2d;
