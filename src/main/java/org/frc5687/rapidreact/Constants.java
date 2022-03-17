@@ -130,10 +130,11 @@ public class Constants {
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
 
         // Vision PID controller
+        // Controller will be overdamped as we have 40ms of latency between getting the frame.
         public static final double VISION_TOLERANCE = 0.025; // rads
-        public static final double VISION_kP = 1.65;
+        public static final double VISION_kP = 3.0;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.1;
+        public static final double VISION_kD = 30.0;
         public static final double VISION_IRANGE = MAX_MPS / 2.0;
 
         public static final double POSITION_TOLERANCE = 0.02;

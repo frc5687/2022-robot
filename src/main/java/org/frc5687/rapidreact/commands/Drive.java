@@ -18,20 +18,11 @@ public class Drive extends OutliersCommand {
 
     private final OI _oi;
 
-    private final PIDController _visionController;
-
     public Drive(DriveTrain driveTrain, OI oi) {
         _driveTrain = driveTrain;
         _oi = oi;
         _vxFilter = new SlewRateLimiter(3.0);
         _vyFilter = new SlewRateLimiter(3.0);
-        _visionController = new PIDController(
-                VISION_kP,
-                VISION_kI,
-                VISION_kD
-        );
-        _visionController.setIntegratorRange(-VISION_IRANGE, VISION_IRANGE);
-        _visionController.setTolerance(VISION_TOLERANCE);
         addRequirements(_driveTrain);
 //        logMetrics("vx","vy");
 //        enableMetrics();
@@ -54,7 +45,9 @@ public class Drive extends OutliersCommand {
         } else {
             _driveTrain.disableLimelight();
         }
-        metric("Aiming controller power", _visionController.calculate(-_driveTrain.getAngleToTarget(), 0));
+        metric("Aiming controller power", _driveTrain.getVisionControllerOutput());
+        metric("vision heading", _driveTrain.getVisionHeading());
+        metric("Robot heading", _driveTrain.getHeading().getRadians());
         double rot =
                 (_oi.autoAim() && _driveTrain.hasTarget())
                         ? _driveTrain.getVisionControllerOutput()

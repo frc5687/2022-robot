@@ -23,6 +23,7 @@ import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
+import org.frc5687.rapidreact.util.VisionState;
 
 
 public class DriveTrain extends OutliersSubsystem {
@@ -316,6 +317,10 @@ public class DriveTrain extends OutliersSubsystem {
         return new double[] {0, 0, 0};
     }
 
+    public VisionState getVisionState() {
+        return new VisionState(getAngleToTarget(), getDistanceToTarget());
+    }
+
     public TrajectoryConfig getConfig() {
         return new TrajectoryConfig(Constants.DriveTrain.MAX_MPS, Constants.DriveTrain.MAX_MPSS)
                 .setKinematics(_kinematics)
@@ -344,7 +349,11 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public double getVisionControllerOutput() {
-        return _visionController.calculate(-getAngleToTarget(), 0) * Constants.DriveTrain.MAX_ANG_VEL;
+        return _visionController.calculate(getHeading().getRadians(), getVisionHeading()) * Constants.DriveTrain.MAX_ANG_VEL;
+    }
+
+    public double getVisionHeading() {
+        return getHeading().getRadians() + getAngleToTarget();
     }
 
     public boolean onTarget() {
