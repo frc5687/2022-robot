@@ -248,16 +248,32 @@ public class Catapult extends OutliersSubsystem {
 
     // calculate linear regression.
     public double calculateIdealString(double dist) {
-        return (0.005029398 * (dist * dist * dist)) -
-                (0.088573184 * (dist * dist)) +
-                (0.520020445 * dist) - 0.698965018;
+//        0.004980234x3 - 0.087269224x2 + 0.510689035x - 0.680419260
+//        0.006154713x3 - 0.103644758x2 + 0.584629376x - 0.788342710
+//        0.005596480x3 - 0.095972797x2 + 0.550428512x - 0.738967199
+        return (0.005596480 * (dist * dist * dist)) -
+                (0.095972797 * (dist * dist)) +
+                (0.550428512 * dist) - 0.738967199;
+        //2nd
+//        return (0.004980234 * (dist * dist * dist)) -
+//                (0.087269224 * (dist * dist)) +
+//                (0.510689035 * dist) - 0.680419260;
+        //1st
+//        return (0.005029398 * (dist * dist * dist)) -
+//                (0.088573184 * (dist * dist)) +
+//                (0.520020445 * dist) - 0.698965018;
     }
 
     // calculated from linear regression
     public double calculateIdealSpring(double dist) {
+
         return (0.000286128 * (dist * dist * dist)) -
                 (0.003328233 * (dist * dist)) +
                 (0.022190998 * dist) + 0.018160169;
+        // prev
+//        return (0.000286128 * (dist * dist * dist)) -
+//                (0.003328233 * (dist * dist)) +
+//                (0.022190998 * dist) + 0.018160169;
     }
 
     public boolean isReleasePinLocked() {

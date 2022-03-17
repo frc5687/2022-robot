@@ -59,8 +59,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                         new DriveToPose(driveTrain, _destination1, _velocity),
                         new WaitCommand(1)
                     ),
-                    new WaitCommand(0)
-//                    new AutoIntake(intake)
+                    new AutoIntake(intake)
                 ),
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
@@ -70,8 +69,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                         new DriveToPose(driveTrain, _destination2, _velocity),
                         new WaitCommand(1)
                     ),
-                        new WaitCommand(0)
-//                    new AutoIntake(intake)
+                    new AutoIntake(intake)
                 ),
                 new SetSetpoint(catapult, CatapultSetpoint.FAR),
                 new AutoAim(driveTrain),
@@ -153,21 +151,19 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                     new DriveToPose(driveTrain, _destination1, _velocity),
                     new WaitCommand(1)
                 ),
-                    new WaitCommand(0)
-//                new AutoIntake(intake)
+                new AutoIntake(intake)
             ),
             new ParallelDeadlineGroup( 
                 new SequentialCommandGroup(
-                    new SetSetpoint(catapult, CatapultSetpoint.MID),
+//                    new SetSetpoint(catapult, CatapultSetpoint.MID),
                     new AutoAim(driveTrain),
                     new Shoot(catapult),
                     new DriveToPose(driveTrain, _destination2, _velocity),
                     new WaitCommand(1)
                 ),
-                    new WaitCommand(0)
-//                new AutoIntake(intake)
+                new AutoIntake(intake)
             ),
-            new SetSetpoint(catapult, CatapultSetpoint.FAR),
+//            new SetSetpoint(catapult, CatapultSetpoint.FAR),
             new AutoAim(driveTrain),
             new Shoot(catapult),
             new SetSetpoint(catapult, CatapultSetpoint.NONE)

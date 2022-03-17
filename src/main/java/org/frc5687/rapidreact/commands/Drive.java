@@ -1,9 +1,7 @@
 /* Team 5687 (C)2021-2022 */
 package org.frc5687.rapidreact.commands;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.Timer;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.OI;
@@ -45,8 +43,6 @@ public class Drive extends OutliersCommand {
         } else {
             _driveTrain.disableLimelight();
         }
-        metric("Aiming controller power", _driveTrain.getVisionControllerOutput());
-        metric("vision heading", _driveTrain.getVisionHeading());
         metric("Robot heading", _driveTrain.getHeading().getRadians());
         double rot =
                 (_oi.autoAim() && _driveTrain.hasTarget())
@@ -65,4 +61,5 @@ public class Drive extends OutliersCommand {
     public void end(boolean interrupted) {
         super.end(interrupted);
     }
+
 }

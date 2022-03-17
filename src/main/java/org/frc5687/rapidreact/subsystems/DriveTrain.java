@@ -23,7 +23,6 @@ import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
-import org.frc5687.rapidreact.util.VisionState;
 
 
 public class DriveTrain extends OutliersSubsystem {
@@ -51,11 +50,10 @@ public class DriveTrain extends OutliersSubsystem {
 
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
-    private PIDController _visionController;
+    private ProfiledPIDController _visionController;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
     private boolean _useLimelight = false;
-    private long _prevTime;
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
         super(container);
@@ -126,11 +124,12 @@ public class DriveTrain extends OutliersSubsystem {
             _angleController.enableContinuousInput(-Math.PI / 2.0, Math.PI / 2.0);
 
             _visionController =
-                    new PIDController(
+                    new ProfiledPIDController(
                             Constants.DriveTrain.VISION_kP,
                             Constants.DriveTrain.VISION_kI,
-                            Constants.DriveTrain.VISION_kD
-                    );
+                            Constants.DriveTrain.VISION_kD,
+                            new TrapezoidProfile.Constraints(
+                                    Constants.DriveTrain.PROFILE_CONSTRAINT_VEL, Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL));
             _visionController.setIntegratorRange(-Constants.DriveTrain.VISION_IRANGE, Constants.DriveTrain.VISION_IRANGE);
             _visionController.setTolerance(Constants.DriveTrain.VISION_TOLERANCE);
         } catch (Exception e) {
@@ -288,7 +287,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
-            _prevTime = _proxy.getLatestFrame().getMillis();
             return _proxy.getLatestFrame().getTargetDistance();
         }
         return Double.NaN;
@@ -315,10 +313,6 @@ public class DriveTrain extends OutliersSubsystem {
             return _proxy.getLatestFrame().targetVelocity();
         }
         return new double[] {0, 0, 0};
-    }
-
-    public VisionState getVisionState() {
-        return new VisionState(getAngleToTarget(), getDistanceToTarget());
     }
 
     public TrajectoryConfig getConfig() {
@@ -349,11 +343,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public double getVisionControllerOutput() {
-        return _visionController.calculate(getHeading().getRadians(), getVisionHeading()) * Constants.DriveTrain.MAX_ANG_VEL;
-    }
-
-    public double getVisionHeading() {
-        return getHeading().getRadians() + getAngleToTarget();
+        return _visionController.calculate(-getAngleToTarget());
     }
 
     public boolean onTarget() {

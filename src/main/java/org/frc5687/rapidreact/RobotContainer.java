@@ -32,7 +32,7 @@ import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 import org.frc5687.rapidreact.util.*;
 
-public class RobotContainer extends OutliersContainer implements ISystemTrackable {
+public class RobotContainer extends OutliersContainer {
     
     private OI _oi;
     private AHRS _imu;
@@ -55,7 +55,6 @@ public class RobotContainer extends OutliersContainer implements ISystemTrackabl
     AutoChooser.Mode autoMode;
 
     private UsbCamera _cam;
-    private SystemStateTracker _systemTracker;
 
     public RobotContainer(Robot robot, IdentityMode identityMode, boolean isLogging) {
         super(identityMode, isLogging);
@@ -103,7 +102,6 @@ public class RobotContainer extends OutliersContainer implements ISystemTrackabl
         _climber = new Climber(this, _driveTrain);
         _catapult = new Catapult(this);
 
-        _systemTracker = new SystemStateTracker(this);
         _autoChooser = new AutoChooser();
 
         initializeCamera();
@@ -225,15 +223,6 @@ public class RobotContainer extends OutliersContainer implements ISystemTrackabl
         }
         CommandScheduler s = CommandScheduler.getInstance();
         s.setDefaultCommand(subSystem, command);
-    }
-
-    @Override
-    public SystemState getState() {
-        if (_driveTrain != null) {
-            return new RobotState(_driveTrain.getVisionState());
-        } else {
-            return new SystemState();
-        }
     }
 
     public Command wrapCommand(Command command) {
