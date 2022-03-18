@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Climber/#126-Rocker-Flip";
-    public static final String REVISION = "f9f2491";
-    public static final String MODIFIED = "";
+    public static final String REVISION = "f30d0e7";
+    public static final String MODIFIED = " *";
 }

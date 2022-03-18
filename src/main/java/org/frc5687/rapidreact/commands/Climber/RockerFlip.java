@@ -15,4 +15,9 @@ public class RockerFlip extends OutliersCommand{
         super.initialize();
         _climber.rockerFlip();
     }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }
