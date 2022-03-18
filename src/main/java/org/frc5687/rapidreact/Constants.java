@@ -122,18 +122,18 @@ public class Constants {
         public static final double ANGLE_kP = 3.0;
         public static final double ANGLE_kI = 0.0;
         public static final double ANGLE_kD = 0.0;
-        public static final double PROFILE_CONSTRAINT_VEL = 4.0 * Math.PI;
-        public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI * 4.0;
+        public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
+        public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI * 3.0;
 
         public static final double kP = 11.5;
         public static final double kI = 0.0;
         public static final double kD = 0.5;
 
         // Vision PID controller
-        public static final double VISION_TOLERANCE = 0.025; // rads
-        public static final double VISION_kP = 6.1;
+        public static final double VISION_TOLERANCE = 0.040; // rads
+        public static final double VISION_kP = 5.65;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.93;
+        public static final double VISION_kD = 0.2;
         public static final double VISION_IRANGE = MAX_MPS * 2;
         public static final long VISION_LATENCY = 50;
 
