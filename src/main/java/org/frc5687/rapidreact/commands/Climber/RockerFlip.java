@@ -7,6 +7,7 @@ public class RockerFlip extends OutliersCommand{
     private Climber _climber;
     public RockerFlip(Climber climber) {
         _climber = climber;
+        addRequirements(_climber);
     }
 
     @Override
