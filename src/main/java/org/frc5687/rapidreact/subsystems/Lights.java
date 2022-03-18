@@ -77,9 +77,11 @@ public class Lights extends OutliersSubsystem{
             return Constants.Lights.CLIMBING;
         }*/
         if(_hasBall && _blueColor){
+            metric("blueLights", true);
             return _onTarget ? Constants.Lights.ON_TARGET: Constants.Lights.BLUE_BALL;
         }
         if(_hasBall && _redColor){
+            metric("redLights", true);
             return _onTarget ? Constants.Lights.ON_TARGET: Constants.Lights.RED_BALL;
         }
 
