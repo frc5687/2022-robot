@@ -278,6 +278,7 @@ public class Constants {
         public static final double GEAR_RATIO = 5.0;
         public static final double MAX_RPM = 6300 * GEAR_RATIO;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
+        public static final long ROLLER_DELAY = 1000; // ms
     }
     public static class ColorSensor{
         public static final double COLOR_PROXIMITY_BUFFER = 130;

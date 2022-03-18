@@ -23,7 +23,7 @@ public class AutoIntake extends OutliersCommand {
 
     @Override
     public void end(boolean interrupted) {
-        _intake.spinDownRoller();
+//        _intake.spinDownRoller();
         _intake.stowe();
         super.end(interrupted);
     }
