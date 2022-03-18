@@ -44,6 +44,8 @@ public class Climber extends OutliersSubsystem{
     private double _staGoal = 0.0;
     private double _rockGoal = 0.0;
 
+    private boolean _rockerIn = false;
+
     private DriveTrain _driveTrain;
 
     public void setStep(ClimberStep step){
@@ -243,8 +245,15 @@ public class Climber extends OutliersSubsystem{
     public void rockerIn(){
         //Rock arm in
         info("Setting Rocker in");
-
         _rocker.set(Value.kForward);
+        _rockerIn = true;
+    }
+
+    /**
+     * Check to see if the rocker arm is in
+     */
+    public boolean isRockerIn(){
+        return _rockerIn;
     }
 
     /**
@@ -254,6 +263,7 @@ public class Climber extends OutliersSubsystem{
         info("Setting Rocker out");
         //Rock arm out
         _rocker.set(Value.kReverse);
+        _rockerIn = false;
     }
 
     public void dropDriveSpeed(boolean value){
@@ -403,6 +413,24 @@ public class Climber extends OutliersSubsystem{
     public String getRockerLabel() {
         return(_rocker.get() == Value.kForward) ? "In" : "Out";
     }
+
+    /**
+     * Flips the Rocker to the other side.
+     */
+    public void rockerFlip(){
+        info("Flipping Rocker");
+        //Flippin' the rockah
+        if(_rocker.get() == Value.kForward) {
+            _rocker.set(Value.kReverse);
+            _rockerIn = false;
+        }else if(_rocker.get() == Value.kReverse) {
+            _rocker.set(Value.kForward);
+            _rockerIn = true;
+        }else{
+           info("Rocker's off, can't flip.");
+        }
+    }
+
 
     public enum ClimberStep {
         UNKNOWN(0),
