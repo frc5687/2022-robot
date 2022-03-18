@@ -8,6 +8,7 @@ import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 
@@ -17,6 +18,7 @@ public class Intake extends OutliersSubsystem{
     private DoubleSolenoid _solenoid;
     private boolean _deployed;
     private HallEffect _intakeHall;
+    private Timer _timer;
     
     public Intake(OutliersContainer container) {
         super(container);
@@ -24,13 +26,19 @@ public class Intake extends OutliersSubsystem{
         _roller = new TalonFX(RobotMap.CAN.TALONFX.INTAKE_ROLLER);
         _solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.INTAKE_HIGH, RobotMap.PCH.INTAKE_LOW);
         _intakeHall = new HallEffect(RobotMap.DIO.INTAKE_HALL_EFFECT);
+        _timer = new Timer();
     }
 
     /**
      * Spin down the intake
+     * If the intake is set to use a delay then use delay
      */
     public void spinDownRoller(){
-        _roller.set(TalonFXControlMode.PercentOutput, Constants.Intake.ROLLER_IDLE_SPEED);
+        if(Constants.Intake.USE_DELAY && _timer.get() >= Constants.Intake.DELAY){
+            _roller.set(TalonFXControlMode.PercentOutput, Constants.Intake.ROLLER_IDLE_SPEED);
+            _timer.stop();
+            _timer.reset();
+        }
     }
 
     /**
@@ -38,6 +46,7 @@ public class Intake extends OutliersSubsystem{
      */
     public void spinUpRoller(){
         _roller.set(TalonFXControlMode.PercentOutput, Constants.Intake.THE_BEANS);
+        _timer.start();
     }
 
     /**
