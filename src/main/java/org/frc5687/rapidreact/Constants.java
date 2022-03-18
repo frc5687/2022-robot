@@ -122,19 +122,20 @@ public class Constants {
         public static final double ANGLE_kP = 3.0;
         public static final double ANGLE_kI = 0.0;
         public static final double ANGLE_kD = 0.0;
+        public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
+        public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI * 3.0;
 
         public static final double kP = 11.5;
         public static final double kI = 0.0;
         public static final double kD = 0.5;
-        public static final double PROFILE_CONSTRAINT_VEL = 3.0 * Math.PI;
-        public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI;
 
         // Vision PID controller
-        public static final double VISION_TOLERANCE = 0.01; // rads
-        public static final double VISION_kP = 4.5;
-        public static final double VISION_kI = 0.1;
-        public static final double VISION_kD = 0.3;
-        public static final double VISION_IRANGE = 1.0;
+        public static final double VISION_TOLERANCE = 0.040; // rads
+        public static final double VISION_kP = 5.65;
+        public static final double VISION_kI = 0.0;
+        public static final double VISION_kD = 0.2;
+        public static final double VISION_IRANGE = MAX_MPS * 2;
+        public static final long VISION_LATENCY = 50;
 
         public static final double POSITION_TOLERANCE = 0.02;
         public static final double ANGLE_TOLERANCE = 0.02;
@@ -151,7 +152,7 @@ public class Constants {
         public static final double GEAR_RATIO_WHEEL = 6.46875;
         public static final double GEAR_RATIO_STEER = 9.2;
         public static final double FALCON_RATE = 600.0;
-        public static final double WHEEL_RADIUS = 0.0508; // Meters with compression.
+        public static final double WHEEL_RADIUS = 0.04615; // Meters with compression.
         public static final double MAX_MODULE_SPEED_MPS =
                 (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL) * WHEEL_RADIUS;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
@@ -188,7 +189,10 @@ public class Constants {
     }
 
     public static class Catapult {
-        public static final long DELAY = 100; // ms
+        public static final int CTRE_TIMEOUT = 20; // ms
+        public static final int CTRE_FRAME_PERIOD = 10; // ms
+
+        public static final long DELAY = 200; // ms
 
         public static final boolean SPRING_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = false;
@@ -233,22 +237,22 @@ public class Constants {
 
         // Controller Parameters
         public static final int MOTION_MAGIC_SLOT = 0;
-        public static final double SPRING_kP = 0.9; // Always start with kP
-        public static final double SPRING_kI = 0.00; // If possible avoid kI
-        public static final double SPRING_kD = 0.0; // 2nd Kd
-        public static final double SPRING_kF = 0.0; // 2nd Kd
-        public static final double SPRING_IZONE = 30.0;
+        public static final double SPRING_kP = 1.5; // Followed with CTRE docs
+        public static final double SPRING_kI = 0.001; // If possible avoid kI
+        public static final double SPRING_kD = 10.0; // 2nd Kd
+        public static final double SPRING_kF = 0.0;
+        public static final double SPRING_IZONE = 50.0;
         public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);
         public static final double CRUISE_VELOCITY = 80000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double ACCELERATION = 100000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double SPRING_TOLERANCE = 0.005; // m
         // winch
-        public static final double WINCH_kP = 20.0; // Always start with kP
+        public static final double WINCH_kP = 22.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI
-        public static final double WINCH_kD = 0.0; // 2nd Kd
+        public static final double WINCH_kD = 0.0; // 2nd Kd following
 //        public static final double MAX_WINCH_VELOCITY_MPS = ((NEO_RAD_PER_SEC / GEAR_REDUCTION)/ (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
         public static final double MAX_WINCH_VELOCITY_MPS = (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
-        public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 20.0; // heuristic.
+        public static final double MAX_WINCH_ACCELERATION_MPSS = MAX_WINCH_VELOCITY_MPS * 50.0; // heuristic.
         public static final double WINCH_TOLERANCE = 0.001; // m
 
         // DriveCatapult constants
