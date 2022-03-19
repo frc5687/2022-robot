@@ -420,9 +420,9 @@ public class Climber extends OutliersSubsystem{
     public void rockerFlip(){
         info("Flipping Rocker");
         //Flippin' the rockah
-        if(_rocker.get() == Value.kForward) {
+        if(_rockerIn == true) {
             rockerOut();
-        }else if(_rocker.get() == Value.kReverse) {
+        }else if(_rockerIn == false) {
             rockerIn();
         }else{
             info("I dunno what rocker state this is, flipping rocker out.");
