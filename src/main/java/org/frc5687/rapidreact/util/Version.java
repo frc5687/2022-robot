@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "OI/#124-BackupDriveteam";
-    public static final String REVISION = "cc8f527";
+    public static final String REVISION = "7cfd82a";
     public static final String MODIFIED = " *";
 }
