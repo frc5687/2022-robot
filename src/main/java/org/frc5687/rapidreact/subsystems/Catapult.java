@@ -786,10 +786,13 @@ public class Catapult extends OutliersSubsystem {
         return false;
     }
 
+    /** Stop winch and spring motors */
     public void stopMotors() {
         setWinchMotorSpeed(0);
         setSpringMotorSpeed(0);
     }
+
+    // Spring methods
 
     public void zeroSpringEncoder() {
         if (!_springEncoderZeroed) {
@@ -798,15 +801,8 @@ public class Catapult extends OutliersSubsystem {
         }
     }
 
-    /** Set distance to target so we can aim catapult.
-     * 
-     * <p> We do a bunch of test shots to determine coefficients
-     * for functions in calculateIdealRope() and calculateIdealSpring().
-     * These methods take a distance and return the ideal setting to make
-     * the shot.
-     */
-    public void setDistanceToTarget(double distance) {
-        _distanceToTarget = distance;
+    public boolean isSpringZeroed() {
+        return _springEncoderZeroed;
     }
 
     public void setSpringMotorSpeed(double speed) {
@@ -829,13 +825,11 @@ public class Catapult extends OutliersSubsystem {
         return getSpringEncoderTicks() * TICKS_TO_METERS;
     }
 
-    public boolean isSpringZeroed() {
-        return _springEncoderZeroed;
-    }
-
     public boolean isSpringAtPosition() {
         return Math.abs(getSpringPosition() - _springGoal) < SPRING_TOLERANCE;
     }
+
+    // Winch methods
 
     public void setWinchMotorSpeed(double speed) {
         _WinchMotor.set(speed);
@@ -871,7 +865,7 @@ public class Catapult extends OutliersSubsystem {
         }
     }
 
-    public boolean isArmZeroed() {
+    public boolean isWinchZeroed() {
         return _winchEncoderZeroed;
     }
 
@@ -887,12 +881,72 @@ public class Catapult extends OutliersSubsystem {
         return _winchController.atGoal();
     }
 
+    // Arm and gate methods
+
     public void lockArm() {
         _releasePin.set(PinPosition.LOCKED.getSolenoidValue());
     }
 
     public void releaseArm() {
         _releasePin.set(PinPosition.RELEASED.getSolenoidValue());
+    }
+
+    public void raiseGate() {
+        _gate.raise();
+    }
+
+    public void lowerGate() {
+        _gate.lower();
+    }
+
+    // DEPRECATED auto shoot methods
+
+    /**
+     * Pass true here to trigger a shot from autonomous.
+     * @param value
+     */
+    public void setAutoshoot(boolean value) {
+        _autoShoot = value;
+    }
+
+    public boolean isAutoShoot() {
+        return _autoShoot;
+    }
+
+    // Aiming methods
+
+    /** Set distance to target so we can aim catapult.
+     * 
+     * @param distance meters to target
+     */
+    public void setDistanceToTarget(double distance) {
+        _distanceToTarget = distance;
+    }
+
+    /** Set release angle by returning ideal rope length given distance to target.
+     * 
+     * <p> Coefficients of polynomial are determined by regression analysis in Excel.
+     * 
+     * @param dist meters to target
+     * @return ideal rope length
+    */
+    public double calculateIdealRope(double dist) {
+        return (-0.0081481481 * (dist * dist * dist)) +
+                (0.1132539683 * (dist * dist))
+                - (0.4818121693 * dist) + 0.9078174603;
+    }
+
+    /** Set power by returning spring position given distance to target.
+     * 
+     * <p> Coefficients of polynomial are determined by regression analysis in Excel.
+     * 
+     * @param dist meters to target
+     * @return ideal spring position
+     */
+    public double calculateIdealSpring(double dist) {
+        return (0.0008888889 * (dist * dist * dist)) -
+                (0.0143095238 * (dist * dist )) +
+                (0.0820515873 * dist) - 0.0838690476;
     }
 
     // calculate the spring displacement based on angle displacement.
@@ -911,55 +965,6 @@ public class Catapult extends OutliersSubsystem {
         double time = Math.sqrt((2.0 / angularAcceleration) * angleDisplacement);
         double angularVelocity = angleDisplacement / time;
         return angularVelocity * ARM_LENGTH;
-    }
-
-    // calculate linear regression.
-    public double calculateIdealRope(double dist) {
-        return (-0.0081481481 * (dist * dist * dist)) +
-                (0.1132539683 * (dist * dist))
-                - (0.4818121693 * dist) + 0.9078174603;
-    }
-
-    // calculated from linear regression
-    public double calculateIdealSpring(double dist) {
-        return (0.0008888889 * (dist * dist * dist)) -
-                (0.0143095238 * (dist * dist )) +
-                (0.0820515873 * dist) - 0.0838690476;
-    }
-
-    public boolean isBallDetected() {
-        return _proximitySensor.get();
-    }
-
-    public boolean isBlueBallDetected() {
-        return _colorSensor.isBlue() && isBallDetected();
-    }
-
-    public boolean isRedBallDetected() {
-        return _colorSensor.isRed() && isBallDetected();
-    }
-
-    public boolean isRedAlliance() {
-        return _alliance == DriverStation.Alliance.Red;
-    }
-    public void raiseGate() {
-        _gate.raise();
-    }
-
-    public void lowerGate() {
-        _gate.lower();
-    }
-
-    /**
-     * Pass true here to trigger a shot from autonomous.
-     * @param value
-     */
-    public void setAutoshoot(boolean value) {
-        _autoShoot = value;
-    }
-
-    public boolean isAutoShoot() {
-        return _autoShoot;
     }
 
     public void setSetpoint(CatapultSetpoint setpoint) {
@@ -1048,6 +1053,23 @@ public class Catapult extends OutliersSubsystem {
         return _initialized;
     }
     
+    /** Ask proximity sensor if it sees a ball. */
+    public boolean isBallDetected() {
+        return _proximitySensor.get();
+    }
+
+    public boolean isBlueBallDetected() {
+        return _colorSensor.isBlue() && isBallDetected();
+    }
+
+    public boolean isRedBallDetected() {
+        return _colorSensor.isRed() && isBallDetected();
+    }
+
+    public boolean isRedAlliance() {
+        return _alliance == DriverStation.Alliance.Red;
+    }
+
     public String getError() {
         return _state_error + " during " + _state_prior.name();
     }
