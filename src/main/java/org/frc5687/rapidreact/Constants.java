@@ -119,7 +119,7 @@ public class Constants {
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
-        public static final double ANGLE_kP = 3.0;
+        public static final double ANGLE_kP = 4.0;
         public static final double ANGLE_kI = 0.0;
         public static final double ANGLE_kD = 0.0;
         public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
@@ -137,7 +137,7 @@ public class Constants {
         public static final double VISION_IRANGE = MAX_MPS * 2;
         public static final long VISION_LATENCY = 50;
 
-        public static final double POSITION_TOLERANCE = 0.02;
+        public static final double POSITION_TOLERANCE = 0.01;
         public static final double ANGLE_TOLERANCE = 0.02;
     }
 
