@@ -1,9 +1,8 @@
-package org.frc5687.rapidreact.commands;
+package org.frc5687.rapidreact.commands.catapult;
 
+import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
-
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
 
 public class Shoot extends OutliersCommand {
     private Catapult _catapult;
@@ -22,7 +21,7 @@ public class Shoot extends OutliersCommand {
 
     @Override
     public void execute() {
-        if (!_done && _catapult.isInitialized()) {
+        if (!_done && _catapult.isInitialized() && _catapult.isBallDetected()) {
             info("Shooting");
             _catapult.setState(CatapultState.AIMING);
             _catapult.setAutoshoot(true);

@@ -6,7 +6,7 @@ package org.frc5687.rapidreact.util;
  */
 
 public class Version {
-    public static final String BRANCH = "AuxSys/#117-TCPtoUDP";
-    public static final String REVISION = "9a8e4f6";
+    public static final String BRANCH = "Auto/#123-ThreeBall";
+    public static final String REVISION = "2026c93";
     public static final String MODIFIED = " *";
 }

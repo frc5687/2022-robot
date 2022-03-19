@@ -1,6 +1,7 @@
-package org.frc5687.rapidreact.commands;
+package org.frc5687.rapidreact.commands.catapult;
 
 import org.frc5687.rapidreact.OI;
+import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Catapult;
 
 public class IdleCatapult extends OutliersCommand {
