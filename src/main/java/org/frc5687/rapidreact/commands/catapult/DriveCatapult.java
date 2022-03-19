@@ -55,7 +55,7 @@ public class DriveCatapult extends OutliersCommand {
         switch (newState) {
             case ZEROING: {
                 checkLockOut();
-                checkKill();
+//                checkKill();
                 // Try Zeroing the spring first, then the winch.
                 if (zeroWinch()) {
                     if (zeroSpring()) {
@@ -66,7 +66,7 @@ public class DriveCatapult extends OutliersCommand {
             break;
             case LOWERING_ARM: {
                 checkLockOut();
-                checkKill();
+//                checkKill();
                 _catapult.setWinchMotorSpeed(LOWERING_SPEED);
                 if (_catapult.isArmLowered()) {
                     _catapult.setWinchMotorSpeed(0.0);
@@ -78,7 +78,7 @@ public class DriveCatapult extends OutliersCommand {
             case LOADING: {
                 _catapult.raiseGate();
                 checkLockOut();
-                checkKill();
+//                checkKill();
                 if (_catapult.isBallDetected()) {
                     _catapult.lowerGate();
                     _catapult.setState(AIMING);
@@ -88,7 +88,7 @@ public class DriveCatapult extends OutliersCommand {
             break;
             case AIMING: {
                 checkLockOut();
-                checkKill();
+//                checkKill();
                 if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
@@ -105,7 +105,7 @@ public class DriveCatapult extends OutliersCommand {
             break;
             case SHOOTING: {
                 checkLockOut();
-                checkKill();
+//                checkKill();
                 _catapult.setSetpoint(CatapultSetpoint.NONE);
                 _catapult.releaseArm();
                 _wait = System.currentTimeMillis() + DELAY;
@@ -217,12 +217,12 @@ public class DriveCatapult extends OutliersCommand {
             _catapult.setState(LOCK_OUT);
         }
     }
-    protected void checkKill() {
-        if (_oi.kill()) {
-            _prevState = _catapult.getState();
-            _catapult.setState(KILL);
-        }
-    }
+//    protected void checkKill() {
+//        if (_oi.kill()) {
+//            _prevState = _catapult.getState();
+//            _catapult.setState(KILL);
+//        }
+//    }
 }
 
 
