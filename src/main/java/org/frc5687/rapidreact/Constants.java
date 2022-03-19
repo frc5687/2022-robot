@@ -113,7 +113,7 @@ public class Constants {
         public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
 
         // Maximum rates of motion
-        public static final double MAX_MPS = 3.0; // Max speed of robot (m/s)
+        public static final double MAX_MPS = 2.5; // Max speed of robot (m/s)
         public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)

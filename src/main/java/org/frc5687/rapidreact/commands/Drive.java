@@ -11,16 +11,16 @@ import static org.frc5687.rapidreact.Constants.DriveTrain.*;
 public class Drive extends OutliersCommand {
 
     private final DriveTrain _driveTrain;
-    private final SlewRateLimiter _vxFilter;
-    private final SlewRateLimiter _vyFilter;
+    // private final SlewRateLimiter _vxFilter;
+    // private final SlewRateLimiter _vyFilter;
 
     private final OI _oi;
 
     public Drive(DriveTrain driveTrain, OI oi) {
         _driveTrain = driveTrain;
         _oi = oi;
-        _vxFilter = new SlewRateLimiter(3.0);
-        _vyFilter = new SlewRateLimiter(3.0);
+        // _vxFilter = new SlewRateLimiter(1.0);
+        // _vyFilter = new SlewRateLimiter(1.0);
         addRequirements(_driveTrain);
 //        logMetrics("vx","vy");
 //        enableMetrics();
@@ -36,8 +36,10 @@ public class Drive extends OutliersCommand {
     public void execute() {
         super.execute();
         //  driveX and driveY are swapped due to coordinate system that WPILib uses.
-        double vx = _vxFilter.calculate(_oi.getDriveY()) * (_driveTrain.getSpeed());
-        double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
+        double vx = _oi.getDriveY() * (_driveTrain.getSpeed());
+        // double vx = _vxFilter.calculate(_oi.getDriveY()) * (_driveTrain.getSpeed());
+        double vy = _oi.getDriveX() * (_driveTrain.getSpeed());
+        // double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
         if (_oi.autoAim()) {
             _driveTrain.enableLimelight();
         } else {
