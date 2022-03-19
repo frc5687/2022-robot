@@ -17,6 +17,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
@@ -51,6 +52,7 @@ public class DriveTrain extends OutliersSubsystem {
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
     private ProfiledPIDController _visionController;
+    private ProfiledPIDController _ballController;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
     private boolean _useLimelight = false;
@@ -132,6 +134,15 @@ public class DriveTrain extends OutliersSubsystem {
                                     Constants.DriveTrain.PROFILE_CONSTRAINT_VEL, Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL));
             _visionController.setIntegratorRange(-Constants.DriveTrain.VISION_IRANGE, Constants.DriveTrain.VISION_IRANGE);
             _visionController.setTolerance(Constants.DriveTrain.VISION_TOLERANCE);
+            _ballController=
+                    new ProfiledPIDController(
+                            Constants.DriveTrain.BALL_VISION_kP,
+                            Constants.DriveTrain.BALL_VISION_kI,
+                            Constants.DriveTrain.BALL_VISION_kD,
+                            new TrapezoidProfile.Constraints(
+                                    Constants.DriveTrain.PROFILE_CONSTRAINT_VEL, Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL));
+            _ballController.setIntegratorRange(-Constants.DriveTrain.BALL_VISION_IRANGE, Constants.DriveTrain.BALL_VISION_IRANGE);
+            _ballController.setTolerance(Constants.DriveTrain.BALL_VISION_TOLERANCE);
         } catch (Exception e) {
             error(e.getMessage());
         }
@@ -176,6 +187,8 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Target x", getTargetPosition()[0]);
         metric("Target y", getTargetPosition()[1]);
         metric("Target z", getTargetPosition()[2]);
+        metric("Blue ball angle", getAngleToClosestBlueBall());
+        metric("Red ball angle", getAngleToClosestRedBall());
 
 //        metric("NW/Encoder Angle", _northWest.getModuleAngle());
 //        metric("SW/Encoder Angle", _southWest.getModuleAngle());
@@ -354,14 +367,25 @@ public class DriveTrain extends OutliersSubsystem {
         setNorthEastModuleState(moduleStates[NORTH_EAST]);
     }
 
-    public double getVisionControllerOutput() {
+    public double getVisionControllerOutput(boolean ball) {
+        if (ball) {
+            return _ballController.calculate(
+                    DriverStation.getAlliance() == DriverStation.Alliance.Red ?
+                            -getAngleToClosestRedBall() : -getAngleToClosestBlueBall());
+        }
         return _visionController.calculate(-getAngleToTarget());
     }
 
     public boolean onTarget() {
         return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE;
     }
+    public boolean hasBlueBall() {
+        return getAngleToClosestBlueBall() != -99;
+    }
 
+    public boolean hasRedBall() {
+        return getAngleToClosestRedBall() != -99;
+    }
     public boolean isAtPose(Pose2d pose) {
         double diffX = getOdometryPose().getX() - pose.getX();
         double diffY = getOdometryPose().getY() - pose.getY();

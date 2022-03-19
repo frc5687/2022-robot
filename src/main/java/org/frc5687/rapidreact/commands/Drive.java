@@ -2,6 +2,7 @@
 package org.frc5687.rapidreact.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DriverStation;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.OI;
@@ -38,16 +39,23 @@ public class Drive extends OutliersCommand {
         //  driveX and driveY are swapped due to coordinate system that WPILib uses.
         double vx = _vxFilter.calculate(-_oi.getDriveY()) * (_driveTrain.getSpeed());
         double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
+        double rot = 0;
         if (_oi.autoAim()) {
             _driveTrain.enableLimelight();
         } else {
             _driveTrain.disableLimelight();
         }
         metric("Robot heading", _driveTrain.getHeading().getRadians());
-        double rot =
-                (_oi.autoAim() && _driveTrain.hasTarget())
-                        ? _driveTrain.getVisionControllerOutput()
-                        : _oi.getRotationX() * MAX_ANG_VEL;
+        if (_oi.autoAim() && _driveTrain.hasTarget()) {
+            rot = _driveTrain.getVisionControllerOutput(false);
+        } else if (_oi.aimBall() &&
+            ((DriverStation.getAlliance() == DriverStation.Alliance.Red && _driveTrain.hasRedBall()) ||
+            (DriverStation.getAlliance() == DriverStation.Alliance.Blue && _driveTrain.hasBlueBall())))
+        {
+            rot = _driveTrain.getVisionControllerOutput(true);
+        } else {
+            rot = _oi.getRotationX() * MAX_ANG_VEL;
+        }
         _driveTrain.drive(vx, vy, rot, true);
 
     }
