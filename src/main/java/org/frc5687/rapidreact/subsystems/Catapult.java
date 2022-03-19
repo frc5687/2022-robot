@@ -56,6 +56,7 @@ public class Catapult extends OutliersSubsystem {
     private CatapultState _state;
     private CatapultState _state_prior; // for ERROR and other states that need to know
     private String _state_error; // what caused ERROR state
+    private boolean _state_changed; // has state just changed
 
     private ColorSensor _colorSensor;
     private ProximitySensor _proximitySensor;
@@ -288,6 +289,7 @@ public class Catapult extends OutliersSubsystem {
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
         _state = CatapultState.LOCK_OUT;
+        _state_changed = true;
         _state_prior = CatapultState.NONE;
         _state_error = "No errors yet";
         _alliance = DriverStation.getAlliance();
@@ -328,6 +330,11 @@ public class Catapult extends OutliersSubsystem {
                 // Initial state of catapult
                 // Intake is in initial stowed position
                 // NOT safe to shoot ball
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
+
                 // Neither catapult motor should be moving
                 stopMotors();
 
@@ -336,14 +343,14 @@ public class Catapult extends OutliersSubsystem {
                 // Arm should be lowered
                 if (!isArmLowered()) {
                     _state_error = "Arm not lowered";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
                 // Pin should be latched
                 if (isReleasePinReleased()) {
                     _state_error = "Pin released";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
@@ -351,7 +358,7 @@ public class Catapult extends OutliersSubsystem {
                 // In this state, spring should be under tension
                 if (isSpringHallTriggered()) {
                     _state_error = "Spring hall triggered";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
@@ -366,6 +373,11 @@ public class Catapult extends OutliersSubsystem {
             case PRELOADED:
                 // Intake has been deployed at least once
                 // Now it is safe to shoot ball
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
+
                 // Neither catapult motor should be moving
                 stopMotors();
 
@@ -374,14 +386,14 @@ public class Catapult extends OutliersSubsystem {
                 // Pin should be latched
                 if (isReleasePinReleased()) {
                     _state_error = "Pin released";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
                 // Arm should be lowered
                 if (!isArmLowered()) {
                     _state_error = "Arm not lowered";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
@@ -389,7 +401,7 @@ public class Catapult extends OutliersSubsystem {
                 // In this state, spring should be under tension
                 if (isSpringHallTriggered()) {
                     _state_error = "Spring hall triggered";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
@@ -398,7 +410,7 @@ public class Catapult extends OutliersSubsystem {
                 // Did we shoot first ball?
                 if (isReleasePinReleased()) {
                     // Time to zero arm motor
-                    _state = CatapultState.ZEROING_ARM;
+                    setState(CatapultState.ZEROING_ARM);
                     return;
                 }
 
@@ -409,6 +421,11 @@ public class Catapult extends OutliersSubsystem {
             case ZEROING_ARM:
                 // First ball has been shot
                 // Now lower arm to zero the winch encoder
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
+
                 // Keep spring tension where it is
                 // Spring motor should not be moving
                 setSpringMotorSpeed(0);
@@ -439,12 +456,12 @@ public class Catapult extends OutliersSubsystem {
                     // Check if we successfully latched release pin (see lockArm() above)
                     // TODO: do we need to wait a bit before checking this?
                     if (isReleasePinLocked()) {
-                        _state = CatapultState.ZEROING_SPRING;
+                        setState(CatapultState.ZEROING_SPRING);
                         return;
                     } else {
                         // We have a problem Houston
                         _state_error = "Release pin did not latch"; 
-                        _state = CatapultState.ERROR;
+                        setState(CatapultState.ERROR);
                         break;
                     }
                 }
@@ -455,7 +472,7 @@ public class Catapult extends OutliersSubsystem {
                 // In this state, latch should be released so we can lower arm all the way
                 if (isReleasePinLocked()) {
                     _state_error = "Pin locked";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
@@ -465,6 +482,11 @@ public class Catapult extends OutliersSubsystem {
             case ZEROING_SPRING:
                 // Arm motor has been zeroed
                 // Release pin has been latched
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
+
                 // Now release tension in spring to zero the spring encoder
                 // Arm motor should not be moving
                 setWinchMotorSpeed(0);
@@ -490,27 +512,31 @@ public class Catapult extends OutliersSubsystem {
                 return;
             case AIMING:
                 // We're either in auto cycle or command is telling us to aim
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
 
                 // Error conditions
 
                 // Arm should be lowered
                 if (!isArmLowered()) {
                     _state_error = "Arm not lowered";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
                 
                 // Pin should be latched
                 if (isReleasePinReleased()) {
                     _state_error = "Pin released";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
-                }                
+                }
 
                 // Success condition
 
                 if ( isWinchAtGoal() && isSpringAtPosition() ) {
-                    _state = CatapultState.LOADING;
+                    setState(CatapultState.LOADING);
                 }
 
                 // Action
@@ -528,6 +554,12 @@ public class Catapult extends OutliersSubsystem {
                 setSpringMotorPosition(_springGoal);
                 return;
             case LOWERING_ARM:
+                // Arm has been released.  Lower it back down.
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
+
                 // Spring motor should not be moving
                 setSpringMotorSpeed(0);
 
@@ -539,7 +571,7 @@ public class Catapult extends OutliersSubsystem {
                     // Stop winching down arm
                     setWinchMotorSpeed(0);
                     _state_error = "Ball detected before arm lowered";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
                 // Is release pin latched by mistake?
@@ -548,7 +580,7 @@ public class Catapult extends OutliersSubsystem {
                     // Stop winching down arm
                     setWinchMotorSpeed(0);
                     _state_error = "Release pin locked";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
@@ -560,8 +592,7 @@ public class Catapult extends OutliersSubsystem {
                     setWinchMotorSpeed(0);
                     // Try to latch release pin
                     lockArm();
-                    // Set state to LATCHING
-                    _state = CatapultState.LATCHING;
+                    setState(CatapultState.LATCHING);
                     return;
                 }
 
@@ -572,6 +603,11 @@ public class Catapult extends OutliersSubsystem {
                 return;
             case LATCHING:
                 // Arm has been lowered, now latch release pin to hold it down
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
+
                 // Neither catapult motor should be moving
                 stopMotors();
 
@@ -582,12 +618,17 @@ public class Catapult extends OutliersSubsystem {
 
                 // Set state to LOADING if release pin latched
                 if (isReleasePinLocked()) {
-                    _state = CatapultState.LOADING;
+                    setState(CatapultState.LOADING);
                     return;
                 }
                 return;
             case LOADING:
                 // We are lowered and locked, now ready for loading
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
+
                 // Neither catapult motor should be moving
                 stopMotors();
 
@@ -596,13 +637,13 @@ public class Catapult extends OutliersSubsystem {
                 // Check to make sure arm is lowered all the way
                 if (!isArmLowered()) {
                     _state_error = "Arm not lowered";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
                 // Check to make sure release pin latched
                 if (isReleasePinReleased()) {
                     _state_error = "Pin released";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
@@ -612,7 +653,7 @@ public class Catapult extends OutliersSubsystem {
                 zerowinchEncoder();
                 // We're ready to aim if we have a ball
                 if (isBallDetected()) {
-                    _state = CatapultState.READY;
+                    setState(CatapultState.READY);
                     return;
                 }
 
@@ -623,6 +664,10 @@ public class Catapult extends OutliersSubsystem {
             case READY:
                 // We have been lowered, locked, and loaded.
                 // We're ready to aim or shoot.
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
 
                 // Error conditions
 
@@ -630,7 +675,7 @@ public class Catapult extends OutliersSubsystem {
                 // a problem -- a ball may have sneaked in under the catapult arm
                 if (!isArmLowered() && isBallDetected()) {
                     _state_error = "Ball detected under arm";
-                    _state = CatapultState.ERROR;
+                    setState(CatapultState.ERROR);
                     break;
                 }
 
@@ -639,13 +684,13 @@ public class Catapult extends OutliersSubsystem {
                 // If we are not lowered, locked and loaded, we just shot a ball.
                 if (!isArmLowered() && isReleasePinReleased() && !isBallDetected()) {
                     // Lower catapult arm to get ready again
-                    _state = CatapultState.LOWERING_ARM;
+                    setState(CatapultState.LOWERING_ARM);
                     return;
                 }
 
                 // If we are lowered and locked but not loaded, we need to load again
                 if (isArmLowered() && isReleasePinLocked() && !isBallDetected()) {
-                    _state = CatapultState.LOADING;
+                    setState(CatapultState.LOADING);
                     return;
                 }
 
@@ -653,23 +698,36 @@ public class Catapult extends OutliersSubsystem {
                 return;
             case WAITING:
                 // Use this state to do nothing but wait
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
                 return;
             default:
+                // Catapult state is NONE or something weird
+                if (_state_changed) {
+                    logState(_state);
+                    _state_changed = false;
+                }
                 // Neither catapult motor should be moving
-                setWinchMotorSpeed(0);
-                setSpringMotorSpeed(0);            
+                stopMotors();            
         }
 
         // Handle ERROR state
         if (_state == CatapultState.ERROR) {
-            info(getError());
+            if (_state_changed) {
+                logState(_state);
+                info(getError());
+                _state_changed = false;
+            }
             // Figure out what's wrong
             // Initiate automatic recovery procedure
             switch(_state_prior) {
                 case LOCK_OUT:
                     if (isArmLowered() && isReleasePinLocked()) {
                         // Error has resolved
-                        _state = CatapultState.LOCK_OUT;
+                        info("Catapult ERROR during LOCK_OUT has resolved");
+                        setState(CatapultState.LOCK_OUT);
                         return;
                     }
                     if (!isArmLowered()) {
@@ -779,10 +837,6 @@ public class Catapult extends OutliersSubsystem {
         return Math.abs(getSpringPosition() - _springGoal) < SPRING_TOLERANCE;
     }
 
-    public boolean isSpringHallTriggered() {
-        return _springHall.get();
-    }
-
     public void setWinchMotorSpeed(double speed) {
         _WinchMotor.set(speed);
     }
@@ -833,24 +887,12 @@ public class Catapult extends OutliersSubsystem {
         return _winchController.atGoal();
     }
 
-    public boolean isArmLowered() {
-        return _armHall.get();
-    }
-
     public void lockArm() {
         _releasePin.set(PinPosition.LOCKED.getSolenoidValue());
     }
 
     public void releaseArm() {
         _releasePin.set(PinPosition.RELEASED.getSolenoidValue());
-    }
-
-    public boolean isReleasePinLocked() {
-        return _releasePin.get() == PinPosition.LOCKED.getSolenoidValue();
-    }
-
-    public boolean isReleasePinReleased() {
-        return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
     }
 
     // calculate the spring displacement based on angle displacement.
@@ -908,22 +950,6 @@ public class Catapult extends OutliersSubsystem {
         _gate.lower();
     }
 
-    public CatapultState getState() {
-        return _state;
-    }
-
-    public void setState(CatapultState state) {
-        _state = state;
-    }
-
-    public void setInitialized(boolean initialized) {
-        _initialized = initialized;
-    }
-
-    public boolean isInitialized() {
-        return _initialized;
-    }
-    
     /**
      * Pass true here to trigger a shot from autonomous.
      * @param value
@@ -982,9 +1008,54 @@ public class Catapult extends OutliersSubsystem {
         }
         
     }
-   
+
+    // State methods -- set and get state of catapult and components
+
+    public void setState(CatapultState state) {
+        _state = state;
+        _state_changed = true;
+    }
+
+    public CatapultState getState() {
+        return _state;
+    }
+
+    /** Arm lowered is true if arm hall effect is triggered. */
+    public boolean isArmLowered() {
+        return _armHall.get();
+    }
+
+    /** Release pin locked is true if solenoid position is locked. */
+    public boolean isReleasePinLocked() {
+        return _releasePin.get() == PinPosition.LOCKED.getSolenoidValue();
+    }
+
+    /** Release pin released is true if solenoid position is released. */
+    public boolean isReleasePinReleased() {
+        return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
+    }
+
+    /** Spring hall is triggered when spring has no tension. */
+    public boolean isSpringHallTriggered() {
+        return _springHall.get();
+    }
+
+    public void setInitialized(boolean initialized) {
+        _initialized = initialized;
+    }
+
+    public boolean isInitialized() {
+        return _initialized;
+    }
+    
     public String getError() {
         return _state_error + " during " + _state_prior.name();
+    }
+
+    // Logging methods
+
+    public void logState(CatapultState state) {
+        info("Catapult state now " + state.name());
     }
 
     @Override
