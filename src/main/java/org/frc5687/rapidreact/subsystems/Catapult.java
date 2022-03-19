@@ -135,8 +135,11 @@ public class Catapult extends OutliersSubsystem {
         // ERROR -- keep track of last state and reason for error
         ERROR(10),
         
-        // NONE -- for ERROR (keeps track of prior state);
-        NONE(11);
+        // DEBUG -- allow manual control of catapult
+        DEBUG(11),
+
+        // NONE -- for ERROR (keeps track of prior state)
+        NONE(12);
 
         // Cycles:
 
@@ -659,6 +662,9 @@ public class Catapult extends OutliersSubsystem {
 
                 // Action
 
+                // Allow ball to drop onto catapult arm
+                raiseGate();
+
                 // Wait for a ball to be detected on the catapult arm
                 return;
             case READY:
@@ -694,6 +700,11 @@ public class Catapult extends OutliersSubsystem {
                     return;
                 }
 
+                // Action
+
+                // Prevent second ball from falling beneath arm
+                lowerGate();
+
                 // Wait for something to happen
                 return;
             case WAITING:
@@ -704,7 +715,7 @@ public class Catapult extends OutliersSubsystem {
                 }
                 return;
             default:
-                // Catapult state is NONE or something weird
+                // Catapult state is NONE or DEBUG or something weird
                 if (_state_changed) {
                     logState(_state);
                     _state_changed = false;

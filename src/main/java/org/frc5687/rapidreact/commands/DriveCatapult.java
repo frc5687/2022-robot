@@ -46,173 +46,42 @@ public class DriveCatapult extends OutliersCommand {
 
     @Override
     public void execute() {
-        metric("String from dist", _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
+        metric("String from dist", _catapult.calculateIdealRope(_driveTrain.getDistanceToTarget()));
         metric("Spring from dist", _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
         metric("Intake down", _intake.isIntakeUp());
         metric("Setpoint value", _catapult.getSetpoint().toString());
-        CatapultState newState =  _catapult.getState(); 
+        CatapultState newState =  _catapult.getState();
         if (newState != _lastLoggedState) {
             info("State changed to " + newState);
             _lastLoggedState = newState;
-        } 
+        }
+
+        // Failsafe kill switch
+        checkKill();
+
         switch (newState) {
-            case ZEROING: {
-                checkLockOut();
-                checkKill();
-                _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
-                _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
-                if (_catapult.isSpringHallTriggered()) {
-                    _catapult.setSpringMotorSpeed(0.0);
-                    _catapult.zeroSpringEncoder();
-                }
-                if (_catapult.isArmLowered()) {
-                    _catapult.setWinchMotorSpeed(0.0);
-                    _catapult.zeroWinchEncoder();
-                }
-                if ((_catapult.isArmLowered() && _catapult.isWinchZeroed()) && (_catapult.isSpringHallTriggered() && _catapult.isSpringZeroed())) {
-                    _catapult.setSpringMotorSpeed(0.0);
-                    _catapult.setWinchMotorSpeed(0.0);
-                    _catapult.setWinchGoal(0.0);
-                    _catapult.setSpringDistance(0.0);
-                    _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
-                }
-            }
-            break;
-            case LOWERING_ARM: {
-                checkLockOut();
-                checkKill();
-                _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
-                if (_catapult.isArmLowered() && (Math.abs(_catapult.getWinchStringLength()) < 0.05)) {
-                    _catapult.setWinchMotorSpeed(0.0);
-                    _catapult.lockArm();
-//                error("Switching state Loading");
-                    _catapult.setState(Catapult.CatapultState.LOADING);
-                }
-            }
-            break;
-            case LOADING: {
-                _catapult.raiseGate();
-                checkLockOut();
-                checkKill();
-                // in the future check if we have a ball and the ball color, REV Color Sensor
-                // has a proximity sensor built it.
-                if (_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
-                    _catapult.setState(Catapult.CatapultState.AIMING);
-                    _catapult.lowerGate();
-                } else if (_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
-                    _catapult.setState(Catapult.CatapultState.WRONG_BALL);
-                    _catapult.lowerGate();
-                }
-                if (!_catapult.isRedAlliance() && _catapult.isBlueBallDetected()) {
-                    _catapult.setState(Catapult.CatapultState.AIMING);
-                    _catapult.lowerGate();
-                } else if (!_catapult.isRedAlliance() && _catapult.isRedBallDetected()) {
-                    _catapult.setState(Catapult.CatapultState.WRONG_BALL);
-                    _catapult.lowerGate();
-                }
-            }
-            break;
-            case AIMING: {
-                checkLockOut();
-                checkKill();
-                if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
-                    _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
-                    _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
-                } else {
-                    _catapult.setStaticGoals();
-                }
-//                _catapult.setStaticGoals();
-                if (isShootTriggered() && (_isFirstShot ||  (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
-                    _catapult.setAutoshoot(false);
-                    _catapult.setState(Catapult.CatapultState.SHOOTING);
-                }
-//             check if we are in the correct position and aiming at the goal.
-              _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-            }
-            break;
-            case WRONG_BALL: {
-                checkLockOut();
-                checkKill();
-                _catapult.setWinchGoal(Constants.Catapult.REMOVE_BALL_WINCH_GOAL);
-                _catapult.setSpringDistance(Constants.Catapult.REMOVE_BALL_SPRING_GOAL);
-                _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-                if (_catapult.isWinchAtGoal()) {
-                    _catapult.setWinchMotorSpeed(0.0);
-                    _catapult.releaseArm();
-                    _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
-                }
-            }
-            break;
-            case SHOOTING: {
-                checkLockOut();
-                checkKill();
-                _catapult.setSetpoint(CatapultSetpoint.NONE);
-                _catapult.releaseArm();
-                if (_isFirstShot) {
-                    _catapult.setState(CatapultState.ZEROING);
-                    _isFirstShot = false;
-                } else {
-                    _catapult.setState(Catapult.CatapultState.LOWERING_ARM);
-                }
-            } break;
-            case LOCK_OUT: {
-                _catapult.setWinchMotorSpeed(0.0);
-                _catapult.setSpringMotorSpeed(0.0);
-                if (!_intake.isIntakeUp()) {
+            case WAITING:
+                if (_oi.exitKill()) {
                     _catapult.setState(_prevState);
                 }
-            } break;
-            case PRELOAD: {
-                checkLockOut();
-                if (!_catapult.isSpringHallTriggered() && !_catapult.isSpringZeroed()) {
-                    _catapult.setSpringMotorSpeed(Constants.Catapult.SPRING_ZERO_SPEED);
-                } else if (_catapult.isSpringHallTriggered()) {
-                    _catapult.zeroSpringEncoder();
-                    _catapult.setSpringDistance(Auto.StaticShots.NEAR_SPRING);
+                break;
+            case READY:
+                if (isShootTriggered()) {
+                    _catapult.releaseArm();
                 }
-                if (!_catapult.isArmLowered() && !_catapult.isWinchZeroed()) {
-                    _catapult.setWinchMotorSpeed(Constants.Catapult.LOWERING_SPEED);
-                } else if (_catapult.isArmLowered()) {
-                    _catapult.zeroWinchEncoder();
-                    _catapult.lockArm();
-                }
-                if ((_catapult.isArmLowered() && _catapult.isWinchZeroed()) && _catapult.isSpringZeroed()){
-                    _catapult.setWinchGoal(Auto.StaticShots.NEAR_WINCH);
-                }
-                // TODO: zero needs to follow this if statement.
-                if (_catapult.isWinchZeroed()){
-                    _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-                }
-                if ((_catapult.isSpringAtPosition() && _catapult.isSpringZeroed()) && (_catapult.isWinchAtGoal() && _catapult.isWinchZeroed())) {
-                    _catapult.setWinchMotorSpeed(0);
-                    _catapult.setSpringMotorSpeed(0);
-                    _catapult.setState(Catapult.CatapultState.DEBUG);
-                }
-            } break;
-            case DEBUG: {
+                break;
+            case DEBUG:
                 if (_oi.releaseArm()) {
                     _catapult.releaseArm();
                 }
                 if (_oi.preloadCatapult()) {
-                    _catapult.setState(Catapult.CatapultState.PRELOAD);
+                    _catapult.setState(Catapult.CatapultState.PRELOADED);
                 }
                 if (_oi.exitDebugCatapult()) {
-                    _catapult.setState(Catapult.CatapultState.ZEROING);
+                    _catapult.setState(Catapult.CatapultState.ZEROING_ARM);
                 }
-            } break;
-            case KILL: {
-                _catapult.setSpringMotorSpeed(0);
-                _catapult.setWinchMotorSpeed(0);
-                if (_oi.exitKill()) {
-                    _catapult.setState(_prevState);
-                }
-            }break;
-            case AUTO:
-                _catapult.setSpringMotorSpeed(0.0);
-                _catapult.setWinchMotorSpeed(0.0);
-                if(!_catapult.isArmLowered()){
-                    _catapult.setState(CatapultState.ZEROING);
-                }
+                break;
+            default:
         }
     }
 
@@ -240,10 +109,13 @@ public class DriveCatapult extends OutliersCommand {
             _catapult.setState(Catapult.CatapultState.LOCK_OUT);
         }
     }
+
+    /** Stop catapult motors on kill button */
     protected void checkKill() {
         if (_oi.kill()) {
             _prevState = _catapult.getState();
-            _catapult.setState(Catapult.CatapultState.KILL);
+            _catapult.stopMotors();
+            _catapult.setState(Catapult.CatapultState.WAITING);
         }
     }
 }
