@@ -34,7 +34,7 @@ public class Auto {
     }
 
     public static class Rotations {
-        public static Rotation2d BALL_ONE_FROM_FIRST = new Rotation2d(-0.25 * Math.PI);
+        public static Rotation2d BALL_ONE_FROM_FIRST = new Rotation2d(Units.degreesToRadians(-10));
         public static Rotation2d BALL_TWO_FROM_THIRD = new Rotation2d(Units.degreesToRadians(20));
         public static Rotation2d BALL_TWO_FROM_BALL_THREE = new Rotation2d(Units.degreesToRadians(-35));
         public static Rotation2d BALL_THREE_FROM_FOURTH = new Rotation2d(0.5 * Math.PI);

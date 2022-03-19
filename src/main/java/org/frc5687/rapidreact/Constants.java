@@ -119,7 +119,7 @@ public class Constants {
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
-        public static final double ANGLE_kP = 4.0;
+        public static final double ANGLE_kP = 5.0;
         public static final double ANGLE_kI = 0.0;
         public static final double ANGLE_kD = 0.0;
         public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
