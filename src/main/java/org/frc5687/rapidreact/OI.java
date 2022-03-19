@@ -67,7 +67,7 @@ public class OI extends OutliersProxy {
 //        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
-        _rockerFlip = new JoystickButton(_debug, Gamepad.Buttons.LEFT_BUMPER.getNumber());
+        _rockerFlip = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
 
         // adding buttons while driving: Ben pls look
 
