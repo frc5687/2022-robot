@@ -36,7 +36,7 @@ public class Shoot extends OutliersCommand {
             info("Shoot finished");
             return true;
         }
-        info("Shoot waiting for winch which is at " + _catapult.getWinchStringLength() );
+        info("Shoot waiting for winch which is at " + _catapult.getArmRopeLength() );
         return false;
     }
 }

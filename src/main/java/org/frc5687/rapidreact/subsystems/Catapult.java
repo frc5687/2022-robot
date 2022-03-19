@@ -454,7 +454,7 @@ public class Catapult extends OutliersSubsystem {
 
                     // Keep pondering questions above, but for now don't wait. If arm is lowered,
                     // assume we're about where we want to be to zero winch encoder.
-                    zerowinchEncoder();
+                    zeroWinchEncoder();
 
                     // Check if we successfully latched release pin (see lockArm() above)
                     // TODO: do we need to wait a bit before checking this?
@@ -653,7 +653,7 @@ public class Catapult extends OutliersSubsystem {
                 // Success condition
 
                 // Arm is fully lowered, so might as well remember that for next time
-                zerowinchEncoder();
+                zeroWinchEncoder();
                 // We're ready to aim if we have a ball
                 if (isBallDetected()) {
                     setState(CatapultState.READY);
@@ -869,7 +869,7 @@ public class Catapult extends OutliersSubsystem {
         return (angle - STOWED_ANGLE + LINEAR_REGRESSION_OFFSET) / LINEAR_REGRESSION_SLOPE;
     }
 
-    public void zerowinchEncoder() {
+    public void zeroWinchEncoder() {
         if (!_winchEncoderZeroed) {
             _winchEncoder.setPosition(WINCH_BOTTOM_LIMIT);
             _winchEncoderZeroed = true;
