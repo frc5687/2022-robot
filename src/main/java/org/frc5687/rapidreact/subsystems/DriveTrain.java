@@ -300,6 +300,18 @@ public class DriveTrain extends OutliersSubsystem {
         }
         return Double.NaN;
     }
+    public double getAngleToClosestBlueBall() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getBlueBallYaw();
+        }
+        return Double.NaN;
+    }
+    public double getAngleToClosestRedBall() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().getRedBallYaw();
+        }
+        return Double.NaN;
+    }
 
     public double[] getTargetPosition() {
         if (_proxy.getLatestFrame() != null) {

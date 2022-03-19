@@ -137,6 +137,8 @@ public class JetsonProxy {
         private double _target_vx;
         private double _target_vy;
         private double _target_vz;
+        private double _blue_ball_yaw;
+        private double _red_ball_yaw;
 
         public Frame(String packet) {
 //            DriverStation.reportError("string is: " + packet, false);
@@ -155,6 +157,8 @@ public class JetsonProxy {
                 _target_vx = Double.parseDouble(a[10]);
                 _target_vy = Double.parseDouble(a[11]);
                 _target_vz = Double.parseDouble(a[12]);
+                _blue_ball_yaw = Double.parseDouble(a[13]);
+                _red_ball_yaw = Double.parseDouble(a[14]);
             }
         }
 
@@ -170,7 +174,8 @@ public class JetsonProxy {
         public double[] targetVelocity() {
             return new double[]{_target_vx, _target_vy, _target_vz};
         }
-
+        public double getBlueBallYaw() { return _blue_ball_yaw; }
+        public double getRedBallYaw() { return _red_ball_yaw; }
     }
     protected class JetsonTimerTask extends TimerTask {
         private JetsonProxy _proxy;
