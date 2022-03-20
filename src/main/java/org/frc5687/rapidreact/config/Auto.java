@@ -8,13 +8,12 @@ public class Auto {
         
     public static class FieldPositions {
         public static Pose2d SAFE_BALL_THREE = new Pose2d(7.7, 0.8, new Rotation2d());
-        public static Pose2d SAFE_BALL_FOUR = new Pose2d(1.55, 1.14, new Rotation2d());
+        public static Pose2d SAFE_BALL_FOUR = new Pose2d(1.37, 1.14, new Rotation2d());
         public static Pose2d ROBOT_POS_ONE_DEST = new Pose2d(6.505, 5.685, new Rotation2d());
         public static Pose2d ROBOT_POS_TWO_DEST = new Pose2d(4.63, 3.65, new Rotation2d());
         public static Pose2d ROBOT_POS_THREE_DEST = new Pose2d(5.95, 1.42, new Rotation2d());
         public static Pose2d PARALLEL_PARK = new Pose2d(8.42, 0.4, new Rotation2d());
-        public static Pose2d FAR_FIELD_SHOT = new Pose2d(2.3, 1.14, new Rotation2d());
-
+        public static Pose2d FAR_FIELD_SHOT = new Pose2d(2.4, 1.34, new Rotation2d());
     }
 
     public static class BallPositions {

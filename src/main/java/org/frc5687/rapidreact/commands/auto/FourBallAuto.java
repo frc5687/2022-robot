@@ -104,7 +104,7 @@ public class FourBallAuto extends SequentialCommandGroup{
                         new SequentialCommandGroup(
                                 new AutoAim(driveTrain),
                                 new Shoot(catapult),
-                                new DriveToPose(driveTrain, _destination1, _velocity),
+                                new DriveToPoseAimBall(driveTrain, _destination1, _velocity),
                                 new WaitCommand(1)
                         ),
                         new AutoIntake(intake)
@@ -114,14 +114,14 @@ public class FourBallAuto extends SequentialCommandGroup{
 //                    new SetSetpoint(catapult, CatapultSetpoint.MID),
                                 new AutoAim(driveTrain),
                                 new Shoot(catapult),
-                                new DriveToPose(driveTrain, _destination2, _velocity),
+                                new DriveToPoseAimBall(driveTrain, _destination2, _velocity),
                                 new WaitCommand(1)
                         ),
                         new AutoIntake(intake)
                 ),
                 // wait a bit for the 2nd ball to roll in from human player station.
                 new ParallelDeadlineGroup(
-                        new WaitCommand(3),
+                        new WaitCommand(4),
                         new AutoIntake(intake)
                 ),
                 new DriveToPose(driveTrain, _destination3, _velocity),

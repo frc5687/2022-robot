@@ -37,7 +37,7 @@ public class RobotContainer extends OutliersContainer {
     private OI _oi;
     private AHRS _imu;
     private JetsonProxy _proxy;
-    private Limelight _limelight;
+//    private Limelight _limelight;
 
     private Robot _robot;
     private DriveTrain _driveTrain;
@@ -94,17 +94,17 @@ public class RobotContainer extends OutliersContainer {
         //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
-        _limelight = new Limelight("limelight");
+//        _limelight = new Limelight("limelight");
 
         // then subsystems
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
+        _driveTrain = new DriveTrain(this, _oi, _proxy/*, _limelight*/, _imu);
         _intake = new Intake(this);
         _climber = new Climber(this, _driveTrain);
         _catapult = new Catapult(this);
 
         _autoChooser = new AutoChooser();
 
-        initializeCamera();
+//        initializeCamera();
 
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
@@ -117,7 +117,7 @@ public class RobotContainer extends OutliersContainer {
 
         // Run periodic for each swerve module faster than regular cycle time
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
-        _limelight.disableLEDs();
+//        _limelight.disableLEDs();
         _imu.reset();
     }
 
@@ -235,9 +235,9 @@ public class RobotContainer extends OutliersContainer {
 
         // Set _bypass to true to set autonomous command here instead of using Drive Station
         if (_bypass) {
-            AutoChooser.Position startingPosition = AutoChooser.Position.First;
+            AutoChooser.Position startingPosition = AutoChooser.Position.Third;
             info("Running TwoBallAuto.");
-            return new TwoBallAuto(_driveTrain, _catapult, _intake, startingPosition);
+            return new FourBallAuto(_driveTrain, _catapult, _intake, startingPosition);
         }
 
         // Return command sequence based on starting position and auto mode selectded
