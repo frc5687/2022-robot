@@ -55,11 +55,11 @@ public class Limelight {
         return _camera.getLatestResult().hasTargets();
     }
 
-    public void LEDOn(){
+    public void enableLEDs(){
         _camera.setLED(VisionLEDMode.kOn);
     }
 
-    public void LEDOff(){
+    public void disableLEDs(){
         _camera.setLED(VisionLEDMode.kOff);
     }
 

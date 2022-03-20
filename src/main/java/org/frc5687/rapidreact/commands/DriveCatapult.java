@@ -1,12 +1,12 @@
 package org.frc5687.rapidreact.commands;
 
-import org.frc5687.rapidreact.Constants;
+//import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.OI;
-import org.frc5687.rapidreact.config.Auto;
+//import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
-import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
+//import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -26,8 +26,9 @@ public class DriveCatapult extends OutliersCommand {
     private final OI _oi;
 
     private Catapult.CatapultState _prevState;
-    private boolean _isFirstShot = true;
+    //private boolean _isFirstShot = true;
     private CatapultState _lastLoggedState = null;
+    //private long _wait;
 
     public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, OI oi) {
         _catapult = catapult;
