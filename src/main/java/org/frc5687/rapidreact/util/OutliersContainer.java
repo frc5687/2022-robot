@@ -12,21 +12,29 @@ import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 public abstract class OutliersContainer implements ILoggingSource {
     private List<OutliersSubsystem> _subsystems = new LinkedList<OutliersSubsystem>();
     private IdentityMode _identityMode;
+    private boolean _isLogging;
 
-    public OutliersContainer(IdentityMode identityMode) {
+    public OutliersContainer(IdentityMode identityMode, boolean isLogging) {
         _identityMode = identityMode;
+        _isLogging = isLogging;
     }
 
     public void metric(String name, boolean value) {
-        SmartDashboard.putBoolean(getClass().getSimpleName() + "/" + name, value);
+        if (_isLogging) {
+            SmartDashboard.putBoolean(getClass().getSimpleName() + "/" + name, value);
+        }
     }
 
     public void metric(String name, String value) {
-        SmartDashboard.putString(getClass().getSimpleName() + "/" + name, value);
+        if (_isLogging) {
+            SmartDashboard.putString(getClass().getSimpleName() + "/" + name, value);
+        }
     }
 
     public void metric(String name, double value) {
-        SmartDashboard.putNumber(getClass().getSimpleName() + "/" + name, value);
+        if (_isLogging) {
+            SmartDashboard.putNumber(getClass().getSimpleName() + "/" + name, value);
+        }
     }
 
     @Override
@@ -59,6 +67,10 @@ public abstract class OutliersContainer implements ILoggingSource {
         }
     }
 
+    public boolean isLogging() {
+        return _isLogging;
+    }
+
     /***
      * Unregisters a subsystem for periodic actions.
      * @param subsystem
@@ -70,7 +82,9 @@ public abstract class OutliersContainer implements ILoggingSource {
     }
 
     public void updateDashboard() {
-        _subsystems.forEach((ss) -> ss.updateDashboard());
+        if (_isLogging) {
+            _subsystems.forEach(OutliersSubsystem::updateDashboard);
+        }
     }
 
     public void disabledPeriodic() {}

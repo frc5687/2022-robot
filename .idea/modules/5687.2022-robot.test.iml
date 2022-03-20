@@ -36,5 +36,4 @@
     <orderEntry type="library" name="Gradle: org.ejml:ejml-core:0.41" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="2022-robot.main" />
 </module>

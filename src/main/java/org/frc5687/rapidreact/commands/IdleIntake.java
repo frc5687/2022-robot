@@ -1,5 +1,6 @@
 package org.frc5687.rapidreact.commands;
 
+import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.subsystems.Intake;
 
@@ -7,6 +8,7 @@ public class IdleIntake extends OutliersCommand{
     
     private final Intake _intake;
     private final OI _oi;
+    private long _waitTime;
 
     public IdleIntake(Intake intake, OI oi){
         _intake = intake;
@@ -17,17 +19,15 @@ public class IdleIntake extends OutliersCommand{
     @Override
     public void initialize(){
         super.initialize();
-//        _intake.deploy();
+        _waitTime = System.currentTimeMillis() + Constants.Intake.ROLLER_DELAY;
     }
 
     @Override
     public void execute(){
         super.execute();
-        // if (_oi.intakeDeployRetract() && _intake.isIntake()) {
-        //     _intake.stowe();
-        // } else if (_oi.intakeDeployRetract() && _intake.isIntakeSolenoidStowed()) {
-        //     _intake.deploy();
-        // }
+        if (System.currentTimeMillis() > _waitTime) {
+            _intake.spinDownRoller();
+        }
     }
 
     @Override
