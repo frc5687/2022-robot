@@ -46,7 +46,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     private AHRS _imu;
     private JetsonProxy _proxy;
-    private Limelight _limelight;
+//    private Limelight _limelight;
     private OI _oi;
 
     private HolonomicDriveController _controller;
@@ -57,12 +57,12 @@ public class DriveTrain extends OutliersSubsystem {
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
     private boolean _useLimelight = false;
 
-    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy, Limelight limelight, AHRS imu) {
+    public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy/*, Limelight limelight*/, AHRS imu) {
         super(container);
         try {
             _oi = oi;
             _proxy = proxy;
-            _limelight = limelight;
+//            _limelight = limelight;
             _imu = imu;
             _northWest =
                     new DiffSwerveModule(
@@ -308,9 +308,9 @@ public class DriveTrain extends OutliersSubsystem {
     public double getAngleToTarget() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().getTargetAngle();
-        } else if(_limelight.hasTarget()) {
-            return Units.degreesToRadians(_limelight.getYaw());
-        }
+        } //else if(_limelight.hasTarget()) {
+           // return Units.degreesToRadians(_limelight.getYaw());
+        //}
         return Double.NaN;
     }
     public double getAngleToClosestBlueBall() {
@@ -435,11 +435,11 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void enableLimelight() {
         _useLimelight = true;
-        _limelight.enableLEDs();
+//        _limelight.enableLEDs();
     }
     public void disableLimelight() {
         _useLimelight = false;
-        _limelight.disableLEDs();
+//        _limelight.disableLEDs();
     }
     public boolean useLimelight() {
         return _useLimelight;

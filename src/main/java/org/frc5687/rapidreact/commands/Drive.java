@@ -40,11 +40,11 @@ public class Drive extends OutliersCommand {
         double vx = _vxFilter.calculate(-_oi.getDriveY()) * (_driveTrain.getSpeed());
         double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
         double rot = 0;
-        if (_oi.autoAim()) {
-            _driveTrain.enableLimelight();
-        } else {
-            _driveTrain.disableLimelight();
-        }
+//        if (_oi.autoAim()) {
+//            _driveTrain.enableLimelight();
+//        } else {
+//            _driveTrain.disableLimelight();
+//        }
         metric("Robot heading", _driveTrain.getHeading().getRadians());
         if (_oi.autoAim() && _driveTrain.hasTarget()) {
             rot = _driveTrain.getVisionControllerOutput(false);

@@ -131,14 +131,14 @@ public class Constants {
 
         // Vision PID controller
         public static final double VISION_TOLERANCE = 0.040; // rads
-        public static final double VISION_kP = 5.65;
+        public static final double VISION_kP = 5.6;
         public static final double VISION_kI = 0.0;
         public static final double VISION_kD = 0.2;
         public static final double VISION_IRANGE = MAX_MPS * 2;
         public static final long VISION_LATENCY = 50;
 
         public static final double BALL_VISION_TOLERANCE = 0.040; // rads
-        public static final double BALL_VISION_kP = 3.0;
+        public static final double BALL_VISION_kP = 3.5;
         public static final double BALL_VISION_kI = 0.0;
         public static final double BALL_VISION_kD = 0.2;
         public static final double BALL_VISION_IRANGE = MAX_MPS * 2;

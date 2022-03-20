@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Drivetrain/#130-BallDetection";
-    public static final String REVISION = "56177fc";
+    public static final String REVISION = "7e0c463";
     public static final String MODIFIED = " *";
 }
