@@ -6,11 +6,11 @@ import org.frc5687.rapidreact.subsystems.Intake;
 public class IdleIntake extends OutliersCommand{
     
     private final Intake _intake;
-    private final OI _oi;
+    //private final OI _oi;
 
     public IdleIntake(Intake intake, OI oi){
         _intake = intake;
-        _oi = oi;
+        //_oi = oi;
         addRequirements(_intake);
     }
 

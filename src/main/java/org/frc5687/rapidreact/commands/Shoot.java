@@ -3,7 +3,7 @@ package org.frc5687.rapidreact.commands;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
+//import edu.wpi.first.math.trajectory.TrajectoryUtil;
 
 public class Shoot extends OutliersCommand {
     private Catapult _catapult;

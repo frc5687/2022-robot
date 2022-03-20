@@ -1,12 +1,12 @@
 /* Team 5687 (C)2020-2022 */
 package org.frc5687.rapidreact;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+//import edu.wpi.first.math.geometry.Pose2d;
+//import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
-import org.frc5687.rapidreact.config.Auto;
+//import org.frc5687.rapidreact.config.Auto;
 
 public class Constants {
     public static final int TICKS_PER_UPDATE = 1;
