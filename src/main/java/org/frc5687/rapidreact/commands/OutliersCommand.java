@@ -1,6 +1,8 @@
 /* (C)2020-2021 */
 package org.frc5687.rapidreact.commands;
 
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 import org.frc5687.rapidreact.util.ILoggingSource;
 import org.frc5687.rapidreact.util.MetricTracker;
 import org.frc5687.rapidreact.util.RioLogger;
@@ -36,8 +38,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  */
  public abstract class OutliersCommand extends CommandBase implements ILoggingSource {
     private MetricTracker _metricTracker;
+    private boolean _isLogging;
 
-    public OutliersCommand() {}
+    public OutliersCommand() {
+        _isLogging = true;
+    }
 
     public OutliersCommand(double timeout) {
         super.withTimeout(timeout);
@@ -64,21 +69,27 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
     }
 
     public void metric(String name, String value) {
-        SmartDashboard.putString(getClass().getSimpleName() + "/" + name, value);
+        if (_isLogging) {
+            SmartDashboard.putString(getClass().getSimpleName() + "/" + name, value);
+        }
         if (_metricTracker != null) {
             _metricTracker.put(name, value);
         }
     }
 
     public void metric(String name, double value) {
-        SmartDashboard.putNumber(getClass().getSimpleName() + "/" + name, value);
+        if (_isLogging) {
+            SmartDashboard.putNumber(getClass().getSimpleName() + "/" + name, value);
+        }
         if (_metricTracker != null) {
             _metricTracker.put(name, value);
         }
     }
 
     public void metric(String name, boolean value) {
-        SmartDashboard.putBoolean(getClass().getSimpleName() + "/" + name, value);
+        if (_isLogging) {
+            SmartDashboard.putBoolean(getClass().getSimpleName() + "/" + name, value);
+        }
         if (_metricTracker != null) {
             _metricTracker.put(name, value);
         }

@@ -70,7 +70,8 @@ public class AutoChooser extends OutliersProxy {
         Unknown(-1), 
         ZeroBall(0), 
         OneBall(1),
-        TwoBall(2);
+        TwoBall(2),
+        ThreeBall(3);
 
         private int _value;
 

@@ -32,7 +32,7 @@ public class Robot extends OutliersRobot implements ILoggingSource {
         LiveWindow.disableAllTelemetry();
         DriverStation.silenceJoystickConnectionWarning(true);
 
-        _robotContainer = new RobotContainer(this, _identityMode);
+        _robotContainer = new RobotContainer(this, _identityMode, true);
         _timer = new Timer();
         _robotContainer.init();
 
@@ -97,7 +97,6 @@ public class Robot extends OutliersRobot implements ILoggingSource {
         // Drive Station for starting position and auto mode to run
         _robotContainer.periodic();
         CommandScheduler.getInstance().run();
-        update();
         updateDashboard();
     }
 

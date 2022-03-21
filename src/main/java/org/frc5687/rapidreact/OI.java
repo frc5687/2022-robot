@@ -7,14 +7,12 @@ package org.frc5687.rapidreact;
 
 import static org.frc5687.rapidreact.util.Helpers.*;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.Climber.AutoClimb;
-import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
 import org.frc5687.rapidreact.commands.Climber.Stow;
-import org.frc5687.rapidreact.commands.SetSetpoint;
+import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -86,6 +84,7 @@ public class OI extends OutliersProxy {
 
         _exitKill = new JoystickButton(_translation, 6);
         _kill = new JoystickButton(_translation, 7);
+        
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {

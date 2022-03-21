@@ -1,6 +1,7 @@
 package org.frc5687.rapidreact.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5687.rapidreact.commands.Drive;
 
 import java.io.IOException;
@@ -130,6 +131,12 @@ public class JetsonProxy {
         private boolean _hasTarget;
         private double _goalDistance;
         private double _goalAngle;
+        private double _target_x;
+        private double _target_y;
+        private double _target_z;
+        private double _target_vx;
+        private double _target_vy;
+        private double _target_vz;
 
         public Frame(String packet) {
 //            DriverStation.reportError("string is: " + packet, false);
@@ -142,6 +149,12 @@ public class JetsonProxy {
                 _hasTarget = Boolean.parseBoolean(a[4]);
                 _goalDistance = Double.parseDouble(a[5]);
                 _goalAngle = Double.parseDouble(a[6]);
+                _target_x = Double.parseDouble(a[7]);
+                _target_y = Double.parseDouble(a[8]);
+                _target_z = Double.parseDouble(a[9]);
+                _target_vx = Double.parseDouble(a[10]);
+                _target_vy = Double.parseDouble(a[11]);
+                _target_vz = Double.parseDouble(a[12]);
             }
         }
 
@@ -151,6 +164,12 @@ public class JetsonProxy {
         public double getTargetDistance() { return _goalDistance; }
         public double getTargetAngle() { return _goalAngle; }
         public boolean hasTarget() { return _hasTarget; }
+        public double[] targetPosition() {
+            return new double[]{_target_x, _target_y, _target_z};
+        }
+        public double[] targetVelocity() {
+            return new double[]{_target_vx, _target_vy, _target_vz};
+        }
 
     }
     protected class JetsonTimerTask extends TimerTask {
@@ -169,6 +188,7 @@ public class JetsonProxy {
         private JetsonProxy _proxy;
         private InetAddress _jetsonAddress = null;
         private int _rioPort;
+        private long _prevTime;
 
         protected JetsonListener(JetsonProxy proxy, int rioPort) {
             _proxy = proxy;

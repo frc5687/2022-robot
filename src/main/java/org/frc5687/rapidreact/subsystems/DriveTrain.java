@@ -25,6 +25,7 @@ import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
+
 public class DriveTrain extends OutliersSubsystem {
     // Order we define swerve modules in kinematics
     // NB: must be same order as we pass to SwerveDriveKinematics
@@ -51,6 +52,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     private HolonomicDriveController _controller;
     private ProfiledPIDController _angleController;
+    private ProfiledPIDController _visionController;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
     private boolean _useLimelight = false;
@@ -123,6 +125,16 @@ public class DriveTrain extends OutliersSubsystem {
                             new TrapezoidProfile.Constraints(
                                     Constants.DriveTrain.PROFILE_CONSTRAINT_VEL, Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL));
             _angleController.enableContinuousInput(-Math.PI / 2.0, Math.PI / 2.0);
+
+            _visionController =
+                    new ProfiledPIDController(
+                            Constants.DriveTrain.VISION_kP,
+                            Constants.DriveTrain.VISION_kI,
+                            Constants.DriveTrain.VISION_kD,
+                            new TrapezoidProfile.Constraints(
+                                    Constants.DriveTrain.PROFILE_CONSTRAINT_VEL, Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL));
+            _visionController.setIntegratorRange(-Constants.DriveTrain.VISION_IRANGE, Constants.DriveTrain.VISION_IRANGE);
+            _visionController.setTolerance(Constants.DriveTrain.VISION_TOLERANCE);
         } catch (Exception e) {
             error(e.getMessage());
         }
@@ -154,12 +166,20 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void updateDashboard() {
-        //TODO: might uncomment this if i feel like it.
-        //metric("Goal Distance", getDistanceToGoal());
-        // metric("Goal Angle", getAngleToGoal());
-        metric("Goal Distance", getDistanceToTarget());
+        metric("Goal Distance From Top Plane", getDistanceToTarget());
+        metric("Goal Distance From Points", Math.sqrt(
+                (getTargetPosition()[0] * getTargetPosition()[0]) +
+                (getTargetPosition()[1] * getTargetPosition()[1]) +
+                (getTargetPosition()[2] * getTargetPosition()[2])
+                ));
         metric("Goal Angle", getAngleToTarget());
         metric("Has goal", hasTarget());
+        metric("Target vx", getTargetVelocity()[0]);
+        metric("Target vy", getTargetVelocity()[1]);
+        metric("Target vz", getTargetVelocity()[2]);
+        metric("Target x", getTargetPosition()[0]);
+        metric("Target y", getTargetPosition()[1]);
+        metric("Target z", getTargetPosition()[2]);
 
 //        metric("NW/Encoder Angle", _northWest.getModuleAngle());
 //        metric("SW/Encoder Angle", _southWest.getModuleAngle());
@@ -177,9 +197,7 @@ public class DriveTrain extends OutliersSubsystem {
         metric("Odometry/x", getOdometryPose().getX());
         metric("Odometry/y", getOdometryPose().getY());
         metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());
-        metric("Odometry/Pose", getOdometryPose().toString());
 
-        metric("IMU angle", _imu.getYaw());
     }
 
     public void setNorthEastModuleState(SwerveModuleState state) {
@@ -273,7 +291,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
-            info("Target Distance is: " + _proxy.getLatestFrame().getTargetDistance());
             return _proxy.getLatestFrame().getTargetDistance();
         }
         return Double.NaN;
@@ -281,7 +298,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getAngleToTarget() {
         if (_proxy.getLatestFrame() != null) {
-            info("Target Distance is: " + _proxy.getLatestFrame().getTargetAngle());
             return _proxy.getLatestFrame().getTargetAngle();
         } else if(_limelight.hasTarget()) {
             return Units.degreesToRadians(_limelight.getYaw());
@@ -289,8 +305,23 @@ public class DriveTrain extends OutliersSubsystem {
         return Double.NaN;
     }
 
+<<<<<<< HEAD
     public boolean isOnTarget() {
         return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE;
+=======
+    public double[] getTargetPosition() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().targetPosition();
+        }
+        return new double[] {0, 0, 0};
+    }
+
+    public double[] getTargetVelocity() {
+        if (_proxy.getLatestFrame() != null) {
+            return _proxy.getLatestFrame().targetVelocity();
+        }
+        return new double[] {0, 0, 0};
+>>>>>>> d170c9c44a9412f97081fc810a0f3f3392505f9c
     }
 
     public TrajectoryConfig getConfig() {
@@ -320,6 +351,14 @@ public class DriveTrain extends OutliersSubsystem {
         setNorthEastModuleState(moduleStates[NORTH_EAST]);
     }
 
+    public double getVisionControllerOutput() {
+        return _visionController.calculate(-getAngleToTarget());
+    }
+
+    public boolean onTarget() {
+        return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE;
+    }
+
     public boolean isAtPose(Pose2d pose) {
         double diffX = getOdometryPose().getX() - pose.getX();
         double diffY = getOdometryPose().getY() - pose.getY();
@@ -340,6 +379,7 @@ public class DriveTrain extends OutliersSubsystem {
      * 
      * <p> If Rotation2d <> gyroAngle, then robot heading will no longer equal IMU heading.
      */
+
     public void resetOdometry(Pose2d position) {
         Translation2d _translation = position.getTranslation();
         Rotation2d _rotation = getHeading();

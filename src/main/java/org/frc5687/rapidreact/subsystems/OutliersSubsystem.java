@@ -38,9 +38,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public abstract class OutliersSubsystem extends SubsystemBase implements ILoggingSource {
     private MetricTracker _metricTracker;
+    private boolean _isLogging;
 
     public OutliersSubsystem(OutliersContainer container) {
         container.registerSubSystem(this);
+        _isLogging = container.isLogging();
+    }
+    public boolean isLogging() {
+        return _isLogging;
     }
 
     @Override
@@ -64,28 +69,31 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
     }
 
     public void metric(String name, String value) {
-        SmartDashboard.putString(getClass().getSimpleName() + "/" + name, value);
+        if (_isLogging) {
+            SmartDashboard.putString(getClass().getSimpleName() + "/" + name, value);
+        }
         if (_metricTracker != null) {
             _metricTracker.put(name, value);
         }
     }
 
     public void metric(String name, double value) {
-        SmartDashboard.putNumber(getClass().getSimpleName() + "/" + name, value);
+        if (_isLogging) {
+            SmartDashboard.putNumber(getClass().getSimpleName() + "/" + name, value);
+        }
         if (_metricTracker != null) {
             _metricTracker.put(name, value);
         }
     }
 
     public void metric(String name, boolean value) {
-        SmartDashboard.putBoolean(getClass().getSimpleName() + "/" + name, value);
+        if (_isLogging) {
+            SmartDashboard.putBoolean(getClass().getSimpleName() + "/" + name, value);
+        }
         if (_metricTracker != null) {
             _metricTracker.put(name, value);
         }
     }
-
-    
-
 
     protected void logMetrics(String... metrics) {
         _metricTracker = MetricTracker.createMetricTracker(getClass().getSimpleName(), metrics);
