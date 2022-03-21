@@ -193,6 +193,11 @@ public class DriveCatapult extends OutliersCommand {
         return _catapult.isSpringZeroed();
     }
 
+    public void zeroingFunction(){
+        _catapult.zeroingProcess();
+        _catapult.setState(Catapult.CatapultState.ZEROING);
+    }
+
     boolean isShootTriggered() {
         if (DriverStation.isAutonomous()) {
             return _catapult.isAutoShoot();    

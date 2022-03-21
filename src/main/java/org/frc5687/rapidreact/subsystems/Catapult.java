@@ -206,6 +206,11 @@ public class Catapult extends OutliersSubsystem {
         return _winchEncoderZeroed;
     }
 
+    public void zeroingProcess(){
+        _winchEncoderZeroed = false;
+        _springEncoderZeroed = false;
+    }
+
     public double getWinchControllerOutput() {
         return _winchController.calculate(getWinchStringLength());
     }
