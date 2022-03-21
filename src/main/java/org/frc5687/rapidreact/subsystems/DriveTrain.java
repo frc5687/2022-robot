@@ -305,10 +305,9 @@ public class DriveTrain extends OutliersSubsystem {
         return Double.NaN;
     }
 
-<<<<<<< HEAD
     public boolean isOnTarget() {
         return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE;
-=======
+    }
     public double[] getTargetPosition() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().targetPosition();
@@ -321,7 +320,6 @@ public class DriveTrain extends OutliersSubsystem {
             return _proxy.getLatestFrame().targetVelocity();
         }
         return new double[] {0, 0, 0};
->>>>>>> d170c9c44a9412f97081fc810a0f3f3392505f9c
     }
 
     public TrajectoryConfig getConfig() {

@@ -2,6 +2,7 @@ package org.frc5687.rapidreact.commands.catapult;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import org.frc5687.rapidreact.OI;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -19,13 +20,14 @@ public class DriveCatapult extends OutliersCommand {
     private final DriveTrain _driveTrain;
     private final Intake _intake;
     private final OI _oi;
+    
 
     private CatapultState _prevState;
     private CatapultState _lastLoggedState = null;
     private boolean _isFirstShot = true;
     private long _wait;
 
-    public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, OI oi) {
+    public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, OI oi, Lights _lights) {
         _catapult = catapult;
         _intake = intake;
         _driveTrain = driveTrain;

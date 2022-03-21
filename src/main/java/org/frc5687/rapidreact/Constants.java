@@ -354,7 +354,6 @@ public class Constants {
         public static final int HEIGHT = 320;
         public static final int WIDTH = 240;
     }
-<<<<<<< HEAD
 
     public static class Lights{
         public static final double BASE = 0.91; // Solid purple
@@ -368,6 +367,4 @@ public class Constants {
         //public static final double WRONG_BALL_ON_TARGET = 0.61; // Solid red
 
     }
-=======
->>>>>>> d170c9c44a9412f97081fc810a0f3f3392505f9c
 }

@@ -29,6 +29,7 @@ public class Climber extends OutliersSubsystem{
     private TalonFX _stationaryArmWinch;
     private TalonFX _rockerArmWinch;
     private DoubleSolenoid _rocker;
+    private Lights _lights;
 
     private HallEffect _staArmDown;
     private HallEffect _rockArmDown;
@@ -68,7 +69,7 @@ public class Climber extends OutliersSubsystem{
         return _step;
     }
     
-    public Climber(OutliersContainer container, DriveTrain driveTrain) {
+    public Climber(OutliersContainer container, DriveTrain driveTrain, Lights _lights) {
         super(container);
         _driveTrain = driveTrain;
 

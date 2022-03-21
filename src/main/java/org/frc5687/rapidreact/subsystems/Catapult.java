@@ -46,6 +46,7 @@ public class Catapult extends OutliersSubsystem {
     private double _springGoal;
     private boolean _autoShoot;
     private boolean _initialized = false;
+    private Lights _lights;
     private CatapultSetpoint _setpoint = CatapultSetpoint.NONE;
 
     public void setState(CatapultState state) {
@@ -53,7 +54,7 @@ public class Catapult extends OutliersSubsystem {
     }
 
     /** Catapult constructor */
-    public Catapult(OutliersContainer container) {
+    public Catapult(OutliersContainer container, Lights _lights) {
         super(container);
 
         // Motor controllers (Spark Maxes)
@@ -134,7 +135,6 @@ public class Catapult extends OutliersSubsystem {
         if (_winchMotor.getOutputCurrent() > WINCH_CURRENT_LIMIT) {
             setWinchMotorSpeed(0);
         }
-<<<<<<< HEAD
        
         if (isBallDetected()) {
             _lights.setHasBall(true);
@@ -152,8 +152,6 @@ public class Catapult extends OutliersSubsystem {
             _lights.setAiming(true);
         }
 
-=======
->>>>>>> d170c9c44a9412f97081fc810a0f3f3392505f9c
     }
 
     
@@ -360,11 +358,7 @@ public class Catapult extends OutliersSubsystem {
 
     public void setSetpoint(CatapultSetpoint setpoint) {
         _setpoint = setpoint;
-<<<<<<< HEAD
         info("Setting setpoint to " + setpoint.toString());
-=======
-//        info("Setting setpoint to " + setpoint.toString());
->>>>>>> d170c9c44a9412f97081fc810a0f3f3392505f9c
     }
 
     public CatapultSetpoint getSetpoint() {
