@@ -6,6 +6,8 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -31,6 +33,9 @@ import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 import org.frc5687.rapidreact.util.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class RobotContainer extends OutliersContainer {
     
@@ -105,13 +110,11 @@ public class RobotContainer extends OutliersContainer {
 //        _autoChooser = new AutoChooser();
 
 //        initializeCamera();
-
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
 //        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
 //        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
 //        setDefaultCommand(_catapult, new IdleCatapult(_catapult, _oi));
 //        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
-
         // initialize OI after subsystems.
         _oi.initializeButtons(_driveTrain /*,_catapult, _intake, _climber*/);
 

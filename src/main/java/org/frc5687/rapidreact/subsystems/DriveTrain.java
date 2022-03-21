@@ -17,6 +17,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.WPIUtilJNI;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
@@ -53,6 +54,8 @@ public class DriveTrain extends OutliersSubsystem {
     private ProfiledPIDController _visionController;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
+    private double _nwWheelPosition;
+    private double _prevTime = -1;
     private boolean _useLimelight = false;
 
     public DriveTrain(OutliersContainer container, OI oi, /*JetsonProxy proxy, Limelight limelight,*/ AHRS imu) {
@@ -154,6 +157,10 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void periodic() {
+        double currentTime = WPIUtilJNI.now() * 1.0e-6;
+        double period = _prevTime >= 0 ? currentTime - _prevTime : 0.0;
+        _prevTime = currentTime;
+        _nwWheelPosition += _northWest.getWheelVelocity() * period;
 //        _odometry.update(
 //                getHeading(),
 //                _northWest.getState(),
@@ -194,6 +201,10 @@ public class DriveTrain extends OutliersSubsystem {
 //        metric("SE/Predicted Wheel Vel", _southEast.getPredictedWheelVelocity());
         metric("NW/Encoder Wheel Vel", _northWest.getWheelVelocity());
         metric("NW/Predicted Wheel Vel", _northWest.getPredictedWheelVelocity());
+        metric("NW/ Wheel Position", _nwWheelPosition);
+
+        metric("NW/Left Current", _northWest.getLeftCurrent());
+        metric("NW/Right Current", _northWest.getRightCurrent());
 
 //        metric("Odometry/x", getOdometryPose().getX());
 //        metric("Odometry/y", getOdometryPose().getY());
