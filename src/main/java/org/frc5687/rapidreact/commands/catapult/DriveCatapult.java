@@ -9,6 +9,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
+import org.frc5687.rapidreact.util.ServoStop;
 
 import static org.frc5687.rapidreact.Constants.Catapult.*;
 import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.*;
@@ -198,6 +199,15 @@ public class DriveCatapult extends OutliersCommand {
             return _catapult.isAutoShoot();    
         } else {
             return _oi.isShootButtonPressed();
+        }
+    }
+
+    public void indexerToggle() {
+        if (ServoStop.getMode()){
+            ServoStop.lower();
+        }
+        else if (!ServoStop.getMode()){
+            ServoStop.raise();
         }
     }
 

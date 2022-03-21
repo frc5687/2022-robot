@@ -4,28 +4,28 @@ import edu.wpi.first.wpilibj.Servo;
 
 public class ServoStop {
     
-    private Servo stopper;
-    private boolean feeding = false;
+    private static Servo stopper;
+    private static boolean feeding = false;
 
     public ServoStop(int channel){
         stopper = new Servo(channel);
     }
 
-    public void lower(){
+    public static void lower(){
         //Lowers the blocking arm
         //Lets balls enter the catapult
         feeding = false;
         stopper.setAngle(70);
     }
 
-    public void raise(){
+    public static void raise(){
         //Raises the blocking arm
         //Stops balls from enter the catapult
         feeding = true;
         stopper.setAngle(120);
     }
 
-    public boolean getMode(){
+    public static boolean getMode(){
         //Check if the indexer arm is feeding the catapult
         return feeding;
     }
