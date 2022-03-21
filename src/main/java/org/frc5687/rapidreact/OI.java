@@ -44,7 +44,6 @@ public class OI extends OutliersProxy {
     private JoystickButton _release;
     private JoystickButton _resetNavX;
     private JoystickButton _shootButton;
-    private JoystickButton _testAuto;
 
     private JoystickButton _shootSetpointOne;
     private JoystickButton _shootSetpointTwo;
@@ -65,7 +64,6 @@ public class OI extends OutliersProxy {
 //        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
-        _testAuto = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
 
         // adding buttons while driving: Ben pls look
 
@@ -92,15 +90,15 @@ public class OI extends OutliersProxy {
         
     }
 
-    public void initializeButtons(DriveTrain driveTrain/*, Catapult catapult, Intake intake, Climber climber*/) {
-//        _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
-//        _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
-//        _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
+        _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
+        _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
+        _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
 
-//        _intakeButton.whenHeld(new AutoIntake(intake));
-//        _resetNavX.whenPressed(driveTrain::resetYaw);
-//        _readyToClimb.whenPressed(new AutoClimb(climber));
-//        _stowClimber.whenPressed(new Stow(climber));
+        _intakeButton.whenHeld(new AutoIntake(intake));
+        _resetNavX.whenPressed(driveTrain::resetYaw);
+        _readyToClimb.whenPressed(new AutoClimb(climber));
+        _stowClimber.whenPressed(new Stow(climber));
     }
 
     public boolean readyToClimb() { return _readyToClimb.get(); }

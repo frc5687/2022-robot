@@ -209,6 +209,11 @@ public class DiffSwerveModule {
         Matrix<N3, N1> error = reference.minus(xHat);
         return VecBuilder.fill(positionError, error.get(1, 0), error.get(2, 0));
     }
+
+    /**
+     * Calculated the profiled reference with angle wrapping.
+     * @return Vector (r-x) vector with profiled values.
+     */
     private Matrix<N3, N1> profiledReference() {
         double angleMinimumGoalDistance = MathUtil.inputModulus(
                 _reference.get(0,0) - getModuleAngle(),
@@ -259,7 +264,7 @@ public class DiffSwerveModule {
     private void predict() {
         // creates our input of voltage to our motors of u = K(r-x) but need to wrap angle to be
         // continuous
-        // see wrapAngle().
+        // see profiledReference().
         _u =
                 _swerveControlLoop.clampInput(
                         _swerveControlLoop
