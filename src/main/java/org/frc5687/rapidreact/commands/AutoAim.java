@@ -18,10 +18,10 @@ public class AutoAim extends OutliersCommand {
 
     @Override
     public void execute(){
+        super.execute();
         if (_driveTrain.hasTarget()) {
             _driveTrain.drive(0, 0, _driveTrain.getVisionControllerOutput(false), true);
         }
-        super.execute();
     }
     @Override
     public boolean isFinished() {

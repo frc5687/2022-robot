@@ -113,15 +113,15 @@ public class Constants {
         public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
 
         // Maximum rates of motion
-        public static final double MAX_MPS = 3.0; // Max speed of robot (m/s)
+        public static final double MAX_MPS = 3.3; // Max speed of robot (m/s)
         public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
-        public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
+        public static final double MAX_MPSS = 2.1; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
-        public static final double ANGLE_kP = 5.0;
+        public static final double ANGLE_kP = 2.3;
         public static final double ANGLE_kI = 0.0;
-        public static final double ANGLE_kD = 0.0;
+        public static final double ANGLE_kD = 0.6;
         public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI * 3.0;
 
@@ -131,9 +131,9 @@ public class Constants {
 
         // Vision PID controller
         public static final double VISION_TOLERANCE = 0.040; // rads
-        public static final double VISION_kP = 5.6;
+        public static final double VISION_kP = 5.85;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.2;
+        public static final double VISION_kD = 0.25;
         public static final double VISION_IRANGE = MAX_MPS * 2;
         public static final long VISION_LATENCY = 50;
 
