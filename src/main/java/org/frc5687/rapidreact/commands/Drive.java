@@ -13,14 +13,16 @@ public class Drive extends OutliersCommand {
     private final DriveTrain _driveTrain;
     private final SlewRateLimiter _vxFilter;
     private final SlewRateLimiter _vyFilter;
+    private final SlewRateLimiter _rotFilter;
 
     private final OI _oi;
 
     public Drive(DriveTrain driveTrain, OI oi) {
         _driveTrain = driveTrain;
         _oi = oi;
-        _vxFilter = new SlewRateLimiter(3.0);
-        _vyFilter = new SlewRateLimiter(3.0);
+        _vxFilter = new SlewRateLimiter(5.0);
+        _vyFilter = new SlewRateLimiter(5.0);
+        _rotFilter = new SlewRateLimiter(5.0);
         addRequirements(_driveTrain);
 //        logMetrics("vx","vy");
 //        enableMetrics();
@@ -36,21 +38,21 @@ public class Drive extends OutliersCommand {
     public void execute() {
         super.execute();
         //  driveX and driveY are swapped due to coordinate system that WPILib uses.
-//        double vx = _vxFilter.calculate(-_oi.getDriveY()) * (_driveTrain.getSpeed());
-//        double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
-        double vx = -_oi.getDriveY() * _driveTrain.getSpeed();
-        double vy = _oi.getDriveX() * _driveTrain.getSpeed();
+        double vx = _vxFilter.calculate(_oi.getDriveY()) * (_driveTrain.getSpeed());
+        double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
+//        double vx = _oi.getDriveY() * _driveTrain.getSpeed();
+//        double vy = _oi.getDriveX() * _driveTrain.getSpeed();
 //        if (_oi.autoAim()) {
 //            _driveTrain.enableLimelight();
 //        } else {
 //            _driveTrain.disableLimelight();
 //        }
         metric("Robot heading", _driveTrain.getHeading().getRadians());
-//        double rot =
-//                (_oi.autoAim() && _driveTrain.hasTarget())
-//                        ? _driveTrain.getVisionControllerOutput()
-//                        : _oi.getRotationX() * MAX_ANG_VEL;
-        double rot = _oi.getRotationX() * MAX_ANG_VEL;
+        double rot =
+                (_oi.autoAim() && _driveTrain.hasTarget())
+                        ? _driveTrain.getVisionControllerOutput()
+                        : _rotFilter.calculate(_oi.getRotationX()) * MAX_ANG_VEL;
+//        double rot = _oi.getRotationX() * MAX_ANG_VEL;
         metric("vx", vx);
         metric("vy", vy);
         metric("rot", rot);

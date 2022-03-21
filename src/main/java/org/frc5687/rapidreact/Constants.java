@@ -113,7 +113,7 @@ public class Constants {
         public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
 
         // Maximum rates of motion
-        public static final double MAX_MPS = 3.0; // Max speed of robot (m/s)
+        public static final double MAX_MPS = 2.7; // Max speed of robot (m/s)
         public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
@@ -158,8 +158,8 @@ public class Constants {
         public static final double FEED_FORWARD = VOLTAGE / (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL);
 
         public static final boolean ENABLE_CURRENT_LIMIT = true;
-        public static final double CURRENT_LIMIT = 30.0;
-        public static final double CURRENT_THRESHOLD = 30.0;
+        public static final double CURRENT_LIMIT = 40.0;
+        public static final double CURRENT_THRESHOLD = 40.0;
         public static final double CURRENT_TRIGGER_TIME = 0.0;
 
         // Create Parameters for DiffSwerve State Space
@@ -185,11 +185,11 @@ public class Constants {
         public static final double MAX_MODULE_SPEED_MPS =
                 (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL) * WHEEL_RADIUS;
         public static final double MAX_ANGULAR_VELOCITY = FALCON_FREE_SPEED / GEAR_RATIO_STEER;
-        public static final double MAX_ANGULAR_ACCELERATION = MAX_ANGULAR_VELOCITY * 7;
+        public static final double MAX_ANGULAR_ACCELERATION = MAX_ANGULAR_VELOCITY * 10;
         // accel of wheel
         // ang vel
-        public static final double MAX_MODULE_ACCELERATION = (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL) * 7;
-        public static final double MAX_MODULE_JERK = MAX_MODULE_ACCELERATION * 20;
+        public static final double MAX_MODULE_ACCELERATION = (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL) * 1.5;
+        public static final double MAX_MODULE_JERK = MAX_MODULE_ACCELERATION * 10;
     }
     public static class UDPJetson {
         public static final int BUFFER = 1024;

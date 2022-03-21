@@ -114,7 +114,7 @@ public class OI extends OutliersProxy {
     public double getDriveY() {
         //Comment for gamepad control
 //        yIn = getSpeedFromAxis(_translation, _translation.getYChannel());
-         yIn = getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
+         yIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
 
         double yOut = yIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
@@ -123,9 +123,9 @@ public class OI extends OutliersProxy {
     }
 
     public double getDriveX() {
-        //Comment for gamepad control
+//        Comment for gamepad control
 //        xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
-        xIn = getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
+        xIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0; // numbers from empirical testing.
@@ -146,23 +146,23 @@ public class OI extends OutliersProxy {
     }
 
     public double getWinchMotorSpeed() {
-        double speed = -getSpeedFromAxis(_debug, _debug.getXChannel());
-        speed = applyDeadband(speed, Constants.DEADBAND);
-        return speed;
+//        double speed = -getSpeedFromAxis(_debug, _debug.getXChannel());
+//        speed = applyDeadband(speed, Constants.DEADBAND);
+        return 0;
     }
 
     public double getStationarySpeed() {
-        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
-        speed = applyDeadband(speed, Constants.DEADBAND);
-        speed = 0;
-        return speed;
+//        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
+//        speed = applyDeadband(speed, Constants.DEADBAND);
+//        speed = 0;
+        return 0;
     }
     
     public double getRockerSpeed() {
-        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_Y.getNumber());
-        speed = applyDeadband(speed, Constants.DEADBAND);
-        speed = 0;
-        return speed;
+//        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_Y.getNumber());
+//        speed = applyDeadband(speed, Constants.DEADBAND);
+//        speed = 0;
+        return 0;
     }
 
     protected double getSpeedFromAxis(Joystick gamepad, int axisNumber) {
