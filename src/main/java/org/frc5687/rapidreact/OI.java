@@ -87,16 +87,16 @@ public class OI extends OutliersProxy {
         
     }
 
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber) {
+    public void initializeButtons(DriveTrain driveTrain/*, Catapult catapult, Intake intake, Climber climber*/) {
         // driving, Ben check pls.
-        _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
-        _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
-        _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
+//        _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
+//        _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
+//        _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
 
-        _intakeButton.whenHeld(new AutoIntake(intake));
-        _resetNavX.whenPressed(driveTrain::resetYaw);
-        _readyToClimb.whenPressed(new AutoClimb(climber));
-        _stowClimber.whenPressed(new Stow(climber));
+//        _intakeButton.whenHeld(new AutoIntake(intake));
+//        _resetNavX.whenPressed(driveTrain::resetYaw);
+//        _readyToClimb.whenPressed(new AutoClimb(climber));
+//        _stowClimber.whenPressed(new Stow(climber));
     }
 
     public boolean readyToClimb() { return _readyToClimb.get(); }
@@ -111,8 +111,8 @@ public class OI extends OutliersProxy {
 
     public double getDriveY() {
         //Comment for gamepad control
-        yIn = getSpeedFromAxis(_translation, _translation.getYChannel());
-        // yIn = getSpeedFromAxis(Gamepad, Gamepad.getYChannel());
+//        yIn = getSpeedFromAxis(_translation, _translation.getYChannel());
+         yIn = getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
 
         double yOut = yIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
@@ -122,8 +122,8 @@ public class OI extends OutliersProxy {
 
     public double getDriveX() {
         //Comment for gamepad control
-        xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
-        //xIn = -getSpeedFromAxis(Gamepad, Gamepad.getXChannel());
+//        xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
+        xIn = getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0; // numbers from empirical testing.
@@ -131,7 +131,8 @@ public class OI extends OutliersProxy {
     }
 
     public double getRotationX() {
-        double speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
+//        double speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
+        double speed = getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_X.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }

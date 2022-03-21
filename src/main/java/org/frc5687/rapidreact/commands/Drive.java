@@ -38,16 +38,20 @@ public class Drive extends OutliersCommand {
         //  driveX and driveY are swapped due to coordinate system that WPILib uses.
         double vx = _vxFilter.calculate(-_oi.getDriveY()) * (_driveTrain.getSpeed());
         double vy = _vyFilter.calculate(_oi.getDriveX()) * (_driveTrain.getSpeed());
-        if (_oi.autoAim()) {
-            _driveTrain.enableLimelight();
-        } else {
-            _driveTrain.disableLimelight();
-        }
+//        if (_oi.autoAim()) {
+//            _driveTrain.enableLimelight();
+//        } else {
+//            _driveTrain.disableLimelight();
+//        }
         metric("Robot heading", _driveTrain.getHeading().getRadians());
-        double rot =
-                (_oi.autoAim() && _driveTrain.hasTarget())
-                        ? _driveTrain.getVisionControllerOutput()
-                        : _oi.getRotationX() * MAX_ANG_VEL;
+//        double rot =
+//                (_oi.autoAim() && _driveTrain.hasTarget())
+//                        ? _driveTrain.getVisionControllerOutput()
+//                        : _oi.getRotationX() * MAX_ANG_VEL;
+        double rot = _oi.getRotationX() * MAX_ANG_VEL;
+        metric("vx", vx);
+        metric("vy", vy);
+        metric("rot", rot);
         _driveTrain.drive(vx, vy, rot, true);
 
     }

@@ -68,56 +68,56 @@ public class RobotContainer extends OutliersContainer {
 
         // Initialize starting position and mode to unknown
         // In disabledPeriodic() we will poll Drive Station for values
-        _positionOne = false;
-        _positionTwo = false;
-        _positionThree = false;
-        _positionFour = false;
-        autoPosition = AutoChooser.Position.Unknown;
-        _autoModeString = "Unknown";
-        autoMode = AutoChooser.Mode.Unknown;
-
-        // Display starting position value
-        SmartDashboard.putString("DB/String 0", "Starting Position:");
-        SmartDashboard.putString("DB/String 5", "Unknown");
-   
-        // Display auto mode value
-        SmartDashboard.putString("DB/String 1", "Auto Mode:");
-        String _automodeString = SmartDashboard.getString("Auto Selector", _autoModeString);
-        SmartDashboard.putString("DB/String 6", _automodeString);
-
-        // Auto mode chooser
-        String [] modes = { "Zero Ball", "One Ball", "Two Ball" };
-        // String [] modes = { "Zero Ball", "One Ball", "Two Ball", "Three Ball", "Four Ball", "Five Ball" };
-        SmartDashboard.putStringArray("Auto List", modes);
+//        _positionOne = false;
+//        _positionTwo = false;
+//        _positionThree = false;
+//        _positionFour = false;
+//        autoPosition = AutoChooser.Position.Unknown;
+//        _autoModeString = "Unknown";
+//        autoMode = AutoChooser.Mode.Unknown;
+//
+//        // Display starting position value
+//        SmartDashboard.putString("DB/String 0", "Starting Position:");
+//        SmartDashboard.putString("DB/String 5", "Unknown");
+//
+//        // Display auto mode value
+//        SmartDashboard.putString("DB/String 1", "Auto Mode:");
+//        String _automodeString = SmartDashboard.getString("Auto Selector", _autoModeString);
+//        SmartDashboard.putString("DB/String 6", _automodeString);
+//
+//        // Auto mode chooser
+//        String [] modes = { "Zero Ball", "One Ball", "Two Ball" };
+//        // String [] modes = { "Zero Ball", "One Ball", "Two Ball", "Three Ball", "Four Ball", "Five Ball" };
+//        SmartDashboard.putStringArray("Auto List", modes);
 
         _oi = new OI();
         //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
-        _proxy = new JetsonProxy(10);
-        _limelight = new Limelight("limelight");
+//        _proxy = new JetsonProxy(10);
+//        _limelight = new Limelight("limelight");
 
         // then subsystems
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
-        _intake = new Intake(this);
-        _climber = new Climber(this, _driveTrain);
-        _catapult = new Catapult(this);
+        _driveTrain = new DriveTrain(this, _oi, /*_proxy, _limelight,*/ _imu);
+//        _intake = new Intake(this);
+//        _climber = new Climber(this, _driveTrain);
+//        _catapult = new Catapult(this);
 
-        _autoChooser = new AutoChooser();
+//        _autoChooser = new AutoChooser();
 
-        initializeCamera();
+//        initializeCamera();
 
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
-        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
+//        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
+//        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
 //        setDefaultCommand(_catapult, new IdleCatapult(_catapult, _oi));
-        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
+//        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
+        _oi.initializeButtons(_driveTrain /*,_catapult, _intake, _climber*/);
 
         // Run periodic for each swerve module faster than regular cycle time
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
-        _limelight.disableLEDs();
+//        _limelight.disableLEDs();
         _imu.reset();
     }
 
@@ -131,58 +131,58 @@ public class RobotContainer extends OutliersContainer {
         // Use existing value as default so if WiFi drops we don't lose settings
 
         // Poll starting position buttons
-        _positionOne = SmartDashboard.getBoolean("DB/Button 0", _positionOne);
-        _positionTwo = SmartDashboard.getBoolean("DB/Button 1", _positionTwo);
-        _positionThree = SmartDashboard.getBoolean("DB/Button 2", _positionThree);
-        _positionFour = SmartDashboard.getBoolean("DB/Button 3", _positionFour);
-
-        // Set position to highest value that is selected
-        if (_positionOne) {
-            autoPosition = AutoChooser.Position.First;
-            SmartDashboard.putString("DB/String 5", "One");
-        }
-        if (_positionTwo) {
-            autoPosition = AutoChooser.Position.Second;
-            SmartDashboard.putString("DB/String 5", "Two");
-        }
-        if (_positionThree) {
-            autoPosition = AutoChooser.Position.Third;
-            SmartDashboard.putString("DB/String 5", "Three");
-        }
-        if (_positionFour) {
-            autoPosition = AutoChooser.Position.Fourth;
-            SmartDashboard.putString("DB/String 5", "Four");
-        }
-        if (autoPosition == AutoChooser.Position.Unknown) {
-            SmartDashboard.putString("DB/String 5", "Unknown");
-        }
-
-        // Set auto mode based on Smart Dashboard pull down
-        _autoModeString = SmartDashboard.getString("Auto Selector", _autoModeString);
-        switch(_autoModeString) {
-            case "Zero Ball":
-                autoMode = AutoChooser.Mode.ZeroBall;
-                metric("Zero Ball", true);
-                break;
-            case "One Ball":
-                autoMode = AutoChooser.Mode.OneBall;
-                metric("One ball", true);
-                break;
-            case "Two Ball":
-                autoMode = AutoChooser.Mode.TwoBall;
-                metric("Two ball", true);
-                break;
-            case "Three Ball":
-                autoMode = AutoChooser.Mode.ThreeBall;
-                metric("Three ball", true);
-            case "Four Ball":
-            case "Five Ball":
-            default:
-                autoMode = AutoChooser.Mode.Unknown;
-        }
-
-        // Display auto mode selector
-        SmartDashboard.putString("DB/String 6", _autoModeString);
+//        _positionOne = SmartDashboard.getBoolean("DB/Button 0", _positionOne);
+//        _positionTwo = SmartDashboard.getBoolean("DB/Button 1", _positionTwo);
+//        _positionThree = SmartDashboard.getBoolean("DB/Button 2", _positionThree);
+//        _positionFour = SmartDashboard.getBoolean("DB/Button 3", _positionFour);
+//
+//        // Set position to highest value that is selected
+//        if (_positionOne) {
+//            autoPosition = AutoChooser.Position.First;
+//            SmartDashboard.putString("DB/String 5", "One");
+//        }
+//        if (_positionTwo) {
+//            autoPosition = AutoChooser.Position.Second;
+//            SmartDashboard.putString("DB/String 5", "Two");
+//        }
+//        if (_positionThree) {
+//            autoPosition = AutoChooser.Position.Third;
+//            SmartDashboard.putString("DB/String 5", "Three");
+//        }
+//        if (_positionFour) {
+//            autoPosition = AutoChooser.Position.Fourth;
+//            SmartDashboard.putString("DB/String 5", "Four");
+//        }
+//        if (autoPosition == AutoChooser.Position.Unknown) {
+//            SmartDashboard.putString("DB/String 5", "Unknown");
+//        }
+//
+//        // Set auto mode based on Smart Dashboard pull down
+//        _autoModeString = SmartDashboard.getString("Auto Selector", _autoModeString);
+//        switch(_autoModeString) {
+//            case "Zero Ball":
+//                autoMode = AutoChooser.Mode.ZeroBall;
+//                metric("Zero Ball", true);
+//                break;
+//            case "One Ball":
+//                autoMode = AutoChooser.Mode.OneBall;
+//                metric("One ball", true);
+//                break;
+//            case "Two Ball":
+//                autoMode = AutoChooser.Mode.TwoBall;
+//                metric("Two ball", true);
+//                break;
+//            case "Three Ball":
+//                autoMode = AutoChooser.Mode.ThreeBall;
+//                metric("Three ball", true);
+//            case "Four Ball":
+//            case "Five Ball":
+//            default:
+//                autoMode = AutoChooser.Mode.Unknown;
+//        }
+//
+//        // Display auto mode selector
+//        SmartDashboard.putString("DB/String 6", _autoModeString);
 
     }
 
