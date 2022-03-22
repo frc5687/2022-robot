@@ -42,7 +42,7 @@ public class RobotContainer extends OutliersContainer {
     private OI _oi;
     private AHRS _imu;
     private JetsonProxy _proxy;
-    private Limelight _limelight;
+//    private Limelight _limelight;
 
     private Robot _robot;
     private DriveTrain _driveTrain;
@@ -99,15 +99,17 @@ public class RobotContainer extends OutliersContainer {
         //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
-        _limelight = new Limelight("limelight");
+//        _limelight = new Limelight("limelight");
 
         // then subsystems
-        _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
+        _driveTrain = new DriveTrain(this, _oi, _proxy/*, _limelight*/, _imu);
         _intake = new Intake(this);
         _climber = new Climber(this, _driveTrain);
         _catapult = new Catapult(this);
 
-//        _autoChooser = new AutoChooser();
+        _autoChooser = new AutoChooser();
+
+//        initializeCamera();
 
 //        initializeCamera();
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
@@ -229,79 +231,18 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command wrapCommand(Command command) {
-        return new SequentialCommandGroup(new DropIntake(_intake), new WaitCommand(0.5), command);
+        return new SequentialCommandGroup(new DropIntake(_intake), new WaitCommand(0.4), command);
     }
 
     public Command getAutonomousCommand() {
         // This is just for testing so Dennis and Jack can bypass chooser code
-        Boolean _bypass = true;
 
+        boolean _bypass = true;
         // Set _bypass to true to set autonomous command here instead of using Drive Station
         if (_bypass) {
             AutoChooser.Position startingPosition = AutoChooser.Position.Third;
-            info("Running zeroball.");
-            return new ThreeBallAuto(_driveTrain, _catapult, _intake, startingPosition);
-        }
-
-        // Return command sequence based on starting position and auto mode selectded
-
-        Pose2d[] destinationsZeroBall = { new Pose2d() };
-        Pose2d[] destinationsOneBall = { new Pose2d() };
-        Pose2d[] destinationsTwoBall = { new Pose2d() };
-        Pose2d[] destinationsThreeBall = { new Pose2d(), new Pose2d() };
-
-        Rotation2d[] rotationsZeroBall = { new Rotation2d() };
-        Rotation2d[] rotationsOneBall = { new Rotation2d() };
-        Rotation2d[] rotationsTwoBall = { new Rotation2d() };
-        Rotation2d[] rotationsThreeBall = { new Rotation2d(), new Rotation2d() };
-        metric("autoPose", autoPosition.toString());
-        switch(autoPosition) {
-            case First:
-                _driveTrain.resetOdometry(Auto.RobotPositions.FIRST);
-                destinationsZeroBall[0] = Auto.BallPositions.BALL_ONE;
-                destinationsOneBall[0] = Auto.BallPositions.BALL_ONE;
-                destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
-                rotationsZeroBall[0] = Auto.Rotations.BALL_ONE_FROM_FIRST;
-                rotationsOneBall[0] = Auto.Rotations.BALL_ONE_FROM_FIRST;
-                rotationsTwoBall[0] = Auto.Rotations.BALL_ONE_FROM_FIRST;
-                break;
-            case Second:
-                _driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
-                destinationsZeroBall[0] = Auto.FieldPositions.ROBOT_POS_TWO_DEST;
-                destinationsOneBall[0] = Auto.FieldPositions.ROBOT_POS_TWO_DEST;
-                destinationsTwoBall[0] = Auto.BallPositions.BALL_ONE;
-                rotationsZeroBall[0] = new Rotation2d();
-                rotationsOneBall[0] = new Rotation2d();
-                rotationsTwoBall[0] = new Rotation2d();
-                break;
-            case Third:
-                _driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
-                destinationsZeroBall[0] = Auto.BallPositions.BALL_TWO;
-                destinationsOneBall[0] = Auto.BallPositions.BALL_TWO;
-                destinationsTwoBall[0] = Auto.BallPositions.BALL_FOUR;
-                destinationsThreeBall[0] = Auto.BallPositions.BALL_TWO;
-                destinationsThreeBall[1] = Auto.FieldPositions.SAFE_BALL_FOUR;
-                rotationsZeroBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
-                rotationsOneBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
-                rotationsTwoBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
-                rotationsThreeBall[0] = Auto.Rotations.BALL_TWO_FROM_THIRD;
-                rotationsThreeBall[1] = Auto.Rotations.BALL_FOUR;
-                break;
-            case Fourth:
-                _driveTrain.resetOdometry(Auto.RobotPositions.FOURTH);
-                destinationsZeroBall[0] = Auto.FieldPositions.PARALLEL_PARK;
-                destinationsOneBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
-                destinationsTwoBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
-                destinationsThreeBall[0] = Auto.FieldPositions.SAFE_BALL_THREE;
-                destinationsThreeBall[1] = Auto.BallPositions.BALL_TWO;
-                rotationsZeroBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
-                rotationsOneBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
-                rotationsTwoBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
-                rotationsThreeBall[0] = Auto.Rotations.BALL_THREE_FROM_FOURTH;
-                rotationsThreeBall[1] = Auto.Rotations.BALL_TWO_FROM_BALL_THREE;
-                break;
-            default:
-                return new Wait(15);
+            info("Running TwoBallAuto.");
+            return new FourBallAuto(_driveTrain, _catapult, _intake, startingPosition);
         }
 
         // Return command sequence based on auto mode selected and pass in starting position

@@ -37,10 +37,10 @@ public class DiffSwerveModule {
     private Matrix<N3, N1> _reference; // same thing as a set point.
     private Matrix<N2, N1> _u;
 
-    private TrapezoidProfile.State _angleReference = new TrapezoidProfile.State();
-    private TrapezoidProfile.State _wheelVelocityReference = new TrapezoidProfile.State();
-    private final TrapezoidProfile.Constraints _profiledSteerConstraints;
-    private final TrapezoidProfile.Constraints _profiledWheelConstraints;
+//    private TrapezoidProfile.State _angleReference = new TrapezoidProfile.State();
+//    private TrapezoidProfile.State _wheelVelocityReference = new TrapezoidProfile.State();
+//    private final TrapezoidProfile.Constraints _profiledSteerConstraints;
+//    private final TrapezoidProfile.Constraints _profiledWheelConstraints;
 
     private final double _encoderOffset;
     private boolean _running;
@@ -182,12 +182,12 @@ public class DiffSwerveModule {
         _swerveControlLoop.reset(VecBuilder.fill(0, 0, 0));
         _u = VecBuilder.fill(0, 0);
 
-        _profiledSteerConstraints = new TrapezoidProfile.Constraints(
-                Constants.DifferentialSwerveModule.MAX_ANGULAR_VELOCITY,
-                Constants.DifferentialSwerveModule.MAX_ANGULAR_ACCELERATION);
-        _profiledWheelConstraints = new TrapezoidProfile.Constraints(
-                Constants.DifferentialSwerveModule.MAX_MODULE_ACCELERATION,
-                Constants.DifferentialSwerveModule.MAX_MODULE_JERK);
+//        _profiledSteerConstraints = new TrapezoidProfile.Constraints(
+//                Constants.DifferentialSwerveModule.MAX_ANGULAR_VELOCITY,
+//                Constants.DifferentialSwerveModule.MAX_ANGULAR_ACCELERATION);
+//        _profiledWheelConstraints = new TrapezoidProfile.Constraints(
+//                Constants.DifferentialSwerveModule.MAX_MODULE_ACCELERATION,
+//                Constants.DifferentialSwerveModule.MAX_MODULE_JERK);
         // boolean for if we want the modules to be running as we set voltage in the periodic loop.
         _running = false;
     }
@@ -214,35 +214,35 @@ public class DiffSwerveModule {
      * Calculated the profiled reference with angle wrapping.
      * @return Vector (r-x) vector with profiled values.
      */
-    private Matrix<N3, N1> profiledReference() {
-        double angleMinimumGoalDistance = MathUtil.inputModulus(
-                _reference.get(0,0) - getModuleAngle(),
-                -Math.PI,
-                Math.PI
-        );
-        double angleMinimumSetpointDistance = MathUtil.inputModulus(
-                _angleReference.position - getModuleAngle(),
-                -Math.PI,
-                Math.PI
-        );
-        _reference.set(0, 0, angleMinimumGoalDistance + getModuleAngle());
-        _angleReference.position = angleMinimumSetpointDistance+ getModuleAngle();
-        var steerProfile = new TrapezoidProfile(
-                _profiledSteerConstraints,
-                new TrapezoidProfile.State(_reference.get(0,0),_reference.get(1,0)), _angleReference);
-        _angleReference = steerProfile.calculate(Constants.DifferentialSwerveModule.kDt);
-
-        var wheelProfile = new TrapezoidProfile(
-                _profiledWheelConstraints,
-                new TrapezoidProfile.State(_reference.get(2,0),0),
-                _wheelVelocityReference
-        );
-        _wheelVelocityReference = wheelProfile.calculate(Constants.DifferentialSwerveModule.kDt);
-        return VecBuilder.fill(
-                _angleReference.position - getModuleAngle(),
-                _angleReference.velocity - getAzimuthAngularVelocity(),
-                _wheelVelocityReference.position - getWheelAngularVelocity());
-    }
+//    private Matrix<N3, N1> profiledReference() {
+//        double angleMinimumGoalDistance = MathUtil.inputModulus(
+//                _reference.get(0,0) - getModuleAngle(),
+//                -Math.PI,
+//                Math.PI
+//        );
+//        double angleMinimumSetpointDistance = MathUtil.inputModulus(
+//                _angleReference.position - getModuleAngle(),
+//                -Math.PI,
+//                Math.PI
+//        );
+//        _reference.set(0, 0, angleMinimumGoalDistance + getModuleAngle());
+//        _angleReference.position = angleMinimumSetpointDistance+ getModuleAngle();
+//        var steerProfile = new TrapezoidProfile(
+//                _profiledSteerConstraints,
+//                new TrapezoidProfile.State(_reference.get(0,0),_reference.get(1,0)), _angleReference);
+//        _angleReference = steerProfile.calculate(Constants.DifferentialSwerveModule.kDt);
+//
+//        var wheelProfile = new TrapezoidProfile(
+//                _profiledWheelConstraints,
+//                new TrapezoidProfile.State(_reference.get(2,0),0),
+//                _wheelVelocityReference
+//        );
+//        _wheelVelocityReference = wheelProfile.calculate(Constants.DifferentialSwerveModule.kDt);
+//        return VecBuilder.fill(
+//                _angleReference.position - getModuleAngle(),
+//                _angleReference.velocity - getAzimuthAngularVelocity(),
+//                _wheelVelocityReference.position - getWheelAngularVelocity());
+//    }
     // periodic loop runs at 5ms.
     public void periodic() {
         // sets the next reference / setpoint.
@@ -270,12 +270,12 @@ public class DiffSwerveModule {
                         _swerveControlLoop
                                 .getController()
                                 .getK()
-                                .times(profiledReference())
-//                                        wrapAngle(
-//                                                _swerveControlLoop.getNextR(),
-//                                                _swerveControlLoop.getXHat(),
-//                                                -Math.PI,
-//                                                Math.PI))
+                                .times(//profiledReference())
+                                        wrapAngle(
+                                                _swerveControlLoop.getNextR(),
+                                                _swerveControlLoop.getXHat(),
+                                                -Math.PI,
+                                                Math.PI))
                                 .plus(
                                         VecBuilder.fill(
                                                 Constants.DifferentialSwerveModule.FEED_FORWARD

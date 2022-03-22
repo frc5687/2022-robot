@@ -32,6 +32,7 @@ public class OI extends OutliersProxy {
 
     // Buttons
     private JoystickButton _autoAim;
+    private JoystickButton _aimBall;
     private JoystickButton _catapultDebugButton;
     private JoystickButton _deployRetract;
     private JoystickButton _dropArm;
@@ -73,6 +74,7 @@ public class OI extends OutliersProxy {
         _intakeButton = new JoystickButton(_rotation, 1);
         _autoAim = new JoystickButton(_rotation, 2);
         _deployRetract = new JoystickButton(_rotation, 3);
+        _aimBall = new JoystickButton(_rotation, 4);
 
         // translation joystick
         _shootButton= new JoystickButton(_translation, 1);
@@ -110,6 +112,7 @@ public class OI extends OutliersProxy {
     public boolean exitKill() { return _exitKill.get(); }
     public boolean kill() { return _kill.get(); }
     public boolean autoAim() { return _autoAim.get(); }
+    public boolean aimBall() { return _aimBall.get(); }
 
     public double getDriveY() {
         //Comment for gamepad control

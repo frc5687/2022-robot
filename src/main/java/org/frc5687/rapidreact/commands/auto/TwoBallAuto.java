@@ -51,7 +51,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
                     new SequentialCommandGroup(
                         new AutoAim(driveTrain),
                         new Shoot(catapult),
-                        new DriveToPose(driveTrain, _destination, _velocity),
+                        new DriveToPoseAimBall(driveTrain, _destination, _velocity),
                         new WaitCommand(1)
                     ),
                     new AutoIntake(intake)
@@ -112,13 +112,13 @@ public class TwoBallAuto extends SequentialCommandGroup {
                     new SequentialCommandGroup(
                         new AutoAim(driveTrain),
                         new Shoot(catapult),
-                        new DriveToPose(driveTrain, _destination, _velocity),
+                        new DriveToPoseAimBall(driveTrain, _destination, _velocity),
                         new WaitCommand(1)
                     ),
                     new AutoIntake(intake)
                 ),
                 new AutoAim(driveTrain),
-                new SetSetpoint(catapult, CatapultSetpoint.MID),
+                //new SetSetpoint(catapult, CatapultSetpoint.MID),
                 new Shoot(catapult),
                 new SetSetpoint(catapult, CatapultSetpoint.NONE)
         );

@@ -44,9 +44,7 @@ public class JetsonProxy {
         _jetsonListener = new JetsonListener(this, _rioPort);
         _listenerThread = new Thread(_jetsonListener);
         _listenerThread.start();
-
         _jetsonTimer = new Timer();
-
         _jetsonTimer.schedule(new JetsonTimerTask(this), _period, _period);
     }
     synchronized protected void collect() {
@@ -137,6 +135,8 @@ public class JetsonProxy {
         private double _target_vx;
         private double _target_vy;
         private double _target_vz;
+        private double _blue_ball_yaw;
+        private double _red_ball_yaw;
 
         public Frame(String packet) {
 //            DriverStation.reportError("string is: " + packet, false);
@@ -149,12 +149,14 @@ public class JetsonProxy {
                 _hasTarget = Boolean.parseBoolean(a[4]);
                 _goalDistance = Double.parseDouble(a[5]);
                 _goalAngle = Double.parseDouble(a[6]);
-                _target_x = Double.parseDouble(a[7]);
-                _target_y = Double.parseDouble(a[8]);
-                _target_z = Double.parseDouble(a[9]);
-                _target_vx = Double.parseDouble(a[10]);
-                _target_vy = Double.parseDouble(a[11]);
-                _target_vz = Double.parseDouble(a[12]);
+                _target_x = Double.parseDouble(a[7]) == -999 ? Double.parseDouble(a[7]) : Double.NaN;
+                _target_y = Double.parseDouble(a[8]) == -999 ? Double.parseDouble(a[8]) : Double.NaN;
+                _target_z = Double.parseDouble(a[9]) == -999 ? Double.parseDouble(a[9]) : Double.NaN;
+                _target_vx = Double.parseDouble(a[10]) == -999 ? Double.parseDouble(a[10]) : Double.NaN;
+                _target_vy = Double.parseDouble(a[11]) == -999 ? Double.parseDouble(a[11]) : Double.NaN;
+                _target_vz = Double.parseDouble(a[12]) == -999 ? Double.parseDouble(a[12]) : Double.NaN;
+                _blue_ball_yaw = Double.parseDouble(a[13]);
+                _red_ball_yaw = Double.parseDouble(a[14]);
             }
         }
 
@@ -170,7 +172,8 @@ public class JetsonProxy {
         public double[] targetVelocity() {
             return new double[]{_target_vx, _target_vy, _target_vz};
         }
-
+        public double getBlueBallYaw() { return _blue_ball_yaw; }
+        public double getRedBallYaw() { return _red_ball_yaw; }
     }
     protected class JetsonTimerTask extends TimerTask {
         private JetsonProxy _proxy;
@@ -211,6 +214,7 @@ public class JetsonProxy {
                             _jetsonAddress = receivePacket.getAddress();
                         }
                         String raw = new String(receivePacket.getData(), 0, receivePacket.getLength());
+//                        DriverStation.reportError(raw, false);
                         Frame frame = new Frame(raw);
                         _proxy.setLatestFrame(frame);
                     }
