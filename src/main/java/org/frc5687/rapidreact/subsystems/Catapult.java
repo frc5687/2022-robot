@@ -287,6 +287,10 @@ public class Catapult extends OutliersSubsystem {
         _gate.lower();
     }
 
+    public boolean getGateState(){
+       return _gate.getMode();
+    }
+
     public CatapultState getState() {
         return _state;
     }

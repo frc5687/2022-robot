@@ -202,14 +202,6 @@ public class DriveCatapult extends OutliersCommand {
         }
     }
 
-    public void indexerToggle() {
-        if (ServoStop.getMode()){
-            ServoStop.lower();
-        }
-        else if (!ServoStop.getMode()){
-            ServoStop.raise();
-        }
-    }
 
     @Override
     public boolean isFinished() {
