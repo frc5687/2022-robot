@@ -14,15 +14,13 @@ public class ToggleGate extends OutliersCommand {
     @Override
     public void initialize(){
       super.initialize();
-    }
 
-    public void indexerToggle() {
-        if (_catapult.getGateState()){
-            _catapult.lowerGate();
+        if (_catapult.getGateState()){ // If indexer is up, moves it down
+                _catapult.lowerGate();
         }
-        else if (!_catapult.getGateState()){
-            _catapult.raiseGate();
+
+        else if (!_catapult.getGateState()){ // If indexer is down, moves it up
+                _catapult.raiseGate();
         }
     }
-
 }

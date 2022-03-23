@@ -19,6 +19,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
+import org.frc5687.rapidreact.commands.ToggleGate;
 
 public class OI extends OutliersProxy {
 
@@ -45,6 +46,8 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootSetpointOne;
     private JoystickButton _shootSetpointTwo;
     private JoystickButton _shootSetpointThree;
+
+    private JoystickButton _toggleGate;
 
     // "Raw" joystick values
     private double yIn = 0;
@@ -97,6 +100,8 @@ public class OI extends OutliersProxy {
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
         _stowClimber.whenPressed(new Stow(climber));
+
+        _toggleGate.whenPressed(new ToggleGate(catapult));
     }
 
     public boolean readyToClimb() { return _readyToClimb.get(); }
