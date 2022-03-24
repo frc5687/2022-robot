@@ -20,6 +20,7 @@ import static org.frc5687.rapidreact.Constants.UDPJetson.BUFFER;
  * <p> Two cameras are connected to a Jetson, which is a processing board with a GPU that can run the neural net for object detection.
  * 
  * <p> A stereoscopic Zed camera is front mounted so it can see hub.
+ * Developer resources for the Zed are here: https://www.stereolabs.com/developers/
  * The Jetston looks for the hub and if it finds it in the Zed camera's field of view, calculates distance to target.
  * Then we can aim the catapult.
  * 
