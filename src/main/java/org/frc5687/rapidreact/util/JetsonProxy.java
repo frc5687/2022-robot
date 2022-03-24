@@ -15,7 +15,27 @@ import java.util.TimerTask;
 
 import static org.frc5687.rapidreact.Constants.UDPJetson.BUFFER;
 
+/** Get vision data from Jetson.
+ * 
+ * <p> Two cameras are connected to a Jetson, which is a processing board with a GPU that can run the neural net for object detection.
+ * 
+ * <p> A stereoscopic Zed camera is front mounted so it can see hub.
+ * The Jetston looks for the hub and if it finds it in the Zed camera's field of view, calculates distance to target.
+ * Then we can aim the catapult.
+ * 
+ * <p> A monocular camera is back mounted so it can see balls on the intake side of charlie.
+ * Not sure if we'll be using ball detection in competition.
+ * 
+ * <p> The code running on the Jetson is in a separate repo, deslobodzian/PoseEstimation on GitHub, written in C++.
+ */
 public class JetsonProxy {
+
+    // IP addresses of Jetson and roboRio are hard coded in the Jetson code
+    // include/udp_server.hpp
+    // int host_port_ = 27002;
+    // int client_port_ = 27001;
+    // std::string host_ = "10.56.87.20";
+    // std::string client_ = "10.56.87.2";
 
     public static final int JETSON_PORT = 27002;
     public static final int RIO_PORT = 27001;
