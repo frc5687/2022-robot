@@ -170,15 +170,22 @@ public class Catapult extends OutliersSubsystem {
 
     public boolean isSpringHallTriggered() { return _springHall.get(); }
 
+    /** Set winch motor speed from -1.0 to 1.0
+     * 
+     * @param
+     */
     public void setWinchMotorSpeed(double speed) {
         _winchMotor.set(speed);
     }
 
+    /** Get encoder value of how many winch motor rotations */
     public double getWinchRotation() {
         return _winchEncoder.getPosition();
     }
 
-    // meters
+    /** Get winch string length based on encoder rotations and winch drum circumference.
+     * 
+     * @return meters */
     public double getWinchStringLength() {
         return getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE;
     }
@@ -206,11 +213,17 @@ public class Catapult extends OutliersSubsystem {
         return _winchEncoderZeroed;
     }
 
+    /** Get what winch motor should do next
+     * 
+     * @return next output of PID controller
+     */
     public double getWinchControllerOutput() {
         return _winchController.calculate(getWinchStringLength());
     }
 
+    /** */
     public void setWinchGoal(double stringLength) {
+        // TODO: explain the negative sign here
         _winchController.setGoal(-stringLength);
     }
 
@@ -246,13 +259,36 @@ public class Catapult extends OutliersSubsystem {
         return angularVelocity * ARM_LENGTH;
     }
 
-    // calculate linear regression.
+    /** String length to aim catapult release angle.
+     * 
+     * <p> Coefficients of polynomial calculated from regression analysis.
+     * Took a bunch of shots, plotted them in Excel, and got a best-fit
+     * 3rd-order polynomial.
+     * 
+     * <p> TODO: check dist to make sure it is not NaN.
+     * 
+     * <p> In theory we should never call this without a valid number, but
+     * would be good to check just in case and return a reasonable value if
+     * we get passes NaN for some unforeseen reason.
+     * */ 
     public double calculateIdealString(double dist) {
         return (0.005596480 * (dist * dist * dist)) -
                 (0.095972797 * (dist * dist)) +
                 (0.550428512 * dist) - 0.738967199;
     }
-    // calculated from linear regression
+
+    /** Spring tension to aim catapult power.
+     * 
+     * <p> Coefficients of polynomial calculated from regression analysis.
+     * Took a bunch of shots, plotted them in Excel, and got a best-fit
+     * 3rd-order polynomial.
+     * 
+     * <p> TODO: check dist to make sure it is not NaN.
+     * 
+     * <p> In theory we should never call this without a valid number, but
+     * would be good to check just in case and return a reasonable value if
+     * we get passes NaN for some unforeseen reason.
+     * */ 
     public double calculateIdealSpring(double dist) {
         return (0.000286128 * (dist * dist * dist)) -
                 (0.003328233 * (dist * dist)) +
@@ -341,6 +377,7 @@ public class Catapult extends OutliersSubsystem {
 //        info("Setting setpoint to " + setpoint.toString());
     }
 
+    /** Return _setpoint of catapult (NONE, NEAR, MID, FAR) */
     public CatapultSetpoint getSetpoint() {
         return _setpoint;
     }
@@ -436,6 +473,7 @@ public class Catapult extends OutliersSubsystem {
         }
     }
 
+    /** Aim catapult depending on _setpoint (NONE, NEAR, MID, FAR) */
     public void setStaticGoals() {
         switch(_setpoint) {
             case NEAR:

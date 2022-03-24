@@ -307,7 +307,9 @@ public class DriveTrain extends OutliersSubsystem {
 
     /** Jetson will give us a positive value if it has target, -1 if not.  If no Jetson, return NaN.
      * 
-     * <p> TODO: Fix this to fall back to setpoints or odometry if we lose Jetson.
+     * <p> If we lose Jetson we should not be calling this.
+     * 
+     * <p> Question: should we sanity check Jetson against odometry?
     */
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
@@ -320,7 +322,9 @@ public class DriveTrain extends OutliersSubsystem {
      * 
      * <p> We were falling back to Limelight but that has been commented out.
      * 
-     * <p>TODO: Fix this to fall back to setpoints or odometry if we lose Jetson.
+     * <p>If we lose Jetson we should not be calling this.
+     * 
+     * <p>Question: should we sanity check Jetson against odometry?
      */
     public double getAngleToTarget() {
         if (_proxy.getLatestFrame() != null) {
