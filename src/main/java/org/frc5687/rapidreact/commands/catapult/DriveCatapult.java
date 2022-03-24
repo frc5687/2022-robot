@@ -19,6 +19,11 @@ import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.*;
  * 
  * <p> Catapult asks DriveTrain for distance to target.  DriveTrain gets that from Jetson.
  * If DriveTrain doesn't have target, catapult falls back to static goals.
+ * 
+ * <p> Drivers can press buttons to set catapult aiming setpoint to NEAR, MID or FAR.
+ * 
+ * @see OI
+ * @see SetSetpoint
  */
 public class DriveCatapult extends OutliersCommand {
 
