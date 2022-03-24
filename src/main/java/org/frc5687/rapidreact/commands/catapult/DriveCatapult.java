@@ -13,6 +13,14 @@ import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 import static org.frc5687.rapidreact.Constants.Catapult.*;
 import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.*;
 
+/** Control the catapult.
+ * 
+ * <p> We run through the state machine in this command.
+ * 
+ * <p> Catapult asks DriveTrain for distance to target.  DriveTrain gets that from Jetson.
+ * Question: do we need to work on DriveTrain so it uses odometry if it loses Jetson?
+ * Or do we want DriveTrain to fall back to set points for catapult aiming?
+ */
 public class DriveCatapult extends OutliersCommand {
 
     private final Catapult _catapult;
@@ -90,6 +98,7 @@ public class DriveCatapult extends OutliersCommand {
                 checkLockOut();
                 checkKill();
                 if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
+                    // TODO: check what happens here if we lose communication with the Jetson
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
                 } else {

@@ -296,6 +296,8 @@ public class DriveTrain extends OutliersSubsystem {
     public SwerveDriveKinematicsConstraint getKinematicConstraint() {
         return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
     }
+
+    /** True if Jetson is talking to us and has target, false if not. */
     public boolean hasTarget() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().getTargetDistance() != -1;
@@ -303,6 +305,10 @@ public class DriveTrain extends OutliersSubsystem {
         return false;
     }
 
+    /** Jetson will give us a positive value if it has target, -1 if not.  If no Jetson, return NaN.
+     * 
+     * <p> TODO: Fix this to fall back to setpoints or odometry if we lose Jetson.
+    */
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().getTargetDistance();
@@ -310,6 +316,12 @@ public class DriveTrain extends OutliersSubsystem {
         return Double.NaN;
     }
 
+    /** Get target angle from Jetson. Not sure what Jetson returns if no target. If no Jetson, return NaN.
+     * 
+     * <p> We were falling back to Limelight but that has been commented out.
+     * 
+     * <p>TODO: Fix this to fall back to setpoints or odometry if we lose Jetson.
+     */
     public double getAngleToTarget() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().getTargetAngle();
@@ -318,12 +330,14 @@ public class DriveTrain extends OutliersSubsystem {
         //}
         return Double.NaN;
     }
+
     public double getAngleToClosestBlueBall() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().getBlueBallYaw();
         }
         return Double.NaN;
     }
+
     public double getAngleToClosestRedBall() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().getRedBallYaw();
@@ -331,6 +345,7 @@ public class DriveTrain extends OutliersSubsystem {
         return Double.NaN;
     }
 
+    /** Get Jetson's estimate of target position or {0,0,0} if nothing from Jetson. */
     public double[] getTargetPosition() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().targetPosition();
@@ -338,6 +353,7 @@ public class DriveTrain extends OutliersSubsystem {
         return new double[] {0, 0, 0};
     }
 
+    /** Get Jetson's estimate of target velocity or {0,0,0} if nothing from Jetson. */
     public double[] getTargetVelocity() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().targetVelocity();
