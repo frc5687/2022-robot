@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.Climber.AutoClimb;
+import org.frc5687.rapidreact.commands.Climber.RockerFlip;
+import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
 import org.frc5687.rapidreact.commands.Climber.Stow;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -38,6 +40,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _preloadButton;
     private JoystickButton _readyToClimb;
     private JoystickButton _stowClimber;
+    private JoystickButton _rockerFlip;
     private JoystickButton _release;
     private JoystickButton _resetNavX;
     private JoystickButton _shootButton;
@@ -61,6 +64,7 @@ public class OI extends OutliersProxy {
 //        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+        _rockerFlip = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
 
         // adding buttons while driving: Ben pls look
 
@@ -97,6 +101,7 @@ public class OI extends OutliersProxy {
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
         _stowClimber.whenPressed(new Stow(climber));
+        _rockerFlip.whenPressed(new RockerFlip(climber));
     }
 
     public boolean readyToClimb() { return _readyToClimb.get(); }

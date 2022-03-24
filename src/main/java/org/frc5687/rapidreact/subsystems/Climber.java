@@ -243,7 +243,6 @@ public class Climber extends OutliersSubsystem{
     public void rockerIn(){
         //Rock arm in
         info("Setting Rocker in");
-
         _rocker.set(Value.kForward);
     }
 
@@ -403,6 +402,24 @@ public class Climber extends OutliersSubsystem{
     public String getRockerLabel() {
         return(_rocker.get() == Value.kForward) ? "In" : "Out";
     }
+
+    /**
+     * Flips the Rocker to the other side.
+     */
+    public void rockerFlip(){
+        info("Flipping Rocker");
+        //Flippin' the rockah
+        if(_rocker.get() == Value.kForward) {
+            rockerOut();
+        }else if(_rocker.get() == Value.kReverse) {
+            rockerIn();
+        }else{
+            info("I dunno what rocker state this is, flipping rocker out.");
+            rockerOut();
+
+        }
+    }
+
 
     public enum ClimberStep {
         UNKNOWN(0),
