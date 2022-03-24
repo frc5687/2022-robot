@@ -210,6 +210,8 @@ public class DriveTrain extends OutliersSubsystem {
 
         metric("Odometry/x", getOdometryPose().getX());
         metric("Odometry/y", getOdometryPose().getY());
+        metric("Estimated Pose/x", getEstimatedPose().getX());
+        metric("Estimated Pose/y", getEstimatedPose().getY());
 //        metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());
 
     }
@@ -331,6 +333,10 @@ public class DriveTrain extends OutliersSubsystem {
         return Double.NaN;
     }
 
+    /**
+     * Gets the Target x, y, z positions to the front of the catapult frame from the coprocessor.
+     * @return array with 3 elements {x, y, z}
+     */
     public double[] getTargetPosition() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().targetPosition();
@@ -338,11 +344,27 @@ public class DriveTrain extends OutliersSubsystem {
         return new double[] {0, 0, 0};
     }
 
+
+    /**
+     * Gets the Target velocities to the front of the catapult frame from the coprocessor.
+     * @return array with 3 elements {vx, vy, vz}
+     */
     public double[] getTargetVelocity() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().targetVelocity();
         }
         return new double[] {0, 0, 0};
+    }
+
+    /**
+     * Gets the estimated robot pose from the coprocessor.
+     * @return Pose2d
+     */
+    public Pose2d getEstimatedPose() {
+        if (_proxy.getLatestFrame() != null) {
+            return new Pose2d(_proxy.getLatestFrame().getEstimatedPose().getTranslation(), getHeading());
+        }
+        return new Pose2d();
     }
 
     public TrajectoryConfig getConfig() {
@@ -353,7 +375,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void trajectoryFollower(Trajectory.State goal, Rotation2d heading) {
         ChassisSpeeds adjustedSpeeds =
-                _controller.calculate(_odometry.getPoseMeters(), goal, heading);
+                _controller.calculate(getOdometryPose(), goal, heading);
         SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DifferentialSwerveModule.MAX_MODULE_SPEED_MPS);
         setNorthWestModuleState(moduleStates[NORTH_WEST]);
@@ -363,7 +385,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void poseFollower(Pose2d pose, double vel) {
-        ChassisSpeeds adjustedSpeeds = _controller.calculate(_odometry.getPoseMeters(), pose, vel, pose.getRotation());
+        ChassisSpeeds adjustedSpeeds = _controller.calculate(getOdometryPose(), pose, vel, pose.getRotation());
         SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveTrain.MAX_MPS);
         setNorthWestModuleState(moduleStates[NORTH_WEST]);
@@ -374,7 +396,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void poseFollowerBallTracking(Pose2d pose, double vel) {
         Rotation2d rot = hasCorrectBall() ? getCorrectBallHeading() : pose.getRotation();
-        ChassisSpeeds adjustedSpeeds = _controller.calculate(_odometry.getPoseMeters(), pose, vel, rot);
+        ChassisSpeeds adjustedSpeeds = _controller.calculate(getOdometryPose(), pose, vel, rot);
         SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveTrain.MAX_MPS);
         setNorthWestModuleState(moduleStates[NORTH_WEST]);
@@ -404,6 +426,7 @@ public class DriveTrain extends OutliersSubsystem {
         return getAngleToClosestRedBall() != -99;
     }
 
+    // checks if correct ball is visible, this is decided by driver station.
     public boolean hasCorrectBall() {
         return (DriverStation.getAlliance() == DriverStation.Alliance.Red && hasRedBall()) ||
                 (DriverStation.getAlliance() == DriverStation.Alliance.Blue && hasBlueBall());
@@ -421,13 +444,24 @@ public class DriveTrain extends OutliersSubsystem {
     public Rotation2d getCorrectBallHeading() {
         return new Rotation2d(getHeading().getRadians() + getAngleCorrectBall());
     }
+
     public boolean isAtPose(Pose2d pose) {
         double diffX = getOdometryPose().getX() - pose.getX();
         double diffY = getOdometryPose().getY() - pose.getY();
         return (Math.abs(diffX) <= Constants.DriveTrain.POSITION_TOLERANCE) && (Math.abs(diffY) < Constants.DriveTrain.POSITION_TOLERANCE);
     }
 
+    public boolean hasEstimatedPose() {
+        if (_proxy != null) {
+            return _proxy.getLatestFrame().hasEstimatedPose();
+        }
+        return false;
+    }
+
     public Pose2d getOdometryPose() {
+//        if (hasEstimatedPose()) {
+//            return getEstimatedPose();
+//        }
         return _odometry.getPoseMeters();
     }
 

@@ -51,7 +51,7 @@ public class RobotContainer extends OutliersContainer {
     private Climber _climber;
 
     private AutoChooser _autoChooser;
-    private Boolean _positionOne;
+    private Pose2d _initPosition;
     private Boolean _positionTwo;
     private Boolean _positionThree;
     private Boolean _positionFour;
@@ -95,48 +95,49 @@ public class RobotContainer extends OutliersContainer {
 //        // String [] modes = { "Zero Ball", "One Ball", "Two Ball", "Three Ball", "Four Ball", "Five Ball" };
 //        SmartDashboard.putStringArray("Auto List", modes);
 
-//        _oi = new OI();
+        _oi = new OI();
         //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
 //        _limelight = new Limelight("limelight");
 
         // then subsystems
-//        _driveTrain = new DriveTrain(this, _oi, _proxy/*, _limelight*/, _imu);
-//        _intake = new Intake(this);
-//        _climber = new Climber(this, _driveTrain);
-//        _catapult = new Catapult(this);
+        _driveTrain = new DriveTrain(this, _oi, _proxy/*, _limelight*/, _imu);
+        _intake = new Intake(this);
+        _climber = new Climber(this, _driveTrain);
+        _catapult = new Catapult(this);
 
-//        _autoChooser = new AutoChooser();
+        _autoChooser = new AutoChooser();
+        _initPosition = Auto.RobotPositions.THIRD;
 
 //        initializeCamera();
 
 //        initializeCamera();
-//        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
-//        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-//        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
+        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
+        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
 //        setDefaultCommand(_catapult, new IdleCatapult(_catapult, _oi));
-//        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
-        // initialize OI after subsystems.
-//        _oi.initializeButtons(_driveTrain ,_catapult, _intake, _climber);
+        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
+//         initialize OI after subsystems.
+        _oi.initializeButtons(_driveTrain ,_catapult, _intake, _climber);
 
         // Run periodic for each swerve module faster than regular cycle time
-//        _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
+        _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
 //        _limelight.disableLEDs();
         _imu.reset();
     }
 
     public void periodic() {
-        _proxy.setData(
-                new JetsonProxy.Data(0),
-                new JetsonProxy.Data(0),
-                new JetsonProxy.Data(10),
-                new JetsonProxy.Data(_imu.getYaw())
-                );
     }
 
     /** Run every cycle when robot disabled */
     public void disabledPeriodic() {
+        _proxy.setData(
+                new JetsonProxy.Data(0), // id = 0 is for initial pose data
+                new JetsonProxy.Data(_initPosition.getX()), // x pos
+                new JetsonProxy.Data(_initPosition.getY()), // y pos
+                new JetsonProxy.Data(_driveTrain.getHeading().getRadians()) // heading angle
+        );
 
         // Poll Drive Station for starting position and auto mode selector
 

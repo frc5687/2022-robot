@@ -168,8 +168,7 @@ public class JetsonProxy {
         private long isNan(long value) { return value != -999 ? value : 0; }
         public long getMillis() { return _millis; }
         public Pose2d getEstimatedPose() { return new Pose2d(_estimatedX, _estimatedY, new Rotation2d(_estimatedHeading)); }
-        public double getEstimatedX() { return _estimatedX; }
-        public double getEstimatedY() { return _estimatedY; }
+        public boolean hasEstimatedPose() { return !Double.isNaN(_estimatedX); }
         public double getTargetDistance() { return _goalDistance; }
         public double getTargetAngle() { return _goalAngle; }
         public boolean hasTarget() { return _hasTarget; }
@@ -221,6 +220,7 @@ public class JetsonProxy {
                             _jetsonAddress = receivePacket.getAddress();
                         }
                         String raw = new String(receivePacket.getData(), 0, receivePacket.getLength());
+//                        DriverStation.reportError(raw, false);
                         Frame frame = new Frame(raw);
                         _proxy.setLatestFrame(frame);
                     }
