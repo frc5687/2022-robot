@@ -7,6 +7,7 @@ import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
 import org.frc5687.rapidreact.commands.catapult.Shoot;
@@ -35,6 +36,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
             DriveTrain driveTrain,
             Catapult catapult,
             Intake intake,
+            Indexer indexer,
             AutoChooser.Position position
     ) {
 
@@ -50,14 +52,14 @@ public class TwoBallAuto extends SequentialCommandGroup {
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
                         new AutoAim(driveTrain),
-                        new Shoot(catapult),
-                        new DriveToPoseAimBall(driveTrain, _destination, _velocity),
+                        new Shoot(catapult, indexer),
+                        new DriveToPose(driveTrain, _destination, _velocity),
                         new WaitCommand(1)
                     ),
                     new AutoIntake(intake)
                 ),
                 new SetSetpoint(catapult, CatapultSetpoint.MID),
-                new Shoot(catapult),
+                new Shoot(catapult, indexer),
                 new SetSetpoint(catapult, CatapultSetpoint.NONE)
 
             );
@@ -111,15 +113,15 @@ public class TwoBallAuto extends SequentialCommandGroup {
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
                         new AutoAim(driveTrain),
-                        new Shoot(catapult),
-                        new DriveToPoseAimBall(driveTrain, _destination, _velocity),
+                        new Shoot(catapult, indexer),
+                        new DriveToPose(driveTrain, _destination, _velocity),
                         new WaitCommand(1)
                     ),
                     new AutoIntake(intake)
                 ),
                 new AutoAim(driveTrain),
-                //new SetSetpoint(catapult, CatapultSetpoint.MID),
-                new Shoot(catapult),
+//                new SetSetpoint(catapult, CatapultSetpoint.MID),
+                new Shoot(catapult, indexer),
                 new SetSetpoint(catapult, CatapultSetpoint.NONE)
         );
     }

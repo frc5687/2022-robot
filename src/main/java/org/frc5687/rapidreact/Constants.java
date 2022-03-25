@@ -116,7 +116,7 @@ public class Constants {
         public static final double MAX_MPS = 3.0; // Max speed of robot (m/s)
         public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
-        public static final double MAX_MPSS = 2.1; // Max acceleration of robot (m/s^2)
+        public static final double MAX_MPSS = 3.0; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
         public static final double ANGLE_kP = 2.3;
@@ -130,8 +130,8 @@ public class Constants {
         public static final double kD = 0.5;
 
         // Vision PID controller
-        public static final double VISION_TOLERANCE = 0.040; // rads
-        public static final double VISION_kP = 5.85;
+        public static final double VISION_TOLERANCE = 0.020; // rads
+        public static final double VISION_kP = 5.95;
         public static final double VISION_kI = 0.0;
         public static final double VISION_kD = 0.25;
         public static final double VISION_IRANGE = MAX_MPS * 2;
@@ -143,7 +143,7 @@ public class Constants {
         public static final double BALL_VISION_kD = 0.2;
         public static final double BALL_VISION_IRANGE = MAX_MPS * 2;
 
-        public static final double POSITION_TOLERANCE = 0.01;
+        public static final double POSITION_TOLERANCE = 0.03;
         public static final double ANGLE_TOLERANCE = 0.02;
     }
 
@@ -279,15 +279,10 @@ public class Constants {
 
     }
 
-    public static class IntakeBlocker{
-        public static final double DOWN_POSITION = 180;
-        public static final double UP_POSITION = 50;
-    }
-
     public static class Intake{
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
-        public static final double THE_BEANS = 0.8;
+        public static final double THE_BEANS = 0.7;
         public static final double GEAR_RATIO = 5.0;
         public static final double MAX_RPM = 6300 * GEAR_RATIO;
         public static final double TICKS_TO_ROTATIONS = 2048.0;

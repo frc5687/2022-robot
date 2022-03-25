@@ -426,7 +426,7 @@ public class DiffSwerveModule {
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getPredictedWheelVelocity(), new Rotation2d(getModuleAngle()));
+        return new SwerveModuleState(getWheelVelocity(), new Rotation2d(getModuleAngle()));
     }
 
     /**

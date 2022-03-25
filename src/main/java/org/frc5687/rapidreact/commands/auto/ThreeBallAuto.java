@@ -6,6 +6,7 @@ import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
 import org.frc5687.rapidreact.commands.catapult.Shoot;
@@ -37,6 +38,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
             DriveTrain driveTrain,
             Catapult catapult,
             Intake intake,
+            Indexer indexer,
             AutoChooser.Position position
     ) {
 
@@ -55,7 +57,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
                         new AutoAim(driveTrain),
-                        new Shoot(catapult),
+                        new Shoot(catapult, indexer),
                         new DriveToPose(driveTrain, _destination1, _velocity),
                         new WaitCommand(1)
                     ),
@@ -65,7 +67,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                     new SequentialCommandGroup(
                         new SetSetpoint(catapult, CatapultSetpoint.MID),
                         new AutoAim(driveTrain),
-                        new Shoot(catapult),
+                        new Shoot(catapult, indexer),
                         new DriveToPose(driveTrain, _destination2, _velocity),
                         new WaitCommand(1)
                     ),
@@ -73,7 +75,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                 ),
                 new SetSetpoint(catapult, CatapultSetpoint.FAR),
                 new AutoAim(driveTrain),
-                new Shoot(catapult),
+                new Shoot(catapult, indexer),
                 new SetSetpoint(catapult, CatapultSetpoint.NONE)
             );
         }
@@ -147,7 +149,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
             new ParallelDeadlineGroup( 
                 new SequentialCommandGroup(
                     new AutoAim(driveTrain),
-                    new Shoot(catapult),
+                    new Shoot(catapult, indexer),
                     new DriveToPose(driveTrain, _destination1, _velocity),
                     new WaitCommand(1)
                 ),
@@ -157,7 +159,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                 new SequentialCommandGroup(
 //                    new SetSetpoint(catapult, CatapultSetpoint.MID),
                     new AutoAim(driveTrain),
-                    new Shoot(catapult),
+                    new Shoot(catapult, indexer),
                     new DriveToPose(driveTrain, _destination2, _velocity),
                     new WaitCommand(1)
                 ),
@@ -165,7 +167,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
             ),
 //            new SetSetpoint(catapult, CatapultSetpoint.FAR),
             new AutoAim(driveTrain),
-            new Shoot(catapult),
+            new Shoot(catapult, indexer),
             new SetSetpoint(catapult, CatapultSetpoint.NONE)
         );
     }

@@ -1,51 +1,71 @@
 package org.frc5687.rapidreact.subsystems;
 
+import org.frc5687.rapidreact.Constants;
+import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.commands.OutliersCommand;
+import org.frc5687.rapidreact.util.ColorSensor;
 import org.frc5687.rapidreact.util.OutliersContainer;
+import org.frc5687.rapidreact.util.ProximitySensor;
 
-/** Keep balls separated so can intake two, shoot just one.
- * 
- * <p>Note: 2022-robot repo calls this subsystem "ServoStop"
- */
-public class Indexer extends OutliersSubsystem {
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.I2C.Port;
+
+public class Indexer extends OutliersSubsystem{
+
+    private DoubleSolenoid _indexerArm;
+    private ColorSensor _colorSensor;
+    private ProximitySensor _proximitySensor;
     
-    public enum IndexerState {
-        DEPLOYED, // stop balls
-        RETRACTED // allow balls to roll down
-    }
-    private IndexerState _state;
-
-    /** Create an Indexer subsystem */
-    public Indexer(OutliersContainer container) {
+    public Indexer(OutliersContainer container){
         super(container);
-        _state = IndexerState.DEPLOYED;
+        _indexerArm = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.INDEXER_IN, RobotMap.PCH.INDEXER_OUT);
+        _colorSensor = new ColorSensor(Port.kMXP);
+        _proximitySensor = new ProximitySensor(RobotMap.DIO.PROXIMITY_SENSOR);
     }
 
-    // Query state of indexer
-
-    public IndexerState getState() {
-        return _state;
+    
+    public boolean isDown(){
+        return _indexerArm.get() == Value.kReverse;
     }
 
-    public void setState(IndexerState state) {
-        _state = state;
+    /**
+     * Is the arm up
+     * @return if true is up
+     */
+    public boolean isUp(){
+        return _indexerArm.get() == Value.kForward;
     }
 
-    public void retract() {
-        // Retract the blocking arm
-        // Let balls enter the catapult
-        _state = IndexerState.RETRACTED;
+    /**
+     * Set the indexer down
+     */
+    public void down(){
+        _indexerArm.set(Value.kForward);
     }
 
-    public void deploy() {
-        // Deploy the blocking arm
-        // Stop balls from entering the catapult
-        _state = IndexerState.DEPLOYED;
+    /**
+     * Set the indexer up
+     */
+    public void up(){
+        _indexerArm.set(Value.kReverse);
+    }
+
+    public boolean isBallDetected() {
+        return _proximitySensor.get();
+    }
+
+    public boolean isBlueBallDetected() {
+        return _colorSensor.isBlue() && isBallDetected();
+    }
+
+    public boolean isRedBallDetected() {
+        return _colorSensor.isRed() && isBallDetected();
     }
 
     @Override
     public void updateDashboard() {
-        // Indexer state
-        metric("Indexer State", getState().name());
+        metric("Prox dected", isBallDetected());
     }
-
 }

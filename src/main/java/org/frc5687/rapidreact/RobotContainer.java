@@ -30,6 +30,7 @@ import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
@@ -50,10 +51,13 @@ public class RobotContainer extends OutliersContainer {
     private Catapult _catapult;
     private Intake _intake;
     private Climber _climber;
+    private Indexer _indexer;
 
     private AutoChooser _autoChooser;
+
     AutoChooser.Position _autoPosition;
     AutoChooser.Mode _autoMode;
+
     private UsbCamera _cam;
 
     public RobotContainer(Robot robot, IdentityMode identityMode, boolean isLogging) {
@@ -77,6 +81,7 @@ public class RobotContainer extends OutliersContainer {
         _proxy = new JetsonProxy(10);
         _autoChooser = new AutoChooser();
 //        _limelight = new Limelight("limelight");
+        _indexer = new Indexer(this);
 
         // then subsystems
         _driveTrain = new DriveTrain(this, _oi, _proxy/*, _limelight*/, _imu);
@@ -86,11 +91,11 @@ public class RobotContainer extends OutliersContainer {
 
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
+        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _indexer, _oi));
         setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
-//         initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain ,_catapult, _intake, _climber);
+        // initialize OI after subsystems.
+        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber, _indexer);
 
         // Run periodic for each swerve module faster than regular cycle time
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
@@ -157,13 +162,13 @@ public class RobotContainer extends OutliersContainer {
             case ZeroBall:
                 return new ZeroBallAuto(_driveTrain, _autoPosition);
             case OneBall:
-                return new OneBallAuto(_driveTrain, _catapult, _autoPosition);
+                return new OneBallAuto(_driveTrain, _catapult, _indexer, _autoPosition);
             case TwoBall:
-                return new TwoBallAuto(_driveTrain, _catapult, _intake, _autoPosition);
+                return new TwoBallAuto(_driveTrain, _catapult, _intake,  _indexer, _autoPosition);
             case ThreeBall:
-                return new ThreeBallAuto(_driveTrain, _catapult, _intake, _autoPosition);
+                return new ThreeBallAuto(_driveTrain, _catapult, _intake, _indexer, _autoPosition);
             case FourBall:
-                return new FourBallAuto(_driveTrain, _catapult, _intake, _autoPosition);
+                return new FourBallAuto(_driveTrain, _catapult, _intake, _indexer, _autoPosition);
             default:
                 return new Wait(15);
         }

@@ -35,7 +35,7 @@ public class Auto {
     }
 
     public static class Rotations {
-        public static Rotation2d BALL_ONE_FROM_FIRST = new Rotation2d(Units.degreesToRadians(-10));
+        public static Rotation2d BALL_ONE_FROM_FIRST = new Rotation2d(Units.degreesToRadians(-5));
         public static Rotation2d BALL_TWO_FROM_THIRD = new Rotation2d(Units.degreesToRadians(40));
         public static Rotation2d BALL_TWO_FROM_BALL_THREE = new Rotation2d(Units.degreesToRadians(-35));
         public static Rotation2d BALL_THREE_FROM_FOURTH = new Rotation2d(0.5 * Math.PI);
@@ -72,8 +72,8 @@ public class Auto {
         public static double DEFAULT_WINCH = 0.24;
         public static double DEFAULT_SPRING = 0.065;
 
-        public static double TARMAC_WINCH = 0.23;
-        public static double TARMAC_SPRING = 0.055;
+        public static double TARMAC_WINCH = 0.225;
+        public static double TARMAC_SPRING = 0.052;
 
         // 3.15m
         public static double NEAR_WINCH = 0.24; // 0.24
