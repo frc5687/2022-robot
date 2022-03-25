@@ -9,6 +9,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -51,13 +52,8 @@ public class RobotContainer extends OutliersContainer {
     private Climber _climber;
 
     private AutoChooser _autoChooser;
-    private Boolean _positionOne;
-    private Boolean _positionTwo;
-    private Boolean _positionThree;
-    private Boolean _positionFour;
-    private String _autoModeString;
-    AutoChooser.Position autoPosition;
-    AutoChooser.Mode autoMode;
+    AutoChooser.Position _autoPosition;
+    AutoChooser.Mode _autoMode;
 
     private UsbCamera _cam;
 
@@ -72,33 +68,14 @@ public class RobotContainer extends OutliersContainer {
         // info("Running RobotContainer.init()");
 
         // Initialize starting position and mode to unknown
+        _autoPosition = AutoChooser.Position.Unknown;
+        _autoMode = AutoChooser.Mode.Unknown;
         // In disabledPeriodic() we will poll Drive Station for values
-//        _positionOne = false;
-//        _positionTwo = false;
-//        _positionThree = false;
-//        _positionFour = false;
-//        autoPosition = AutoChooser.Position.Unknown;
-//        _autoModeString = "Unknown";
-//        autoMode = AutoChooser.Mode.Unknown;
-//
-//        // Display starting position value
-//        SmartDashboard.putString("DB/String 0", "Starting Position:");
-//        SmartDashboard.putString("DB/String 5", "Unknown");
-//
-//        // Display auto mode value
-//        SmartDashboard.putString("DB/String 1", "Auto Mode:");
-//        String _automodeString = SmartDashboard.getString("Auto Selector", _autoModeString);
-//        SmartDashboard.putString("DB/String 6", _automodeString);
-//
-//        // Auto mode chooser
-//        String [] modes = { "Zero Ball", "One Ball", "Two Ball" };
-//        // String [] modes = { "Zero Ball", "One Ball", "Two Ball", "Three Ball", "Four Ball", "Five Ball" };
-//        SmartDashboard.putStringArray("Auto List", modes);
-
 //        _oi = new OI();
         //Config the NavX
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
+        _autoChooser = new AutoChooser();
 //        _limelight = new Limelight("limelight");
 
         // then subsystems
@@ -107,7 +84,6 @@ public class RobotContainer extends OutliersContainer {
 //        _climber = new Climber(this, _driveTrain);
 //        _catapult = new Catapult(this);
 
-//        _autoChooser = new AutoChooser();
 
 //        initializeCamera();
 
@@ -127,75 +103,13 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public void periodic() {
-        _proxy.setData(
-                new JetsonProxy.Data(0),
-                new JetsonProxy.Data(0),
-                new JetsonProxy.Data(10),
-                new JetsonProxy.Data(_imu.getYaw())
-                );
+     
     }
 
-    /** Run every cycle when robot disabled */
     public void disabledPeriodic() {
-
-        // Poll Drive Station for starting position and auto mode selector
-
-        // Use existing value as default so if WiFi drops we don't lose settings
-
-        // Poll starting position buttons
-//        _positionOne = SmartDashboard.getBoolean("DB/Button 0", _positionOne);
-//        _positionTwo = SmartDashboard.getBoolean("DB/Button 1", _positionTwo);
-//        _positionThree = SmartDashboard.getBoolean("DB/Button 2", _positionThree);
-//        _positionFour = SmartDashboard.getBoolean("DB/Button 3", _positionFour);
-//
-//        // Set position to highest value that is selected
-//        if (_positionOne) {
-//            autoPosition = AutoChooser.Position.First;
-//            SmartDashboard.putString("DB/String 5", "One");
-//        }
-//        if (_positionTwo) {
-//            autoPosition = AutoChooser.Position.Second;
-//            SmartDashboard.putString("DB/String 5", "Two");
-//        }
-//        if (_positionThree) {
-//            autoPosition = AutoChooser.Position.Third;
-//            SmartDashboard.putString("DB/String 5", "Three");
-//        }
-//        if (_positionFour) {
-//            autoPosition = AutoChooser.Position.Fourth;
-//            SmartDashboard.putString("DB/String 5", "Four");
-//        }
-//        if (autoPosition == AutoChooser.Position.Unknown) {
-//            SmartDashboard.putString("DB/String 5", "Unknown");
-//        }
-//
-//        // Set auto mode based on Smart Dashboard pull down
-//        _autoModeString = SmartDashboard.getString("Auto Selector", _autoModeString);
-//        switch(_autoModeString) {
-//            case "Zero Ball":
-//                autoMode = AutoChooser.Mode.ZeroBall;
-//                metric("Zero Ball", true);
-//                break;
-//            case "One Ball":
-//                autoMode = AutoChooser.Mode.OneBall;
-//                metric("One ball", true);
-//                break;
-//            case "Two Ball":
-//                autoMode = AutoChooser.Mode.TwoBall;
-//                metric("Two ball", true);
-//                break;
-//            case "Three Ball":
-//                autoMode = AutoChooser.Mode.ThreeBall;
-//                metric("Three ball", true);
-//            case "Four Ball":
-//            case "Five Ball":
-//            default:
-//                autoMode = AutoChooser.Mode.Unknown;
-//        }
-//
-//        // Display auto mode selector
-//        SmartDashboard.putString("DB/String 6", _autoModeString);
-
+        _autoChooser.updateChooser();
+        _autoMode = _autoChooser.getAutoMode();
+        _autoPosition = _autoChooser.getAutoPosition();
     }
 
     @Override
@@ -242,30 +156,21 @@ public class RobotContainer extends OutliersContainer {
     }
 
     public Command getAutonomousCommand() {
-        // This is just for testing so Dennis and Jack can bypass chooser code
-
-        boolean _bypass = true;
-//         Set _bypass to true to set autonomous command here instead of using Drive Station
-        if (_bypass) {
-            AutoChooser.Position startingPosition = AutoChooser.Position.Third;
-            info("Running TwoBallAuto.");
-            return new FourBallAuto(_driveTrain, _catapult, _intake, startingPosition);
-        }
-
         // Return command sequence based on auto mode selected and pass in starting position
-        switch (autoMode) {
+        switch (_autoMode) {
             case ZeroBall:
-                return new ZeroBallAuto(_driveTrain, autoPosition);
+                return new ZeroBallAuto(_driveTrain, _autoPosition);
             case OneBall:
-                return new OneBallAuto(_driveTrain, _catapult, autoPosition);
+                return new OneBallAuto(_driveTrain, _catapult, _autoPosition);
             case TwoBall:
-                return new TwoBallAuto(_driveTrain, _catapult, _intake, autoPosition);
+                return new TwoBallAuto(_driveTrain, _catapult, _intake, _autoPosition);
             case ThreeBall:
-                return new ThreeBallAuto(_driveTrain, _catapult, _intake, autoPosition);
+                return new ThreeBallAuto(_driveTrain, _catapult, _intake, _autoPosition);
+            case FourBall:
+                return new FourBallAuto(_driveTrain, _catapult, _intake, _autoPosition);
             default:
                 return new Wait(15);
         }
-
     }
 
     public void controllerPeriodic() {
