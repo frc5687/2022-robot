@@ -54,7 +54,6 @@ public class RobotContainer extends OutliersContainer {
     private AutoChooser _autoChooser;
     AutoChooser.Position _autoPosition;
     AutoChooser.Mode _autoMode;
-
     private UsbCamera _cam;
 
     public RobotContainer(Robot robot, IdentityMode identityMode, boolean isLogging) {
@@ -68,46 +67,43 @@ public class RobotContainer extends OutliersContainer {
         // info("Running RobotContainer.init()");
 
         // Initialize starting position and mode to unknown
+        // In disabledPeriodic() we will poll Drive Station for values
         _autoPosition = AutoChooser.Position.Unknown;
         _autoMode = AutoChooser.Mode.Unknown;
-        // In disabledPeriodic() we will poll Drive Station for values
-//        _oi = new OI();
-        //Config the NavX
+
+        // initialize these peripherals first as subsystems require them.
+        _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
         _autoChooser = new AutoChooser();
 //        _limelight = new Limelight("limelight");
 
         // then subsystems
-//        _driveTrain = new DriveTrain(this, _oi, _proxy/*, _limelight*/, _imu);
-//        _intake = new Intake(this);
-//        _climber = new Climber(this, _driveTrain);
-//        _catapult = new Catapult(this);
+        _driveTrain = new DriveTrain(this, _oi, _proxy/*, _limelight*/, _imu);
+        _intake = new Intake(this);
+        _climber = new Climber(this, _driveTrain);
+        _catapult = new Catapult(this);
 
+        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
+        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
+        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
+        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
-//        initializeCamera();
-
-//        initializeCamera();
-//        setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
-//        setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-//        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
-//        setDefaultCommand(_catapult, new IdleCatapult(_catapult, _oi));
-//        setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
-        // initialize OI after subsystems.
-//        _oi.initializeButtons(_driveTrain ,_catapult, _intake, _climber);
+//         initialize OI after subsystems.
+        _oi.initializeButtons(_driveTrain ,_catapult, _intake, _climber);
 
         // Run periodic for each swerve module faster than regular cycle time
-//        _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
+        _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
 //        _limelight.disableLEDs();
         _imu.reset();
     }
 
-    public void periodic() {
-     
-    }
+    public void periodic() {}
 
     public void disabledPeriodic() {
+        // update the auto chooser for more values.
         _autoChooser.updateChooser();
+        // set the values from the auto chooser.
         _autoMode = _autoChooser.getAutoMode();
         _autoPosition = _autoChooser.getAutoPosition();
     }
