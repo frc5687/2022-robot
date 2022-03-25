@@ -3,6 +3,7 @@ package org.frc5687.rapidreact.commands.auto;
 import org.frc5687.rapidreact.commands.catapult.Shoot;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Indexer;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,7 +26,8 @@ public class OneBallAuto extends SequentialCommandGroup {
     public OneBallAuto (
         DriveTrain driveTrain,
         Catapult catapult,
-        AutoChooser.Position position
+        AutoChooser.Position position,
+        Indexer indexer
     ) {
         Double _velocity;
 
@@ -36,7 +38,7 @@ public class OneBallAuto extends SequentialCommandGroup {
             _destination = new Pose2d();
             _velocity = 0.2;
             addCommands(
-                new Shoot(catapult),
+                new Shoot(catapult, indexer),
                 new DriveToPose(driveTrain, _destination, _velocity)
             );
             return;
@@ -86,7 +88,7 @@ public class OneBallAuto extends SequentialCommandGroup {
         _destination = new Pose2d(_translation, _rotation);
         _velocity = 0.2;
         addCommands(
-            new Shoot(catapult),
+            new Shoot(catapult, indexer),
             new DriveToPose(driveTrain, _destination, _velocity)
         );
     }

@@ -30,13 +30,10 @@ public class Catapult extends OutliersSubsystem {
     private final TalonFX _springMotor;
     private final CANSparkMax _winchMotor;
     private final DoubleSolenoid _releasePin;
-    private final ServoStop _gate;
 
     private final RelativeEncoder _winchEncoder;
     private final HallEffect _springHall;
     private final HallEffect _armHall;
-    private final ColorSensor _colorSensor;
-    private final ProximitySensor _proximitySensor;
 
     private final ProfiledPIDController _winchController;
 
@@ -93,7 +90,6 @@ public class Catapult extends OutliersSubsystem {
         _winchEncoder = _winchMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, COUNTS_PER_REVOLUTION);
 
         // Proximity sensor (sense if ball on catapult arm)
-        _proximitySensor = new ProximitySensor(RobotMap.DIO.PROXIMITY_SENSOR);
 
         // PID controllers
         _springMotor.config_kP(MOTION_MAGIC_SLOT, SPRING_kP);
@@ -119,8 +115,6 @@ public class Catapult extends OutliersSubsystem {
         _springEncoderZeroed = false;
         _winchEncoderZeroed = false;
         _state = CatapultState.DEBUG;
-        _gate = new ServoStop(RobotMap.PWM.INTAKE_STOPPER);
-        _colorSensor = new ColorSensor(I2C.Port.kMXP);
         _springGoal = 0;
     }
 
@@ -267,26 +261,6 @@ public class Catapult extends OutliersSubsystem {
         return _releasePin.get() == PinPosition.RELEASED.getSolenoidValue();
     }
 
-    public boolean isBallDetected() {
-        return _proximitySensor.get();
-    }
-
-    public boolean isBlueBallDetected() {
-        return _colorSensor.isBlue() && isBallDetected();
-    }
-
-    public boolean isRedBallDetected() {
-        return _colorSensor.isRed() && isBallDetected();
-    }
-
-    public void raiseGate() {
-        _gate.raise();
-    }
-
-    public void lowerGate() {
-        _gate.lower();
-    }
-
     public CatapultState getState() {
         return _state;
     }
@@ -315,13 +289,10 @@ public class Catapult extends OutliersSubsystem {
         metric("Winch controller output", _winchMotor.getAppliedOutput());
         metric("winch goal", _winchController.getGoal().position);
         metric("Winch string length", getWinchStringLength());
-        metric("Blue", isBlueBallDetected());
-        metric("Red", isRedBallDetected());
         // Catapult arm values
         metric("Arm state", _state.name());
 //        metric("Arm release angle", getArmReleaseAngle());
 //        metric("Arm Hall Effect", isArmLowered());
-        metric("Ball detected", isBallDetected());
     }
 
     /**

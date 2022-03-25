@@ -6,6 +6,7 @@ import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
@@ -18,6 +19,7 @@ public class DriveCatapult extends OutliersCommand {
     private final Catapult _catapult;
     private final DriveTrain _driveTrain;
     private final Intake _intake;
+    private final Indexer _indexer;
     private final OI _oi;
 
     private CatapultState _prevState;
@@ -25,8 +27,10 @@ public class DriveCatapult extends OutliersCommand {
     private boolean _isFirstShot = true;
     private long _wait;
 
-    public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, OI oi) {
+
+    public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, Indexer indexer, OI oi) {
         _catapult = catapult;
+        _indexer = indexer;
         _intake = intake;
         _driveTrain = driveTrain;
         _oi = oi;
@@ -76,11 +80,11 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case LOADING: {
-                _catapult.raiseGate();
+                _indexer.up();
                 checkLockOut();
                 checkKill();
-                if (_catapult.isBallDetected()) {
-                    _catapult.lowerGate();
+                if (_indexer.isBallDetected()) {
+                    _indexer.down();
                     _catapult.setState(AIMING);
                 }
 
@@ -89,6 +93,9 @@ public class DriveCatapult extends OutliersCommand {
             case AIMING: {
                 checkLockOut();
                 checkKill();
+                if(!_indexer.isBallDetected()){
+                    _catapult.setState(LOADING);
+                }
                 if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
