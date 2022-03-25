@@ -61,6 +61,8 @@ public class RobotMap {
         public static int RELEASE_PIN_LOW = 8;
         public static final int CLIMBER_IN = 6;
         public static final int CLIMBER_OUT = 9;
+        public static final int INDEXER_OUT = 11;
+        public static final int INDEXER_IN = 4;
     }
 
     /**

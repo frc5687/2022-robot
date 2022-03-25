@@ -27,6 +27,7 @@ import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
@@ -51,6 +52,7 @@ public class RobotContainer extends OutliersContainer {
     private Boolean _positionThree;
     private Boolean _positionFour;
     private String _autoModeString;
+    private Indexer _indexer;
     AutoChooser.Position autoPosition;
     AutoChooser.Mode autoMode;
 
@@ -95,6 +97,7 @@ public class RobotContainer extends OutliersContainer {
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
         _proxy = new JetsonProxy(10);
         _limelight = new Limelight("limelight");
+        _indexer = new Indexer(this);
 
         // then subsystems
         _driveTrain = new DriveTrain(this, _oi, _proxy, _limelight, _imu);
@@ -108,12 +111,12 @@ public class RobotContainer extends OutliersContainer {
 
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
-        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _oi));
+        setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _indexer, _oi));
 //        setDefaultCommand(_catapult, new IdleCatapult(_catapult, _oi));
         setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber);
+        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber, _indexer);
 
         // Run periodic for each swerve module faster than regular cycle time
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
@@ -237,7 +240,7 @@ public class RobotContainer extends OutliersContainer {
         if (_bypass) {
             AutoChooser.Position startingPosition = AutoChooser.Position.Third;
             info("Running zeroball.");
-            return new ThreeBallAuto(_driveTrain, _catapult, _intake, startingPosition);
+            return new ThreeBallAuto(_driveTrain, _catapult, _intake, startingPosition, _indexer);
         }
 
         // Return command sequence based on starting position and auto mode selectded
@@ -306,11 +309,11 @@ public class RobotContainer extends OutliersContainer {
             case ZeroBall:
                 return new ZeroBallAuto(_driveTrain, autoPosition);
             case OneBall:
-                return new OneBallAuto(_driveTrain, _catapult, autoPosition);
+                return new OneBallAuto(_driveTrain, _catapult, autoPosition, _indexer);
             case TwoBall:
-                return new TwoBallAuto(_driveTrain, _catapult, _intake, autoPosition);
+                return new TwoBallAuto(_driveTrain, _catapult, _intake, autoPosition, _indexer);
             case ThreeBall:
-                return new ThreeBallAuto(_driveTrain, _catapult, _intake, autoPosition);
+                return new ThreeBallAuto(_driveTrain, _catapult, _intake, autoPosition, _indexer);
             default:
                 return new Wait(15);
         }
