@@ -26,6 +26,8 @@ import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
+import static org.frc5687.rapidreact.Constants.EPSILON;
+
 
 public class DriveTrain extends OutliersSubsystem {
     // Order we define swerve modules in kinematics
@@ -254,7 +256,7 @@ public class DriveTrain extends OutliersSubsystem {
      * @param fieldRelative forward is always forward no mater orientation of robot.
      */
     public void drive(double vx, double vy, double omega, boolean fieldRelative) {
-        if (Math.abs(vx) < Constants.DriveTrain.DEADBAND && Math.abs(vy) < Constants.DriveTrain.DEADBAND && Math.abs(omega) < Constants.DriveTrain.DEADBAND) {
+        if (Math.abs(vx) < EPSILON && Math.abs(vy) < EPSILON && Math.abs(omega) < EPSILON) {
             setNorthWestModuleState(
                     new SwerveModuleState(0, new Rotation2d(_northWest.getModuleAngle())));
             setSouthWestModuleState(
@@ -500,6 +502,10 @@ public class DriveTrain extends OutliersSubsystem {
      */
     public void dropDriveSpeed(boolean value) {
         _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_DURING_CLIMB : Constants.DriveTrain.MAX_MPS; 
+    }
+
+    public void turboDriveSpeed(boolean value) {
+        _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_TURBO : Constants.DriveTrain.MAX_MPS;
     }
 
     public void enableLimelight() {

@@ -84,7 +84,7 @@ public class RobotContainer extends OutliersContainer {
         _indexer = new Indexer(this);
 
         // then subsystems
-        _driveTrain = new DriveTrain(this, _oi, _proxy/*, _limelight*/, _imu);
+        _driveTrain = new DriveTrain(this, _oi, _proxy,/*, _limelight, */_imu);
         _intake = new Intake(this);
         _climber = new Climber(this, _driveTrain);
         _catapult = new Catapult(this);
@@ -107,6 +107,8 @@ public class RobotContainer extends OutliersContainer {
 
     public void disabledPeriodic() {
         // update the auto chooser for more values.
+//        metric("xIn", _oi.getDriveX());
+//        metric("yIn", _oi.getDriveY());
         _autoChooser.updateChooser();
         // set the values from the auto chooser.
         _autoMode = _autoChooser.getAutoMode();

@@ -1,6 +1,7 @@
 package org.frc5687.rapidreact.commands.catapult;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.config.Auto;
@@ -26,6 +27,7 @@ public class DriveCatapult extends OutliersCommand {
     private CatapultState _lastLoggedState = null;
     private boolean _isFirstShot = true;
     private long _wait;
+    private long _indexerWait;
 
 
     public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, Indexer indexer, OI oi) {
@@ -86,6 +88,7 @@ public class DriveCatapult extends OutliersCommand {
                 if (_indexer.isBallDetected()) {
                     _indexer.down();
                     _catapult.setState(AIMING);
+                    _indexerWait = System.currentTimeMillis() + Constants.Indexer.NO_BALL_DELAY;
                 }
 
             }
@@ -93,9 +96,9 @@ public class DriveCatapult extends OutliersCommand {
             case AIMING: {
                 checkLockOut();
                 checkKill();
-//                if(!_indexer.isBallDetected()){
-//                    _catapult.setState(LOADING);
-//                }
+                if(!_indexer.isBallDetected() && (System.currentTimeMillis() > _indexerWait)){
+                    _catapult.setState(LOADING);
+                }
                 if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));

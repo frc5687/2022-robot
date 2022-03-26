@@ -2,7 +2,6 @@ package org.frc5687.rapidreact.config;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 import java.util.Arrays;
@@ -21,21 +20,21 @@ public class Auto {
     }
     public static class BallPositions {
         public static Pose2d BALL_ONE = new Pose2d(4.93, 6.223, new Rotation2d());
-        public static Pose2d BALL_TWO = new Pose2d(5.035, 1.905, new Rotation2d(Units.degreesToRadians(-165)));
-        public static Pose2d BALL_THREE = new Pose2d(7.569, 0.305, new Rotation2d());
+        public static Pose2d BALL_TWO = new Pose2d(5.035, 1.905, new Rotation2d(Units.degreesToRadians(165)));
+        public static Pose2d BALL_THREE = new Pose2d(7.569, 0.305, new Rotation2d(Math.PI / 2.0));
         public static Pose2d BALL_FOUR = new Pose2d(1.067, 1.14, new Rotation2d());
     }
 
     public static class RobotPositions {
         //new super accurate poses from amory.
-        public static Pose2d FIRST = new Pose2d(6.604, 5.639, new Rotation2d());
-        public static Pose2d SECOND = new Pose2d(5.9, 3.93, new Rotation2d());
+        public static Pose2d FIRST = new Pose2d(6.604, 5.639, new Rotation2d(Math.PI));
+        public static Pose2d SECOND = new Pose2d(5.9, 3.93, new Rotation2d(Math.PI));
         public static Pose2d THIRD = new Pose2d(6.724, 2.491, new Rotation2d(Math.PI));
-        public static Pose2d FOURTH = new Pose2d(8.15, 1.877, new Rotation2d());
+        public static Pose2d FOURTH = new Pose2d(8.15, 1.877, new Rotation2d(-Math.PI / 2.0));
     }
 
     public static class Rotations {
-        public static Rotation2d BALL_ONE_FROM_FIRST = new Rotation2d(Units.degreesToRadians(-5));
+        public static Rotation2d BALL_ONE_FROM_FIRST = new Rotation2d(Units.degreesToRadians(-20));
         public static Rotation2d BALL_TWO_FROM_THIRD = new Rotation2d(Units.degreesToRadians(40));
         public static Rotation2d BALL_TWO_FROM_BALL_THREE = new Rotation2d(Units.degreesToRadians(-35));
         public static Rotation2d BALL_THREE_FROM_FOURTH = new Rotation2d(0.5 * Math.PI);
@@ -44,7 +43,7 @@ public class Auto {
     }
 
     public static class TrajectoryPoints {
-        public static class PositionThreeToBallTwo{
+        public static class PositionThreeToBallTwo {
             public static final List<Pose2d> waypoints =
                     Arrays.asList(
                             RobotPositions.THIRD,
@@ -64,6 +63,28 @@ public class Auto {
                             FieldPositions.FAR_FIELD_SHOT
                     );
         }
+        public static class PositionOneToBallOne {
+            public static final List<Pose2d> waypoints =
+                    Arrays.asList(
+                            RobotPositions.FIRST,
+                            BallPositions.BALL_ONE
+                    );
+        }
+
+        public static class PositionTwoToBallOne {
+            public static final List<Pose2d> waypoints =
+                    Arrays.asList(
+                            RobotPositions.SECOND,
+                            BallPositions.BALL_ONE
+                    );
+        }
+        public static class PositionFourToBallThree {
+            public static final List<Pose2d> waypoints =
+                    Arrays.asList(
+                            RobotPositions.FOURTH,
+                            BallPositions.BALL_THREE
+                    );
+        }
     }
 
     public static final double DRIVETRAIN_POWER = 0.5;
@@ -72,7 +93,7 @@ public class Auto {
         public static double DEFAULT_WINCH = 0.24;
         public static double DEFAULT_SPRING = 0.065;
 
-        public static double TARMAC_WINCH = 0.225;
+        public static double TARMAC_WINCH = 0.22;
         public static double TARMAC_SPRING = 0.052;
 
         // 3.15m

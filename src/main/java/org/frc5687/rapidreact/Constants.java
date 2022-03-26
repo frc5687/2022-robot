@@ -52,6 +52,7 @@ public class Constants {
         // Control
         public static final double DEADBAND = 0.2; // Avoid unintentional joystick movement
 
+
         // Size of the robot chassis in meters
         public static final double WIDTH = 0.6223; // meters
         public static final double LENGTH = 0.6223; // meters
@@ -113,10 +114,12 @@ public class Constants {
         public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
 
         // Maximum rates of motion
-        public static final double MAX_MPS = 3.0; // Max speed of robot (m/s)
+        public static final double MAX_MPS = 2.5; // Max speed of robot (m/s)
+        public static final double MAX_MPS_TURBO = 3.8; // Max speed of robot in turbo (m/s)
         public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
-        public static final double MAX_MPSS = 3.0; // Max acceleration of robot (m/s^2)
+        public static final double MAX_ANG_VEL_AIM = 2 * Math.PI; // Max rotation rate of robot (rads/s)
+        public static final double MAX_MPSS = 2.1; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
         public static final double ANGLE_kP = 2.3;
@@ -130,10 +133,10 @@ public class Constants {
         public static final double kD = 0.5;
 
         // Vision PID controller
-        public static final double VISION_TOLERANCE = 0.020; // rads
-        public static final double VISION_kP = 5.95;
+        public static final double VISION_TOLERANCE = 0.035; // rads
+        public static final double VISION_kP = 6.0;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.25;
+        public static final double VISION_kD = 0.15;
         public static final double VISION_IRANGE = MAX_MPS * 2;
         public static final long VISION_LATENCY = 50;
 
@@ -288,8 +291,13 @@ public class Constants {
         public static final double TICKS_TO_ROTATIONS = 2048.0;
         public static final long ROLLER_DELAY = 1000; // ms
     }
+
     public static class ColorSensor{
         public static final double COLOR_PROXIMITY_BUFFER = 130;
+    }
+
+    public static class Indexer {
+        public static final long NO_BALL_DELAY = 1000; //ms
     }
 
     public static class Climber{

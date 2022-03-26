@@ -21,8 +21,8 @@ public class Drive extends OutliersCommand {
     public Drive(DriveTrain driveTrain, OI oi) {
         _driveTrain = driveTrain;
         _oi = oi;
-        _vxFilter = new SlewRateLimiter(5.0);
-        _vyFilter = new SlewRateLimiter(5.0);
+        _vxFilter = new SlewRateLimiter(3.0);
+        _vyFilter = new SlewRateLimiter(3.0);
         _rotFilter = new SlewRateLimiter(5.0);
         addRequirements(_driveTrain);
 //        logMetrics("vx","vy");
@@ -37,6 +37,7 @@ public class Drive extends OutliersCommand {
 
     @Override
     public void execute() {
+        _driveTrain.turboDriveSpeed(_oi.turbo());
         super.execute();
         //  driveX and driveY are swapped due to coordinate system that WPILib uses.
         double vx = _vxFilter.calculate(_oi.getDriveY()) * (_driveTrain.getSpeed());
@@ -55,7 +56,8 @@ public class Drive extends OutliersCommand {
         {
             rot = _driveTrain.getVisionControllerOutput(true);
         } else {
-            rot = _rotFilter.calculate(_oi.getRotationX()) * MAX_ANG_VEL;
+            rot = _oi.getRotationX() * MAX_ANG_VEL;
+//            rot = _rotFilter.calculate(_oi.getRotationX()) * MAX_ANG_VEL;
         }
         _driveTrain.drive(vx, vy, rot, true);
 

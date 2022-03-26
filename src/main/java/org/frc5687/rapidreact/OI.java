@@ -50,6 +50,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _resetNavX;
     private JoystickButton _shootButton;
     private JoystickButton _manualIndexer;
+    private JoystickButton _turboDrive;
 
 
     private JoystickButton _shootSetpointOne;
@@ -87,16 +88,17 @@ public class OI extends OutliersProxy {
 
         // translation joystick
         _shootButton= new JoystickButton(_translation, 1);
-        _release = new JoystickButton(_translation, 2);
+        _release = new JoystickButton(_translation, 6);
         _dropArm = new JoystickButton(_translation, 3);
         _resetNavX = new JoystickButton(_translation, 5);
+        _turboDrive = new JoystickButton(_translation, 2);
 
         // while driving, ben check.
         _shootSetpointOne = new JoystickButton(_translation, 9);
         _shootSetpointTwo = new JoystickButton(_translation, 10);
         _shootSetpointThree = new JoystickButton(_translation, 11);
 
-        _exitKill = new JoystickButton(_translation, 6);
+        _exitKill = new JoystickButton(_translation, 8);
         _kill = new JoystickButton(_translation, 7);
         
     }
@@ -126,10 +128,11 @@ public class OI extends OutliersProxy {
     public boolean kill() { return _kill.get(); }
     public boolean autoAim() { return _autoAim.get(); }
     public boolean aimBall() { return _aimBall.get(); }
+    public boolean turbo() {return _turboDrive.get(); }
 
     public double getDriveY() {
         //Comment for gamepad control
-        yIn = getSpeedFromAxis(_translation, _translation.getYChannel());
+        yIn = -getSpeedFromAxis(_translation, _translation.getYChannel());
 //         yIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
 
