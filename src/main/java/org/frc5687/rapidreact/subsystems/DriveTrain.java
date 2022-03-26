@@ -23,7 +23,6 @@ import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.util.JetsonProxy;
-import org.frc5687.rapidreact.util.Limelight;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
 import static org.frc5687.rapidreact.Constants.EPSILON;
@@ -59,6 +58,8 @@ public class DriveTrain extends OutliersSubsystem {
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
     private boolean _useLimelight = false;
+
+    private boolean _climbing = false;
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy/*, Limelight limelight*/, AHRS imu) {
         super(container);
@@ -501,11 +502,20 @@ public class DriveTrain extends OutliersSubsystem {
      * @param value
      */
     public void dropDriveSpeed(boolean value) {
-        _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_DURING_CLIMB : Constants.DriveTrain.MAX_MPS; 
+        if (value) {
+            _driveSpeed = Constants.DriveTrain.MAX_MPS_DURING_CLIMB;
+            _climbing = true;
+        } else {
+            _driveSpeed = Constants.DriveTrain.MAX_MPS;
+        }
     }
 
     public void turboDriveSpeed(boolean value) {
-        _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_TURBO : Constants.DriveTrain.MAX_MPS;
+        if (_climbing) {
+            _driveSpeed = Constants.DriveTrain.MAX_MPS_DURING_CLIMB;
+        } else {
+            _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_TURBO : Constants.DriveTrain.MAX_MPS;
+        }
     }
 
     public void enableLimelight() {

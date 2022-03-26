@@ -5,6 +5,7 @@
 */
 package org.frc5687.rapidreact;
 
+import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.ZEROING;
 import static org.frc5687.rapidreact.util.Helpers.*;
 
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -18,6 +19,7 @@ import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
 import org.frc5687.rapidreact.commands.Climber.Stow;
 import org.frc5687.rapidreact.commands.DriveTrajectory;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
+import org.frc5687.rapidreact.commands.catapult.SetState;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -109,7 +111,8 @@ public class OI extends OutliersProxy {
         _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
         _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
 
-        
+
+        _preloadButton.whenPressed(new SetState(catapult, ZEROING));
         _intakeButton.whenHeld(new AutoIntake(intake));
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
@@ -121,7 +124,10 @@ public class OI extends OutliersProxy {
     public boolean readyToClimb() { return _readyToClimb.get(); }
     public boolean isShootButtonPressed() { return _shootButton.get(); }
     public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
-    public boolean preloadCatapult() { return _preloadButton.get(); }
+    public boolean preloadCatapult() {
+        return false;
+//        return _preloadButton.get();
+    }
     public boolean releaseArm() { return _release.get(); }
     public boolean intakeDeployRetract() { return _deployRetract.get(); }
     public boolean exitKill() { return _exitKill.get(); }

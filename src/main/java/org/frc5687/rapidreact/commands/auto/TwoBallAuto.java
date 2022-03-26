@@ -8,6 +8,7 @@ import org.frc5687.rapidreact.commands.AutoAim;
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.DriveTrajectory;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
+import org.frc5687.rapidreact.commands.catapult.SetState;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
@@ -24,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.util.AutoChooser;
+
+import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.ZEROING;
 
 /** Shoot first ball, taxi out of tarmac, intake second ball, shoot it */
 public class TwoBallAuto extends SequentialCommandGroup {
@@ -86,6 +89,8 @@ public class TwoBallAuto extends SequentialCommandGroup {
         addCommands(
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
+                        new SetState(catapult, ZEROING),
+                        new SetSetpoint(catapult, CatapultSetpoint.TARMAC),
                         new AutoAim(driveTrain),
                         new Shoot(catapult, indexer),
                         new DriveTrajectory(driveTrain, _trajectory, _rotation),
