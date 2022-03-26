@@ -105,7 +105,7 @@ public class DriveCatapult extends OutliersCommand {
                 } else {
                     _catapult.setStaticGoals();
                 }
-                if (isShootTriggered() && (_isFirstShot ||  (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
+                if (isShootTriggered() && ((_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
                     _catapult.setAutoshoot(false);
                     _catapult.setState(SHOOTING);
                 }

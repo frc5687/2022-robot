@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.util.AutoChooser;
 
+import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.AIMING;
 import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.ZEROING;
 
 
@@ -79,9 +80,9 @@ public class FourBallAuto extends SequentialCommandGroup {
         addCommands(
                 new ParallelDeadlineGroup(
                         new SequentialCommandGroup(
-                                new SetState(catapult, ZEROING),
+                                new SetState(catapult, AIMING),
                                 new SetSetpoint(catapult, CatapultSetpoint.TARMAC),
-                                new AutoAim(driveTrain),
+//                                new AutoAim(driveTrain),
                                 new Shoot(catapult, indexer),
                                 new DriveTrajectory(driveTrain, _trajectory, _rotation1),
                                 new WaitCommand(0.3)

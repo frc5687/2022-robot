@@ -98,11 +98,11 @@ public class Auto {
 
         // 3.15m
         public static double NEAR_WINCH = 0.24; // 0.24
-        public static double NEAR_SPRING = 0.066; // 0.065
+        public static double NEAR_SPRING = 0.066; // 0.066
 
         // 4.35m
-        public static double MID_WINCH = 0.315; //0.315
-        public static double MID_SPRING = 0.076; //0.076
+        public static double MID_WINCH = 0.309; //0.315
+        public static double MID_SPRING = 0.075; //0.076
 
         // 6.5m
         public static double FAR_WINCH = 0.32; // 0.328
