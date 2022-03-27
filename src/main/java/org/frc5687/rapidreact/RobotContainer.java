@@ -101,6 +101,7 @@ public class RobotContainer extends OutliersContainer {
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
 //        _limelight.disableLEDs();
         _imu.reset();
+        _driveTrain.startModules();
     }
 
     public void periodic() {}
@@ -122,10 +123,12 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void teleopInit() {
+//        _driveTrain.startModules();
     }
 
     @Override
     public void autonomousInit() {
+        _driveTrain.startModules();
         // Run once when entering auto mode
         // info("Running RobotContainer.autonomousInit()");
     }
