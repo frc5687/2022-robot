@@ -178,22 +178,23 @@ public class DriveTrain extends OutliersSubsystem {
     @Override
     public void updateDashboard() {
         metric("Goal Distance From Top Plane", getDistanceToTarget());
-        metric("Goal Distance From Points", Math.sqrt(
-                (getTargetPosition()[0] * getTargetPosition()[0]) +
-                (getTargetPosition()[1] * getTargetPosition()[1]) +
-                (getTargetPosition()[2] * getTargetPosition()[2])
-                ));
+        metric("Heading", getHeading().getDegrees());
+//        metric("Goal Distance From Points", Math.sqrt(
+//                (getTargetPosition()[0] * getTargetPosition()[0]) +
+//                (getTargetPosition()[1] * getTargetPosition()[1]) +
+//                (getTargetPosition()[2] * getTargetPosition()[2])
+//                ));
         metric("Goal Angle", getAngleToTarget());
         metric("Has goal", hasTarget());
-        metric("Target vx", getTargetVelocity()[0]);
-        metric("Target vy", getTargetVelocity()[1]);
-        metric("Target vz", getTargetVelocity()[2]);
-        metric("Target x", getTargetPosition()[0]);
-        metric("Target y", getTargetPosition()[1]);
-        metric("Target z", getTargetPosition()[2]);
-        metric("Blue ball angle", getAngleToClosestBlueBall());
-        metric("Red ball angle", getAngleToClosestRedBall());
-        metric("Ball heading", getCorrectBallHeading().getRadians());
+//        metric("Target vx", getTargetVelocity()[0]);
+//        metric("Target vy", getTargetVelocity()[1]);
+//        metric("Target vz", getTargetVelocity()[2]);
+//        metric("Target x", getTargetPosition()[0]);
+//        metric("Target y", getTargetPosition()[1]);
+//        metric("Target z", getTargetPosition()[2]);
+//        metric("Blue ball angle", getAngleToClosestBlueBall());
+//        metric("Red ball angle", getAngleToClosestRedBall());
+//        metric("Ball heading", getCorrectBallHeading().getRadians());
 
 //        metric("NW/Encoder Angle", _northWest.getModuleAngle());
 //        metric("SW/Encoder Angle", _southWest.getModuleAngle());
@@ -207,14 +208,14 @@ public class DriveTrain extends OutliersSubsystem {
 //
 //        metric("SE/Encoder Wheel Vel", _southEast.getWheelVelocity());
 //        metric("SE/Predicted Wheel Vel", _southEast.getPredictedWheelVelocity());
-        metric("NW/Encoder Wheel Vel", _northWest.getWheelVelocity());
-        metric("NW/Predicted Wheel Vel", _northWest.getPredictedWheelVelocity());
+//        metric("NW/Encoder Wheel Vel", _northWest.getWheelVelocity());
+//        metric("NW/Predicted Wheel Vel", _northWest.getPredictedWheelVelocity());
 
 
-        metric("Odometry/x", getOdometryPose().getX());
-        metric("Odometry/y", getOdometryPose().getY());
-        metric("Estimated Pose/x", getEstimatedPose().getX());
-        metric("Estimated Pose/y", getEstimatedPose().getY());
+//        metric("Odometry/x", getOdometryPose().getX());
+//        metric("Odometry/y", getOdometryPose().getY());
+//        metric("Estimated Pose/x", getEstimatedPose().getX());
+//        metric("Estimated Pose/y", getEstimatedPose().getY());
 //        metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());
 
     }
