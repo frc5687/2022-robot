@@ -52,6 +52,7 @@ public class Constants {
         // Control
         public static final double DEADBAND = 0.2; // Avoid unintentional joystick movement
 
+
         // Size of the robot chassis in meters
         public static final double WIDTH = 0.6223; // meters
         public static final double LENGTH = 0.6223; // meters
@@ -113,15 +114,17 @@ public class Constants {
         public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
 
         // Maximum rates of motion
-        public static final double MAX_MPS = 3.0; // Max speed of robot (m/s)
+        public static final double MAX_MPS = 2.5; // Max speed of robot (m/s)
+        public static final double MAX_MPS_TURBO = 3.8; // Max speed of robot in turbo (m/s)
         public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
-        public static final double MAX_MPSS = 0.5; // Max acceleration of robot (m/s^2)
+        public static final double MAX_ANG_VEL_AIM = 2 * Math.PI; // Max rotation rate of robot (rads/s)
+        public static final double MAX_MPSS = 2.1; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
-        public static final double ANGLE_kP = 4.0;
+        public static final double ANGLE_kP = 2.3;
         public static final double ANGLE_kI = 0.0;
-        public static final double ANGLE_kD = 0.0;
+        public static final double ANGLE_kD = 0.6;
         public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI * 3.0;
 
@@ -130,14 +133,20 @@ public class Constants {
         public static final double kD = 0.5;
 
         // Vision PID controller
-        public static final double VISION_TOLERANCE = 0.040; // rads
-        public static final double VISION_kP = 5.65;
+        public static final double VISION_TOLERANCE = 0.035; // rads
+        public static final double VISION_kP = 6.0;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.2;
+        public static final double VISION_kD = 0.15;
         public static final double VISION_IRANGE = MAX_MPS * 2;
         public static final long VISION_LATENCY = 50;
 
-        public static final double POSITION_TOLERANCE = 0.01;
+        public static final double BALL_VISION_TOLERANCE = 0.040; // rads
+        public static final double BALL_VISION_kP = 3.1;
+        public static final double BALL_VISION_kI = 0.0;
+        public static final double BALL_VISION_kD = 0.2;
+        public static final double BALL_VISION_IRANGE = MAX_MPS * 2;
+
+        public static final double POSITION_TOLERANCE = 0.03;
         public static final double ANGLE_TOLERANCE = 0.02;
     }
 
@@ -152,16 +161,14 @@ public class Constants {
         public static final double GEAR_RATIO_WHEEL = 6.46875;
         public static final double GEAR_RATIO_STEER = 9.2;
         public static final double FALCON_RATE = 600.0;
-        public static final double WHEEL_RADIUS = 0.04615; // Meters with compression.
-        public static final double MAX_MODULE_SPEED_MPS =
-                (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL) * WHEEL_RADIUS;
+        public static final double WHEEL_RADIUS = 0.04515; // Meters with compression.
         public static final double TICKS_TO_ROTATIONS = 2048.0;
         public static final double VOLTAGE = 12.0;
         public static final double FEED_FORWARD = VOLTAGE / (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL);
 
         public static final boolean ENABLE_CURRENT_LIMIT = true;
-        public static final double CURRENT_LIMIT = 30.0;
-        public static final double CURRENT_THRESHOLD = 30.0;
+        public static final double CURRENT_LIMIT = 40.0;
+        public static final double CURRENT_THRESHOLD = 40.0;
         public static final double CURRENT_TRIGGER_TIME = 0.0;
 
         // Create Parameters for DiffSwerve State Space
@@ -183,6 +190,15 @@ public class Constants {
         public static final double SENSOR_AZIMUTH_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double CONTROL_EFFORT = VOLTAGE;
+        // Module Constraints
+        public static final double MAX_MODULE_SPEED_MPS =
+                (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL) * WHEEL_RADIUS;
+        public static final double MAX_ANGULAR_VELOCITY = FALCON_FREE_SPEED / GEAR_RATIO_STEER;
+        public static final double MAX_ANGULAR_ACCELERATION = MAX_ANGULAR_VELOCITY * 10;
+        // accel of wheel
+        // ang vel
+        public static final double MAX_MODULE_ACCELERATION = (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL) * 1.5;
+        public static final double MAX_MODULE_JERK = MAX_MODULE_ACCELERATION * 10;
     }
     public static class UDPJetson {
         public static final int BUFFER = 1024;
@@ -269,14 +285,19 @@ public class Constants {
     public static class Intake{
         public static final boolean INVERTED = false;
         public static final double ROLLER_IDLE_SPEED = 0.0;
-        public static final double THE_BEANS = 0.8;
+        public static final double THE_BEANS = 0.7;
         public static final double GEAR_RATIO = 5.0;
         public static final double MAX_RPM = 6300 * GEAR_RATIO;
         public static final double TICKS_TO_ROTATIONS = 2048.0;
         public static final long ROLLER_DELAY = 1000; // ms
     }
+
     public static class ColorSensor{
         public static final double COLOR_PROXIMITY_BUFFER = 130;
+    }
+
+    public static class Indexer {
+        public static final long NO_BALL_DELAY = 1000; //ms
     }
 
     public static class Climber{

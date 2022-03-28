@@ -26,8 +26,8 @@ public class OneBallAuto extends SequentialCommandGroup {
     public OneBallAuto (
         DriveTrain driveTrain,
         Catapult catapult,
-        AutoChooser.Position position,
-        Indexer indexer
+        Indexer indexer,
+        AutoChooser.Position position
     ) {
         Double _velocity;
 

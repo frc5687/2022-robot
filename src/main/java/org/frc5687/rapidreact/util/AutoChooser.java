@@ -1,60 +1,55 @@
 package org.frc5687.rapidreact.util;
-import org.frc5687.rapidreact.RobotMap;
-// import org.frc5687.rapidreact.util.RotarySwitch;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/** Created by Ben Bernard on 2/2/2018. */
 public class AutoChooser extends OutliersProxy {
-    private RotarySwitch _autoSwitch;
-    private RotarySwitch _positionSwitch;
-    private final double TOLERANCE = 0.05;
+    private Position _autoPosition;
+    private Mode _autoMode;
+
+    private SendableChooser<Position> _positionChooser;
+    private SendableChooser<Mode> _modeChooser;
 
     public AutoChooser() {
-        _autoSwitch = new RotarySwitch(RobotMap.Analog.MODE_SWITCH, TOLERANCE, 0.07, 0.14, 0.23, 0.3, 0.38, 0.46,
-                0.54, 0.62, 0.69, 0.77, 0.85, 0.93);        
-        _positionSwitch = new RotarySwitch(RobotMap.Analog.POSITION_SWITCH, TOLERANCE, 0.07, 0.15, 0.21, 0.3, 0.38, 0.46,
-                0.54, 0.61, 0.69, 0.76, 0.83, 0.93);
+        _positionChooser = new SendableChooser<>();
+        _positionChooser.setDefaultOption("First Position", Position.First);
+        _positionChooser.addOption("Second Position", Position.Second);
+        _positionChooser.addOption("Third Position", Position.Third);
+        _positionChooser.addOption("Fourth Position", Position.Fourth);
+        SmartDashboard.putData("Auto Position", _positionChooser);
 
-
-        // _autoSwitch = new RotarySwitch(RobotMap.Analog.MODE_SWITCH,
-        // Constants.RotarySwitch.TOLERANCE, .09, .17, .23, .31, .5, .59, .68, .75, .82,
-        // .91, .96);
+        _modeChooser = new SendableChooser<>();
+        _modeChooser.setDefaultOption("Zero Ball", Mode.ZeroBall);
+        _modeChooser.addOption("One Ball", Mode.OneBall);
+        _modeChooser.addOption("Two Ball", Mode.TwoBall);
+        _modeChooser.addOption("Three Ball", Mode.ThreeBall);
+        _modeChooser.addOption("Four Ball", Mode.FourBall);
+        SmartDashboard.putData("Auto Mode", _modeChooser);
     }
 
-    public Mode getSelectedMode() {
-        int raw = _autoSwitch.get() / 3;
-        if (raw >= Mode.values().length) {
-            raw = 0;
-        }
-        try {
-            return Mode.values()[raw];
-        } catch (Exception e) {
-            return Mode.Unknown;
-        }
+    public void updateChooser() {
+        _autoPosition = _positionChooser.getSelected();
+        _autoMode = _modeChooser.getSelected();
+        metric("Auto Position", _autoPosition.name());
+        metric("Auto Mode", _autoMode.name());
     }
 
-    public Position getSelectedPosition() {
-        int raw = _positionSwitch.get() / 2;
-        if (raw >= Position.values().length) {
-            raw = 0;
-        }
-        try {
-            return Position.values()[raw];
-        } catch (Exception e) {
-            return Position.Unknown;
-        }
+    public Position getAutoPosition() {
+        return _autoPosition;
+    }
+
+    public Mode getAutoMode() {
+        return _autoMode;
     }
 
     public void updateDashboard() {
-        metric("Raw/Mode", _autoSwitch.getRaw());
-        metric("Numeric/Mode", _autoSwitch.get());
-        metric("Raw/Position", _positionSwitch.getRaw());
-        metric("Numeric/Position", _positionSwitch.get());
-        
     }
 
     public enum Position {
-        Unknown(-1), First(0), Second(1), 
-        Third(2), Fourth(3);
+        Unknown(-1),
+        First(0),
+        Second(1),
+        Third(2),
+        Fourth(3);
 
         private int _value;
 
@@ -71,7 +66,8 @@ public class AutoChooser extends OutliersProxy {
         ZeroBall(0), 
         OneBall(1),
         TwoBall(2),
-        ThreeBall(3);
+        ThreeBall(3),
+        FourBall(3);
 
         private int _value;
 

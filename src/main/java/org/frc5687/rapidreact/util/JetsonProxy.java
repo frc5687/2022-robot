@@ -1,7 +1,10 @@
 package org.frc5687.rapidreact.util;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.frc5687.rapidreact.Robot;
 import org.frc5687.rapidreact.commands.Drive;
 
 import java.io.IOException;
@@ -18,7 +21,7 @@ public class JetsonProxy {
     public static final int RIO_PORT = 27001;
     public static final int PERIOD = 10;
 
-    DatagramSocket outgoingSocket;
+    DatagramSocket _clientSocket;
     private Thread _listenerThread;
 
     private int _period = PERIOD;
@@ -36,17 +39,16 @@ public class JetsonProxy {
     public JetsonProxy(int period) {
         _period = period;
         try {
-            outgoingSocket = new DatagramSocket();
+            _clientSocket = new DatagramSocket();
         } catch (IOException ioe) {
-            outgoingSocket = null;
+            DriverStation.reportError(ioe.getMessage(), false);
+            _clientSocket = null;
         }
 
         _jetsonListener = new JetsonListener(this, _rioPort);
         _listenerThread = new Thread(_jetsonListener);
         _listenerThread.start();
-
         _jetsonTimer = new Timer();
-
         _jetsonTimer.schedule(new JetsonTimerTask(this), _period, _period);
     }
     synchronized protected void collect() {
@@ -59,7 +61,7 @@ public class JetsonProxy {
                 sendData = _data.getBytes();
                 DatagramPacket sendPacket = new DatagramPacket(sendData, _data.length(), jetsonAddress, _jetsonPort);
                 try {
-                    outgoingSocket.send(sendPacket);
+                    _clientSocket.send(sendPacket);
                 } catch (IOException ioe) {
                 }
             }
@@ -137,30 +139,36 @@ public class JetsonProxy {
         private double _target_vx;
         private double _target_vy;
         private double _target_vz;
+        private double _blue_ball_yaw;
+        private double _red_ball_yaw;
 
         public Frame(String packet) {
 //            DriverStation.reportError("string is: " + packet, false);
             if (!packet.equals("nan")) {
                 String[] a = packet.split(";");
-                _millis = Long.parseLong(a[0]);
-                _estimatedX = Double.parseDouble(a[1]);
-                _estimatedY = Double.parseDouble(a[2]);
-                _estimatedHeading = Double.parseDouble(a[3]);
+                _millis = isNan(Long.parseLong(a[0]));
+                _estimatedX = isNan(Double.parseDouble(a[1]));
+                _estimatedY = isNan(Double.parseDouble(a[2]));
+                _estimatedHeading = isNan(Double.parseDouble(a[3]));
                 _hasTarget = Boolean.parseBoolean(a[4]);
-                _goalDistance = Double.parseDouble(a[5]);
-                _goalAngle = Double.parseDouble(a[6]);
-                _target_x = Double.parseDouble(a[7]);
-                _target_y = Double.parseDouble(a[8]);
-                _target_z = Double.parseDouble(a[9]);
-                _target_vx = Double.parseDouble(a[10]);
-                _target_vy = Double.parseDouble(a[11]);
-                _target_vz = Double.parseDouble(a[12]);
+                _goalDistance = isNan(Double.parseDouble(a[5]));
+                _goalAngle = isNan(Double.parseDouble(a[6]));
+                _target_x = isNan(Double.parseDouble(a[7]));
+                _target_y = isNan(Double.parseDouble(a[8]));
+                _target_z = isNan(Double.parseDouble(a[9]));
+                _target_vx = isNan(Double.parseDouble(a[10]));
+                _target_vy = isNan(Double.parseDouble(a[11]));
+                _target_vz = isNan(Double.parseDouble(a[12]));
+                _blue_ball_yaw = isNan(Double.parseDouble(a[13]));
+                _red_ball_yaw = isNan(Double.parseDouble(a[14]));
             }
         }
 
+        private double isNan(double value) { return value != -999.0 ? value : Double.NaN; }
+        private long isNan(long value) { return value != -999 ? value : 0; }
         public long getMillis() { return _millis; }
-        public double getEstimatedX() { return _estimatedX; }
-        public double getEstimatedY() { return _estimatedY; }
+        public Pose2d getEstimatedPose() { return new Pose2d(_estimatedX, _estimatedY, new Rotation2d(_estimatedHeading)); }
+        public boolean hasEstimatedPose() { return !Double.isNaN(_estimatedX); }
         public double getTargetDistance() { return _goalDistance; }
         public double getTargetAngle() { return _goalAngle; }
         public boolean hasTarget() { return _hasTarget; }
@@ -170,7 +178,8 @@ public class JetsonProxy {
         public double[] targetVelocity() {
             return new double[]{_target_vx, _target_vy, _target_vz};
         }
-
+        public double getBlueBallYaw() { return _blue_ball_yaw; }
+        public double getRedBallYaw() { return _red_ball_yaw; }
     }
     protected class JetsonTimerTask extends TimerTask {
         private JetsonProxy _proxy;
@@ -197,13 +206,13 @@ public class JetsonProxy {
 
         @Override
         public void run() {
-            DatagramSocket incomingSocket;
+            DatagramSocket serverSocket;
             byte[] receiveData = new byte[BUFFER];
             try {
-                incomingSocket = new DatagramSocket(_rioPort);
+                serverSocket = new DatagramSocket(_rioPort);
                 while (true) {
-                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-                    incomingSocket.receive(receivePacket);
+                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length );
+                    serverSocket.receive(receivePacket);
                     if (receivePacket == null) {
 
                     } else {
@@ -211,6 +220,7 @@ public class JetsonProxy {
                             _jetsonAddress = receivePacket.getAddress();
                         }
                         String raw = new String(receivePacket.getData(), 0, receivePacket.getLength());
+//                        DriverStation.reportError(raw, false);
                         Frame frame = new Frame(raw);
                         _proxy.setLatestFrame(frame);
                     }

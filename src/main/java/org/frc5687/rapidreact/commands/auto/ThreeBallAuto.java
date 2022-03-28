@@ -38,8 +38,8 @@ public class ThreeBallAuto extends SequentialCommandGroup{
             DriveTrain driveTrain,
             Catapult catapult,
             Intake intake,
-            AutoChooser.Position position,
-            Indexer indexer
+            Indexer indexer,
+            AutoChooser.Position position
     ) {
 
         Double _velocity;

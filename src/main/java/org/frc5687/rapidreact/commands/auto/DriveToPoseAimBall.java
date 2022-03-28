@@ -1,16 +1,11 @@
-/* Team 5687 (C)2021-2022 */
 package org.frc5687.rapidreact.commands.auto;
 
+
+import edu.wpi.first.math.geometry.Pose2d;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-
-/**
- * Drive in autonomous mode (i.e., no OI control) to a field-relative pose.
- */
-public class DriveToPose extends OutliersCommand {
+public class DriveToPoseAimBall extends OutliersCommand {
 
     private final Pose2d _destination;
     private final DriveTrain _driveTrain;
@@ -21,16 +16,16 @@ public class DriveToPose extends OutliersCommand {
 
     /**
      * Create DriveAuto command
-     * 
+     *
      * @param driveTrain pass in from RobotContainer
      * @param pose xPos in meters, yPos in meters, theta in radians
      * @param velocity m/s
      */
-    public DriveToPose(
-        DriveTrain driveTrain,
-        Pose2d pose,
-        double velocity
-        ) {
+    public DriveToPoseAimBall(
+            DriveTrain driveTrain,
+            Pose2d pose,
+            double velocity
+            ) {
         _driveTrain = driveTrain;
         _destination = pose;
         _velocity = velocity;
@@ -49,13 +44,13 @@ public class DriveToPose extends OutliersCommand {
 
         /**
          * Based on observation, appears that
-         * 
+         *
          *             North = +X
          *  West = +Y              East = -Y
          *             South = -X
          */
 
-        _driveTrain.poseFollower(_destination, _velocity);
+        _driveTrain.poseFollowerBallTracking(_destination, _velocity);
     }
 
     @Override
