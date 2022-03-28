@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import org.frc5687.rapidreact.commands.*;
+import org.frc5687.rapidreact.commands.catapult.AutoShoot;
 import org.frc5687.rapidreact.commands.catapult.DriveCatapult;
 import org.frc5687.rapidreact.commands.auto.*;
 import org.frc5687.rapidreact.commands.Climber.IdleClimber;
@@ -92,6 +93,7 @@ public class RobotContainer extends OutliersContainer {
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
         setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _indexer, _oi));
+        setDefaultCommand(_catapult, new AutoShoot(_catapult, _driveTrain, _oi));
         setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.

@@ -1,47 +1,45 @@
 package org.frc5687.rapidreact.commands.catapult;
 
+
+import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 
-import static org.frc5687.rapidreact.Constants.DriveTrain.VISION_TOLERANCE;
+public class AutoShoot extends OutliersCommand{
 
-public class AutoShoot extends OutliersCommand {
     private Catapult _catapult;
     private DriveTrain _driveTrain;
+    private OI _oi;
+    private boolean shotComplete;
 
-    public AutoShoot(Catapult catapult, DriveTrain driveTrain) {
+    public AutoShoot(Catapult catapult, DriveTrain driveTrain, OI oi){
         _catapult = catapult;
         _driveTrain = driveTrain;
-        addRequirements(_catapult);
+        _oi = oi;
+        metric("Auto shoot running", false);
     }
 
     @Override
-    public void initialize() {
+    public void initialize(){
         super.initialize();
     }
 
     @Override
-    public void execute() {
-        if (_driveTrain.hasTarget()) {
-//            _catapult.setWinchGoal(); // TODO: distance calc from linear regression
-//            _catapult.setSpringGoal(); // TODO: distance calc from linear regression
+    public void execute(){
+        super.execute();
+        if(_oi.getDriveX() < 0.4 && _oi.getDriveY() < 0.4 && _driveTrain.onTarget() == true){
+            metric("Clear to shoot", true);
         }
+        metric("Not clear to shoot", false);
     }
 
     @Override
-    public boolean isFinished() {
-        if (_catapult.isWinchAtGoal() &&
-                _catapult.isSpringAtPosition() &&
-                Math.abs(_driveTrain.getAngleToTarget()) < VISION_TOLERANCE
-        ) {
+    public boolean isFinished(){
+        super.isFinished();
+        if(shotComplete){
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        super.end(interrupted);
     }
 }
