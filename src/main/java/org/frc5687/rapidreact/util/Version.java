@@ -6,7 +6,7 @@ package org.frc5687.rapidreact.util;
  */
 
 public class Version {
-    public static final String BRANCH = "Events/Boston";
-    public static final String REVISION = "fda8da8";
+    public static final String BRANCH = "Catapult/#142-SpeedUp";
+    public static final String REVISION = "870a984";
     public static final String MODIFIED = " *";
 }

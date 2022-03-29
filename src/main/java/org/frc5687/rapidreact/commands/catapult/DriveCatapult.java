@@ -25,6 +25,10 @@ public class DriveCatapult extends OutliersCommand {
 
     private CatapultState _prevState;
     private CatapultState _lastLoggedState = null;
+
+    private double _springGoal;
+    private double _winchGoal;
+
     private boolean _isFirstShot = true;
     private long _wait;
     private long _indexerWait;
@@ -85,6 +89,12 @@ public class DriveCatapult extends OutliersCommand {
                 _indexer.up();
                 checkLockOut();
                 checkKill();
+                if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
+                    _winchGoal = _catapult.calculateIdealString(_driveTrain.getDistanceToTarget());
+                    _springGoal = _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget());
+                    _catapult.setWinchGoal(_winchGoal);
+                    _catapult.setSpringDistance(_springGoal);
+                }
                 if (_indexer.isBallDetected()) {
                     _indexer.down();
                     _catapult.setState(AIMING);
@@ -103,7 +113,12 @@ public class DriveCatapult extends OutliersCommand {
                     _catapult.setWinchGoal(_catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
                     _catapult.setSpringDistance(_catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
                 } else {
-                    _catapult.setStaticGoals();
+                    if (_catapult.getSetpoint() == CatapultSetpoint.NONE) {
+                        _catapult.setWinchGoal(_winchGoal);
+                        _catapult.setSpringDistance(_springGoal);
+                    } else {
+                        _catapult.setStaticGoals();
+                    }
                 }
                 if (isShootTriggered() && ((_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
                     _catapult.setAutoshoot(false);
