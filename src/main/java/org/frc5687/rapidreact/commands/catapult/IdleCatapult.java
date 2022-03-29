@@ -24,7 +24,6 @@ public class IdleCatapult extends OutliersCommand {
     public void execute() {
         super.execute();
         _catapult.setWinchMotorSpeed(0);
-        _catapult.setSpringMotorSpeed(_oi.getSpringMotorSpeed());
     }
 
     @Override
