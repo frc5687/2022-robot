@@ -2,6 +2,9 @@
 package org.frc5687.rapidreact.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -12,6 +15,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -19,9 +24,11 @@ import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.drive.Vector2d;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
+import org.frc5687.rapidreact.util.Helpers;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
@@ -179,11 +186,6 @@ public class DriveTrain extends OutliersSubsystem {
     public void updateDashboard() {
         metric("Goal Distance From Top Plane", getDistanceToTarget());
         metric("Heading", getHeading().getDegrees());
-//        metric("Goal Distance From Points", Math.sqrt(
-//                (getTargetPosition()[0] * getTargetPosition()[0]) +
-//                (getTargetPosition()[1] * getTargetPosition()[1]) +
-//                (getTargetPosition()[2] * getTargetPosition()[2])
-//                ));
         metric("Goal Angle", getAngleToTarget());
         metric("Has goal", hasTarget());
 //        metric("Target vx", getTargetVelocity()[0]);
@@ -407,6 +409,52 @@ public class DriveTrain extends OutliersSubsystem {
         setSouthWestModuleState(moduleStates[SOUTH_WEST]);
         setSouthEastModuleState(moduleStates[SOUTH_EAST]);
         setNorthEastModuleState(moduleStates[NORTH_EAST]);
+    }
+
+    /**
+     * calculates time to hit moving target
+     * @param position array of target
+     * @param velocity array of target
+     * @param speed exit velocity
+     * @return lead time
+     */
+    public double calculateLeadTime(double[] position, double[] velocity, double speed) {
+        double c0 = Helpers.dotProduct(position, position);
+        double c1 = Helpers.dotProduct(position, velocity);
+        double c2 = (speed * speed) * Helpers.dotProduct(velocity, velocity);
+        double calculation = c1 * c1 + c2 * c0;
+        double time = 0;
+        if (calculation >= 0) {
+            time = (c1 + Math.sqrt(calculation)) / c0;
+            if (time < 0) {
+                time = 0;
+            }
+        }
+        return time;
+    }
+
+    /**
+     * Calculates the new position with the target velocity
+     * @return Matrix<N3, N1> target position
+     */
+    public Matrix<N3, N1> leadTargetPosition(double[] position, double[] velocity, double time) {
+        Vector<N3> pos = VecBuilder.fill(position[0], position[1], position[2]);
+        Vector<N3> vel = VecBuilder.fill(velocity[0], velocity[1], velocity[2]);
+        return pos.plus(vel.times(time));
+    }
+
+    public double calculateLeadAngle(Matrix<N3, N1> leadPosition) {
+        // only care about 2d plane (x, y)
+        Vector2d pos = new Vector2d(leadPosition.get(0, 0), leadPosition.get(1, 0));
+        // unit vector of x
+        Vector2d unitX = new Vector2d(1, 0);
+        double angle;
+        if (leadPosition.get(1,0) < 0) {
+            angle = -Math.acos(pos.dot(unitX) / (pos.magnitude() * unitX.magnitude()));
+        } else {
+            angle = Math.acos(pos.dot(unitX) / (pos.magnitude() * unitX.magnitude()));
+        }
+        return angle;
     }
 
     public double getVisionControllerOutput(boolean ball) {

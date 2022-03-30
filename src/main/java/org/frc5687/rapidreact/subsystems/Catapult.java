@@ -17,11 +17,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.config.Auto;
-import org.frc5687.rapidreact.util.ColorSensor;
-import org.frc5687.rapidreact.util.ProximitySensor;
-import org.frc5687.rapidreact.util.HallEffect;
-import org.frc5687.rapidreact.util.OutliersContainer;
-import org.frc5687.rapidreact.util.ServoStop;
+import org.frc5687.rapidreact.util.*;
 
 import static org.frc5687.rapidreact.Constants.Catapult.*;
 
@@ -41,6 +37,7 @@ public class Catapult extends OutliersSubsystem {
     private boolean _winchEncoderZeroed = false;
     private CatapultState _state;
     private double _springGoal;
+    private double _winchGoal;
     private boolean _autoShoot;
     private boolean _initialized = false;
     private CatapultSetpoint _setpoint = CatapultSetpoint.NONE;
@@ -116,6 +113,7 @@ public class Catapult extends OutliersSubsystem {
         _winchEncoderZeroed = false;
         _state = CatapultState.DEBUG;
         _springGoal = 0;
+        _winchGoal = 0;
     }
 
 
@@ -132,7 +130,8 @@ public class Catapult extends OutliersSubsystem {
 
     public void zeroSpringEncoder() {
         if (!_springEncoderZeroed) {
-            _springMotor.setSelectedSensorPosition(SPRING_BOTTOM_LIMIT);
+            // this is zero now not the real value. Don't want to mess with the regression.
+            _springMotor.setSelectedSensorPosition(0);
             _springEncoderZeroed = true;
         }
     }
@@ -178,17 +177,59 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public double getArmReleaseAngle() {
-        return STOWED_ANGLE - stringLengthToAngle(getWinchRotation() * ARM_WINCH_DRUM_CIRCUMFERENCE);
+        return stringLengthToAngle(getWinchStringLength()) - STOWED_ANGLE;
     }
-    
+
+    public double calculateLeadExitVelocity(double currentExitVelocity, double[] targetVelocity) {
+        if (targetVelocity[0] > 0) {
+            // moving away from target
+            return currentExitVelocity + Helpers.magnitude(targetVelocity);
+        }
+        return currentExitVelocity - Helpers.magnitude(targetVelocity);
+    }
+
+    public double calculateAngleToHitTarget(double exitVel, double xPosition, double zPosition) {
+        double g = 9.81;
+        double root = Math.pow(exitVel, 4) -
+                g * (g * (xPosition * xPosition) +
+                2 * zPosition * (exitVel * exitVel));
+        if (root > 0) {
+            double num = (exitVel * exitVel) + Math.sqrt(root);
+            double num1 = (exitVel * exitVel) - Math.sqrt(root);
+            double denom = g * xPosition;
+            double angle1 = Math.atan(num / denom);
+            double angle2 = Math.atan(num1 / denom);
+            return Math.min(angle1, angle2);
+        }
+        return 0;
+    }
+
+    public double calculateLeadSpringDisplacement(double[] targetPosition, double[] targetVelocity) {
+        double exitVel = calculateExitVelocity(getArmReleaseAngle(), _springGoal);
+        double newExitVel = calculateLeadExitVelocity(exitVel, targetVelocity);
+        double angleDisplacement = calculateAngleToHitTarget(newExitVel, targetPosition[0], targetPosition[2]);
+
+        return 0;
+    }
+
     //meters and radians.
     protected double stringLengthToAngle(double stringLength) {
         return LINEAR_REGRESSION_SLOPE * stringLength + LINEAR_REGRESSION_OFFSET;
     }
+
     // radians
     protected double angleToStringLength(double angle) {
-        return (angle - STOWED_ANGLE + LINEAR_REGRESSION_OFFSET) / LINEAR_REGRESSION_SLOPE;
+        return (angle + STOWED_ANGLE + LINEAR_REGRESSION_OFFSET) / LINEAR_REGRESSION_SLOPE;
     }
+
+    protected double exitVelocityToSpringDisplacement(double exitVelocity, double angleDisplacement) {
+        double angularAcceleration = (2.0 * (exitVelocity * exitVelocity)) /
+                (angleDisplacement * (ARM_LENGTH * ARM_LENGTH));
+        double torque = angularAcceleration * INERTIA_OF_ARM;
+        double force = torque / LEVER_ARM_LENGTH;
+        return force / SPRING_RATE;
+    }
+
 
     public void zeroWinchEncoder() {
         if (!_winchEncoderZeroed) {
@@ -228,10 +269,10 @@ public class Catapult extends OutliersSubsystem {
                 ((ARM_LENGTH * ARM_LENGTH) * angleDisplacement * SPRING_RATE * LEVER_ARM_LENGTH);
     }
 
-    // calculated the ball exit velocity in meters per sec from the angle displacement.
-    public double calculateExitVelocity(double angle, double spring) {
+    // calculated the ball exit velocity in meters per sec from the angle displacement and spring disp.
+    public double calculateExitVelocity(double exitAngle, double spring) {
         double springDisplacement = Math.abs(spring - SPRING_BOTTOM_LIMIT);
-        double angleDisplacement = Math.abs(angle - STOWED_ANGLE);
+        double angleDisplacement = Math.abs(exitAngle + STOWED_ANGLE);
         double force = springDisplacement * SPRING_RATE;
         double torque = LEVER_ARM_LENGTH * force;
         double angularAcceleration = torque / INERTIA_OF_ARM;
@@ -240,16 +281,12 @@ public class Catapult extends OutliersSubsystem {
         return angularVelocity * ARM_LENGTH;
     }
 
-    public double getFixedDistance(double dist) {
-        return 0.8195 * dist + 0.6648;
-    }
-
     // calculate linear regression.
     public double calculateIdealString(double dist) {
         // new curve
-        return (0.006314395 * (dist * dist * dist)) -
-                (0.105778826 * (dist * dist)) +
-                (0.592986356 * dist) - 0.793641243 ;
+        return (SPRING_CUBIC_COEFF * (dist * dist * dist)) +
+                (SPRING_SQUARE_COEFF * (dist * dist)) +
+                (SPRING_LINEAR_COEFF * dist) + SPRING_OFFSET_COEFF;
         // old curve
 //        return (0.005596480 * (dist * dist * dist)) -
 //                (0.095972797 * (dist * dist)) +
@@ -258,9 +295,9 @@ public class Catapult extends OutliersSubsystem {
     // calculated from linear regression
     public double calculateIdealSpring(double dist) {
         // new curve
-        return (-0.000068220 * (dist * dist * dist)) +
-                (0.001980322 * (dist * dist)) -
-                (0.005533508 * dist) + 0.064979245;
+        return (WINCH_CUBIC_COEFF * (dist * dist * dist)) +
+                (WINCH_SQUARE_COEFF * (dist * dist)) +
+                (WINCH_LINEAR_COEFF * dist) + WINCH_OFFSET_COEFF;
         // old curve
 //        return (0.000286128 * (dist * dist * dist)) -
 //                (0.003328233 * (dist * dist)) +

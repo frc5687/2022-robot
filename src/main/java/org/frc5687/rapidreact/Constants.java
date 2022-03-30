@@ -1,12 +1,8 @@
 /* Team 5687 (C)2020-2022 */
 package org.frc5687.rapidreact;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-
-import org.frc5687.rapidreact.config.Auto;
 
 public class Constants {
     public static final int TICKS_PER_UPDATE = 1;
@@ -228,25 +224,29 @@ public class Constants {
         public static final double ARM_WINCH_DRUM_CIRCUMFERENCE = Units.inchesToMeters(1.437) * Math.PI; // meters
         public static final int WINCH_CURRENT_LIMIT = 25; //amps
 
-        // Physical characteristics
-        public static final double POUND_PER_IN_TO_NEWTON_PER_METER = 0.0057101471627692;
-        public static final double SPRING_RATE = 11.2 * POUND_PER_IN_TO_NEWTON_PER_METER; // Newtons per meter.
-        public static final double ARM_LENGTH = Units.inchesToMeters(20.9);
-        public static final double LEVER_ARM_LENGTH = Units.inchesToMeters(6.0);
-        public static final double ARM_MASS = 1.2; //kg
-        public static final double BALL_INERTIA = 0.0432;
-        public static final double ROD_INERTIA = (1.0 / 3.0) * ARM_MASS * (ARM_LENGTH * ARM_LENGTH);
-        public static final double INERTIA_OF_ARM = ROD_INERTIA + BALL_INERTIA;
+        // Ball characteristics
 
-        public static final double STOWED_ANGLE = Units.degreesToRadians(90 + 24.724);
+        public static final double BALL_MASS = 0.27; // kg
+        public static final double BALL_RADIUS = 0.24; // m of an inflated ball
+        public static final double BALL_INERTIA = (2.0 / 3.0) * BALL_MASS * (BALL_RADIUS * BALL_RADIUS); // kg * m^2
+
+        // Physical characteristics
+        public static final double POUND_PER_IN_TO_NEWTON_PER_METER = 0.0057101471627692; // conversion factor
+        public static final double SPRING_RATE = 11.2 * POUND_PER_IN_TO_NEWTON_PER_METER; // Newtons per meter.
+        public static final double ARM_LENGTH = Units.inchesToMeters(20.9); // m
+        public static final double LEVER_ARM_LENGTH = Units.inchesToMeters(6.0); // m
+        public static final double ARM_MASS = 0.56; // kg
+        public static final double ROD_INERTIA = (1.0 / 3.0) * ARM_MASS * (ARM_LENGTH * ARM_LENGTH); // kg * m^2
+        public static final double INERTIA_OF_ARM = ROD_INERTIA + BALL_INERTIA; // kg * m^2
+
+        public static final double STOWED_ANGLE = Units.degreesToRadians(24.724);
 
         //Linear regression constants
         public static final double LINEAR_REGRESSION_SLOPE = 3.6073; // meters and radians
         public static final double LINEAR_REGRESSION_OFFSET = -0.0217; //meters and radians
 
-
         // Spring Linear actuator limits
-        public static final double SPRING_BOTTOM_LIMIT = 0; //TODO: Real values
+        public static final double SPRING_BOTTOM_LIMIT = 0.0245; //TODO: Real values
 
         // Winch actuator limits
         public static final double WINCH_BOTTOM_LIMIT = 0;
@@ -274,11 +274,17 @@ public class Constants {
         // DriveCatapult constants
         public static final double LOWERING_SPEED = 1.0;
         public static final double SPRING_ZERO_SPEED = -0.5;
-        public static final double REMOVE_BALL_WINCH_GOAL = 0.1;
-        public static final double REMOVE_BALL_SPRING_GOAL = 0.05;
-        public static final double INITIAL_BALL_WINCH_GOAL = 0.255;
-        public static final double INITIAL_BALL_SPRING_GOAL = 0.06;
 
+        // poly regression spring
+        public static final double SPRING_CUBIC_COEFF = 0.006314395;
+        public static final double SPRING_SQUARE_COEFF = -0.105778826;
+        public static final double SPRING_LINEAR_COEFF = 0.592986356;
+        public static final double SPRING_OFFSET_COEFF = -0.793641243;
+        // poly regression winch
+        public static final double WINCH_CUBIC_COEFF = -0.000068220;
+        public static final double WINCH_SQUARE_COEFF = 0.001980322;
+        public static final double WINCH_LINEAR_COEFF = -0.005533508;
+        public static final double WINCH_OFFSET_COEFF = 0.064979245;
 
     }
 
