@@ -170,26 +170,6 @@ public class OI extends OutliersProxy {
         return speed;
     }
 
-    public double getWinchMotorSpeed() {
-//        double speed = -getSpeedFromAxis(_debug, _debug.getXChannel());
-//        speed = applyDeadband(speed, Constants.DEADBAND);
-        return 0;
-    }
-
-    public double getStationarySpeed() {
-//        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
-//        speed = applyDeadband(speed, Constants.DEADBAND);
-//        speed = 0;
-        return 0;
-    }
-    
-    public double getRockerSpeed() {
-//        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_Y.getNumber());
-//        speed = applyDeadband(speed, Constants.DEADBAND);
-//        speed = 0;
-        return 0;
-    }
-
     protected double getSpeedFromAxis(Joystick gamepad, int axisNumber) {
         return gamepad.getRawAxis(axisNumber);
     }

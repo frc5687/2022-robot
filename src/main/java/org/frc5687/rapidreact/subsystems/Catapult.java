@@ -207,9 +207,15 @@ public class Catapult extends OutliersSubsystem {
     public double calculateLeadSpringDisplacement(double[] targetPosition, double[] targetVelocity) {
         double exitVel = calculateExitVelocity(getArmReleaseAngle(), _springGoal);
         double newExitVel = calculateLeadExitVelocity(exitVel, targetVelocity);
-        double angleDisplacement = calculateAngleToHitTarget(newExitVel, targetPosition[0], targetPosition[2]);
+        double angleDisplacement = calculateAngleToHitTarget(newExitVel, targetPosition[0], targetPosition[2]) + STOWED_ANGLE;
+        return exitVelocityToSpringDisplacement(newExitVel, angleDisplacement);
+    }
 
-        return 0;
+    public double calculateLeadWinchString(double[] targetPosition, double[] targetVelocity) {
+        double exitVel = calculateExitVelocity(getArmReleaseAngle(), _springGoal);
+        double newExitVel = calculateLeadExitVelocity(exitVel, targetVelocity);
+        double angle = calculateAngleToHitTarget(newExitVel, targetPosition[0], targetPosition[2]);
+        return angleToStringLength(angle);
     }
 
     //meters and radians.
