@@ -21,8 +21,6 @@ public class IdleClimber extends OutliersCommand {
     @Override
     public void execute() {
         super.execute();
-        _climber.setStaSpeed(_oi.getStationarySpeed());
-        _climber.setRockSpeed(_oi.getRockerSpeed());
         if (_climber.isRockArmDown()) {
             _climber.zeroRockerArmEncoder();
         }

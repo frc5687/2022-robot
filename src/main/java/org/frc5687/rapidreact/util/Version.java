@@ -6,7 +6,7 @@ package org.frc5687.rapidreact.util;
  */
 
 public class Version {
-    public static final String BRANCH = "Catapult/#138-AutoShoot";
-    public static final String REVISION = "ac78253";
+    public static final String BRANCH = "OI/#140-CleanUp";
+    public static final String REVISION = "870a984";
     public static final String MODIFIED = " *";
 }
