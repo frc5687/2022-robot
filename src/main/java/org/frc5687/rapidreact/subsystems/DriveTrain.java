@@ -2,6 +2,9 @@
 package org.frc5687.rapidreact.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -12,6 +15,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -19,12 +24,15 @@ import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.drive.Vector2d;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.OI;
+import org.frc5687.rapidreact.util.Helpers;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
+import static org.frc5687.rapidreact.Constants.DriveTrain.ROTATING_TOLERANCE;
 import static org.frc5687.rapidreact.Constants.EPSILON;
 
 
@@ -45,6 +53,8 @@ public class DriveTrain extends OutliersSubsystem {
     private SwerveDriveOdometry _odometry;
 
     private double _PIDAngle;
+
+    private boolean _isMoving;
 
     private AHRS _imu;
     private JetsonProxy _proxy;
@@ -135,7 +145,7 @@ public class DriveTrain extends OutliersSubsystem {
                             Constants.DriveTrain.VISION_kI,
                             Constants.DriveTrain.VISION_kD,
                             new TrapezoidProfile.Constraints(
-                                    Constants.DriveTrain.PROFILE_CONSTRAINT_VEL, Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL));
+                                    Constants.DriveTrain.MAX_ANG_VEL_VISION, Constants.DriveTrain.MAX_ANG_VEL_VISION * 2));
             _visionController.setIntegratorRange(-Constants.DriveTrain.VISION_IRANGE, Constants.DriveTrain.VISION_IRANGE);
             _visionController.setTolerance(Constants.DriveTrain.VISION_TOLERANCE);
             _ballController=
@@ -150,6 +160,7 @@ public class DriveTrain extends OutliersSubsystem {
         } catch (Exception e) {
             error(e.getMessage());
         }
+        _isMoving = false;
     }
 
     // use for modules as controller is running at 200Hz.
@@ -179,19 +190,14 @@ public class DriveTrain extends OutliersSubsystem {
     public void updateDashboard() {
         metric("Goal Distance From Top Plane", getDistanceToTarget());
         metric("Heading", getHeading().getDegrees());
-//        metric("Goal Distance From Points", Math.sqrt(
-//                (getTargetPosition()[0] * getTargetPosition()[0]) +
-//                (getTargetPosition()[1] * getTargetPosition()[1]) +
-//                (getTargetPosition()[2] * getTargetPosition()[2])
-//                ));
         metric("Goal Angle", getAngleToTarget());
         metric("Has goal", hasTarget());
 //        metric("Target vx", getTargetVelocity()[0]);
 //        metric("Target vy", getTargetVelocity()[1]);
 //        metric("Target vz", getTargetVelocity()[2]);
-//        metric("Target x", getTargetPosition()[0]);
-//        metric("Target y", getTargetPosition()[1]);
-//        metric("Target z", getTargetPosition()[2]);
+        metric("Target x", getTargetPosition()[0]);
+        metric("Target y", getTargetPosition()[1]);
+        metric("Target z", getTargetPosition()[2]);
 //        metric("Blue ball angle", getAngleToClosestBlueBall());
 //        metric("Red ball angle", getAngleToClosestRedBall());
 //        metric("Ball heading", getCorrectBallHeading().getRadians());
@@ -298,6 +304,7 @@ public class DriveTrain extends OutliersSubsystem {
             setSouthEastModuleState(swerveModuleStates[SOUTH_EAST]);
             setNorthEastModuleState(swerveModuleStates[NORTH_EAST]);
         }
+        _isMoving = vx != 0 || vy != 0 || !(Math.abs(omega) < ROTATING_TOLERANCE);
     }
     public SwerveDriveKinematicsConstraint getKinematicConstraint() {
         return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
@@ -311,7 +318,11 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
-            return _proxy.getLatestFrame().getTargetDistance();
+            double dist = _proxy.getLatestFrame().getTargetDistance();
+            if (dist > 1.5 && dist < 8) {
+                return dist;
+            }
+            return -1;
         }
         return Double.NaN;
     }
@@ -409,6 +420,52 @@ public class DriveTrain extends OutliersSubsystem {
         setNorthEastModuleState(moduleStates[NORTH_EAST]);
     }
 
+    /**
+     * calculates time to hit moving target
+     * @param position array of target
+     * @param velocity array of target
+     * @param speed exit velocity
+     * @return lead time
+     */
+    public double calculateLeadTime(double[] position, double[] velocity, double speed) {
+        double c0 = Helpers.dotProduct(position, position);
+        double c1 = Helpers.dotProduct(position, velocity);
+        double c2 = (speed * speed) * Helpers.dotProduct(velocity, velocity);
+        double calculation = c1 * c1 + c2 * c0;
+        double time = 0;
+        if (calculation >= 0) {
+            time = (c1 + Math.sqrt(calculation)) / c0;
+            if (time < 0) {
+                time = 0;
+            }
+        }
+        return time;
+    }
+
+    /**
+     * Calculates the new position with the target velocity
+     * @return Matrix<N3, N1> target position
+     */
+    public Matrix<N3, N1> leadTargetPosition(double[] position, double[] velocity, double time) {
+        Vector<N3> pos = VecBuilder.fill(position[0], position[1], position[2]);
+        Vector<N3> vel = VecBuilder.fill(velocity[0], velocity[1], velocity[2]);
+        return pos.plus(vel.times(time));
+    }
+
+    public double calculateLeadAngle(Matrix<N3, N1> leadPosition) {
+        // only care about 2d plane (x, y)
+        Vector2d pos = new Vector2d(leadPosition.get(0, 0), leadPosition.get(1, 0));
+        // unit vector of x
+        Vector2d unitX = new Vector2d(1, 0);
+        double angle;
+        if (leadPosition.get(1,0) < 0) {
+            angle = -Math.acos(pos.dot(unitX) / (pos.magnitude() * unitX.magnitude()));
+        } else {
+            angle = Math.acos(pos.dot(unitX) / (pos.magnitude() * unitX.magnitude()));
+        }
+        return angle;
+    }
+
     public double getVisionControllerOutput(boolean ball) {
         if (ball) {
             return _ballController.calculate(getAngleCorrectBall());
@@ -419,7 +476,13 @@ public class DriveTrain extends OutliersSubsystem {
     public boolean onTarget() {
         return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE;
     }
+    public boolean onAutoTarget() {
+        return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE + 0.01;
+    }
 
+    public boolean isMoving(){
+        return _isMoving;
+    }
     // checks if blue ball is visible
     public boolean hasBlueBall() {
         return getAngleToClosestBlueBall() != -99;
@@ -517,6 +580,10 @@ public class DriveTrain extends OutliersSubsystem {
         } else {
             _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_TURBO : Constants.DriveTrain.MAX_MPS;
         }
+    }
+
+    public void setIsMoving(boolean isMoving) {
+        _isMoving = isMoving;
     }
 
     public void enableLimelight() {

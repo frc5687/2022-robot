@@ -101,4 +101,22 @@ public class Helpers {
         }
         return radians ? angle : Units.radiansToDegrees(angle);
     }
+
+    public static double dotProduct(double[] a, double[] b) {
+        if (a.length != b.length)
+            throw new RuntimeException("Arrays must be same size");
+        double sum = 0;
+        for (int i = 0; i < a.length; i++)
+            sum += a[i] * b[i];
+        return sum;
+    }
+
+    public static double magnitude(double[] a) {
+        double root = 0;
+        for (double v : a) root += v * v;
+        if (root < 0) {
+            return 0;
+        }
+        return Math.sqrt(root);
+    }
 }
