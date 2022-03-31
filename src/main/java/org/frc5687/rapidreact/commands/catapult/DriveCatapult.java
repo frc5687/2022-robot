@@ -204,11 +204,13 @@ public class DriveCatapult extends OutliersCommand {
     }
 
     boolean isShootTriggered() {
-        if (DriverStation.isAutonomous()) {
-            return _catapult.isAutoShoot();    
-        } else {
-            return _oi.isShootButtonPressed();
+        if(!_driveTrain.isMoving() && _driveTrain.onTarget()){
+            return true;
         }
+        if(_oi.isShootButtonPressed()){
+            return true;
+        }
+        return false;
     }
 
     @Override

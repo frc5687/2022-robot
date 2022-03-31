@@ -46,6 +46,8 @@ public class DriveTrain extends OutliersSubsystem {
 
     private double _PIDAngle;
 
+    private boolean _isMoving;
+
     private AHRS _imu;
     private JetsonProxy _proxy;
 //    private Limelight _limelight;
@@ -63,6 +65,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy/*, Limelight limelight*/, AHRS imu) {
         super(container);
+        _isMoving = false;
         try {
             _oi = oi;
             _proxy = proxy;
@@ -297,6 +300,11 @@ public class DriveTrain extends OutliersSubsystem {
             setSouthEastModuleState(swerveModuleStates[SOUTH_EAST]);
             setNorthEastModuleState(swerveModuleStates[NORTH_EAST]);
         }
+        if (vx == 0 && vy == 0) {
+            _isMoving = false;
+        } else {
+            _isMoving = true;
+        }
     }
     public SwerveDriveKinematicsConstraint getKinematicConstraint() {
         return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
@@ -419,6 +427,9 @@ public class DriveTrain extends OutliersSubsystem {
         return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE;
     }
 
+    public boolean isMoving(){
+        return _isMoving;
+    }
     // checks if blue ball is visible
     public boolean hasBlueBall() {
         return getAngleToClosestBlueBall() != -99;
