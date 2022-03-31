@@ -32,6 +32,7 @@ import org.frc5687.rapidreact.util.Helpers;
 import org.frc5687.rapidreact.util.JetsonProxy;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
+import static org.frc5687.rapidreact.Constants.DriveTrain.ROTATING_TOLERANCE;
 import static org.frc5687.rapidreact.Constants.EPSILON;
 
 
@@ -72,7 +73,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     public DriveTrain(OutliersContainer container, OI oi, JetsonProxy proxy/*, Limelight limelight*/, AHRS imu) {
         super(container);
-        _isMoving = false;
         try {
             _oi = oi;
             _proxy = proxy;
@@ -145,7 +145,7 @@ public class DriveTrain extends OutliersSubsystem {
                             Constants.DriveTrain.VISION_kI,
                             Constants.DriveTrain.VISION_kD,
                             new TrapezoidProfile.Constraints(
-                                    Constants.DriveTrain.PROFILE_CONSTRAINT_VEL, Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL));
+                                    Constants.DriveTrain.MAX_ANG_VEL_VISION, Constants.DriveTrain.MAX_ANG_VEL_VISION * 2));
             _visionController.setIntegratorRange(-Constants.DriveTrain.VISION_IRANGE, Constants.DriveTrain.VISION_IRANGE);
             _visionController.setTolerance(Constants.DriveTrain.VISION_TOLERANCE);
             _ballController=
@@ -160,6 +160,7 @@ public class DriveTrain extends OutliersSubsystem {
         } catch (Exception e) {
             error(e.getMessage());
         }
+        _isMoving = false;
     }
 
     // use for modules as controller is running at 200Hz.
@@ -194,9 +195,9 @@ public class DriveTrain extends OutliersSubsystem {
 //        metric("Target vx", getTargetVelocity()[0]);
 //        metric("Target vy", getTargetVelocity()[1]);
 //        metric("Target vz", getTargetVelocity()[2]);
-//        metric("Target x", getTargetPosition()[0]);
-//        metric("Target y", getTargetPosition()[1]);
-//        metric("Target z", getTargetPosition()[2]);
+        metric("Target x", getTargetPosition()[0]);
+        metric("Target y", getTargetPosition()[1]);
+        metric("Target z", getTargetPosition()[2]);
 //        metric("Blue ball angle", getAngleToClosestBlueBall());
 //        metric("Red ball angle", getAngleToClosestRedBall());
 //        metric("Ball heading", getCorrectBallHeading().getRadians());
@@ -303,11 +304,7 @@ public class DriveTrain extends OutliersSubsystem {
             setSouthEastModuleState(swerveModuleStates[SOUTH_EAST]);
             setNorthEastModuleState(swerveModuleStates[NORTH_EAST]);
         }
-        if (vx == 0 && vy == 0) {
-            _isMoving = false;
-        } else {
-            _isMoving = true;
-        }
+        _isMoving = vx != 0 || vy != 0 || !(Math.abs(omega) < ROTATING_TOLERANCE);
     }
     public SwerveDriveKinematicsConstraint getKinematicConstraint() {
         return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
@@ -321,7 +318,11 @@ public class DriveTrain extends OutliersSubsystem {
 
     public double getDistanceToTarget() {
         if (_proxy.getLatestFrame() != null) {
-            return _proxy.getLatestFrame().getTargetDistance();
+            double dist = _proxy.getLatestFrame().getTargetDistance();
+            if (dist > 1.5 && dist < 8) {
+                return dist;
+            }
+            return -1;
         }
         return Double.NaN;
     }
@@ -475,6 +476,9 @@ public class DriveTrain extends OutliersSubsystem {
     public boolean onTarget() {
         return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE;
     }
+    public boolean onAutoTarget() {
+        return Math.abs(getAngleToTarget()) < Constants.DriveTrain.VISION_TOLERANCE + 0.01;
+    }
 
     public boolean isMoving(){
         return _isMoving;
@@ -576,6 +580,10 @@ public class DriveTrain extends OutliersSubsystem {
         } else {
             _driveSpeed = value ? Constants.DriveTrain.MAX_MPS_TURBO : Constants.DriveTrain.MAX_MPS;
         }
+    }
+
+    public void setIsMoving(boolean isMoving) {
+        _isMoving = isMoving;
     }
 
     public void enableLimelight() {

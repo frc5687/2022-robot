@@ -129,11 +129,12 @@ public class Constants {
         public static final double kD = 0.5;
 
         // Vision PID controller
-        public static final double VISION_TOLERANCE = 0.035; // rads
-        public static final double VISION_kP = 6.0;
+        public static final double VISION_TOLERANCE = 0.04; // rads
+        public static final double VISION_kP = 5.6;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.15;
+        public static final double VISION_kD = 0.2;
         public static final double VISION_IRANGE = MAX_MPS * 2;
+        public static final double MAX_ANG_VEL_VISION = Math.PI * 3; // Max rotation rate of robot (rads/s)
         public static final long VISION_LATENCY = 50;
 
         public static final double BALL_VISION_TOLERANCE = 0.040; // rads
@@ -144,6 +145,7 @@ public class Constants {
 
         public static final double POSITION_TOLERANCE = 0.03;
         public static final double ANGLE_TOLERANCE = 0.02;
+        public static final double ROTATING_TOLERANCE = 0.3;
     }
 
     public static class DifferentialSwerveModule {
@@ -261,7 +263,7 @@ public class Constants {
         public static final double TICKS_TO_METERS = SPRING_WINCH_DRUM_CIRCUMFERENCE / (FALCON_TICKS * FALCON_GEAR_REDUCTION);
         public static final double CRUISE_VELOCITY = 80000; // TODO: Needs to be calibrated via Phoenix tuner
         public static final double ACCELERATION = 100000; // TODO: Needs to be calibrated via Phoenix tuner
-        public static final double SPRING_TOLERANCE = 0.005; // m
+        public static final double SPRING_TOLERANCE = 0.001; // m
         // winch
         public static final double WINCH_kP = 22.0; // Always start with kP
         public static final double WINCH_kI = 0.0; // If possible avoid kI

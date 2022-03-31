@@ -163,6 +163,10 @@ public class Catapult extends OutliersSubsystem {
 
     public boolean isSpringHallTriggered() { return _springHall.get(); }
 
+    public double getSpringGoal() {
+        return _springGoal;
+    }
+
     public void setWinchMotorSpeed(double speed) {
         _winchMotor.set(speed);
     }
@@ -170,6 +174,7 @@ public class Catapult extends OutliersSubsystem {
     public double getWinchRotation() {
         return _winchEncoder.getPosition();
     }
+
 
     // meters
     public double getWinchStringLength() {
@@ -329,16 +334,20 @@ public class Catapult extends OutliersSubsystem {
     public boolean isInitialized() {
         return _initialized;
     }
-    
+
+
     @Override
     public void updateDashboard() {
         // Spring values
         metric("Spring position", getSpringPosition());
         metric("Spring goal ticks", _springGoal / TICKS_TO_METERS);
         metric("spring zeroed", _springEncoderZeroed);
+
 //        metric("Spring encoder ticks", getSpringEncoderTicks());
+
         metric("Spring motor output", _springMotor.getMotorOutputPercent());
         metric("Spring goal", _springGoal);
+
 //        metric("Spring Hall Effect", isSpringHallTriggered());
 
         // Winch values

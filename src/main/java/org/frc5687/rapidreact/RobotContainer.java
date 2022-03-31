@@ -93,7 +93,6 @@ public class RobotContainer extends OutliersContainer {
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
         setDefaultCommand(_catapult, new DriveCatapult(_catapult, _intake, _driveTrain, _indexer, _oi));
-        //setDefaultCommand(_catapult, new AutoShoot(_catapult, _driveTrain, _oi));
         setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
