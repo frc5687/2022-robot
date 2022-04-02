@@ -51,6 +51,9 @@ public class DriveCatapult extends OutliersCommand {
         metric("Spring from dist", _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
         metric("Intake down", _intake.isIntakeUp());
         metric("Setpoint value", _catapult.getSetpoint().toString());
+
+        _catapult.runState(); // advance the catapult state
+
         CatapultState newState =  _catapult.getState();
         if (newState != _lastLoggedState) {
             info("State changed to " + newState);

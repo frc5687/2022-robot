@@ -80,7 +80,7 @@ public class Catapult extends OutliersSubsystem {
         // - intake in STOWED_INITIAL state (catapult should not be fired)
         // - arm lowered
         // - pin locked
-        // - spring tensioned for auto shot
+        // - spring tensioned for auto shot (note this can be a problem if motor can't hold when robot is off)
         // - winch rope unwound to hard stop length for auto shot
         // This allows auto to deploy intake, then release pin to shoot ball one into hub
 
@@ -321,6 +321,10 @@ public class Catapult extends OutliersSubsystem {
 
         // Failsafes
         checkFailsafes();
+    }
+
+    /** Run the catapult's state machine */
+    public void runState() {
 
         // Remember state in case we change to ERROR state.
         _state_prior = _state;
