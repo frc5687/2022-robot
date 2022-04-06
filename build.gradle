@@ -4,8 +4,33 @@ plugins {
 	id "java"
 	id "idea"
 	id "edu.wpi.first.GradleRIO" version "2022.3.1"
+	id "com.diffplug.spotless" version "5.12.4"
 }
 
+spotless {
+	// optional: limit format enforcement to just the files changed by this feature branch
+	ratchetFrom 'origin/main'
+
+	format 'misc', {
+		// define the files to apply `misc` to
+		target '*.gradle', '*.md', '.gitignore'
+
+		// define the steps to apply to those files
+		trimTrailingWhitespace()
+		indentWithTabs() // or spaces. Takes an integer argument if you don't like 4
+		endWithNewline()
+	}
+	java {
+		// don't need to set target, it is inferred from java
+
+		// apply a specific flavor of google-java-format
+		googleJavaFormat('1.8').aosp()
+		// make sure every file has the following copyright header.
+		// optionally, Spotless can set copyright years by digging
+		// through git history (see "license" section below)
+		licenseHeader '/* Team 5687 (C)$YEAR */'
+	}
+}
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -91,30 +116,30 @@ wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
 
 task gitInfo(dependsOn: build) {
-    description = 'Logs git branch and version to build'
-    def cmd = 'git rev-parse --abbrev-ref HEAD'
-    project.ext.branch = cmd.execute().text.trim()
-    cmd = 'git rev-parse --short HEAD'
-    project.ext.revision = cmd.execute().text.trim()
+	description = 'Logs git branch and version to build'
+	def cmd = 'git rev-parse --abbrev-ref HEAD'
+	project.ext.branch = cmd.execute().text.trim()
+	cmd = 'git rev-parse --short HEAD'
+	project.ext.revision = cmd.execute().text.trim()
 
-    println '[branch] ' + project.branch
-    println '[commit] ' + project.revision
+	println '[branch] ' + project.branch
+	println '[commit] ' + project.revision
 }
 
 task gitLog {
-    description = 'Logs git branch and version to log file when deploy'
-    def logFile = new File('src/main/java/org/frc5687/rapidreact/util/Version.java')
+	description = 'Logs git branch and version to log file when deploy'
+	def logFile = new File('src/main/java/org/frc5687/rapidreact/util/Version.java')
 
-    def cmd = 'git diff HEAD --shortstat'
-    def mod = cmd.execute().text.trim()
-    def modified = (mod != null && mod.length() != 0) ? ' *' : ''
-    def br = '\n\n'
-    def reader = 'package org.frc5687.rapidreact.util;' + br
-    reader += '/**\n * A version class to read current Git information from deployed robot code\n * @author wilstenholme\n */' + br
-    reader += 'public class Version {\n'
-    reader += '    public static final String BRANCH = \"' + project.branch + '\";\n'
-    reader += '    public static final String REVISION = \"' + project.revision + '\";\n'
-    reader += '    public static final String MODIFIED = \"' +  modified + '\";\n'
-    reader += '}'
-    logFile.text = reader
+	def cmd = 'git diff HEAD --shortstat'
+	def mod = cmd.execute().text.trim()
+	def modified = (mod != null && mod.length() != 0) ? ' *' : ''
+	def br = '\n\n'
+	def reader = 'package org.frc5687.rapidreact.util;' + br
+	reader += '/**\n * A version class to read current Git information from deployed robot code\n * @author wilstenholme\n */' + br
+	reader += 'public class Version {\n'
+	reader += '    public static final String BRANCH = \"' + project.branch + '\";\n'
+	reader += '    public static final String REVISION = \"' + project.revision + '\";\n'
+	reader += '    public static final String MODIFIED = \"' +  modified + '\";\n'
+	reader += '}'
+	logFile.text = reader
 }

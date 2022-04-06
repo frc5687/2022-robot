@@ -1,3 +1,4 @@
+/* Team 5687 (C)2022 */
 package org.frc5687.rapidreact.commands;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -9,9 +10,9 @@ public class AutoAlign extends PIDCommand {
     public AutoAlign(DriveTrain drivetrain, double angle) {
         super(
                 new PIDController(
-                        Constants.DriveTrain.ANGLE_kP,
-                        Constants.DriveTrain.ANGLE_kI,
-                        Constants.DriveTrain.ANGLE_kD),
+                        Constants.DriveTrain.SNAP_kP,
+                        Constants.DriveTrain.SNAP_kI,
+                        Constants.DriveTrain.SNAP_kD),
                 drivetrain::getYaw,
                 angle,
                 output -> drivetrain.drive(0, 0, output, false),

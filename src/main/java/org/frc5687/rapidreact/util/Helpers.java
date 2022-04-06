@@ -103,12 +103,14 @@ public class Helpers {
     }
 
     public static double dotProduct(double[] a, double[] b) {
-        if (a.length != b.length)
-            throw new RuntimeException("Arrays must be same size");
+        if (a.length != b.length) throw new RuntimeException("Arrays must be same size");
         double sum = 0;
-        for (int i = 0; i < a.length; i++)
-            sum += a[i] * b[i];
+        for (int i = 0; i < a.length; i++) sum += a[i] * b[i];
         return sum;
+    }
+
+    public static boolean epsilonEquals(double a, double b, double epsilon) {
+        return (a - epsilon <= b) && (a + epsilon >= b);
     }
 
     public static double magnitude(double[] a) {
