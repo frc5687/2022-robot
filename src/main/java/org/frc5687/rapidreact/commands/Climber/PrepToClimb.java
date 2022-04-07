@@ -19,6 +19,7 @@ public class PrepToClimb extends OutliersCommand{
     public void initialize(){
         super.initialize();
         info("Initialized PrepToClimb");
+        _climber.setClimbingLights();
         _climber.setStep(ClimberStep.PREP_TO_CLIMB);
         _climber.enableMetrics();
         _climber.dropDriveSpeed(true);

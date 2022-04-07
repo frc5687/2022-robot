@@ -27,12 +27,12 @@ import org.frc5687.rapidreact.commands.auto.*;
 import org.frc5687.rapidreact.commands.Climber.IdleClimber;
 
 import org.frc5687.rapidreact.config.Auto;
-
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 import org.frc5687.rapidreact.util.*;
@@ -54,6 +54,7 @@ public class RobotContainer extends OutliersContainer {
     private Climber _climber;
     private Indexer _indexer;
 
+    private Lights _lights;
     private AutoChooser _autoChooser;
 
     AutoChooser.Position _autoPosition;
@@ -76,6 +77,8 @@ public class RobotContainer extends OutliersContainer {
         _autoPosition = AutoChooser.Position.Unknown;
         _autoMode = AutoChooser.Mode.Unknown;
 
+        _lights = new Lights(this);
+
         // initialize these peripherals first as subsystems require them.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
@@ -86,7 +89,7 @@ public class RobotContainer extends OutliersContainer {
 
         // then subsystems
         _driveTrain = new DriveTrain(this, _oi, _proxy,/*, _limelight, */_imu);
-        _intake = new Intake(this);
+        _intake = new Intake(this, _lights);
         _climber = new Climber(this, _driveTrain);
         _catapult = new Catapult(this);
 
@@ -96,7 +99,7 @@ public class RobotContainer extends OutliersContainer {
         setDefaultCommand(_climber, new IdleClimber(_climber, _oi));
 
         // initialize OI after subsystems.
-        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber, _indexer);
+        _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber, _indexer, _lights);
 
         // Run periodic for each swerve module faster than regular cycle time
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
@@ -111,10 +114,10 @@ public class RobotContainer extends OutliersContainer {
         // update the auto chooser for more values.
 //        metric("xIn", _oi.getDriveX());
 //        metric("yIn", _oi.getDriveY());
-        _autoChooser.updateChooser();
-        // set the values from the auto chooser.
-        _autoMode = _autoChooser.getAutoMode();
-        _autoPosition = _autoChooser.getAutoPosition();
+        // _autoChooser.updateChooser();
+        // // set the values from the auto chooser.
+        // _autoMode = _autoChooser.getAutoMode();
+        // _autoPosition = _autoChooser.getAutoPosition();
     }
 
     @Override
@@ -124,7 +127,7 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void teleopInit() {
-//        _driveTrain.startModules();
+       _driveTrain.startModules();
     }
 
     @Override

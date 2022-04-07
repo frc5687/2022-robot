@@ -114,6 +114,7 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case AIMING: {
+                _catapult.setAimingLights();
                 checkLockOut();
                 checkKill();
                 if(!_indexer.isBallDetected() && (System.currentTimeMillis() > _indexerWait)){
@@ -143,6 +144,7 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case SHOOTING: {
+                _catapult.setBaseLights();
                 checkLockOut();
                 checkKill();
                 _catapult.setSetpoint(CatapultSetpoint.NONE);

@@ -34,6 +34,10 @@ public class RobotMap {
             public static final int STATIONARY_CLIMBER = 15;
             public static final int ROCKER_CLIMBER = 14;
         }
+        
+        public static class CANDLE{
+            public static final int PORT = 0;
+        }
 
         public static class SPARKMAX {
             public static final int WINCH_BABY_NEO = 10;

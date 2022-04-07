@@ -378,4 +378,8 @@ public class Constants {
         public static final int HEIGHT = 320;
         public static final int WIDTH = 240;
     }
+
+    public static class CANdle{
+        public static double BRIGHTNESS = 0.5;
+    }
 }

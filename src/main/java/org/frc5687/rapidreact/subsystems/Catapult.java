@@ -31,6 +31,8 @@ public class Catapult extends OutliersSubsystem {
     private final HallEffect _springHall;
     private final HallEffect _armHall;
 
+    private Lights _lights;
+
     private final ProfiledPIDController _winchController;
 
     private boolean _springEncoderZeroed = false;
@@ -47,9 +49,9 @@ public class Catapult extends OutliersSubsystem {
     }
 
     /** Catapult constructor */
-    public Catapult(OutliersContainer container) {
+    public Catapult(OutliersContainer container, Lights lights) {
         super(container);
-
+        _lights = lights;
         // Motor controllers (Spark Maxes)
         // Spring motor
         _springMotor = new TalonFX(RobotMap.CAN.TALONFX.CATAPULT_SPRING);
@@ -134,6 +136,18 @@ public class Catapult extends OutliersSubsystem {
             _springMotor.setSelectedSensorPosition(0);
             _springEncoderZeroed = true;
         }
+    }
+
+    public void setAimingLights(){
+        _lights.setBlue();
+    }
+
+    public void setErrorLights(){
+        _lights.setRed();
+    }
+
+    public void setBaseLights(){
+        _lights.setWhite();
     }
 
     public boolean isSpringZeroed() {
