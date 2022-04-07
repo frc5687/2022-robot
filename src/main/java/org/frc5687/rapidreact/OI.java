@@ -59,6 +59,11 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootSetpointTwo;
     private JoystickButton _shootSetpointThree;
 
+    private JoystickButton _autoShootToggle;
+
+    private boolean _autoShoot;
+
+
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -76,6 +81,8 @@ public class OI extends OutliersProxy {
         _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
         _rockerFlip = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _manualIndexer = new JoystickButton(_debug, Gamepad.Buttons.LEFT_BUMPER.getNumber());
+
+        _autoShootToggle = new JoystickButton(_rotation, 10);
 
 
         // adding buttons while driving: Ben pls look
@@ -121,6 +128,15 @@ public class OI extends OutliersProxy {
         _manualIndexer.whenPressed(indexer::up);
     }
 
+    public void autoShootToggle(){
+        if(_autoShootToggle.get() && !_autoShoot){
+            _autoShoot = true;
+        }else{
+            _autoShoot = false;
+        }
+    }
+
+    public boolean autoShoot(){ return _autoShoot; }
     public boolean readyToClimb() { return _readyToClimb.get(); }
     public boolean isShootButtonPressed() { return _shootButton.get(); }
     public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
