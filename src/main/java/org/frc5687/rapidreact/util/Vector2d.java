@@ -5,6 +5,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import org.frc5687.rapidreact.Constants;
 
 public class Vector2d {
+    protected static final Vector2d IDENTITY = new Vector2d();
+
+    public static Vector2d identity() {
+        return IDENTITY;
+    }
 
     protected double _x;
     protected double _y;

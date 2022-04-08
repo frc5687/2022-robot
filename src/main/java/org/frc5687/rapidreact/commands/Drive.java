@@ -29,6 +29,8 @@ public class Drive extends OutliersCommand {
     public void initialize() {
         super.initialize();
         _driveTrain.startModules();
+        _driveTrain.setFieldRelative(true);
+        _driveTrain.setControlState(DriveTrain.ControlState.MANUAL);
     }
 
     @Override
@@ -43,7 +45,8 @@ public class Drive extends OutliersCommand {
         if (_oi.autoAim() && _driveTrain.hasTarget()) {
             _driveTrain.vision(_driveTrain.getVisionHeading());
         }
-        _driveTrain.drive(vx, vy, rot, true);
+
+        _driveTrain.drive(vx, vy, rot);
     }
 
     @Override

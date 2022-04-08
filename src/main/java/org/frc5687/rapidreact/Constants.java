@@ -47,12 +47,6 @@ public class Constants {
         public static final double WIDTH = 0.6223; // meters
         public static final double LENGTH = 0.6223; // meters
 
-        /**
-         * Swerve modules are on four corners of robot:
-         *
-         * <p>NW <- Width of robot -> NE / \ | Length of robot | \ / SW SE
-         */
-
         // Distance of swerve modules from center of robot
         public static final double SWERVE_NS_POS = LENGTH / 2.0;
 
@@ -121,9 +115,9 @@ public class Constants {
         public static final double SNAP_kI = 0.0;
         public static final double SNAP_kD = 0.0;
 
-        public static final double VISION_kP = 4.0;
+        public static final double VISION_kP = 6.0;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.0;
+        public static final double VISION_kD = 0.1;
 
         public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI * 3.0;
@@ -180,8 +174,7 @@ public class Constants {
         public static final double SENSOR_WHEEL_ANG_VELOCITY_NOISE = 0.1; // radians per sec
         public static final double CONTROL_EFFORT = VOLTAGE;
 
-        public static final double MAX_MODULE_SPEED_MPS =
-                (FALCON_FREE_SPEED / GEAR_RATIO_WHEEL) * WHEEL_RADIUS;
+        public static final double MAX_MODULE_SPEED_MPS = 4.7; // m/s
         public static final double MAX_ANGULAR_VELOCITY = FALCON_FREE_SPEED / GEAR_RATIO_STEER;
         public static final double MAX_ANGULAR_ACCELERATION = MAX_ANGULAR_VELOCITY * 20;
 
@@ -277,7 +270,7 @@ public class Constants {
                 (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
         public static final double MAX_WINCH_ACCELERATION_MPSS =
                 MAX_WINCH_VELOCITY_MPS * 50.0; // heuristic.
-        public static final double WINCH_TOLERANCE = 0.001; // m
+        public static final double WINCH_TOLERANCE = 0.0005; // m
 
         // DriveCatapult constants
         public static final double LOWERING_SPEED = 1.0;

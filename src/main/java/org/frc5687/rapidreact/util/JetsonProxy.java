@@ -1,19 +1,15 @@
+/* Team 5687 (C)2022 */
 package org.frc5687.rapidreact.util;
+
+import static org.frc5687.rapidreact.Constants.UDPJetson.BUFFER;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.frc5687.rapidreact.Robot;
-import org.frc5687.rapidreact.commands.Drive;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.*;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static org.frc5687.rapidreact.Constants.UDPJetson.BUFFER;
 
 public class JetsonProxy {
 
@@ -30,7 +26,6 @@ public class JetsonProxy {
 
     private Frame _latestFrame;
 
-    private long trackingMillis = System.currentTimeMillis();
     private JetsonListener _jetsonListener;
     private Timer _jetsonTimer;
 
@@ -51,7 +46,8 @@ public class JetsonProxy {
         _jetsonTimer = new Timer();
         _jetsonTimer.schedule(new JetsonTimerTask(this), _period, _period);
     }
-    synchronized protected void collect() {
+
+    protected synchronized void collect() {
         long rioMillis = System.currentTimeMillis();
         // Send the heartbeat to the pi
         if (_jetsonListener != null) {
@@ -59,7 +55,8 @@ public class JetsonProxy {
             if (jetsonAddress != null) {
                 byte[] sendData = new byte[BUFFER];
                 sendData = _data.getBytes();
-                DatagramPacket sendPacket = new DatagramPacket(sendData, _data.length(), jetsonAddress, _jetsonPort);
+                DatagramPacket sendPacket =
+                        new DatagramPacket(sendData, _data.length(), jetsonAddress, _jetsonPort);
                 try {
                     _clientSocket.send(sendPacket);
                 } catch (IOException ioe) {
@@ -67,8 +64,10 @@ public class JetsonProxy {
             }
         }
         // latestFrame = _piListener==null?null:_piListener.getLatestFrame();
-        // trackingPose = latestFrame==null?null: (OutliersPose)poseTracker.getRaw(latestFrame.adjustedMillis);
+        // trackingPose = latestFrame==null?null:
+        // (OutliersPose)poseTracker.getRaw(latestFrame.adjustedMillis);
     }
+
     protected synchronized void setLatestFrame(Frame frame) {
         _latestFrame = frame;
     }
@@ -96,15 +95,19 @@ public class JetsonProxy {
         public Data(double data) {
             _double = data;
         }
+
         public Data(long data) {
             _long = data;
         }
+
         public Data(String data) {
             _string = data;
         }
+
         public Data(Boolean data) {
             _boolean = data;
         }
+
         public Data(int data) {
             _int = data;
         }
@@ -125,6 +128,7 @@ public class JetsonProxy {
             return null;
         }
     }
+
     public class Frame {
         private long _millis;
         private double _estimatedX;
@@ -143,7 +147,7 @@ public class JetsonProxy {
         private double _red_ball_yaw;
 
         public Frame(String packet) {
-//            DriverStation.reportError("string is: " + packet, false);
+            //            DriverStation.reportError("string is: " + packet, false);
             if (!packet.equals("nan")) {
                 String[] a = packet.split(";");
                 _millis = isNan(Long.parseLong(a[0]));
@@ -164,23 +168,55 @@ public class JetsonProxy {
             }
         }
 
-        private double isNan(double value) { return value != -999.0 ? value : Double.NaN; }
-        private long isNan(long value) { return value != -999 ? value : 0; }
-        public long getMillis() { return _millis; }
-        public Pose2d getEstimatedPose() { return new Pose2d(_estimatedX, _estimatedY, new Rotation2d(_estimatedHeading)); }
-        public boolean hasEstimatedPose() { return !Double.isNaN(_estimatedX); }
-        public double getTargetDistance() { return _goalDistance; }
-        public double getTargetAngle() { return _goalAngle; }
-        public boolean hasTarget() { return _hasTarget; }
-        public double[] targetPosition() {
-            return new double[]{_target_x, _target_y, _target_z};
+        private double isNan(double value) {
+            return value != -999.0 ? value : Double.NaN;
         }
-        public double[] targetVelocity() {
-            return new double[]{_target_vx, _target_vy, _target_vz};
+
+        private long isNan(long value) {
+            return value != -999 ? value : 0;
         }
-        public double getBlueBallYaw() { return _blue_ball_yaw; }
-        public double getRedBallYaw() { return _red_ball_yaw; }
+
+        public long getMillis() {
+            return _millis;
+        }
+
+        public Pose2d getEstimatedPose() {
+            return new Pose2d(_estimatedX, _estimatedY, new Rotation2d(_estimatedHeading));
+        }
+
+        public boolean hasEstimatedPose() {
+            return !Double.isNaN(_estimatedX);
+        }
+
+        public double getTargetDistance() {
+            return _goalDistance;
+        }
+
+        public double getTargetAngle() {
+            return _goalAngle;
+        }
+
+        public boolean hasTarget() {
+            return _hasTarget;
+        }
+
+        public Vector3d targetPosition() {
+            return new Vector3d(_target_x, _target_y, _target_z);
+        }
+
+        public Vector3d targetVelocity() {
+            return new Vector3d(_target_vx, _target_vy, _target_vz);
+        }
+
+        public double getBlueBallYaw() {
+            return _blue_ball_yaw;
+        }
+
+        public double getRedBallYaw() {
+            return _red_ball_yaw;
+        }
     }
+
     protected class JetsonTimerTask extends TimerTask {
         private JetsonProxy _proxy;
 
@@ -193,6 +229,7 @@ public class JetsonProxy {
             _proxy.collect();
         }
     }
+
     protected class JetsonListener implements Runnable {
         private JetsonProxy _proxy;
         private InetAddress _jetsonAddress = null;
@@ -211,7 +248,8 @@ public class JetsonProxy {
             try {
                 serverSocket = new DatagramSocket(_rioPort);
                 while (true) {
-                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length );
+                    DatagramPacket receivePacket =
+                            new DatagramPacket(receiveData, receiveData.length);
                     serverSocket.receive(receivePacket);
                     if (receivePacket == null) {
 
@@ -219,8 +257,9 @@ public class JetsonProxy {
                         synchronized (this) {
                             _jetsonAddress = receivePacket.getAddress();
                         }
-                        String raw = new String(receivePacket.getData(), 0, receivePacket.getLength());
-//                        DriverStation.reportError(raw, false);
+                        String raw =
+                                new String(receivePacket.getData(), 0, receivePacket.getLength());
+                        //                        DriverStation.reportError(raw, false);
                         Frame frame = new Frame(raw);
                         _proxy.setLatestFrame(frame);
                     }
@@ -228,9 +267,11 @@ public class JetsonProxy {
             } catch (IOException ioe) {
                 DriverStation.reportError("IOE Exception getting frame", false);
             } catch (Exception e) {
-                DriverStation.reportError("Exception getting frame [Error]: " + e.getMessage(), false);
+                DriverStation.reportError(
+                        "Exception getting frame [Error]: " + e.getMessage(), false);
             }
         }
+
         public synchronized InetAddress getJetsonAddress() {
             return _jetsonAddress;
         }

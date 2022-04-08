@@ -80,6 +80,7 @@ public class RobotContainer extends OutliersContainer {
 
         // Run periodic for each swerve module faster than regular cycle time
         _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
+        _robot.addPeriodic(this::swervePeriodic, 0.01, 0.01);
         _imu.reset();
         _driveTrain.startModules();
     }
@@ -158,6 +159,12 @@ public class RobotContainer extends OutliersContainer {
     public void controllerPeriodic() {
         if (_driveTrain != null) {
             _driveTrain.controllerPeriodic();
+        }
+    }
+
+    public void swervePeriodic() {
+        if (_driveTrain != null) {
+            _driveTrain.swervePeriodic();
         }
     }
 }

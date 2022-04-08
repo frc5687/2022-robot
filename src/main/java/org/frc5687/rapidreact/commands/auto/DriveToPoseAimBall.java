@@ -1,5 +1,5 @@
+/* Team 5687 (C)2022 */
 package org.frc5687.rapidreact.commands.auto;
-
 
 import edu.wpi.first.math.geometry.Pose2d;
 import org.frc5687.rapidreact.commands.OutliersCommand;
@@ -21,11 +21,7 @@ public class DriveToPoseAimBall extends OutliersCommand {
      * @param pose xPos in meters, yPos in meters, theta in radians
      * @param velocity m/s
      */
-    public DriveToPoseAimBall(
-            DriveTrain driveTrain,
-            Pose2d pose,
-            double velocity
-            ) {
+    public DriveToPoseAimBall(DriveTrain driveTrain, Pose2d pose, double velocity) {
         _driveTrain = driveTrain;
         _destination = pose;
         _velocity = velocity;
@@ -45,18 +41,15 @@ public class DriveToPoseAimBall extends OutliersCommand {
         /**
          * Based on observation, appears that
          *
-         *             North = +X
-         *  West = +Y              East = -Y
-         *             South = -X
+         * <p>North = +X West = +Y East = -Y South = -X
          */
-
         _driveTrain.poseFollowerBallTracking(_destination, _velocity);
     }
 
     @Override
     public boolean isFinished() {
         if (_driveTrain.isAtPose(_destination)) {
-            _driveTrain.drive(0,0,0,true);
+            _driveTrain.drive(0, 0, 0);
             info("DriveToPose finished.");
             return true;
         }

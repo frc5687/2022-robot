@@ -38,6 +38,7 @@ public class SwerveHeadingController {
         _stabilizationPID.enableContinuousInput(-Math.PI, Math.PI);
         _snapPID.enableContinuousInput(-Math.PI, Math.PI);
         _visionPID.enableContinuousInput(-Math.PI, Math.PI);
+        _headingState = HeadingState.OFF;
         _targetHeading = new Rotation2d();
         _disableTime = System.currentTimeMillis();
     }
@@ -48,6 +49,10 @@ public class SwerveHeadingController {
 
     public void setState(HeadingState state) {
         _headingState = state;
+    }
+
+    public void disable() {
+        setState(HeadingState.OFF);
     }
 
     public void temporaryDisable() {
@@ -65,10 +70,10 @@ public class SwerveHeadingController {
         setState(HeadingState.VISION);
     }
 
-    //    public void setSnapHeading(Rotation2d heading) {
-    //        _targetHeading = heading;
-    //        setState(HeadingState.SNAP);
-    //    }
+    public void setSnapHeading(Rotation2d heading) {
+        _targetHeading = heading;
+        setState(HeadingState.SNAP);
+    }
 
     public Rotation2d getTargetHeading() {
         return _targetHeading;

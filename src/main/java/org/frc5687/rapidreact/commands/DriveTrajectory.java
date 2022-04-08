@@ -41,7 +41,7 @@ public class DriveTrajectory extends OutliersCommand {
     public boolean isFinished() {
         if (_timer.get() >= _trajectory.getTotalTimeSeconds()) {
             _driveTrain.setIsMoving(false);
-            _driveTrain.drive(0, 0, 0, true);
+            _driveTrain.drive(0, 0, 0);
             return true;
         }
         return false;

@@ -22,14 +22,12 @@ public class AutoAim extends OutliersCommand {
         super.execute();
         if (_driveTrain.hasTarget()) {
             _driveTrain.vision(_driveTrain.getVisionHeading());
-            _driveTrain.drive(0, 0, 0, true);
         }
     }
 
     @Override
     public boolean isFinished() {
         if (_driveTrain.onTarget()) {
-            _driveTrain.drive(0, 0, 0, true);
             return true;
         }
         return false;

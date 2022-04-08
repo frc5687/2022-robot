@@ -4,12 +4,8 @@ package org.frc5687.rapidreact.subsystems;
 import static org.frc5687.rapidreact.Constants.DifferentialSwerveModule.MAX_MODULE_SPEED_MPS;
 import static org.frc5687.rapidreact.Constants.DriveTrain.*;
 import static org.frc5687.rapidreact.util.GeometryUtil.*;
-import static org.frc5687.rapidreact.util.SwerveHeadingController.HeadingState.*;
 
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -20,8 +16,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -42,7 +36,12 @@ public class DriveTrain extends OutliersSubsystem {
     private SwerveDriveKinematics _kinematics;
     private SwerveDriveOdometry _odometry;
 
+    // teleop values
     private Vector2d _translationVector;
+    private double _rotationInput;
+    private ControlState _controlState;
+    private boolean _fieldRelative;
+    private boolean _lockHeading;
 
     private AHRS _imu;
     private HolonomicDriveController _controller;
@@ -50,9 +49,9 @@ public class DriveTrain extends OutliersSubsystem {
     private JetsonProxy _proxy;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
+
     private boolean _isMoving = false;
     private boolean _climbing = false;
-    private boolean _lockHeading = false;
 
     public DriveTrain(OutliersContainer container, JetsonProxy proxy, AHRS imu) {
         super(container);
@@ -126,7 +125,11 @@ public class DriveTrain extends OutliersSubsystem {
                                             Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL)));
             _headingController = new SwerveHeadingController(Constants.DriveTrain.kDt);
             _translationVector = new Vector2d();
+            _rotationInput = 0;
+            _controlState = ControlState.NEUTRAL;
+            _fieldRelative = true;
             _isMoving = false;
+            _lockHeading = false;
         } catch (Exception e) {
             error(e.getMessage());
         }
@@ -137,51 +140,28 @@ public class DriveTrain extends OutliersSubsystem {
         _modules.forEach(DiffSwerveModule::periodic);
     }
 
-    @Override
-    public void periodic() {
-        _odometry.update(
-                getHeading(),
-                _northWest.getState(),
-                _southWest.getState(),
-                _southEast.getState(),
-                _northEast.getState());
+    public void swervePeriodic() {
+        updateOdometry();
+        double omegaCorrection = _headingController.getRotationCorrection(getHeading());
+        switch (_controlState) {
+            case NEUTRAL:
+                break;
+            case MANUAL:
+                updateSwerve(_translationVector, _rotationInput + omegaCorrection);
+                break;
+            case ROTATION:
+                updateSwerve(Vector2d.identity(), omegaCorrection);
+                break;
+        }
+
+        _isMoving =
+                _translationVector.x() != 0
+                        || _translationVector.y() != 0
+                        || !(Math.abs(_rotationInput + omegaCorrection) < ROTATING_TOLERANCE);
     }
 
-    @Override
-    public void updateDashboard() {
-        metric("Goal Distance From Top Plane", getDistanceToTarget());
-        metric("Heading", getHeading().getDegrees());
-        metric("Goal Angle", getAngleToTarget());
-        metric("Has goal", hasTarget());
-        //        metric("Target vx", getTargetVelocity()[0]);
-        //        metric("Target vy", getTargetVelocity()[1]);
-        //        metric("Target vz", getTargetVelocity()[2]);
-        metric("Target x", getTargetPosition()[0]);
-        metric("Target y", getTargetPosition()[1]);
-        metric("Target z", getTargetPosition()[2]);
-
-        //        metric("NW/Encoder Angle", _northWest.getModuleAngle());
-        //        metric("SW/Encoder Angle", _southWest.getModuleAngle());
-        //        metric("SE/Encoder Angle", _southEast.getModuleAngle());
-        //        metric("NE/Encoder Angle", _northEast.getModuleAngle());
-        //
-        //        metric("SW/Predicted Angle", _southWest.getPredictedAzimuthAngle());
-        //
-        //        metric("SW/Encoder Azimuth Vel", _southWest.getAzimuthAngularVelocity());
-        //        metric("SW/Predicted Azimuth Vel",
-        // _southWest.getPredictedAzimuthAngularVelocity());
-        //
-        //        metric("SE/Encoder Wheel Vel", _southEast.getWheelVelocity());
-        //        metric("SE/Predicted Wheel Vel", _southEast.getPredictedWheelVelocity());
-        //        metric("NW/Encoder Wheel Vel", _northWest.getWheelVelocity());
-        //        metric("NW/Predicted Wheel Vel", _northWest.getPredictedWheelVelocity());
-
-        //        metric("Odometry/x", getOdometryPose().getX());
-        //        metric("Odometry/y", getOdometryPose().getY());
-        //        metric("Estimated Pose/x", getEstimatedPose().getX());
-        //        metric("Estimated Pose/y", getEstimatedPose().getY());
-        //        metric("Odometry/angle", getOdometryPose().getRotation().getDegrees());
-
+    public void startModules() {
+        _modules.forEach(DiffSwerveModule::start);
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
@@ -190,17 +170,12 @@ public class DriveTrain extends OutliersSubsystem {
         }
     }
 
-    public double getYaw() {
-        return _imu.getYaw();
+    public void setControlState(ControlState state) {
+        _controlState = state;
     }
 
-    // yaw is negative to follow wpi coordinate system.
-    public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(-getYaw());
-    }
-
-    public void resetYaw() {
-        _imu.reset();
+    public ControlState getControlState() {
+        return _controlState;
     }
 
     /**
@@ -209,14 +184,11 @@ public class DriveTrain extends OutliersSubsystem {
      * @param vx velocity in x direction
      * @param vy velocity in y direction
      * @param omega angular velocity (rotating speed)
-     * @param fieldRelative forward is always forward no mater orientation of robot.
      */
-    public void drive(double vx, double vy, double omega, boolean fieldRelative) {
+    public void drive(double vx, double vy, double omega) {
         metric("vx", vx);
         metric("vy", vy);
-        metric("omega", omega);
         Vector2d translation = new Vector2d(vx, vy);
-
         double magnitude = translation.magnitude();
 
         if (Math.abs(getDistance(translation.direction(), getNearestPole(translation.direction())))
@@ -247,60 +219,85 @@ public class DriveTrain extends OutliersSubsystem {
         translation = translation.scale(_driveSpeed);
         omega *= MAX_ANG_VEL;
 
-        _translationVector = translation;
-
-        if (omega == 0 && _translationVector.magnitude() != 0) {
+        //        if (omega != 0 && _rotationInput == 0) {
+        //            _headingController.disable();
+        if (omega == 0) {
             if (!_lockHeading) {
-                stabilize();
+                _headingController.temporaryDisable();
             }
             _lockHeading = true;
         } else {
+            _headingController.disable();
             _lockHeading = false;
-            _headingController.setState(OFF);
         }
+        metric("target heading", _headingController.getTargetHeading().getRadians());
 
-        double correctedOmega = omega + _headingController.getRotationCorrection(getHeading());
-        metric("Drive X", _translationVector.x());
-        metric("Drive Y", _translationVector.y());
-        metric("Corrected Omega", correctedOmega);
-        metric("Heading state", getCurrentHeadingState().name());
-        metric("Target Heading", _headingController.getTargetHeading().getRadians());
+        _rotationInput = omega;
+        _translationVector = translation;
+        //        _isMoving = vx != 0 || vy != 0 || !(Math.abs(omega) < ROTATING_TOLERANCE);
+    }
+
+    public void updateSwerve(Vector2d translationVector, double rotationalInput) {
         SwerveModuleState[] swerveModuleStates =
                 _kinematics.toSwerveModuleStates(
-                        fieldRelative
+                        _fieldRelative
                                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                        _translationVector.x(),
-                                        _translationVector.y(),
-                                        correctedOmega,
+                                        translationVector.x(),
+                                        translationVector.y(),
+                                        rotationalInput,
                                         getHeading())
                                 : new ChassisSpeeds(
-                                        _translationVector.x(),
-                                        _translationVector.y(),
-                                        correctedOmega));
-
+                                        translationVector.x(),
+                                        translationVector.y(),
+                                        rotationalInput));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_MODULE_SPEED_MPS);
         setModuleStates(swerveModuleStates);
-        _isMoving = vx != 0 || vy != 0 || !(Math.abs(omega) < ROTATING_TOLERANCE);
+    }
+
+    public double getYaw() {
+        return _imu.getYaw();
+    }
+
+    // yaw is negative to follow wpi coordinate system.
+    public Rotation2d getHeading() {
+        return Rotation2d.fromDegrees(-getYaw());
+    }
+
+    public void resetYaw() {
+        _imu.reset();
     }
 
     public void snap(Rotation2d heading) {
         _headingController.setStabilizationHeading(heading);
     }
 
-    public void stabilize() {
-        _headingController.temporaryDisable();
+    public void stabilize(Rotation2d heading) {
+        _headingController.setStabilizationHeading(heading);
     }
 
     public void vision(Rotation2d visionHeading) {
         _headingController.setVisionHeading(visionHeading);
     }
 
+    public void rotate(Rotation2d heading) {
+        if (_translationVector.equals(Vector2d.identity())) {
+            rotateInPlace(heading);
+        } else {
+            _headingController.setStabilizationHeading(heading);
+        }
+    }
+
+    public void rotateInPlace(Rotation2d heading) {
+        setControlState(ControlState.ROTATION);
+        _headingController.setSnapHeading(heading);
+    }
+
     public Rotation2d getVisionHeading() {
         return getHeading().plus(new Rotation2d(getAngleToTarget()));
     }
 
-    public SwerveDriveKinematicsConstraint getKinematicConstraint() {
-        return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
+    public SwerveHeadingController.HeadingState getCurrentHeadingState() {
+        return _headingController.getHeadingState();
     }
 
     public boolean hasTarget() {
@@ -345,25 +342,25 @@ public class DriveTrain extends OutliersSubsystem {
     /**
      * Gets the Target x, y, z positions to the front of the catapult frame from the coprocessor.
      *
-     * @return array with 3 elements {x, y, z}
+     * @return Vector3d with elements {x, y, z}
      */
-    public double[] getTargetPosition() {
+    public Vector3d getTargetPosition() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().targetPosition();
         }
-        return new double[] {0, 0, 0};
+        return new Vector3d();
     }
 
     /**
      * Gets the Target velocities to the front of the catapult frame from the coprocessor.
      *
-     * @return array with 3 elements {vx, vy, vz}
+     * @return Vector3d elements {vx, vy, vz}
      */
-    public double[] getTargetVelocity() {
+    public Vector3d getTargetVelocity() {
         if (_proxy.getLatestFrame() != null) {
             return _proxy.getLatestFrame().targetVelocity();
         }
-        return new double[] {0, 0, 0};
+        return new Vector3d(0, 0, 0);
     }
 
     /**
@@ -408,22 +405,20 @@ public class DriveTrain extends OutliersSubsystem {
         setModuleStates(moduleStates);
     }
 
-    public SwerveHeadingController.HeadingState getCurrentHeadingState() {
-        return _headingController.getHeadingState();
+    public SwerveDriveKinematicsConstraint getKinematicConstraint() {
+        return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
     }
 
     /**
      * calculates time to hit moving target
      *
-     * @param position array of target
-     * @param velocity array of target
      * @param speed exit velocity
      * @return lead time
      */
-    public double calculateLeadTime(double[] position, double[] velocity, double speed) {
-        double c0 = Helpers.dotProduct(position, position);
-        double c1 = Helpers.dotProduct(position, velocity);
-        double c2 = (speed * speed) * Helpers.dotProduct(velocity, velocity);
+    public double calculateLeadTime(Vector3d position, Vector3d velocity, double speed) {
+        double c0 = position.dot(position);
+        double c1 = position.dot(velocity);
+        double c2 = (speed * speed) * velocity.dot(velocity);
         double calculation = c1 * c1 + c2 * c0;
         double time = 0;
         if (calculation >= 0) {
@@ -440,22 +435,20 @@ public class DriveTrain extends OutliersSubsystem {
      *
      * @return Matrix<N3, N1> target position
      */
-    public Matrix<N3, N1> leadTargetPosition(double[] position, double[] velocity, double time) {
-        Vector<N3> pos = VecBuilder.fill(position[0], position[1], position[2]);
-        Vector<N3> vel = VecBuilder.fill(velocity[0], velocity[1], velocity[2]);
-        return pos.plus(vel.times(time));
+    public Vector3d leadTargetPosition(double time) {
+        return getTargetPosition().plus(getTargetVelocity().scale(time));
     }
 
-    public double calculateLeadAngle(Matrix<N3, N1> leadPosition) {
+    public double calculateLeadAngle(Vector3d leadPosition) {
         // only care about 2d plane (x, y)
-        Vector2d pos = new Vector2d(leadPosition.get(0, 0), leadPosition.get(1, 0));
+        Vector2d pos = new Vector2d(leadPosition.x(), leadPosition.y());
         // unit vector of x
         Vector2d unitX = new Vector2d(1, 0);
         double angle;
-        if (leadPosition.get(1, 0) < 0) {
-            angle = -Math.acos(pos.dot(unitX) / (pos.magnitude() * unitX.magnitude()));
+        if (leadPosition.y() < 0) {
+            angle = -pos.angle(unitX).getRadians();
         } else {
-            angle = Math.acos(pos.dot(unitX) / (pos.magnitude() * unitX.magnitude()));
+            angle = pos.angle(unitX).getRadians();
         }
         return angle;
     }
@@ -514,6 +507,15 @@ public class DriveTrain extends OutliersSubsystem {
         return false;
     }
 
+    public void updateOdometry() {
+        _odometry.update(
+                getHeading(),
+                _northWest.getState(),
+                _southWest.getState(),
+                _southEast.getState(),
+                _northEast.getState());
+    }
+
     public Pose2d getOdometryPose() {
         return _odometry.getPoseMeters();
     }
@@ -531,10 +533,6 @@ public class DriveTrain extends OutliersSubsystem {
         Rotation2d _rotation = getHeading();
         Pose2d _reset = new Pose2d(_translation, _rotation);
         _odometry.resetPosition(_reset, getHeading());
-    }
-
-    public void startModules() {
-        _modules.forEach(DiffSwerveModule::start);
     }
 
     public double getSpeed() {
@@ -565,5 +563,45 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void setIsMoving(boolean isMoving) {
         _isMoving = isMoving;
+    }
+
+    public void setFieldRelative(boolean relative) {
+        _fieldRelative = relative;
+    }
+
+    public boolean isFieldRelative() {
+        return _fieldRelative;
+    }
+
+    @Override
+    public void updateDashboard() {
+        metric("Goal Distance From Top Plane", getDistanceToTarget());
+        metric("Heading", getHeading().getDegrees());
+        metric("Goal Angle", getAngleToTarget());
+        metric("Has goal", hasTarget());
+        //        metric("Target vx", getTargetVelocity()[0]);
+        //        metric("Target vy", getTargetVelocity()[1]);
+        //        metric("Target vz", getTargetVelocity()[2]);
+        //        metric("Target x", getTargetPosition().x());
+        //        metric("Target y", getTargetPosition().y());
+        //        metric("Target z", getTargetPosition().z());
+        metric("Swerve State", _controlState.name());
+        metric("Heading State", getCurrentHeadingState().name());
+    }
+
+    public enum ControlState {
+        NEUTRAL(0),
+        MANUAL(1),
+        ROTATION(2),
+        TRAJECTORY(3);
+        private final int _value;
+
+        ControlState(int value) {
+            _value = value;
+        }
+
+        public int getValue() {
+            return _value;
+        }
     }
 }

@@ -7,6 +7,7 @@ import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 
 public class AutoAlign extends PIDCommand {
+
     public AutoAlign(DriveTrain drivetrain, double angle) {
         super(
                 new PIDController(
@@ -15,7 +16,7 @@ public class AutoAlign extends PIDCommand {
                         Constants.DriveTrain.SNAP_kD),
                 drivetrain::getYaw,
                 angle,
-                output -> drivetrain.drive(0, 0, output, false),
+                output -> drivetrain.drive(0, 0, output),
                 drivetrain);
 
         getController().enableContinuousInput(-180, 180);

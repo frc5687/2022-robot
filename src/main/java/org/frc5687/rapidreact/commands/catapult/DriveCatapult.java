@@ -1,19 +1,20 @@
+/* Team 5687 (C)2022 */
 package org.frc5687.rapidreact.commands.catapult;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import static org.frc5687.rapidreact.Constants.Catapult.*;
+import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.*;
+
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.OI;
 import org.frc5687.rapidreact.commands.OutliersCommand;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.subsystems.Catapult;
+import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
+import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
-import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
-import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
-
-import static org.frc5687.rapidreact.Constants.Catapult.*;
-import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.*;
+import org.frc5687.rapidreact.util.Vector3d;
 
 public class DriveCatapult extends OutliersCommand {
 
@@ -33,8 +34,8 @@ public class DriveCatapult extends OutliersCommand {
     private long _wait;
     private long _indexerWait;
 
-
-    public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, Indexer indexer, OI oi) {
+    public DriveCatapult(
+            Catapult catapult, Intake intake, DriveTrain driveTrain, Indexer indexer, OI oi) {
         _catapult = catapult;
         _indexer = indexer;
         _intake = intake;
@@ -52,161 +53,201 @@ public class DriveCatapult extends OutliersCommand {
 
     @Override
     public void execute() {
-        metric("String from dist", _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
-        metric("Spring from dist", _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
-        metric("Setpoint value", _catapult.getSetpoint().toString());
+        double spring = _catapult.calculateIdealString(_driveTrain.getDistanceToTarget());
+        double angle =
+                _catapult.angleToStringLength(
+                        _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
+        //                metric(
+        //                "String from dist",
+        //                _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
+        //        metric(
+        //                "Spring from dist",
+        //                _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
+        //        metric("Setpoint value", _catapult.getSetpoint().toString());
 
-//        metric("Spring lead dispacement", _catapult.calculateLeadSpringDisplacement(
-//                _driveTrain.getTargetPosition(),
-//                _driveTrain.getTargetVelocity()
-//        ));
-//
-//        metric("Winch Lead", _catapult.calculateLeadWinchString(
-//                _driveTrain.getTargetPosition(),
-//                _driveTrain.getTargetVelocity()
-//        ));
+        double speed = _catapult.calculateExitVelocity(spring, angle);
+        Vector3d targetVelocity = _driveTrain.getTargetVelocity();
+        Vector3d targetPosition = _driveTrain.getTargetPosition();
+        Vector3d leadPosition =
+                _driveTrain.leadTargetPosition(
+                        _driveTrain.calculateLeadTime(targetPosition, targetVelocity, speed));
+        metric("lead position", leadPosition.toString());
+        metric("lead angle", _driveTrain.calculateLeadAngle(leadPosition));
+        metric(
+                "Spring lead displacement",
+                _catapult.calculateLeadSpringDisplacement(
+                        leadPosition, _driveTrain.getTargetVelocity()));
 
-        CatapultState newState =  _catapult.getState(); 
+        metric(
+                "Winch Lead",
+                _catapult.calculateLeadWinchString(leadPosition, _driveTrain.getTargetVelocity()));
+
+        CatapultState newState = _catapult.getState();
         if (newState != _lastLoggedState) {
             info("State changed to " + newState);
             _lastLoggedState = newState;
         }
 
         switch (newState) {
-            case ZEROING: {
-                checkLockOut();
-                checkKill();
-                // Try Zeroing the spring first, then the winch.
-                if (zeroWinch()) {
-                    if (zeroSpring()) {
-                        _catapult.setState(LOWERING_ARM);
-                    }
-                }
-            }
-            break;
-            case LOWERING_ARM: {
-                checkLockOut();
-                checkKill();
-                _catapult.setWinchMotorSpeed(LOWERING_SPEED);
-                if (_catapult.isArmLowered()) {
-                    _catapult.setWinchMotorSpeed(0.0);
-                    _catapult.lockArm();
-                    _catapult.setState(LOADING);
-                }
-            }
-            break;
-            case LOADING: {
-                _indexer.up();
-                checkLockOut();
-                checkKill();
-                if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
-                    _winchGoal = _catapult.calculateIdealString(_driveTrain.getDistanceToTarget());
-                    _springGoal = _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget());
-                    _catapult.setWinchGoal(_winchGoal);
-                    _catapult.setSpringDistance(_springGoal);
-//                    _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-                }
-                if (_indexer.isBallDetected()) {
-                    _indexer.down();
-                    _catapult.setState(AIMING);
-                    _indexerWait = System.currentTimeMillis() + Constants.Indexer.NO_BALL_DELAY;
-                }
-            }
-            break;
-            case AIMING: {
-                checkLockOut();
-                checkKill();
-                if(!_indexer.isBallDetected() && (System.currentTimeMillis() > _indexerWait)){
-                    _catapult.setState(LOADING);
-                }
-                if (_driveTrain.hasTarget() && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
-                    _winchGoal = _catapult.calculateIdealString(_driveTrain.getDistanceToTarget());
-                    _springGoal = _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget());
-                    _catapult.setWinchGoal(_winchGoal);
-                    _catapult.setSpringDistance(_springGoal);
-                } else {
-                    if (_catapult.getSetpoint() == CatapultSetpoint.NONE) {
-                        _catapult.setWinchGoal(_winchGoal);
-                        _catapult.setSpringDistance(_springGoal);
-                    } else {
-                        _catapult.setStaticGoals();
-                    }
-                }
-                if (isShootTriggered() && ((_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
-//                    if (_indexer.isBallDetected() && (System.currentTimeMillis() > _indexerWait)) {
-                        _catapult.setAutoshoot(false);
-                        _catapult.setState(SHOOTING);
-//                    }
-                }
-//             check if we are in the correct position and aiming at the goal.
-              _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-            }
-            break;
-            case SHOOTING: {
-                checkLockOut();
-                checkKill();
-                _catapult.setSetpoint(CatapultSetpoint.NONE);
-                _catapult.releaseArm();
-                _wait = System.currentTimeMillis() + DELAY;
-                _catapult.setState(Catapult.CatapultState.WAIT_SHOT);
-            } break;
-            case WAIT_SHOT: {
-                if (System.currentTimeMillis() > _wait) {
-                    if (_isFirstShot) {
-                        _isFirstShot = false;
-                        _catapult.setState(ZEROING);
-                    } else {
-                        _catapult.setState(LOWERING_ARM);
-                    }
-                }
-            } break;
-            case LOCK_OUT: {
-                _catapult.setWinchMotorSpeed(0.0);
-                _catapult.setSpringMotorSpeed(0.0);
-                if (!_intake.isIntakeUp()) {
-                    _catapult.setState(_prevState);
-                }
-            } break;
-            case PRELOAD: {
-                checkLockOut();
-                if (zeroWinch()) {
-                    if (zeroSpring()) {
-                        _catapult.setWinchGoal(Auto.StaticShots.TARMAC_WINCH);
-                        _catapult.setSpringDistance(Auto.StaticShots.TARMAC_SPRING);
-                        _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-                        if (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
-                            _catapult.setWinchMotorSpeed(0);
-                            _catapult.setState(DEBUG);
+            case ZEROING:
+                {
+                    checkLockOut();
+                    checkKill();
+                    // Try Zeroing the spring first, then the winch.
+                    if (zeroWinch()) {
+                        if (zeroSpring()) {
+                            _catapult.setState(LOWERING_ARM);
                         }
                     }
                 }
-            } break;
-            case DEBUG: {
-                if (_oi.releaseArm()) {
+                break;
+            case LOWERING_ARM:
+                {
+                    checkLockOut();
+                    checkKill();
+                    _catapult.setWinchMotorSpeed(LOWERING_SPEED);
+                    if (_catapult.isArmLowered()) {
+                        _catapult.setWinchMotorSpeed(0.0);
+                        _catapult.lockArm();
+                        _catapult.setState(LOADING);
+                    }
+                }
+                break;
+            case LOADING:
+                {
+                    _indexer.up();
+                    checkLockOut();
+                    checkKill();
+                    if (_driveTrain.hasTarget()
+                            && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
+                        _winchGoal =
+                                _catapult.calculateIdealString(_driveTrain.getDistanceToTarget());
+                        _springGoal =
+                                _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget());
+                        _catapult.setWinchGoal(_winchGoal);
+                        _catapult.setSpringDistance(_springGoal);
+                        // _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
+                    }
+                    if (_indexer.isBallDetected()) {
+                        _indexer.down();
+                        _catapult.setState(AIMING);
+                        _indexerWait = System.currentTimeMillis() + Constants.Indexer.NO_BALL_DELAY;
+                    }
+                }
+                break;
+            case AIMING:
+                {
+                    checkLockOut();
+                    checkKill();
+                    if (!_indexer.isBallDetected() && (System.currentTimeMillis() > _indexerWait)) {
+                        _catapult.setState(LOADING);
+                    }
+                    if (_driveTrain.hasTarget()
+                            && _catapult.getSetpoint() == CatapultSetpoint.NONE) {
+                        _winchGoal =
+                                _catapult.calculateIdealString(_driveTrain.getDistanceToTarget());
+                        _springGoal =
+                                _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget());
+                        _catapult.setWinchGoal(_winchGoal);
+                        _catapult.setSpringDistance(_springGoal);
+                    } else {
+                        if (_catapult.getSetpoint() == CatapultSetpoint.NONE) {
+                            _catapult.setWinchGoal(_winchGoal);
+                            _catapult.setSpringDistance(_springGoal);
+                        } else {
+                            _catapult.setStaticGoals();
+                        }
+                    }
+                    if (isShootTriggered()
+                            && ((_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
+                        //                    if (_indexer.isBallDetected() &&
+                        // (System.currentTimeMillis() > _indexerWait)) {
+                        _catapult.setAutoshoot(false);
+                        _catapult.setState(SHOOTING);
+                        //                    }
+                    }
+                    //             check if we are in the correct position and aiming at the goal.
+                    _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
+                }
+                break;
+            case SHOOTING:
+                {
+                    checkLockOut();
+                    checkKill();
+                    _catapult.setSetpoint(CatapultSetpoint.NONE);
                     _catapult.releaseArm();
+                    _wait = System.currentTimeMillis() + DELAY;
+                    _catapult.setState(Catapult.CatapultState.WAIT_SHOT);
                 }
-                if (_oi.preloadCatapult()) {
-                    _catapult.setState(PRELOAD);
+                break;
+            case WAIT_SHOT:
+                {
+                    if (System.currentTimeMillis() > _wait) {
+                        if (_isFirstShot) {
+                            _isFirstShot = false;
+                            _catapult.setState(ZEROING);
+                        } else {
+                            _catapult.setState(LOWERING_ARM);
+                        }
+                    }
                 }
-                if (_oi.exitDebugCatapult()) {
-                    _catapult.setState(ZEROING);
+                break;
+            case LOCK_OUT:
+                {
+                    _catapult.setWinchMotorSpeed(0.0);
+                    _catapult.setSpringMotorSpeed(0.0);
+                    if (!_intake.isIntakeUp()) {
+                        _catapult.setState(_prevState);
+                    }
                 }
-            } break;
-            case KILL: {
-                _catapult.setSpringMotorSpeed(0);
-                _catapult.setWinchMotorSpeed(0);
-                if (_oi.exitKill()) {
-                    _catapult.setState(_prevState);
+                break;
+            case PRELOAD:
+                {
+                    checkLockOut();
+                    if (zeroWinch()) {
+                        if (zeroSpring()) {
+                            _catapult.setWinchGoal(Auto.StaticShots.TARMAC_WINCH);
+                            _catapult.setSpringDistance(Auto.StaticShots.TARMAC_SPRING);
+                            _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
+                            if (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
+                                _catapult.setWinchMotorSpeed(0);
+                                _catapult.setState(DEBUG);
+                            }
+                        }
+                    }
                 }
-            }break;
+                break;
+            case DEBUG:
+                {
+                    if (_oi.releaseArm()) {
+                        _catapult.releaseArm();
+                    }
+                    if (_oi.preloadCatapult()) {
+                        _catapult.setState(PRELOAD);
+                    }
+                    if (_oi.exitDebugCatapult()) {
+                        _catapult.setState(ZEROING);
+                    }
+                }
+                break;
+            case KILL:
+                {
+                    _catapult.setSpringMotorSpeed(0);
+                    _catapult.setWinchMotorSpeed(0);
+                    if (_oi.exitKill()) {
+                        _catapult.setState(_prevState);
+                    }
+                }
+                break;
             case AUTO:
                 _catapult.setSpringMotorSpeed(0.0);
                 _catapult.setWinchMotorSpeed(0.0);
-                if(!_catapult.isArmLowered()){
+                if (!_catapult.isArmLowered()) {
                     _catapult.setState(ZEROING);
                 }
         }
     }
+
     protected boolean zeroWinch() {
         if (!_catapult.isWinchZeroed()) {
             _catapult.setWinchMotorSpeed(LOWERING_SPEED);
@@ -233,7 +274,7 @@ public class DriveCatapult extends OutliersCommand {
     }
 
     boolean isShootTriggered() {
-        if(!_driveTrain.isMoving() && _driveTrain.onTarget()){
+        if (!_driveTrain.isMoving() && _driveTrain.onTarget()) {
             return true;
         }
         if (_catapult.isAutoShoot() && !_driveTrain.isMoving()) {
@@ -258,6 +299,7 @@ public class DriveCatapult extends OutliersCommand {
             _catapult.setState(LOCK_OUT);
         }
     }
+
     protected void checkKill() {
         if (_oi.kill()) {
             _prevState = _catapult.getState();
@@ -265,6 +307,3 @@ public class DriveCatapult extends OutliersCommand {
         }
     }
 }
-
-
-
