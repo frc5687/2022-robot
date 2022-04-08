@@ -1,17 +1,17 @@
 /* Team 5687 (C)5687-2022 */
 package org.frc5687.rapidreact;
 
-import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.ZEROING;
 import static org.frc5687.rapidreact.util.Helpers.*;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.Climber.AutoClimb;
 import org.frc5687.rapidreact.commands.Climber.RockerFlip;
 import org.frc5687.rapidreact.commands.Climber.Stow;
+import org.frc5687.rapidreact.commands.Snap;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
-import org.frc5687.rapidreact.commands.catapult.SetState;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
@@ -50,6 +50,8 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootSetpointTwo;
     private JoystickButton _shootSetpointThree;
 
+    private JoystickButton _snap;
+
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -61,7 +63,7 @@ public class OI extends OutliersProxy {
 
         // debug gamepad
         _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _snap = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
         _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
         _rockerFlip = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
@@ -102,12 +104,13 @@ public class OI extends OutliersProxy {
         _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
         _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
 
-        _preloadButton.whenPressed(new SetState(catapult, ZEROING));
+        //        _preloadButton.whenPressed(new SetState(catapult, ZEROING));
         _intakeButton.whenHeld(new AutoIntake(intake));
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
         _stowClimber.whenPressed(new Stow(climber));
         _rockerFlip.whenPressed(new RockerFlip(climber));
+        _snap.whenPressed(new Snap(driveTrain, new Rotation2d(Math.PI)));
         _manualIndexer.whenPressed(indexer::up);
     }
 

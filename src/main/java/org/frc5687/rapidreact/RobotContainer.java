@@ -71,7 +71,7 @@ public class RobotContainer extends OutliersContainer {
         _catapult = new Catapult(this);
 
         // custom periodic manager
-        _manager = new PeriodicManager(_driveTrain, _catapult, _climber);
+        _manager = new PeriodicManager(_driveTrain, _climber);
 
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
