@@ -158,8 +158,8 @@ public class OI extends OutliersProxy {
 
     public double getDriveY() {
         // Comment for gamepad control
-        //        yIn = -getSpeedFromAxis(_translation, _translation.getYChannel());
-        yIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
+        yIn = -getSpeedFromAxis(_translation, _translation.getYChannel());
+        //        yIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
         yIn = applyDeadband(yIn, Constants.DEADBAND);
 
         double yOut = yIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
@@ -169,8 +169,8 @@ public class OI extends OutliersProxy {
 
     public double getDriveX() {
         //        Comment for gamepad control
-        //        xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
-        xIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
+        xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
+        //        xIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
         xIn = applyDeadband(xIn, Constants.DEADBAND);
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0; // numbers from empirical testing.
@@ -178,8 +178,8 @@ public class OI extends OutliersProxy {
     }
 
     public double getRotationX() {
-        //        double speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
-        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_X.getNumber());
+        double speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
+        //        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_X.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }

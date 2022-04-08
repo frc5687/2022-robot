@@ -121,8 +121,7 @@ public class Catapult extends OutliersSubsystem {
     }
 
     @Override
-    public void periodic() {
-        super.periodic();
+    public void controlPeriodic(double timestamp, double dt) {
         if (isArmLowered() && (_winchMotor.getAppliedOutput() > 0)) {
             setWinchMotorSpeed(0);
         }

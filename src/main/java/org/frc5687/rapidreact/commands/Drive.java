@@ -27,7 +27,6 @@ public class Drive extends OutliersCommand {
 
     @Override
     public void initialize() {
-        super.initialize();
         _driveTrain.startModules();
         _driveTrain.setFieldRelative(true);
         _driveTrain.setControlState(DriveTrain.ControlState.MANUAL);
@@ -36,7 +35,6 @@ public class Drive extends OutliersCommand {
     @Override
     public void execute() {
         _driveTrain.turboDriveSpeed(_oi.turbo());
-        super.execute();
         //  driveX and driveY are swapped due to coordinate system that WPILib uses.
         double vx = _vxFilter.calculate(_oi.getDriveY());
         double vy = _vyFilter.calculate(_oi.getDriveX());

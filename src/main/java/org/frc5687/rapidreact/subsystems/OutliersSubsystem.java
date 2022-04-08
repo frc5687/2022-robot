@@ -1,42 +1,32 @@
-/* (C)2020-2021 */
+/* Team 5687 (C)2020-2022 */
 package org.frc5687.rapidreact.subsystems;
-
-import org.frc5687.rapidreact.util.ILoggingSource;
-import org.frc5687.rapidreact.util.MetricTracker;
-import org.frc5687.rapidreact.util.OutliersContainer;
-import org.frc5687.rapidreact.util.RioLogger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.frc5687.rapidreact.util.*;
 
 /**
  * Base class to provide metrics and logging infrustructure.
- * 
- * See ILoggingSource for logging details.
- * 
- * See MetricTracker for metrics details.
- * 
- * Example of metrics collection. In a child class's constructor:
- * 
- * public SampleSystem() {
- *    logMetrics("foo", "bar", "baz");
- * }
- * 
- * Later on in the child class, eg in setSpeed():
- * 
- * ...
- * metric("foo", 123);
- * metric("bar", "elvis");
- * metric("baz", 42.42);
- * metric("pants", 99);    <~ This metric won't get written to USB storage because it wasn't registered.
- * ...
- * 
- * Note that metric logging is expensive, so it is turned OFF by default.
- * To turn it on, either call enableMetrics() from code (eg at the start of an auto command)
- * or set Metrics/[SubSystemName] to true in the SmartDashboard 
- * 
+ *
+ * <p>See ILoggingSource for logging details.
+ *
+ * <p>See MetricTracker for metrics details.
+ *
+ * <p>Example of metrics collection. In a child class's constructor:
+ *
+ * <p>public SampleSystem() { logMetrics("foo", "bar", "baz"); }
+ *
+ * <p>Later on in the child class, eg in setSpeed():
+ *
+ * <p>... metric("foo", 123); metric("bar", "elvis"); metric("baz", 42.42); metric("pants", 99); <~
+ * This metric won't get written to USB storage because it wasn't registered. ...
+ *
+ * <p>Note that metric logging is expensive, so it is turned OFF by default. To turn it on, either
+ * call enableMetrics() from code (eg at the start of an auto command) or set
+ * Metrics/[SubSystemName] to true in the SmartDashboard
  */
-public abstract class OutliersSubsystem extends SubsystemBase implements ILoggingSource {
+public abstract class OutliersSubsystem extends SubsystemBase
+        implements ILoggingSource, OutlierPeriodic {
     private MetricTracker _metricTracker;
     private boolean _isLogging;
 
@@ -44,6 +34,7 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
         container.registerSubSystem(this);
         _isLogging = container.isLogging();
     }
+
     public boolean isLogging() {
         return _isLogging;
     }
@@ -112,4 +103,10 @@ public abstract class OutliersSubsystem extends SubsystemBase implements ILoggin
             _metricTracker.disable();
         }
     }
+
+    @Override
+    public void controlPeriodic(double timestamp, double dt) {}
+
+    @Override
+    public void dataPeriodic(double timestamp, double dt) {}
 }

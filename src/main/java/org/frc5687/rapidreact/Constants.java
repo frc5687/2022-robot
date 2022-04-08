@@ -5,9 +5,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
-    public static final int TICKS_PER_UPDATE = 1;
+    public static final int TICKS_PER_UPDATE = 5;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
     public static final double UPDATE_PERIOD = 0.02;
+    public static final double PERIODIC_PERIOD = 0.005;
     public static final double EPSILON = 0.00001;
     public static final double DEADBAND = 0.15;
     // Separate constants into individual inner classes corresponding
@@ -36,11 +37,11 @@ public class Constants {
     public static class DriveTrain {
 
         public static final String CAN_BUS = "DriveTrain";
-        public static final double kDt = 0.02;
+        public static final double kDt = 0.005;
         public static final double TRANSLATION_DEADBAND =
                 0.1; // Avoid unintentional joystick movement
         public static final double ROTATION_DEADBAND = 0.1; // Avoid unintentional joystick movement
-        public static final double POWER = 1.75; // Determines the curve of drive input
+        public static final double POWER = 1.0; // Determines the curve of drive input
         public static final long DISABLE_TIME = 200; // ms
 
         // Size of the robot chassis in meters
@@ -98,7 +99,8 @@ public class Constants {
         public static final double MAX_MPS_TURBO = 3.8; // Max speed of robot in turbo (m/s)
         public static final double MAX_MPS_DURING_CLIMB =
                 MAX_MPS / 4; // Max speed of robot (m/s) during climb
-        public static final double MAX_ANG_VEL = Math.PI; // Max rotation rate of robot (rads/s)
+        public static final double MAX_ANG_VEL =
+                Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_ANG_VEL_AIM =
                 2 * Math.PI; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 2.1; // Max acceleration of robot (m/s^2)
@@ -117,7 +119,7 @@ public class Constants {
 
         public static final double VISION_kP = 6.0;
         public static final double VISION_kI = 0.0;
-        public static final double VISION_kD = 0.1;
+        public static final double VISION_kD = 0.05;
 
         public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI * 3.0;

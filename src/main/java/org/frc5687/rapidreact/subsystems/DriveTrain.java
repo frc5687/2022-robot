@@ -136,12 +136,13 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     // use for modules as controller is running at 200Hz.
-    public void controllerPeriodic() {
+    public void modulePeriodic() {
         _modules.forEach(DiffSwerveModule::periodic);
     }
 
-    public void swervePeriodic() {
-        updateOdometry();
+    @Override
+    public void controlPeriodic(double timestamp, double dt) {
+        modulePeriodic();
         double omegaCorrection = _headingController.getRotationCorrection(getHeading());
         switch (_controlState) {
             case NEUTRAL:
@@ -158,6 +159,11 @@ public class DriveTrain extends OutliersSubsystem {
                 _translationVector.x() != 0
                         || _translationVector.y() != 0
                         || !(Math.abs(_rotationInput + omegaCorrection) < ROTATING_TOLERANCE);
+    }
+
+    @Override
+    public void dataPeriodic(double timestamp, double dt) {
+        updateOdometry(timestamp);
     }
 
     public void startModules() {
@@ -507,8 +513,9 @@ public class DriveTrain extends OutliersSubsystem {
         return false;
     }
 
-    public void updateOdometry() {
-        _odometry.update(
+    public void updateOdometry(double timestamp) {
+        _odometry.updateWithTime(
+                timestamp,
                 getHeading(),
                 _northWest.getState(),
                 _southWest.getState(),

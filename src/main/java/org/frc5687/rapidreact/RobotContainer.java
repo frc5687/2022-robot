@@ -33,6 +33,7 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private Climber _climber;
     private Indexer _indexer;
+    private PeriodicManager _manager;
 
     private AutoChooser _autoChooser;
 
@@ -69,6 +70,9 @@ public class RobotContainer extends OutliersContainer {
         _climber = new Climber(this, _driveTrain);
         _catapult = new Catapult(this);
 
+        // custom periodic manager
+        _manager = new PeriodicManager(_driveTrain, _catapult, _climber);
+
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
         setDefaultCommand(
@@ -79,10 +83,11 @@ public class RobotContainer extends OutliersContainer {
         _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber, _indexer);
 
         // Run periodic for each swerve module faster than regular cycle time
-        _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
-        _robot.addPeriodic(this::swervePeriodic, 0.01, 0.01);
-        _imu.reset();
+        // look to use periodic manager.
         _driveTrain.startModules();
+        _imu.reset();
+        // start manager notifier.
+        _manager.startPeriodic();
     }
 
     public void periodic() {}
@@ -105,7 +110,6 @@ public class RobotContainer extends OutliersContainer {
 
     @Override
     public void autonomousInit() {
-        _driveTrain.startModules();
         // Run once when entering auto mode
         // info("Running RobotContainer.autonomousInit()");
     }
@@ -158,13 +162,7 @@ public class RobotContainer extends OutliersContainer {
 
     public void controllerPeriodic() {
         if (_driveTrain != null) {
-            _driveTrain.controllerPeriodic();
-        }
-    }
-
-    public void swervePeriodic() {
-        if (_driveTrain != null) {
-            _driveTrain.swervePeriodic();
+            _driveTrain.modulePeriodic();
         }
     }
 }

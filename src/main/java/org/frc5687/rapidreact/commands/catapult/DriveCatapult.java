@@ -14,7 +14,6 @@ import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
-import org.frc5687.rapidreact.util.Vector3d;
 
 public class DriveCatapult extends OutliersCommand {
 
@@ -53,35 +52,6 @@ public class DriveCatapult extends OutliersCommand {
 
     @Override
     public void execute() {
-        double spring = _catapult.calculateIdealString(_driveTrain.getDistanceToTarget());
-        double angle =
-                _catapult.angleToStringLength(
-                        _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
-        //                metric(
-        //                "String from dist",
-        //                _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
-        //        metric(
-        //                "Spring from dist",
-        //                _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
-        //        metric("Setpoint value", _catapult.getSetpoint().toString());
-
-        double speed = _catapult.calculateExitVelocity(spring, angle);
-        Vector3d targetVelocity = _driveTrain.getTargetVelocity();
-        Vector3d targetPosition = _driveTrain.getTargetPosition();
-        Vector3d leadPosition =
-                _driveTrain.leadTargetPosition(
-                        _driveTrain.calculateLeadTime(targetPosition, targetVelocity, speed));
-        metric("lead position", leadPosition.toString());
-        metric("lead angle", _driveTrain.calculateLeadAngle(leadPosition));
-        metric(
-                "Spring lead displacement",
-                _catapult.calculateLeadSpringDisplacement(
-                        leadPosition, _driveTrain.getTargetVelocity()));
-
-        metric(
-                "Winch Lead",
-                _catapult.calculateLeadWinchString(leadPosition, _driveTrain.getTargetVelocity()));
-
         CatapultState newState = _catapult.getState();
         if (newState != _lastLoggedState) {
             info("State changed to " + newState);

@@ -36,6 +36,7 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 def ROBOT_MAIN_CLASS = "org.frc5687.rapidreact.Main"
+def TEAM_IP = "10.56.87.2"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -47,13 +48,28 @@ deploy {
 			// You can use getTeamOrDefault(team) instead of getTeamNumber if you
 			// want to store a team number in this file.
 			team = project.frc.getTeamNumber()
-			debug = project.frc.getDebugOrDefault(false)
+//			debug = project.frc.getDebugOrDefault(false)
+			debug = frc.getDebugOrDefault(false)
 
 			artifacts {
 				// First part is artifact name, 2nd is artifact type
 				// getTargetTypeClass is a shortcut to get the class type using a string
-
 				frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
+//						targets << "roborio"
+						// Debug can be overridden by command line, for use with VSCode
+						// ADDED SECTION TO ENABLE visualvm
+					project.logger.lifecycle('Checking if profile mode...')
+					//Enter profile mode with ./gradlew deploy -PprofileMode
+					if (frc.project.hasProperty("profileMode")) {
+						project.logger.lifecycle('Debug mode enabled!')
+						project.logger.lifecycle("Connect JMX client to ${TEAM_IP}:1099 for RoboRIO profiling with visualvm.")
+						jvmArgs.add("-Dcom.sun.management.jmxremote=true")
+						jvmArgs.add(	"-Dcom.sun.management.jmxremote.port=1099")
+						jvmArgs.add(	"-Dcom.sun.management.jmxremote.local.only=false")
+						jvmArgs.add(	"-Dcom.sun.management.jmxremote.ssl=false")
+						jvmArgs.add(	"-Dcom.sun.management.jmxremote.authenticate=false")
+						jvmArgs.add(	"-Djava.rmi.server.hostname=10.56.87.2")
+					}
 				}
 
 				// Static files artifact
@@ -125,7 +141,6 @@ task gitInfo(dependsOn: build) {
 	println '[branch] ' + project.branch
 	println '[commit] ' + project.revision
 }
-
 task gitLog {
 	description = 'Logs git branch and version to log file when deploy'
 	def logFile = new File('src/main/java/org/frc5687/rapidreact/util/Version.java')

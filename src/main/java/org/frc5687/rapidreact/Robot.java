@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 import org.frc5687.rapidreact.util.*;
 
 /**
@@ -51,13 +50,14 @@ public class Robot extends OutliersRobot implements ILoggingSource {
         ourPeriodic();
     }
 
-    /** Run once every time entering autonomous mode
-     * 
-     * <p> Autonomous command set in RobotContainer
+    /**
+     * Run once every time entering autonomous mode
+     *
+     * <p>Autonomous command set in RobotContainer
      */
     @Override
     public void autonomousInit() {
-        //wrapCommand drops intake before the autocommand.
+        // wrapCommand drops intake before the autocommand.
         // Jack did this to save typing in robotContainer
         _autoCommand = _robotContainer.wrapCommand(_robotContainer.getAutonomousCommand());
         _fmsConnected = DriverStation.isFMSAttached();
@@ -92,12 +92,15 @@ public class Robot extends OutliersRobot implements ILoggingSource {
 
         // Example of starting a new row of metrics for all instrumented objects.
         // MetricTracker.newMetricRowAll();
+        _prevTime = System.currentTimeMillis();
         MetricTracker.newMetricRowAll();
         // If you comment out _robotContainer.periodic(), provide another way to poll
         // Drive Station for starting position and auto mode to run
-        _robotContainer.periodic();
         CommandScheduler.getInstance().run();
+        _robotContainer.periodic();
         updateDashboard();
+        _time = System.currentTimeMillis();
+        metric("dt", _time - _prevTime);
     }
 
     /** This function is called periodically during test mode. */
@@ -126,7 +129,6 @@ public class Robot extends OutliersRobot implements ILoggingSource {
             _robotContainer.updateDashboard();
         }
     }
-
 
     private void update() {}
 }
