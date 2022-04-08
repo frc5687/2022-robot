@@ -32,8 +32,8 @@ public class DriveCatapult extends OutliersCommand {
     private boolean _isFirstShot = true;
     private long _wait;
     private long _indexerWait;
-    private boolean _autoShoot = true;
- 
+
+
     public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, Indexer indexer, OI oi) {
         _catapult = catapult;
         _indexer = indexer;
@@ -52,9 +52,6 @@ public class DriveCatapult extends OutliersCommand {
 
     @Override
     public void execute() {
-        _autoShoot = _oi.autoShoot();
-        metric("Autoshoot", _autoShoot);
-
         metric("String from dist", _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
         metric("Spring from dist", _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
         metric("Setpoint value", _catapult.getSetpoint().toString());
@@ -236,12 +233,10 @@ public class DriveCatapult extends OutliersCommand {
     }
 
     boolean isShootTriggered() {
-        if(!_driveTrain.isMoving() && _driveTrain.onTarget() && _autoShoot){
-            //For autoshoot
+        if(!_driveTrain.isMoving() && _driveTrain.onTarget() && _oi.autoShoot()){
             return true;
         }
         if (_catapult.isAutoShoot() && !_driveTrain.isMoving()) {
-            //Shooting during automuns
             return true;
         }
         return _oi.isShootButtonPressed();
