@@ -10,6 +10,7 @@ import static org.frc5687.rapidreact.util.Helpers.*;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.frc5687.rapidreact.commands.AutoIntake;
@@ -61,7 +62,7 @@ public class OI extends OutliersProxy {
 
     private JoystickButton _autoShootToggle;
 
-    private boolean _autoShoot;
+    private boolean _autoShoot = false;
 
 
     // "Raw" joystick values
@@ -129,14 +130,21 @@ public class OI extends OutliersProxy {
     }
 
     public void autoShootToggle(){
-        if(_autoShootToggle.get() && !_autoShoot){
-            _autoShoot = true;
-        }else{
-            _autoShoot = false;
-        }
     }
 
-    public boolean autoShoot(){ return _autoShoot; }
+    public boolean autoShoot(){
+        if(_autoShootToggle.get()) {
+            if (_autoShoot) {
+                _autoShoot = false;
+            } else {
+                _autoShoot = true;
+            }
+            _autoShoot = false;
+            // metric("AutoShoot Toggle", false);
+        }
+        return _autoShoot;
+    }
+
     public boolean readyToClimb() { return _readyToClimb.get(); }
     public boolean isShootButtonPressed() { return _shootButton.get(); }
     public boolean exitDebugCatapult() { return _catapultDebugButton.get(); }
