@@ -8,6 +8,8 @@ package org.frc5687.rapidreact;
 import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.ZEROING;
 import static org.frc5687.rapidreact.util.Helpers.*;
 
+import javax.swing.text.DefaultStyledDocument.ElementSpec;
+
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -60,7 +62,8 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootSetpointTwo;
     private JoystickButton _shootSetpointThree;
 
-    private JoystickButton _autoShootToggle;
+    private JoystickButton _autoShootOn;
+    private JoystickButton _autoShootOff;
 
     private boolean _autoShoot = false;
 
@@ -83,7 +86,8 @@ public class OI extends OutliersProxy {
         _rockerFlip = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _manualIndexer = new JoystickButton(_debug, Gamepad.Buttons.LEFT_BUMPER.getNumber());
 
-        _autoShootToggle = new JoystickButton(_rotation, 10);
+        _autoShootOn = new JoystickButton(_rotation, 10);
+        _autoShootOff = new JoystickButton(_rotation, 9);
 
 
         // adding buttons while driving: Ben pls look
@@ -129,20 +133,16 @@ public class OI extends OutliersProxy {
         _manualIndexer.whenPressed(indexer::up);
     }
 
-    public void autoShootToggle(){
-    }
-
+    public boolean hold = false;
     public boolean autoShoot(){
-        if(_autoShootToggle.get()) {
-            if (_autoShoot) {
-                _autoShoot = false;
-            } else {
-                _autoShoot = true;
-            }
-            _autoShoot = false;
-            // metric("AutoShoot Toggle", false);
+        if(_autoShootOn.get()){
+            hold = true;
+            metric("Hold", true);
+        }else if(_autoShootOn.get() && hold){
+            hold = false;
+            metric("Hold", false);
         }
-        return _autoShoot;
+        return hold;
     }
 
     public boolean readyToClimb() { return _readyToClimb.get(); }
