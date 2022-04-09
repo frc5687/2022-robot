@@ -233,7 +233,8 @@ public class DriveCatapult extends OutliersCommand {
     }
 
     boolean isShootTriggered() {
-        metric("Autoshoot", _catapult.getAutomatShoot());
+        metric("Automatic Shooting (Teleop)", _catapult.getAutomatShoot());
+        metric("Autonomous Shooting (Autonomous)", _catapult.getAutonomShoot());
         metric("On target", _driveTrain.onTarget());
         metric("Is drivetrain moving", _driveTrain.isMoving());
         if(!_driveTrain.isMoving() && _driveTrain.onTarget() && _catapult.getAutomatShoot()){
