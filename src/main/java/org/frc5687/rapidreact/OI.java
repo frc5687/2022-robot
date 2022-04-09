@@ -58,17 +58,13 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootButton;
     private JoystickButton _manualIndexer;
     private JoystickButton _turboDrive;
-    private JoystickButton _green;
 
 
     private JoystickButton _shootSetpointOne;
     private JoystickButton _shootSetpointTwo;
     private JoystickButton _shootSetpointThree;
 
-    private JoystickButton _autoShootOn;
-    private JoystickButton _autoShootOff;
-
-    private boolean _autoShoot = false;
+    private JoystickButton _autoShootControl;
 
 
     // "Raw" joystick values
@@ -84,7 +80,7 @@ public class OI extends OutliersProxy {
         _catapultDebugButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
         _preloadButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_STICK.getNumber());
 //        _release = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
-        _readyToClimb = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
+        _readyToClimb = new JoystickButton(_buttonpad, Gamepad.Buttons.B.getNumber());
         _stowClimber = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _rockerFlip = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
         _manualIndexer = new JoystickButton(_buttonpad, Gamepad.Buttons.A.getNumber());
@@ -99,6 +95,8 @@ public class OI extends OutliersProxy {
         _autoAim = new JoystickButton(_rotation, 2);
         _deployRetract = new JoystickButton(_rotation, 3);
         _aimBall = new JoystickButton(_rotation, 4);
+
+        _autoShootControl = new JoystickButton(_rotation, 10);
 
         //translation joystick
         _shootButton= new JoystickButton(_translation, 1);
@@ -123,8 +121,6 @@ public class OI extends OutliersProxy {
          _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
          _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
 
-        _green.whenPressed(new ChangeColor(lights));
-
          _preloadButton.whenPressed(new SetState(catapult, ZEROING));
          _intakeButton.whenHeld(new AutoIntake(intake));
          _resetNavX.whenPressed(driveTrain::resetYaw);
@@ -134,16 +130,8 @@ public class OI extends OutliersProxy {
          _manualIndexer.whenPressed(indexer::up);
     }
 
-    public boolean hold = false;
     public boolean autoShoot(){
-        if(_autoShootOn.get()){
-            hold = true;
-            metric("Hold", true);
-        }else if(_autoShootOn.get() && hold){
-            hold = false;
-            metric("Hold", false);
-        }
-        return hold;
+        return true;
     }
 
     public boolean readyToClimb() { return _readyToClimb.get(); }

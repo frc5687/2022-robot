@@ -150,6 +150,10 @@ public class Catapult extends OutliersSubsystem {
         _lights.setWhite();
     }
 
+    public void setShootingLights(){
+        _lights.setGold();
+    }
+
     public boolean isSpringZeroed() {
         return _springEncoderZeroed;
     }
