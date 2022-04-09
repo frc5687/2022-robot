@@ -126,7 +126,7 @@ public class OI extends OutliersProxy {
         _stowClimber.whenPressed(new Stow(climber));
         _rockerFlip.whenPressed(new RockerFlip(climber));
         _manualIndexer.whenPressed(indexer::up);
-        _autoShootToggle.whenPressed(catapult::toggleAutoShoot);
+        _autoShootToggle.whenPressed(catapult::toggleAutomatShoot);
     }
 
     public boolean hold = false;

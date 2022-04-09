@@ -38,7 +38,8 @@ public class Catapult extends OutliersSubsystem {
     private CatapultState _state;
     private double _springGoal;
     private double _winchGoal;
-    private boolean _autoShoot;
+    private boolean _autonomShoot;
+    private boolean _automatShoot;
     private boolean _initialized = false;
     private CatapultSetpoint _setpoint = CatapultSetpoint.NONE;
 
@@ -360,33 +361,34 @@ public class Catapult extends OutliersSubsystem {
 //        metric("Arm release angle", getArmReleaseAngle());
 //        metric("Arm Hall Effect", isArmLowered());
     }
-    /**
-     * 
-     * @param value
-     */
-    public boolean getAutoshoot() {
-        return _autoShoot;
+
+    public boolean getAutomatShoot() {
+        return _automatShoot;
+    }
+
+    public boolean getAutonomShoot() {
+        return _autonomShoot;
+    }
+
+    public void setAutomatShoot(boolean value) {
+        _automatShoot = value;
     }
     /**
      * Pass true here to trigger a shot from autonomous.
      * @param value
      */
-    public void setAutoshoot(boolean value) {
-        _autoShoot = value;
+    public void setAutonomShoot(boolean value) {
+        _autonomShoot = value;
     }
 
-    public void toggleAutoShoot() {
-        if (getAutoshoot() == true) {
-            setAutoshoot(false);
-        } else if (getAutoshoot() == false) {
-            setAutoshoot(true);
+    public void toggleAutomatShoot() {
+        if (getAutomatShoot() == true) {
+            setAutomatShoot(false);
+        } else if (getAutomatShoot() == false) {
+            setAutomatShoot(true);
         } else {
-            setAutoshoot(false);
+            setAutomatShoot(false);
         }
-    }
-
-    public boolean isAutoShoot() {
-        return _autoShoot;
     }
 
     public void setSetpoint(CatapultSetpoint setpoint) {
