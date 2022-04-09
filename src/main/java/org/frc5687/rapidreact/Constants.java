@@ -41,7 +41,8 @@ public class Constants {
         public static final double TRANSLATION_DEADBAND =
                 0.1; // Avoid unintentional joystick movement
         public static final double ROTATION_DEADBAND = 0.1; // Avoid unintentional joystick movement
-        public static final double POWER = 1.0; // Determines the curve of drive input
+        public static final double TRANSLATION_POWER = 1.75; // Determines the curve of drive input
+        public static final double ROTATION_POWER = 1.0; // Determines the curve of drive input
         public static final long DISABLE_TIME = 200; // ms
 
         // Size of the robot chassis in meters
@@ -95,7 +96,7 @@ public class Constants {
         public static final boolean NORTH_EAST_ENCODER_INVERTED = true;
 
         // Maximum rates of motion
-        public static final double MAX_MPS = 2.5; // Max speed of robot (m/s)
+        public static final double MAX_MPS = 2.7; // Max speed of robot (m/s)
         public static final double MAX_MPS_TURBO = 3.8; // Max speed of robot in turbo (m/s)
         public static final double MAX_MPS_DURING_CLIMB =
                 MAX_MPS / 4; // Max speed of robot (m/s) during climb
@@ -139,7 +140,7 @@ public class Constants {
         // update rate of our modules 5ms.
         public static final double kDt = 0.005;
         public static final int FALCON_VELOCITY_MEASUREMENT_WINDOW = 32;
-        public static final int TIMEOUT = 10;
+        public static final int TIMEOUT = 200;
 
         public static final double FALCON_FREE_SPEED =
                 Units.rotationsPerMinuteToRadiansPerSecond(6380);
@@ -163,7 +164,7 @@ public class Constants {
         // angle more aggressively than the wheel angular velocity.
         public static final double Q_AZIMUTH_ANG_VELOCITY = 1.1; // radians per sec
         public static final double Q_AZIMUTH = 0.08; // radians
-        public static final double Q_WHEEL_ANG_VELOCITY = 1; // radians per sec
+        public static final double Q_WHEEL_ANG_VELOCITY = 3; // radians per sec
         // This is for Kalman filter which isn't used for azimuth angle due to angle wrapping.
         // Model noise are assuming that our model isn't as accurate as our sensors.
         public static final double MODEL_AZIMUTH_ANGLE_NOISE = .1; // radians

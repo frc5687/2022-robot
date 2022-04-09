@@ -209,7 +209,7 @@ public class DriveTrain extends OutliersSubsystem {
         }
 
         Rotation2d direction = translation.direction();
-        double scaledMagnitude = Math.pow(magnitude, POWER);
+        double scaledMagnitude = Math.pow(magnitude, TRANSLATION_POWER);
         translation =
                 new Vector2d(
                         direction.getCos() * scaledMagnitude, direction.getSin() * scaledMagnitude);
@@ -220,7 +220,7 @@ public class DriveTrain extends OutliersSubsystem {
 
         omega = (Math.abs(omega) < ROTATION_DEADBAND) ? 0 : omega;
         // scale rotation
-        omega = Math.pow(Math.abs(omega), POWER) * Math.signum(omega);
+        omega = Math.pow(Math.abs(omega), ROTATION_POWER) * Math.signum(omega);
 
         translation = translation.scale(_driveSpeed);
         omega *= MAX_ANG_VEL;
@@ -271,6 +271,7 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void resetYaw() {
         _imu.reset();
+        _headingController.setStabilizationHeading(new Rotation2d(0.0));
     }
 
     public void snap(Rotation2d heading) {
@@ -283,6 +284,10 @@ public class DriveTrain extends OutliersSubsystem {
 
     public void vision(Rotation2d visionHeading) {
         _headingController.setVisionHeading(visionHeading);
+    }
+
+    public void disableHeadingController() {
+        _headingController.setState(SwerveHeadingController.HeadingState.OFF);
     }
 
     public void rotate(Rotation2d heading) {
@@ -594,6 +599,7 @@ public class DriveTrain extends OutliersSubsystem {
         //        metric("Target z", getTargetPosition().z());
         metric("Swerve State", _controlState.name());
         metric("Heading State", getCurrentHeadingState().name());
+        metric("NE/Module Angle Vel", _northEast.getWheelAngularVelocity());
     }
 
     public enum ControlState {

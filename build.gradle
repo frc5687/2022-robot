@@ -64,11 +64,11 @@ deploy {
 						project.logger.lifecycle('Debug mode enabled!')
 						project.logger.lifecycle("Connect JMX client to ${TEAM_IP}:1099 for RoboRIO profiling with visualvm.")
 						jvmArgs.add("-Dcom.sun.management.jmxremote=true")
-						jvmArgs.add(	"-Dcom.sun.management.jmxremote.port=1099")
-						jvmArgs.add(	"-Dcom.sun.management.jmxremote.local.only=false")
-						jvmArgs.add(	"-Dcom.sun.management.jmxremote.ssl=false")
-						jvmArgs.add(	"-Dcom.sun.management.jmxremote.authenticate=false")
-						jvmArgs.add(	"-Djava.rmi.server.hostname=10.56.87.2")
+						jvmArgs.add("-Dcom.sun.management.jmxremote.port=1099")
+						jvmArgs.add("-Dcom.sun.management.jmxremote.local.only=false")
+						jvmArgs.add("-Dcom.sun.management.jmxremote.ssl=false")
+						jvmArgs.add("-Dcom.sun.management.jmxremote.authenticate=false")
+						jvmArgs.add("-Djava.rmi.server.hostname=10.56.87.2")
 					}
 				}
 

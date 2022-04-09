@@ -25,6 +25,7 @@ public class DriveTrajectory extends OutliersCommand {
     public void initialize() {
         super.initialize();
         _driveTrain.setIsMoving(true);
+        _driveTrain.disableHeadingController();
         _timer.reset();
         _timer.start();
     }
@@ -41,6 +42,7 @@ public class DriveTrajectory extends OutliersCommand {
     public boolean isFinished() {
         if (_timer.get() >= _trajectory.getTotalTimeSeconds()) {
             _driveTrain.setIsMoving(false);
+            _driveTrain.stabilize(_driveTrain.getHeading());
             _driveTrain.drive(0, 0, 0);
             return true;
         }
