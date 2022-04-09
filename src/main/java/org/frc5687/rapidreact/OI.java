@@ -21,7 +21,6 @@ import org.frc5687.rapidreact.commands.Climber.RockerFlip;
 import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
 import org.frc5687.rapidreact.commands.Climber.Stow;
 import org.frc5687.rapidreact.commands.DriveTrajectory;
-import org.frc5687.rapidreact.commands.catapult.AutoShootToggle;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.commands.catapult.SetState;
 import org.frc5687.rapidreact.subsystems.Catapult;

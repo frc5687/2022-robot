@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Shoot/#149-Toggle-Auto-Shoot";
-    public static final String REVISION = "1d7f61b";
+    public static final String REVISION = "4cdf2fa";
     public static final String MODIFIED = " *";
 }
