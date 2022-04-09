@@ -78,7 +78,7 @@ public class RobotContainer extends OutliersContainer {
         _autoMode = AutoChooser.Mode.Unknown;
 
         _lights = new Lights(this);
-        _lights.pink();
+        _lights.rainbow();
 
         // initialize these peripherals first as subsystems require them.
         _oi = new OI();
