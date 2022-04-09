@@ -52,6 +52,8 @@ public class DriveCatapult extends OutliersCommand {
 
     @Override
     public void execute() {
+        metric("Automatic Shooting (Teleop)", _catapult.getAutomatShoot());
+        metric("Autonomous Shooting (Autonomous)", _catapult.getAutonomShoot());
         metric("String from dist", _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
         metric("Spring from dist", _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
         metric("Setpoint value", _catapult.getSetpoint().toString());
@@ -233,8 +235,6 @@ public class DriveCatapult extends OutliersCommand {
     }
 
     boolean isShootTriggered() {
-        metric("Automatic Shooting (Teleop)", _catapult.getAutomatShoot());
-        metric("Autonomous Shooting (Autonomous)", _catapult.getAutonomShoot());
         metric("On target", _driveTrain.onTarget());
         metric("Is drivetrain moving", _driveTrain.isMoving());
         if(!_driveTrain.isMoving() && _driveTrain.onTarget() && _catapult.getAutomatShoot()){
