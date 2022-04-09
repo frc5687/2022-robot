@@ -81,8 +81,8 @@ public class OI extends OutliersProxy {
         _debug = new Gamepad(2);
 
         // debug gamepad
-        // _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        // _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+        _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
+        _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
 
         _green = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());

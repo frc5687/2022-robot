@@ -29,6 +29,11 @@ public class Lights extends OutliersSubsystem{
 
     //Set the color of the lights
 
+
+    public void pink(){
+        _candle.setLEDs(255, 105, 18);
+    }
+
     public void setWhite(){
         _candle.setLEDs(0, 0, 0);
     }
