@@ -360,13 +360,29 @@ public class Catapult extends OutliersSubsystem {
 //        metric("Arm release angle", getArmReleaseAngle());
 //        metric("Arm Hall Effect", isArmLowered());
     }
-
+    /**
+     * 
+     * @param value
+     */
+    public boolean getAutoshoot() {
+        return _autoShoot;
+    }
     /**
      * Pass true here to trigger a shot from autonomous.
      * @param value
      */
     public void setAutoshoot(boolean value) {
         _autoShoot = value;
+    }
+
+    public void toggleAutoShoot() {
+        if (getAutoshoot() == true) {
+            setAutoshoot(false);
+        } else if (getAutoshoot() == false) {
+            setAutoshoot(true);
+        } else {
+            setAutoshoot(false);
+        }
     }
 
     public boolean isAutoShoot() {

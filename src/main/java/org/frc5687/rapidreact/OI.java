@@ -21,6 +21,7 @@ import org.frc5687.rapidreact.commands.Climber.RockerFlip;
 import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
 import org.frc5687.rapidreact.commands.Climber.Stow;
 import org.frc5687.rapidreact.commands.DriveTrajectory;
+import org.frc5687.rapidreact.commands.catapult.AutoShootToggle;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.commands.catapult.SetState;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -62,11 +63,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootSetpointTwo;
     private JoystickButton _shootSetpointThree;
 
-    private JoystickButton _autoShootOn;
-    private JoystickButton _autoShootOff;
-
-    private boolean _autoShoot = false;
-
+    private JoystickButton _autoShootToggle;
 
     // "Raw" joystick values
     private double yIn = 0;
@@ -86,8 +83,7 @@ public class OI extends OutliersProxy {
         _rockerFlip = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
         _manualIndexer = new JoystickButton(_debug, Gamepad.Buttons.LEFT_BUMPER.getNumber());
 
-        _autoShootOn = new JoystickButton(_rotation, 10);
-        _autoShootOff = new JoystickButton(_rotation, 9);
+        _autoShootToggle = new JoystickButton(_rotation, 10);
 
 
         // adding buttons while driving: Ben pls look
@@ -131,19 +127,10 @@ public class OI extends OutliersProxy {
         _stowClimber.whenPressed(new Stow(climber));
         _rockerFlip.whenPressed(new RockerFlip(climber));
         _manualIndexer.whenPressed(indexer::up);
+        _autoShootToggle.whenPressed(catapult::toggleAutoShoot);
     }
 
     public boolean hold = false;
-    public boolean autoShoot(){
-        if(_autoShootOn.get()){
-            hold = false;
-            metric("Hold", false);
-        }else if(_autoShootOn.get() && !hold){
-            hold = true;
-            metric("Hold", true);
-        }
-        return hold;
-    }
 
     public boolean readyToClimb() { return _readyToClimb.get(); }
     public boolean isShootButtonPressed() { return _shootButton.get(); }
