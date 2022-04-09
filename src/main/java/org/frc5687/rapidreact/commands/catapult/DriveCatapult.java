@@ -235,7 +235,11 @@ public class DriveCatapult extends OutliersCommand {
     }
 
     boolean isShootTriggered() {
-        if(!_driveTrain.isMoving() && _driveTrain.onTarget()){
+        metric("Autoshoot", _oi.autoShoot());
+        metric("On target", _driveTrain.onTarget());
+        metric("Is drivetrain moving", _driveTrain.isMoving());
+        if(!_driveTrain.isMoving() && _driveTrain.onTarget() && _oi.autoShoot()){
+            metric("Can shoot", true);
             return true;
         }
         if (_catapult.isAutoShoot() && !_driveTrain.isMoving()) {
