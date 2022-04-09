@@ -59,7 +59,7 @@ public class Intake extends OutliersSubsystem{
      */
     public void deploy(){
         if(_indexer.isBallDetected()){
-            _indexer.up();
+            spinDownRoller();
         }
         _solenoid.set(Value.kForward);
         _deployed = true;
