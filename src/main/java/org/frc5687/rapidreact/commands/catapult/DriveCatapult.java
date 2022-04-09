@@ -74,7 +74,6 @@ public class DriveCatapult extends OutliersCommand {
 
         switch (newState) {
             case ZEROING: {
-                _catapult.setBaseLights();
                 checkLockOut();
                 checkKill();
                 // Try Zeroing the spring first, then the winch.
@@ -86,7 +85,6 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case LOWERING_ARM: {
-                _catapult.setBaseLights();
                 checkLockOut();
                 checkKill();
                 _catapult.setWinchMotorSpeed(LOWERING_SPEED);
@@ -98,7 +96,6 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case LOADING: {
-                _catapult.setBaseLights();
                 _indexer.up();
                 checkLockOut();
                 checkKill();
@@ -117,7 +114,6 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case AIMING: {
-                _catapult.setAimingLights();
                 checkLockOut();
                 checkKill();
                 if(!_indexer.isBallDetected() && (System.currentTimeMillis() > _indexerWait)){
@@ -147,7 +143,6 @@ public class DriveCatapult extends OutliersCommand {
             }
             break;
             case SHOOTING: {
-                _catapult.setShootingLights();
                 checkLockOut();
                 checkKill();
                 _catapult.setSetpoint(CatapultSetpoint.NONE);
@@ -156,7 +151,6 @@ public class DriveCatapult extends OutliersCommand {
                 _catapult.setState(Catapult.CatapultState.WAIT_SHOT);
             } break;
             case WAIT_SHOT: {
-                _catapult.setBaseLights();
                 if (System.currentTimeMillis() > _wait) {
                     if (_isFirstShot) {
                         _isFirstShot = false;
@@ -167,7 +161,6 @@ public class DriveCatapult extends OutliersCommand {
                 }
             } break;
             case LOCK_OUT: {
-                _catapult.setErrorLights();
                 _catapult.setWinchMotorSpeed(0.0);
                 _catapult.setSpringMotorSpeed(0.0);
                 if (!_intake.isIntakeUp()) {
@@ -175,7 +168,6 @@ public class DriveCatapult extends OutliersCommand {
                 }
             } break;
             case PRELOAD: {
-                _catapult.setErrorLights();
                 checkLockOut();
                 if (zeroWinch()) {
                     if (zeroSpring()) {
@@ -190,7 +182,6 @@ public class DriveCatapult extends OutliersCommand {
                 }
             } break;
             case DEBUG: {
-                _catapult.setErrorLights();
                 if (_oi.releaseArm()) {
                     _catapult.releaseArm();
                 }
@@ -202,7 +193,6 @@ public class DriveCatapult extends OutliersCommand {
                 }
             } break;
             case KILL: {
-                _catapult.setErrorLights();
                 _catapult.setSpringMotorSpeed(0);
                 _catapult.setWinchMotorSpeed(0);
                 if (_oi.exitKill()) {

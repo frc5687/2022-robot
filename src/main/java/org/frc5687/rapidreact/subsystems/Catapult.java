@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
+import org.frc5687.rapidreact.Constants.Catapult;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.util.*;
 
@@ -122,6 +123,20 @@ public class Catapult extends OutliersSubsystem {
     @Override
     public void periodic() {
         super.periodic();
+        switch(getState()) {
+            case KILL:
+                setErrorLights();
+                break;
+            case DEBUG:
+                setErrorLights();
+                break;
+            case AIMING:
+                setAimingLights();
+                break;
+            case SHOOTING:
+                setShootingLights();
+                break;
+        }
         if (isArmLowered() && (_winchMotor.getAppliedOutput() > 0)) {
             setWinchMotorSpeed(0);
         }
