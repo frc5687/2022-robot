@@ -136,11 +136,11 @@ public class OI extends OutliersProxy {
     public boolean hold = false;
     public boolean autoShoot(){
         if(_autoShootOn.get()){
-            hold = true;
-            metric("Hold", true);
-        }else if(_autoShootOn.get() && hold){
             hold = false;
             metric("Hold", false);
+        }else if(_autoShootOn.get() && !hold){
+            hold = true;
+            metric("Hold", true);
         }
         return hold;
     }
