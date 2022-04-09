@@ -18,7 +18,11 @@ public class AutoIntake extends OutliersCommand {
 
     @Override
     public void execute(){
-        _intake.spinUpRoller();
+        if(_intake.isBallInItake() && _intake.ballInCardle()){
+            _intake.spinDownRoller();
+        }else{
+            _intake.spinUpRoller();
+        }
     }
 
     @Override

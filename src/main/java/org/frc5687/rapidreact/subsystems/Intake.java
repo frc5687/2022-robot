@@ -47,6 +47,13 @@ public class Intake extends OutliersSubsystem{
     }
 
     /**
+     * Check for ball in intake
+     * @return is there a ball in the intake
+     */
+    public boolean ballInCardle(){
+        return _indexer.isBallDetected();
+    }
+    /**
      * Stowe the intake
      */
     public void stowe(){
@@ -58,9 +65,6 @@ public class Intake extends OutliersSubsystem{
      * Deploy the intake
      */
     public void deploy(){
-        if(_indexer.isBallDetected()){
-            spinDownRoller();
-        }
         _solenoid.set(Value.kForward);
         _deployed = true;
     }
