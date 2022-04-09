@@ -38,7 +38,7 @@ public class OI extends OutliersProxy {
     // Joysticks and gamepads
     private Joystick _translation;
     private Joystick _rotation;
-    private Gamepad _debug;
+    private Gamepad _buttonpad;
 
     // Buttons
     private JoystickButton _autoAim;
@@ -78,26 +78,21 @@ public class OI extends OutliersProxy {
     public OI() {
         _translation = new Joystick(0);
         _rotation = new Joystick(1);
-        _debug = new Gamepad(2);
+        _buttonpad = new Gamepad(2);
 
         // debug gamepad
-        _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
-        _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
-
-        _green = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
-       _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
-         _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
-         _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
-         _rockerFlip = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
-         _manualIndexer = new JoystickButton(_debug, Gamepad.Buttons.LEFT_BUMPER.getNumber());
-
-        _autoShootOn = new JoystickButton(_rotation, 10);
-        _autoShootOff = new JoystickButton(_rotation, 9);
+        _catapultDebugButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
+        _preloadButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_STICK.getNumber());
+//        _release = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
+        _readyToClimb = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
+        _stowClimber = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
+        _rockerFlip = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
+        _manualIndexer = new JoystickButton(_buttonpad, Gamepad.Buttons.A.getNumber());
 
 
         // adding buttons while driving: Ben pls look
 
-//        _shootButton = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+//        _shootButton = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
 
         // rotation joystick
         _intakeButton = new JoystickButton(_rotation, 1);
@@ -169,7 +164,7 @@ public class OI extends OutliersProxy {
     public double getDriveY() {
         //Comment for gamepad control
         yIn = -getSpeedFromAxis(_translation, _translation.getYChannel());
-//         yIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
+//         yIn = -getSpeedFromAxis(_buttonpad, Gamepad.Axes.LEFT_Y.getNumber());
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
 
         double yOut = yIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
@@ -180,7 +175,7 @@ public class OI extends OutliersProxy {
     public double getDriveX() {
 //        Comment for gamepad control
         xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
-//        xIn = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_X.getNumber());
+//        xIn = -getSpeedFromAxis(_buttonpad, Gamepad.Axes.LEFT_X.getNumber());
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0; // numbers from empirical testing.
@@ -189,13 +184,13 @@ public class OI extends OutliersProxy {
 
     public double getRotationX() {
         double speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
-//        double speed = getSpeedFromAxis(_debug, Gamepad.Axes.RIGHT_X.getNumber());
+//        double speed = getSpeedFromAxis(_buttonpad, Gamepad.Axes.RIGHT_X.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }
 
     public double getSpringMotorSpeed() {
-        double speed = -getSpeedFromAxis(_debug, Gamepad.Axes.LEFT_Y.getNumber());
+        double speed = -getSpeedFromAxis(_buttonpad, Gamepad.Axes.LEFT_Y.getNumber());
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }
