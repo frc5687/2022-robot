@@ -87,14 +87,13 @@ public class RobotContainer extends OutliersContainer {
         // Run periodic for each swerve module faster than regular cycle time
         // look to use periodic manager.
 
-        _driveTrain.startModules();
-        _robot.addPeriodic(this::controllerPeriodic, 0.005, 0.005);
-
-        _imu.reset();
-        // build trajectories one initialize.
-        _trajectoryManager.generateTrajectories();
         // start manager notifier.
         _periodicManager.startPeriodic();
+        // build trajectories one initialize.
+        _trajectoryManager.generateTrajectories();
+
+        _driveTrain.startModules();
+        _imu.reset();
     }
 
     public void periodic() {}

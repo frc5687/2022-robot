@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Drivetrain/#145-AlgorithmChange";
-    public static final String REVISION = "8f21ea2";
+    public static final String REVISION = "9b988df";
     public static final String MODIFIED = " *";
 }
