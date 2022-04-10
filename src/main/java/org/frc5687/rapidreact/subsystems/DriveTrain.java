@@ -44,9 +44,14 @@ public class DriveTrain extends OutliersSubsystem {
     private boolean _lockHeading;
 
     private AHRS _imu;
-    private HolonomicDriveController _controller;
+    private HolonomicDriveController _poseController;
     private SwerveHeadingController _headingController;
     private JetsonProxy _proxy;
+
+    // Trajectory / Pose Following
+    private Trajectory.State _trajectoryGoal;
+    private Rotation2d _trajectoryHeading;
+    private Pose2d _goalPose;
 
     private double _driveSpeed = Constants.DriveTrain.MAX_MPS;
 
@@ -106,23 +111,27 @@ public class DriveTrain extends OutliersSubsystem {
                             _northEast.getModulePosition());
             _odometry = new SwerveDriveOdometry(_kinematics, getHeading());
 
-            _controller =
+            _poseController =
                     new HolonomicDriveController(
                             new PIDController(
                                     Constants.DriveTrain.kP,
                                     Constants.DriveTrain.kI,
-                                    Constants.DriveTrain.kD),
+                                    Constants.DriveTrain.kD,
+                                    Constants.DriveTrain.kDt),
                             new PIDController(
                                     Constants.DriveTrain.kP,
                                     Constants.DriveTrain.kI,
-                                    Constants.DriveTrain.kD),
-                            new ProfiledPIDController(
-                                    Constants.DriveTrain.kP,
-                                    Constants.DriveTrain.kI,
                                     Constants.DriveTrain.kD,
+                                    Constants.DriveTrain.kDt),
+                            new ProfiledPIDController(
+                                    STABILIZATION_kP,
+                                    STABILIZATION_kI,
+                                    STABILIZATION_kD,
                                     new TrapezoidProfile.Constraints(
                                             Constants.DriveTrain.PROFILE_CONSTRAINT_VEL,
-                                            Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL)));
+                                            Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL),
+                                    Constants.DriveTrain.kDt));
+
             _headingController = new SwerveHeadingController(Constants.DriveTrain.kDt);
             _translationVector = new Vector2d();
             _rotationInput = 0;
@@ -130,6 +139,8 @@ public class DriveTrain extends OutliersSubsystem {
             _fieldRelative = true;
             _isMoving = false;
             _lockHeading = false;
+            _trajectoryGoal = new Trajectory.State();
+            _goalPose = new Pose2d();
         } catch (Exception e) {
             error(e.getMessage());
         }
@@ -141,7 +152,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     @Override
-    public void controlPeriodic(double timestamp, double dt) {
+    public void controlPeriodic(double timestamp) {
         modulePeriodic();
         double omegaCorrection = _headingController.getRotationCorrection(getHeading());
         switch (_controlState) {
@@ -150,8 +161,14 @@ public class DriveTrain extends OutliersSubsystem {
             case MANUAL:
                 updateSwerve(_translationVector, _rotationInput + omegaCorrection);
                 break;
+            case POSITION:
+                updateSwerve(_goalPose);
+                break;
             case ROTATION:
                 updateSwerve(Vector2d.identity(), omegaCorrection);
+                break;
+            case TRAJECTORY:
+                updateSwerve(_trajectoryGoal, _trajectoryHeading);
                 break;
         }
 
@@ -162,7 +179,7 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     @Override
-    public void dataPeriodic(double timestamp, double dt) {
+    public void dataPeriodic(double timestamp) {
         updateOdometry(timestamp);
     }
 
@@ -258,6 +275,22 @@ public class DriveTrain extends OutliersSubsystem {
                                         rotationalInput));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_MODULE_SPEED_MPS);
         setModuleStates(swerveModuleStates);
+    }
+
+    public void updateSwerve(Trajectory.State goal, Rotation2d heading) {
+        ChassisSpeeds adjustedSpeeds = _poseController.calculate(getOdometryPose(), goal, heading);
+        SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_MODULE_SPEED_MPS);
+        setModuleStates(moduleStates);
+    }
+
+    public void updateSwerve(Pose2d pose) {
+        ChassisSpeeds adjustedSpeeds =
+                _poseController.calculate(
+                        getOdometryPose(), pose, LINEAR_VELOCITY_REFERENCE, pose.getRotation());
+        SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_MODULE_SPEED_MPS);
+        setModuleStates(moduleStates);
     }
 
     public double getYaw() {
@@ -388,36 +421,31 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public TrajectoryConfig getConfig() {
-        return new TrajectoryConfig(Constants.DriveTrain.MAX_MPS, Constants.DriveTrain.MAX_MPSS)
+        return new TrajectoryConfig(
+                        Constants.DriveTrain.MAX_AUTO_MPS, Constants.DriveTrain.MAX_MPSS)
                 .setKinematics(_kinematics)
                 .addConstraint(getKinematicConstraint());
     }
 
-    public void trajectoryFollower(Trajectory.State goal, Rotation2d heading) {
-        ChassisSpeeds adjustedSpeeds = _controller.calculate(getOdometryPose(), goal, heading);
-        SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_MODULE_SPEED_MPS);
-        setModuleStates(moduleStates);
+    public void setTrajectoryGoal(Trajectory.State goal, Rotation2d heading) {
+        _trajectoryGoal = goal;
+        _trajectoryHeading = heading;
     }
 
-    public void poseFollower(Pose2d pose, double vel) {
-        ChassisSpeeds adjustedSpeeds =
-                _controller.calculate(getOdometryPose(), pose, vel, pose.getRotation());
-        SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveTrain.MAX_MPS);
-        setModuleStates(moduleStates);
+    public void setPoseGoal(Pose2d pose) {
+        _goalPose = pose;
     }
 
     public void poseFollowerBallTracking(Pose2d pose, double vel) {
         Rotation2d rot = hasCorrectBall() ? getCorrectBallHeading() : pose.getRotation();
-        ChassisSpeeds adjustedSpeeds = _controller.calculate(getOdometryPose(), pose, vel, rot);
+        ChassisSpeeds adjustedSpeeds = _poseController.calculate(getOdometryPose(), pose, vel, rot);
         SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveTrain.MAX_MPS);
         setModuleStates(moduleStates);
     }
 
     public SwerveDriveKinematicsConstraint getKinematicConstraint() {
-        return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_MPS);
+        return new SwerveDriveKinematicsConstraint(_kinematics, Constants.DriveTrain.MAX_AUTO_MPS);
     }
 
     /**
@@ -605,8 +633,9 @@ public class DriveTrain extends OutliersSubsystem {
     public enum ControlState {
         NEUTRAL(0),
         MANUAL(1),
-        ROTATION(2),
-        TRAJECTORY(3);
+        POSITION(2),
+        ROTATION(3),
+        TRAJECTORY(4);
         private final int _value;
 
         ControlState(int value) {

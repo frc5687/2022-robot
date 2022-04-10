@@ -3,8 +3,8 @@ package org.frc5687.rapidreact.util;
 
 public interface OutlierPeriodic {
     /** Control processing periodic function */
-    void controlPeriodic(double timestamp, double dt);
+    void controlPeriodic(double timestamp);
 
     /** Data processing periodic function */
-    void dataPeriodic(double timestamp, double dt);
+    void dataPeriodic(double timestamp);
 }

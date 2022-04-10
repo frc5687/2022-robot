@@ -20,8 +20,8 @@ public final class PeriodicManager {
                             final double timestamp = Timer.getFPGATimestamp();
                             _dt = timestamp - _prevTimestamp;
                             _prevTimestamp = timestamp;
-                            _periods.forEach(p -> p.controlPeriodic(timestamp, _dt));
-                            _periods.forEach(p -> p.dataPeriodic(timestamp, _dt));
+                            _periods.forEach(p -> p.controlPeriodic(timestamp));
+                            _periods.forEach(p -> p.dataPeriodic(timestamp));
                         }
                     });
 

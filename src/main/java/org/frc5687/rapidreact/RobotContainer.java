@@ -33,7 +33,8 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private Climber _climber;
     private Indexer _indexer;
-    private PeriodicManager _manager;
+    private PeriodicManager _periodicManager;
+    private TrajectoryManger _trajectoryManager;
 
     private AutoChooser _autoChooser;
 
@@ -71,7 +72,8 @@ public class RobotContainer extends OutliersContainer {
         _catapult = new Catapult(this);
 
         // custom periodic manager
-        _manager = new PeriodicManager(_driveTrain, _climber);
+        _periodicManager = new PeriodicManager(_driveTrain, _climber);
+        _trajectoryManager = new TrajectoryManger(_driveTrain);
 
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
@@ -86,8 +88,10 @@ public class RobotContainer extends OutliersContainer {
         // look to use periodic manager.
         _driveTrain.startModules();
         _imu.reset();
+        // build trajectories one initialize.
+        _trajectoryManager.generateTrajectories();
         // start manager notifier.
-        _manager.startPeriodic();
+        _periodicManager.startPeriodic();
     }
 
     public void periodic() {}
@@ -150,11 +154,23 @@ public class RobotContainer extends OutliersContainer {
             case OneBall:
                 return new OneBallAuto(_driveTrain, _catapult, _indexer, _autoPosition);
             case TwoBall:
-                return new TwoBallAuto(_driveTrain, _catapult, _intake, _indexer, _autoPosition);
+                return new TwoBallAuto(
+                        _driveTrain,
+                        _catapult,
+                        _intake,
+                        _indexer,
+                        _autoPosition,
+                        _trajectoryManager);
             case ThreeBall:
                 return new ThreeBallAuto(_driveTrain, _catapult, _intake, _indexer, _autoPosition);
             case FourBall:
-                return new FourBallAuto(_driveTrain, _catapult, _intake, _indexer, _autoPosition);
+                return new FourBallAuto(
+                        _driveTrain,
+                        _catapult,
+                        _intake,
+                        _indexer,
+                        _autoPosition,
+                        _trajectoryManager);
             default:
                 return new Wait(15);
         }

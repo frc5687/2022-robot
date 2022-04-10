@@ -9,22 +9,16 @@ public class DriveToPoseAimBall extends OutliersCommand {
 
     private final Pose2d _destination;
     private final DriveTrain _driveTrain;
-    // private final SlewRateLimiter _vxFilter;
-    // private final SlewRateLimiter _vyFilter;
-
-    private Double _velocity;
 
     /**
      * Create DriveAuto command
      *
      * @param driveTrain pass in from RobotContainer
      * @param pose xPos in meters, yPos in meters, theta in radians
-     * @param velocity m/s
      */
-    public DriveToPoseAimBall(DriveTrain driveTrain, Pose2d pose, double velocity) {
+    public DriveToPoseAimBall(DriveTrain driveTrain, Pose2d pose) {
         _driveTrain = driveTrain;
         _destination = pose;
-        _velocity = velocity;
         addRequirements(_driveTrain);
     }
 
@@ -32,24 +26,19 @@ public class DriveToPoseAimBall extends OutliersCommand {
     public void initialize() {
         super.initialize();
         _driveTrain.startModules();
+        _driveTrain.setPoseGoal(_destination);
+        _driveTrain.setControlState(DriveTrain.ControlState.POSITION);
     }
 
     @Override
     public void execute() {
         super.execute();
-
-        /**
-         * Based on observation, appears that
-         *
-         * <p>North = +X West = +Y East = -Y South = -X
-         */
-        _driveTrain.poseFollowerBallTracking(_destination, _velocity);
     }
 
     @Override
     public boolean isFinished() {
         if (_driveTrain.isAtPose(_destination)) {
-            _driveTrain.drive(0, 0, 0);
+            _driveTrain.setControlState(DriveTrain.ControlState.NEUTRAL);
             info("DriveToPose finished.");
             return true;
         }

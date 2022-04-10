@@ -42,6 +42,7 @@ public class Drive extends OutliersCommand {
 
         if (_oi.autoAim() && _driveTrain.hasTarget()) {
             _driveTrain.vision(_driveTrain.getVisionHeading());
+            rot = 0.0;
         }
 
         _driveTrain.drive(vx, vy, rot);

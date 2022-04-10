@@ -97,6 +97,7 @@ public class Constants {
 
         // Maximum rates of motion
         public static final double MAX_MPS = 2.7; // Max speed of robot (m/s)
+        public static final double MAX_AUTO_MPS = 2.7; // Max speed of robot (m/s)
         public static final double MAX_MPS_TURBO = 3.8; // Max speed of robot in turbo (m/s)
         public static final double MAX_MPS_DURING_CLIMB =
                 MAX_MPS / 4; // Max speed of robot (m/s) during climb
@@ -105,6 +106,7 @@ public class Constants {
         public static final double MAX_ANG_VEL_AIM =
                 2 * Math.PI; // Max rotation rate of robot (rads/s)
         public static final double MAX_MPSS = 2.1; // Max acceleration of robot (m/s^2)
+        public static final double LINEAR_VELOCITY_REFERENCE = 0.5;
 
         // PID controller settings
         public static final double POLE_THRESHOLD = Units.degreesToRadians(5.0);
