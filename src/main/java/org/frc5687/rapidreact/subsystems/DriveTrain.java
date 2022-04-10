@@ -116,21 +116,18 @@ public class DriveTrain extends OutliersSubsystem {
                             new PIDController(
                                     Constants.DriveTrain.kP,
                                     Constants.DriveTrain.kI,
-                                    Constants.DriveTrain.kD,
-                                    Constants.DriveTrain.kDt),
+                                    Constants.DriveTrain.kD),
                             new PIDController(
                                     Constants.DriveTrain.kP,
                                     Constants.DriveTrain.kI,
-                                    Constants.DriveTrain.kD,
-                                    Constants.DriveTrain.kDt),
+                                    Constants.DriveTrain.kD),
                             new ProfiledPIDController(
                                     STABILIZATION_kP,
                                     STABILIZATION_kI,
                                     STABILIZATION_kD,
                                     new TrapezoidProfile.Constraints(
                                             Constants.DriveTrain.PROFILE_CONSTRAINT_VEL,
-                                            Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL),
-                                    Constants.DriveTrain.kDt));
+                                            Constants.DriveTrain.PROFILE_CONSTRAINT_ACCEL)));
 
             _headingController = new SwerveHeadingController(Constants.DriveTrain.kDt);
             _translationVector = new Vector2d();
@@ -140,6 +137,7 @@ public class DriveTrain extends OutliersSubsystem {
             _isMoving = false;
             _lockHeading = false;
             _trajectoryGoal = new Trajectory.State();
+            _trajectoryHeading = new Rotation2d();
             _goalPose = new Pose2d();
         } catch (Exception e) {
             error(e.getMessage());
@@ -168,7 +166,7 @@ public class DriveTrain extends OutliersSubsystem {
                 updateSwerve(Vector2d.identity(), omegaCorrection);
                 break;
             case TRAJECTORY:
-                updateSwerve(_trajectoryGoal, _trajectoryHeading);
+                //                updateSwerve(_trajectoryGoal, _trajectoryHeading);
                 break;
         }
 
@@ -180,7 +178,12 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void dataPeriodic(double timestamp) {
-        updateOdometry(timestamp);
+        updateOdometry();
+    }
+
+    @Override
+    public void periodic() {
+        //        updateOdometry();
     }
 
     public void startModules() {
@@ -278,7 +281,8 @@ public class DriveTrain extends OutliersSubsystem {
     }
 
     public void updateSwerve(Trajectory.State goal, Rotation2d heading) {
-        ChassisSpeeds adjustedSpeeds = _poseController.calculate(getOdometryPose(), goal, heading);
+        ChassisSpeeds adjustedSpeeds =
+                _poseController.calculate(getOdometryPose(), goal, getHeading());
         SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(adjustedSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_MODULE_SPEED_MPS);
         setModuleStates(moduleStates);
@@ -546,9 +550,8 @@ public class DriveTrain extends OutliersSubsystem {
         return false;
     }
 
-    public void updateOdometry(double timestamp) {
-        _odometry.updateWithTime(
-                timestamp,
+    public void updateOdometry() {
+        _odometry.update(
                 getHeading(),
                 _northWest.getState(),
                 _southWest.getState(),
@@ -627,7 +630,7 @@ public class DriveTrain extends OutliersSubsystem {
         //        metric("Target z", getTargetPosition().z());
         metric("Swerve State", _controlState.name());
         metric("Heading State", getCurrentHeadingState().name());
-        metric("NE/Module Angle Vel", _northEast.getWheelAngularVelocity());
+        metric("Odometry Pose", getOdometryPose().toString());
     }
 
     public enum ControlState {

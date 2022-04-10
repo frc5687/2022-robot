@@ -82,7 +82,8 @@ public class TwoBallAuto extends SequentialCommandGroup {
                         new SequentialCommandGroup(
                                 new SetState(catapult, AIMING),
                                 new SetSetpoint(catapult, CatapultSetpoint.TARMAC),
-                                //                        new AutoAim(driveTrain),
+                                //                                                        new
+                                // AutoAim(driveTrain),
                                 new Shoot(catapult, indexer),
                                 new DriveTrajectory(driveTrain, _trajectory, _rotation),
                                 new WaitCommand(1)),

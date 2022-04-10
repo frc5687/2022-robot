@@ -145,13 +145,10 @@ public class DiffSwerveModule {
      * @param reference is the Matrix that contains the reference wanted such as [Math.PI, 0, 100].
      * @param xHat is the predicted states of our system. [Azimuth Angle, Azimuth Angular Velocity,
      *     Wheel Angular Velocity].
-     * @param minAngle is the minimum angle in our case -PI.
-     * @param maxAngle is the maximum angle in our case PI.
      */
-    private Matrix<N3, N1> wrapAngle(
-            Matrix<N3, N1> reference, Matrix<N3, N1> xHat, double minAngle, double maxAngle) {
+    private Matrix<N3, N1> wrapAngle(Matrix<N3, N1> reference, Matrix<N3, N1> xHat) {
         double angleError = reference.get(0, 0) - getModuleAngle();
-        double positionError = MathUtil.inputModulus(angleError, minAngle, maxAngle);
+        double positionError = MathUtil.inputModulus(angleError, -Math.PI, Math.PI);
         Matrix<N3, N1> error = reference.minus(xHat);
         return VecBuilder.fill(positionError, error.get(1, 0), error.get(2, 0));
     }
@@ -177,7 +174,6 @@ public class DiffSwerveModule {
     private void predict() {
         // creates our input of voltage to our motors of u = K(r-x) but need to wrap angle to be
         // continuous
-        // see wrapAngle().
         _u =
                 _swerveControlLoop.clampInput(
                         _swerveControlLoop
@@ -186,9 +182,7 @@ public class DiffSwerveModule {
                                 .times( // profiledReference())
                                         wrapAngle(
                                                 _swerveControlLoop.getNextR(),
-                                                _swerveControlLoop.getXHat(),
-                                                -Math.PI,
-                                                Math.PI))
+                                                _swerveControlLoop.getXHat()))
                                 .plus(
                                         VecBuilder.fill(
                                                 FEED_FORWARD * _reference.get(2, 0),

@@ -35,14 +35,14 @@ public class DriveTrajectory extends OutliersCommand {
     public void execute() {
         super.execute();
         Trajectory.State goal = _trajectory.sample(_timer.get());
-        _driveTrain.setTrajectoryGoal(goal, _rot);
+        _driveTrain.updateSwerve(goal, _rot);
     }
 
     @Override
     public boolean isFinished() {
         if (_timer.get() >= _trajectory.getTotalTimeSeconds()) {
             _driveTrain.setIsMoving(false);
-            _driveTrain.stabilize(_driveTrain.getHeading());
+//            _driveTrain.stabilize(_driveTrain.getHeading());
             _driveTrain.setControlState(DriveTrain.ControlState.NEUTRAL);
             return true;
         }
