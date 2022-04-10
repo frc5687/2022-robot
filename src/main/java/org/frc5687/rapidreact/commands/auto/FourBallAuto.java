@@ -3,6 +3,7 @@ package org.frc5687.rapidreact.commands.auto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -47,6 +48,9 @@ public class FourBallAuto extends SequentialCommandGroup {
                 break;
             case Third:
                 driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
+//                _trajectory = TrajectoryGenerator.generateTrajectory(Auto.TrajectoryPoints.PositionThreeToBallTwo.waypoints, config);
+//                _trajectory1 = TrajectoryGenerator.generateTrajectory(Auto.TrajectoryPoints.BallTwoToBallFour.waypoints, config);
+//                _trajectory2 = TrajectoryGenerator.generateTrajectory(Auto.TrajectoryPoints.BallFourToFieldShot.waypoints, config);
                 _trajectory =
                         manager.getTrajectory(TrajectoryManger.Trajectories.POS_THREE_TO_BALL_TWO);
                 _trajectory1 =

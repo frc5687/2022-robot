@@ -151,7 +151,6 @@ public class DriveTrain extends OutliersSubsystem {
 
     @Override
     public void controlPeriodic(double timestamp) {
-        modulePeriodic();
         double omegaCorrection = _headingController.getRotationCorrection(getHeading());
         switch (_controlState) {
             case NEUTRAL:
@@ -179,11 +178,6 @@ public class DriveTrain extends OutliersSubsystem {
     @Override
     public void dataPeriodic(double timestamp) {
         updateOdometry();
-    }
-
-    @Override
-    public void periodic() {
-        //        updateOdometry();
     }
 
     public void startModules() {
