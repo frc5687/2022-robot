@@ -124,9 +124,9 @@ public class Constants {
         public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI * 3.0;
 
-        public static final double kP = 11.5;
+        public static final double kP = 3.5;
         public static final double kI = 0.0;
-        public static final double kD = 0.5;
+        public static final double kD = 0.1;
 
         // Vision PID controller
         public static final double VISION_TOLERANCE = 0.04; // rads
