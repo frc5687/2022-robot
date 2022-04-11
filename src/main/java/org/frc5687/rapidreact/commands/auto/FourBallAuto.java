@@ -107,7 +107,7 @@ public class FourBallAuto extends SequentialCommandGroup {
                 // station.
                 new ParallelDeadlineGroup(new WaitCommand(1), new AutoIntake(intake)),
                 new DriveTrajectory(driveTrain, _trajectory2, _rotation3),
-//                new SetSetpoint(catapult, CatapultSetpoint.FAR),
+                //                new SetSetpoint(catapult, CatapultSetpoint.FAR),
                 new AutoAim(driveTrain),
                 new Shoot(catapult, indexer),
                 new Shoot(catapult, indexer),

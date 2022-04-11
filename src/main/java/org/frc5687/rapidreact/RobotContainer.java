@@ -93,8 +93,7 @@ public class RobotContainer extends OutliersContainer {
         _imu.reset();
     }
 
-    public void periodic() {
-    }
+    public void periodic() {}
 
     public void disabledPeriodic() {
         // update the auto chooser for more values.

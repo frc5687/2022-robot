@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import java.io.IOException;
 import java.net.*;
-import java.util.Timer;
 import java.util.TimerTask;
 
 public class JetsonProxy {
@@ -27,7 +26,7 @@ public class JetsonProxy {
     private Frame _latestFrame;
 
     private JetsonListener _jetsonListener;
-    private Timer _jetsonTimer;
+    //    private Timer _jetsonTimer;
 
     private String _data = "";
 
@@ -43,8 +42,8 @@ public class JetsonProxy {
         _jetsonListener = new JetsonListener(this, _rioPort);
         _listenerThread = new Thread(_jetsonListener);
         _listenerThread.start();
-        _jetsonTimer = new Timer();
-        _jetsonTimer.schedule(new JetsonTimerTask(this), _period, _period);
+        //        _jetsonTimer = new Timer();
+        //        _jetsonTimer.schedule(new JetsonTimerTask(this), _period, _period);
     }
 
     protected synchronized void collect() {

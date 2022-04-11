@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
-import org.frc5687.rapidreact.util.Vector2d;
 
 public class DriveTrajectory extends OutliersCommand {
 
@@ -44,7 +43,7 @@ public class DriveTrajectory extends OutliersCommand {
         if (_timer.get() >= _trajectory.getTotalTimeSeconds()) {
             _driveTrain.setIsMoving(false);
             //            _driveTrain.stabilize(_driveTrain.getHeading());
-            _driveTrain.drive(0,0,0);
+            _driveTrain.drive(0, 0, 0);
             _driveTrain.setControlState(DriveTrain.ControlState.MANUAL);
             return true;
         }

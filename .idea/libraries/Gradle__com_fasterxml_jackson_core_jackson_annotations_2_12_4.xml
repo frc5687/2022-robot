@@ -1,13 +1,15 @@
 <component name="libraryTable">
   <library name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.12.4">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-annotations/2.12.4/jackson-annotations-2.12.4.jar!/" />
+      <root url="jar://$USER_HOME$/Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-annotations/2.12.4/jackson-annotations-2.12.4.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-annotations/2.12.4/jackson-annotations-2.12.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-annotations/2.12.4/jackson-annotations-2.12.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-annotations/2.12.4/jackson-annotations-2.12.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-annotations/2.12.4/jackson-annotations-2.12.4-sources.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-annotations/2.12.4/jackson-annotations-2.12.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-annotations/2.12.4/jackson-annotations-2.12.4-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

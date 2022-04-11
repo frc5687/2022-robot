@@ -123,12 +123,10 @@ public class DiffSwerveModule {
         falcon.setNeutralMode(NeutralMode.Brake);
         falcon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, TIMEOUT);
         falcon.configForwardSoftLimitEnable(false);
-
         falcon.configVoltageCompSaturation(VOLTAGE, TIMEOUT);
-
         falcon.enableVoltageCompensation(true);
-        falcon.setStatusFramePeriod(StatusFrame.Status_1_General, 5, TIMEOUT);
-        falcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, TIMEOUT);
+        falcon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 5, TIMEOUT);
+        falcon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, TIMEOUT);
         falcon.configVelocityMeasurementPeriod(SensorVelocityMeasPeriod.Period_5Ms, TIMEOUT);
         falcon.configVelocityMeasurementWindow(FALCON_VELOCITY_MEASUREMENT_WINDOW, TIMEOUT);
         falcon.configSupplyCurrentLimit(
@@ -147,20 +145,23 @@ public class DiffSwerveModule {
      *     Wheel Angular Velocity].
      */
     private Matrix<N3, N1> wrapAngle(Matrix<N3, N1> reference, Matrix<N3, N1> xHat) {
-        double angleError = reference.get(0, 0) - getModuleAngle();
+        double angleError = reference.get(0, 0) - xHat.get(0, 0);
         double positionError = MathUtil.inputModulus(angleError, -Math.PI, Math.PI);
-        Matrix<N3, N1> error = reference.minus(xHat);
-        return VecBuilder.fill(positionError, error.get(1, 0), error.get(2, 0));
+                Matrix<N3, N1> error = reference.minus(xHat);
+                return VecBuilder.fill(positionError, error.get(1, 0), error.get(2, 0));
+//        return VecBuilder.fill(
+//                positionError,
+//                reference.get(1, 0) - getAzimuthAngularVelocity(),
+//                reference.get(2, 0) - getWheelAngularVelocity());
     }
 
     // periodic loop runs at 5ms.
     public void periodic() {
         // sets the next reference / setpoint.
         _swerveControlLoop.setNextR(_reference);
+        Matrix<N3, N1> y = VecBuilder.fill(getModuleAngle(), getAzimuthAngularVelocity(), getWheelAngularVelocity());
         // updates the kalman filter with new data points.
-        _swerveControlLoop.correct(
-                VecBuilder.fill(
-                        getModuleAngle(), getAzimuthAngularVelocity(), getWheelAngularVelocity()));
+        _swerveControlLoop.correct(y);
         // predict step of kalman filter.
         predict();
         if (_running) {
@@ -171,7 +172,7 @@ public class DiffSwerveModule {
 
     // use custom predict() function for as absolute encoder azimuth angle and the angular velocity
     // of the module need to be continuous.
-    private void predict() {
+    private void predict(Matrix<N3, N1> y) {
         // creates our input of voltage to our motors of u = K(r-x) but need to wrap angle to be
         // continuous
         _u =
@@ -184,9 +185,9 @@ public class DiffSwerveModule {
                                                 _swerveControlLoop.getNextR(),
                                                 _swerveControlLoop.getXHat()))
                                 .plus(
-                                        VecBuilder.fill(
-                                                FEED_FORWARD * _reference.get(2, 0),
-                                                -FEED_FORWARD * _reference.get(2, 0))));
+                                        _swerveControlLoop
+                                                .getFeedforward()
+                                                .calculate(_swerveControlLoop.getNextR())));
         _swerveControlLoop.getObserver().predict(_u, kDt);
     }
 
