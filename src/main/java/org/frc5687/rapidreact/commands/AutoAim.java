@@ -2,6 +2,7 @@
 package org.frc5687.rapidreact.commands;
 
 import org.frc5687.rapidreact.subsystems.DriveTrain;
+import org.frc5687.rapidreact.util.Vector2d;
 
 public class AutoAim extends OutliersCommand {
 
@@ -15,6 +16,7 @@ public class AutoAim extends OutliersCommand {
     @Override
     public void initialize() {
         super.initialize();
+        _driveTrain.setControlState(DriveTrain.ControlState.ROTATION);
     }
 
     @Override
@@ -28,6 +30,8 @@ public class AutoAim extends OutliersCommand {
     @Override
     public boolean isFinished() {
         if (_driveTrain.onTarget()) {
+            _driveTrain.drive(0,0,0);
+            _driveTrain.setControlState(DriveTrain.ControlState.MANUAL);
             return true;
         }
         return false;

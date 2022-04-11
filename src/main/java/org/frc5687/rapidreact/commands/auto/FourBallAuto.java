@@ -1,15 +1,19 @@
 /* Team 5687 (C)2022 */
 package org.frc5687.rapidreact.commands.auto;
 
+import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.AIMING;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import org.frc5687.rapidreact.commands.AutoAim;
 import org.frc5687.rapidreact.commands.AutoIntake;
 import org.frc5687.rapidreact.commands.DriveTrajectory;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
+import org.frc5687.rapidreact.commands.catapult.SetState;
+import org.frc5687.rapidreact.commands.catapult.Shoot;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
@@ -48,9 +52,12 @@ public class FourBallAuto extends SequentialCommandGroup {
                 break;
             case Third:
                 driveTrain.resetOdometry(Auto.RobotPositions.THIRD);
-//                _trajectory = TrajectoryGenerator.generateTrajectory(Auto.TrajectoryPoints.PositionThreeToBallTwo.waypoints, config);
-//                _trajectory1 = TrajectoryGenerator.generateTrajectory(Auto.TrajectoryPoints.BallTwoToBallFour.waypoints, config);
-//                _trajectory2 = TrajectoryGenerator.generateTrajectory(Auto.TrajectoryPoints.BallFourToFieldShot.waypoints, config);
+                //                _trajectory =
+                // TrajectoryGenerator.generateTrajectory(Auto.TrajectoryPoints.PositionThreeToBallTwo.waypoints, config);
+                //                _trajectory1 =
+                // TrajectoryGenerator.generateTrajectory(Auto.TrajectoryPoints.BallTwoToBallFour.waypoints, config);
+                //                _trajectory2 =
+                // TrajectoryGenerator.generateTrajectory(Auto.TrajectoryPoints.BallFourToFieldShot.waypoints, config);
                 _trajectory =
                         manager.getTrajectory(TrajectoryManger.Trajectories.POS_THREE_TO_BALL_TWO);
                 _trajectory1 =
@@ -82,19 +89,17 @@ public class FourBallAuto extends SequentialCommandGroup {
         addCommands(
                 new ParallelDeadlineGroup(
                         new SequentialCommandGroup(
-                                //                                new SetState(catapult, AIMING),
-                                //                                new SetSetpoint(catapult,
-                                // CatapultSetpoint.TARMAC),
-                                //
+                                new SetState(catapult, AIMING),
+                                new SetSetpoint(catapult, CatapultSetpoint.TARMAC),
                                 // new AutoAim(driveTrain),
-                                //                                new Shoot(catapult, indexer),
+                                new Shoot(catapult, indexer),
                                 new DriveTrajectory(driveTrain, _trajectory, _rotation1),
                                 new WaitCommand(0.3)),
                         new AutoIntake(intake)),
                 new ParallelDeadlineGroup(
                         new SequentialCommandGroup(
-                                //                                new AutoAim(driveTrain),
-                                //                                new Shoot(catapult, indexer),
+                                new AutoAim(driveTrain),
+                                new Shoot(catapult, indexer),
                                 new DriveTrajectory(driveTrain, _trajectory1, _rotation2),
                                 new WaitCommand(0.3)),
                         new AutoIntake(intake)),
@@ -102,10 +107,10 @@ public class FourBallAuto extends SequentialCommandGroup {
                 // station.
                 new ParallelDeadlineGroup(new WaitCommand(1), new AutoIntake(intake)),
                 new DriveTrajectory(driveTrain, _trajectory2, _rotation3),
-                new SetSetpoint(catapult, CatapultSetpoint.FAR),
-                //                new AutoAim(driveTrain),
-                //                new Shoot(catapult, indexer),
-                //                new Shoot(catapult, indexer),
+//                new SetSetpoint(catapult, CatapultSetpoint.FAR),
+                new AutoAim(driveTrain),
+                new Shoot(catapult, indexer),
+                new Shoot(catapult, indexer),
                 new SetSetpoint(catapult, CatapultSetpoint.NONE));
     }
 }

@@ -84,9 +84,6 @@ public class RobotContainer extends OutliersContainer {
         // initialize OI after subsystems.
         _oi.initializeButtons(_driveTrain, _catapult, _intake, _climber, _indexer);
 
-        // Run periodic for each swerve module faster than regular cycle time
-        // look to use periodic manager.
-
         // start manager notifier.
         _periodicManager.startPeriodic();
         // build trajectories one initialize.
@@ -96,7 +93,8 @@ public class RobotContainer extends OutliersContainer {
         _imu.reset();
     }
 
-    public void periodic() {}
+    public void periodic() {
+    }
 
     public void disabledPeriodic() {
         // update the auto chooser for more values.

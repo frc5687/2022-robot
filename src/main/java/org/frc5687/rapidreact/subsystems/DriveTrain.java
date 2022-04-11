@@ -173,7 +173,7 @@ public class DriveTrain extends OutliersSubsystem {
         _isMoving =
                 _translationVector.x() != 0
                         || _translationVector.y() != 0
-                        || !(Math.abs(_rotationInput + omegaCorrection) < ROTATING_TOLERANCE);
+                        || (Math.abs(_rotationInput + omegaCorrection) > ROTATING_TOLERANCE);
     }
 
     @Override
@@ -209,6 +209,9 @@ public class DriveTrain extends OutliersSubsystem {
     public void drive(double vx, double vy, double omega) {
         metric("vx", vx);
         metric("vy", vy);
+        if (_controlState == ControlState.NEUTRAL) {
+            setControlState(ControlState.MANUAL);
+        }
         Vector2d translation = new Vector2d(vx, vy);
         double magnitude = translation.magnitude();
 

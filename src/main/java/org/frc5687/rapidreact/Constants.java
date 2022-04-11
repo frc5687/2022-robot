@@ -97,7 +97,7 @@ public class Constants {
 
         // Maximum rates of motion
         public static final double MAX_MPS = 2.7; // Max speed of robot (m/s)
-        public static final double MAX_AUTO_MPS = 3.5; // Max speed of robot (m/s)
+        public static final double MAX_AUTO_MPS = 2.5; // Max speed of robot (m/s)
         public static final double MAX_MPS_TURBO = 3.8; // Max speed of robot in turbo (m/s)
         public static final double MAX_MPS_DURING_CLIMB =
                 MAX_MPS / 4; // Max speed of robot (m/s) during climb
@@ -134,7 +134,7 @@ public class Constants {
         public static final double VISION_TOLERANCE = 0.04;
         public static final double POSITION_TOLERANCE = 0.03;
         public static final double ANGLE_TOLERANCE = 0.02;
-        public static final double ROTATING_TOLERANCE = 0.3;
+        public static final double ROTATING_TOLERANCE = 0.2;
     }
 
     public static class DifferentialSwerveModule {
@@ -275,7 +275,7 @@ public class Constants {
                 (MAX_SPEED_WITH_GEAR_BOX / (2 * Math.PI)) * ARM_WINCH_DRUM_CIRCUMFERENCE; // m/s
         public static final double MAX_WINCH_ACCELERATION_MPSS =
                 MAX_WINCH_VELOCITY_MPS * 50.0; // heuristic.
-        public static final double WINCH_TOLERANCE = 0.0005; // m
+        public static final double WINCH_TOLERANCE = 0.001; // m
 
         // DriveCatapult constants
         public static final double LOWERING_SPEED = 1.0;
