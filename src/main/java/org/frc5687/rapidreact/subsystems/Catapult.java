@@ -115,6 +115,8 @@ public class Catapult extends OutliersSubsystem {
         _state = CatapultState.DEBUG;
         _springGoal = 0;
         _winchGoal = 0;
+        _automatShoot = true;
+        _autonomShoot = false;
     }
 
 
