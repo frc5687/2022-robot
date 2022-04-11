@@ -159,9 +159,8 @@ public class DiffSwerveModule {
     public void periodic() {
         // sets the next reference / setpoint.
         _swerveControlLoop.setNextR(_reference);
-        Matrix<N3, N1> y = VecBuilder.fill(getModuleAngle(), getAzimuthAngularVelocity(), getWheelAngularVelocity());
         // updates the kalman filter with new data points.
-        _swerveControlLoop.correct(y);
+        _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getAzimuthAngularVelocity(), getWheelAngularVelocity()));
         // predict step of kalman filter.
         predict();
         if (_running) {
@@ -172,7 +171,7 @@ public class DiffSwerveModule {
 
     // use custom predict() function for as absolute encoder azimuth angle and the angular velocity
     // of the module need to be continuous.
-    private void predict(Matrix<N3, N1> y) {
+    private void predict() {
         // creates our input of voltage to our motors of u = K(r-x) but need to wrap angle to be
         // continuous
         _u =
