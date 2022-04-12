@@ -52,6 +52,8 @@ public class DriveCatapult extends OutliersCommand {
 
     @Override
     public void execute() {
+        metric("Automatic Shooting (Teleop)", _catapult.getAutomatShoot());
+        metric("Autonomous Shooting (Autonomous)", _catapult.getAutonomShoot());
         metric("String from dist", _catapult.calculateIdealString(_driveTrain.getDistanceToTarget()));
         metric("Spring from dist", _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget()));
         metric("Setpoint value", _catapult.getSetpoint().toString());
@@ -134,7 +136,7 @@ public class DriveCatapult extends OutliersCommand {
                 }
                 if (isShootTriggered() && ((_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
 //                    if (_indexer.isBallDetected() && (System.currentTimeMillis() > _indexerWait)) {
-                        _catapult.setAutoshoot(false);
+                        _catapult.setAutonomShoot(false);
                         _catapult.setState(SHOOTING);
 //                    }
                 }
@@ -233,10 +235,13 @@ public class DriveCatapult extends OutliersCommand {
     }
 
     boolean isShootTriggered() {
-        if(!_driveTrain.isMoving() && _driveTrain.onTarget()){
+        metric("On target", _driveTrain.onTarget());
+        metric("Is drivetrain moving", _driveTrain.isMoving());
+        if(!_driveTrain.isMoving() && _driveTrain.onTarget() && _catapult.getAutomatShoot()){
+            metric("Can shoot", true);
             return true;
         }
-        if (_catapult.isAutoShoot() && !_driveTrain.isMoving()) {
+        if (_catapult.getAutonomShoot() && !_driveTrain.isMoving()) {
             return true;
         }
         return _oi.isShootButtonPressed();
