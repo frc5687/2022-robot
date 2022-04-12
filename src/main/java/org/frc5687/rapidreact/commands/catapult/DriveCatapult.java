@@ -9,6 +9,7 @@ import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultSetpoint;
 import org.frc5687.rapidreact.subsystems.Catapult.CatapultState;
 
@@ -32,6 +33,8 @@ public class DriveCatapult extends OutliersCommand {
     private boolean _isFirstShot = true;
     private long _wait;
     private long _indexerWait;
+
+    private Lights _lights;
 
 
     public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, Indexer indexer, OI oi) {
@@ -108,6 +111,12 @@ public class DriveCatapult extends OutliersCommand {
                 }
                 if (_indexer.isBallDetected()) {
                     _indexer.down();
+                    if (_indexer.isBlueBallDetected()){
+                        _lights.setBlue();
+                    }
+                    else if (_indexer.isRedBallDetected()){
+                        _lights.setRed();
+                    }
                     _catapult.setState(AIMING);
                     _indexerWait = System.currentTimeMillis() + Constants.Indexer.NO_BALL_DELAY;
                 }

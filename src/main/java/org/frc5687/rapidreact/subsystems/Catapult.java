@@ -1,6 +1,5 @@
 package org.frc5687.rapidreact.subsystems;
 
-
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -16,10 +15,9 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
-import org.frc5687.rapidreact.Constants.Catapult;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.util.*;
-
+import org.frc5687.rapidreact.subsystems.Indexer;
 import static org.frc5687.rapidreact.Constants.Catapult.*;
 
 public class Catapult extends OutliersSubsystem {
@@ -33,6 +31,7 @@ public class Catapult extends OutliersSubsystem {
     private final HallEffect _armHall;
 
     private Lights _lights;
+    private Indexer _indexer;
 
     private final ProfiledPIDController _winchController;
 
@@ -154,11 +153,11 @@ public class Catapult extends OutliersSubsystem {
     }
 
     public void setAimingLights(){
-        _lights.setBlue();
+        _lights.setGreen();
     }
 
     public void setErrorLights(){
-        _lights.setRed();
+        _lights.setPurple();
     }
 
     public void setBaseLights(){
