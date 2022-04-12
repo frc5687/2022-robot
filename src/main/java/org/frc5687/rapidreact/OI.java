@@ -8,8 +8,11 @@ package org.frc5687.rapidreact;
 import static org.frc5687.rapidreact.subsystems.Catapult.CatapultState.ZEROING;
 import static org.frc5687.rapidreact.util.Helpers.*;
 
+import javax.swing.text.DefaultStyledDocument.ElementSpec;
+
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.frc5687.rapidreact.commands.AutoIntake;
@@ -59,6 +62,8 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootSetpointTwo;
     private JoystickButton _shootSetpointThree;
 
+    private JoystickButton _autoShootToggle;
+
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -70,12 +75,13 @@ public class OI extends OutliersProxy {
 
         // debug gamepad
         _catapultDebugButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
-        //_preloadButton = new JoystickButton(_buttonpad, Gamepad.Buttons..getNumber());
-//        _release = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
-        _readyToClimb = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
+        _preloadButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_STICK.getNumber());
+//        _release = new JoystickButton(_buttonpad, Gamepad.Buttons..getNumber());
+        _readyToClimb = new JoystickButton(_buttonpad, Gamepad.Buttons.B.getNumber());
         _stowClimber = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _rockerFlip = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
         _manualIndexer = new JoystickButton(_buttonpad, Gamepad.Buttons.A.getNumber());
+        _autoShootToggle = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
 
 
         // adding buttons while driving: Ben pls look
@@ -119,7 +125,10 @@ public class OI extends OutliersProxy {
         _stowClimber.whenPressed(new Stow(climber));
         _rockerFlip.whenPressed(new RockerFlip(climber));
         _manualIndexer.whenPressed(indexer::up);
+        _autoShootToggle.whenPressed(catapult::toggleAutomatShoot);
     }
+
+    public boolean hold = false;
 
     public boolean readyToClimb() { return _readyToClimb.get(); }
     public boolean isShootButtonPressed() { return _shootButton.get(); }
