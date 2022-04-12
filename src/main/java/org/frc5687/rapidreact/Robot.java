@@ -89,18 +89,14 @@ public class Robot extends OutliersRobot implements ILoggingSource {
     public void teleopPeriodic() {}
 
     private void ourPeriodic() {
-
+        CommandScheduler.getInstance().run();
         // Example of starting a new row of metrics for all instrumented objects.
         // MetricTracker.newMetricRowAll();
-        _prevTime = System.currentTimeMillis();
         MetricTracker.newMetricRowAll();
         // If you comment out _robotContainer.periodic(), provide another way to poll
         // Drive Station for starting position and auto mode to run
-        CommandScheduler.getInstance().run();
         _robotContainer.periodic();
         updateDashboard();
-        _time = System.currentTimeMillis();
-        metric("dt", _time - _prevTime);
     }
 
     /** This function is called periodically during test mode. */

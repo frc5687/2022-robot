@@ -7,8 +7,8 @@ import edu.wpi.first.math.util.Units;
 public class Constants {
     public static final int TICKS_PER_UPDATE = 5;
     public static final double METRIC_FLUSH_PERIOD = 1.0;
-    public static final double UPDATE_PERIOD = 0.02;
-    public static final double PERIODIC_PERIOD = 0.005;
+    public static final double UPDATE_PERIOD = 0.02; // default 20ms
+    public static final double PERIODIC_PERIOD = 0.01; // 10 ms
     public static final double EPSILON = 0.00001;
     public static final double DEADBAND = 0.15;
     // Separate constants into individual inner classes corresponding
@@ -37,7 +37,7 @@ public class Constants {
     public static class DriveTrain {
 
         public static final String CAN_BUS = "DriveTrain";
-        public static final double kDt = 0.005;
+        public static final double kDt = 0.01; // 10 ms
         public static final double TRANSLATION_DEADBAND =
                 0.1; // Avoid unintentional joystick movement
         public static final double ROTATION_DEADBAND = 0.1; // Avoid unintentional joystick movement
@@ -139,8 +139,8 @@ public class Constants {
 
     public static class DifferentialSwerveModule {
 
-        // update rate of our modules 5ms.
-        public static final double kDt = 0.005;
+        // update rate of our modules 10ms.
+        public static final double kDt = 0.01;
         public static final int FALCON_VELOCITY_MEASUREMENT_WINDOW = 32;
         public static final int TIMEOUT = 200;
 

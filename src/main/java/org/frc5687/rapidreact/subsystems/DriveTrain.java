@@ -207,8 +207,6 @@ public class DriveTrain extends OutliersSubsystem {
      * @param omega angular velocity (rotating speed)
      */
     public void drive(double vx, double vy, double omega) {
-        metric("vx", vx);
-        metric("vy", vy);
         if (_controlState == ControlState.NEUTRAL) {
             setControlState(ControlState.MANUAL);
         }

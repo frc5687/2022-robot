@@ -104,8 +104,12 @@ public abstract class OutliersSubsystem extends SubsystemBase
         }
     }
 
+    public void readInputs() {}
+
     @Override
-    public void controlPeriodic(double timestamp) {}
+    public void controlPeriodic(double timestamp) {
+        readInputs();
+    }
 
     @Override
     public void dataPeriodic(double timestamp) {}

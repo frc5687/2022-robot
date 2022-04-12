@@ -39,6 +39,8 @@ public class DiffSwerveModule {
     private final boolean _encoderInverted;
     private boolean _running;
 
+    private final SystemIO _systemIO;
+
     public DiffSwerveModule(
             Translation2d positionVector,
             int leftMotorID,
@@ -108,6 +110,7 @@ public class DiffSwerveModule {
         _u = VecBuilder.fill(0, 0);
         // boolean for if we want the modules to be running as we set voltage in the periodic loop.
         _running = false;
+        _systemIO = new SystemIO();
     }
 
     /**
@@ -125,9 +128,9 @@ public class DiffSwerveModule {
         falcon.configForwardSoftLimitEnable(false);
         falcon.configVoltageCompSaturation(VOLTAGE, TIMEOUT);
         falcon.enableVoltageCompensation(true);
-        falcon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 5, TIMEOUT);
-        falcon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 5, TIMEOUT);
-        falcon.configVelocityMeasurementPeriod(SensorVelocityMeasPeriod.Period_5Ms, TIMEOUT);
+        falcon.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10, TIMEOUT);
+        falcon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10, TIMEOUT);
+        falcon.configVelocityMeasurementPeriod(SensorVelocityMeasPeriod.Period_10Ms, TIMEOUT);
         falcon.configVelocityMeasurementWindow(FALCON_VELOCITY_MEASUREMENT_WINDOW, TIMEOUT);
         falcon.configSupplyCurrentLimit(
                 new SupplyCurrentLimitConfiguration(
@@ -145,22 +148,30 @@ public class DiffSwerveModule {
      *     Wheel Angular Velocity].
      */
     private Matrix<N3, N1> wrapAngle(Matrix<N3, N1> reference, Matrix<N3, N1> xHat) {
-        double angleError = reference.get(0, 0) - xHat.get(0, 0);
+        double angleError = reference.get(0, 0) - getModuleAngle();
         double positionError = MathUtil.inputModulus(angleError, -Math.PI, Math.PI);
-                Matrix<N3, N1> error = reference.minus(xHat);
-                return VecBuilder.fill(positionError, error.get(1, 0), error.get(2, 0));
-//        return VecBuilder.fill(
-//                positionError,
-//                reference.get(1, 0) - getAzimuthAngularVelocity(),
-//                reference.get(2, 0) - getWheelAngularVelocity());
+        Matrix<N3, N1> error = reference.minus(xHat);
+        return VecBuilder.fill(positionError, error.get(1, 0), error.get(2, 0));
     }
 
+    public synchronized void readInputs() {
+        _systemIO.leftVelocityTicksPer100ms = _leftFalcon.getSelectedSensorVelocity(0);
+        _systemIO.rightVelocityTicksPer100ms = _rightFalcon.getSelectedSensorVelocity(0);
+
+        _systemIO.moduleAngle = getEncoderAngle();
+        _systemIO.moduleAzimuthAngularVelocity = getAzimuthAngularVelocity();
+        _systemIO.moduleWheelAngularVelocity = getWheelAngularVelocity();
+    }
     // periodic loop runs at 5ms.
     public void periodic() {
+        // read inputs from falcon;
+        readInputs();
         // sets the next reference / setpoint.
         _swerveControlLoop.setNextR(_reference);
         // updates the kalman filter with new data points.
-        _swerveControlLoop.correct(VecBuilder.fill(getModuleAngle(), getAzimuthAngularVelocity(), getWheelAngularVelocity()));
+        _swerveControlLoop.correct(
+                VecBuilder.fill(
+                        getModuleAngle(), getAzimuthAngularVelocity(), getWheelAngularVelocity()));
         // predict step of kalman filter.
         predict();
         if (_running) {
@@ -212,11 +223,15 @@ public class DiffSwerveModule {
         _leftFalcon.set(TalonFXControlMode.PercentOutput, limVoltage / VOLTAGE);
     }
 
-    public double getModuleAngle() {
+    public double getEncoderAngle() {
         return Helpers.boundHalfAngle(
                 ((_encoderInverted ? (-1.0) : 1.0) * _boreEncoder.getDistance() % (2.0 * Math.PI))
                         - _encoderOffset,
                 true);
+    }
+
+    public double getModuleAngle() {
+        return _systemIO.moduleAngle;
     }
 
     public double getWheelAngularVelocity() {
@@ -242,11 +257,11 @@ public class DiffSwerveModule {
     }
 
     public double getRightFalconRPM() {
-        return _rightFalcon.getSelectedSensorVelocity() / TICKS_TO_ROTATIONS * FALCON_RATE;
+        return _systemIO.rightVelocityTicksPer100ms / TICKS_TO_ROTATIONS * FALCON_RATE;
     }
 
     public double getLeftFalconRPM() {
-        return _leftFalcon.getSelectedSensorVelocity() / TICKS_TO_ROTATIONS * FALCON_RATE;
+        return _systemIO.leftVelocityTicksPer100ms / TICKS_TO_ROTATIONS * FALCON_RATE;
     }
 
     public double getLeftVoltage() {
@@ -372,5 +387,15 @@ public class DiffSwerveModule {
                                 0.0, 0.0,
                                 0.0, 0.0);
         return new LinearSystem<>(A, B, C, D);
+    }
+
+    private static class SystemIO {
+        // Falcon 500 sensor inputs
+        public double leftVelocityTicksPer100ms;
+        public double rightVelocityTicksPer100ms;
+        // State Space Sensor Inputs
+        public double moduleAngle;
+        public double moduleAzimuthAngularVelocity;
+        public double moduleWheelAngularVelocity;
     }
 }
