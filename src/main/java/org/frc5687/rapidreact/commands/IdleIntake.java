@@ -25,8 +25,12 @@ public class IdleIntake extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        if (System.currentTimeMillis() > _waitTime) {
-            _intake.spinDownRoller();
+        if(_intake.isBallInItake() && _intake.ballInCardle()){
+            _intake.deploy();
+        }else{
+            if (System.currentTimeMillis() > _waitTime) {
+                _intake.spinDownRoller();
+            }
         }
     }
 
