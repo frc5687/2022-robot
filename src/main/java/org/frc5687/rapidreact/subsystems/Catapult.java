@@ -433,19 +433,18 @@ public class Catapult extends OutliersSubsystem {
         // If arm Hall effect is triggered, robot enters LOADING
         LOWERING_ARM(1),
 
+        WAIT_LOADING(2),
         // LOADING locks pin, check for which color ball we have.
         // Depending on the ball the robot enters the AIMING state or WRONG_BALL state.
-        LOADING(2),
+        LOADING(3),
 
         // AIMING waited for the OI aim button to change states.
         // Will constantly be changing the spring and winch when moving in this state.
         // to automatically get the ball in no mater the distance.
         // Also have an override button if vision is not working.
         // Change state to SHOOTING.
-        AIMING(3),
+        AIMING(4),
 
-        // We have the wrong ball, set the Winch and Spring goal to remove the ball.
-        WRONG_BALL(4),
 
         // Set the winch goal and spring goal.
         // SHOOTING waits for shoot button to be pressed and the goals to be in tolerance.

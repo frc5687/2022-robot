@@ -32,6 +32,7 @@ public class DriveCatapult extends OutliersCommand {
     private boolean _isFirstShot = true;
     private long _wait;
     private long _indexerWait;
+    private long _loweringWait;
 
 
     public DriveCatapult(Catapult catapult, Intake intake, DriveTrain driveTrain, Indexer indexer, OI oi) {
@@ -89,14 +90,25 @@ public class DriveCatapult extends OutliersCommand {
             case LOWERING_ARM: {
                 checkLockOut();
                 checkKill();
-                _catapult.setWinchMotorSpeed(LOWERING_SPEED);
+                if (_indexer.isBallDetected()) {
+                    _catapult.setWinchMotorSpeed(0.0);
+                } else {
+                    _catapult.setWinchMotorSpeed(LOWERING_SPEED);
+                }
                 if (_catapult.isArmLowered()) {
                     _catapult.setWinchMotorSpeed(0.0);
                     _catapult.lockArm();
-                    _catapult.setState(LOADING);
+                    _loweringWait = System.currentTimeMillis() + LOWERING_DELAY;
+                    _catapult.setState(WAIT_LOADING);
                 }
             }
             break;
+            case WAIT_LOADING: {
+                if (System.currentTimeMillis() > _loweringWait) {
+                    _catapult.setState(LOADING);
+                }
+                break;
+            }
             case LOADING: {
                 _indexer.up();
                 checkLockOut();
@@ -106,13 +118,13 @@ public class DriveCatapult extends OutliersCommand {
                     _springGoal = _catapult.calculateIdealSpring(_driveTrain.getDistanceToTarget());
                     _catapult.setWinchGoal(_winchGoal);
                     _catapult.setSpringDistance(_springGoal);
-//                    _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
                 }
                 if (_indexer.isBallDetected()) {
                     _indexer.down();
                     _catapult.setState(AIMING);
                     _indexerWait = System.currentTimeMillis() + Constants.Indexer.NO_BALL_DELAY;
                 }
+                _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
             }
             break;
             case AIMING: {
@@ -135,10 +147,10 @@ public class DriveCatapult extends OutliersCommand {
                     }
                 }
                 if (isShootTriggered() && ((_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()))) {
-//                    if (_indexer.isBallDetected() && (System.currentTimeMillis() > _indexerWait)) {
+                    if (_indexer.isBallDetected() && (System.currentTimeMillis() > _indexerWait)) {
                         _catapult.setAutonomShoot(false);
                         _catapult.setState(SHOOTING);
-//                    }
+                    }
                 }
 //             check if we are in the correct position and aiming at the goal.
               _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
@@ -173,15 +185,14 @@ public class DriveCatapult extends OutliersCommand {
                 checkLockOut();
                 if (zeroWinch()) {
                     if (zeroSpring()) {
-                        _catapult.setWinchGoal(Auto.StaticShots.TARMAC_WINCH);
-                        _catapult.setSpringDistance(Auto.StaticShots.TARMAC_SPRING);
-                        _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
-                        if (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
-                            _catapult.setWinchMotorSpeed(0);
-                            _catapult.setState(DEBUG);
-                        }
-                    }
-                }
+                        _catapult.setState(DEBUG);
+                        _catapult.setWinchMotorSpeed(0);
+//                        _catapult.setWinchGoal(Auto.StaticShots.TARMAC_WINCH);
+//                        _catapult.setSpringDistance(Auto.StaticShots.TARMAC_SPRING);
+//                        _catapult.setWinchMotorSpeed(_catapult.getWinchControllerOutput());
+//                        if (_catapult.isWinchAtGoal() && _catapult.isSpringAtPosition()) {
+                   }
+               }
             } break;
             case DEBUG: {
                 if (_oi.releaseArm()) {

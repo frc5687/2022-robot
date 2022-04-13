@@ -61,7 +61,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                         new DriveToPose(driveTrain, _destination1, _velocity),
                         new WaitCommand(1)
                     ),
-                    new AutoIntake(intake)
+                    new AutoIntake(intake, catapult)
                 ),
                 new ParallelDeadlineGroup( 
                     new SequentialCommandGroup(
@@ -71,7 +71,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                         new DriveToPose(driveTrain, _destination2, _velocity),
                         new WaitCommand(1)
                     ),
-                    new AutoIntake(intake)
+                    new AutoIntake(intake, catapult)
                 ),
                 new SetSetpoint(catapult, CatapultSetpoint.FAR),
                 new AutoAim(driveTrain),
@@ -153,7 +153,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                     new DriveToPose(driveTrain, _destination1, _velocity),
                     new WaitCommand(1)
                 ),
-                new AutoIntake(intake)
+                new AutoIntake(intake, catapult)
             ),
             new ParallelDeadlineGroup( 
                 new SequentialCommandGroup(
@@ -163,7 +163,7 @@ public class ThreeBallAuto extends SequentialCommandGroup{
                     new DriveToPose(driveTrain, _destination2, _velocity),
                     new WaitCommand(1)
                 ),
-                new AutoIntake(intake)
+                new AutoIntake(intake, catapult)
             ),
 //            new SetSetpoint(catapult, CatapultSetpoint.FAR),
             new AutoAim(driveTrain),

@@ -119,7 +119,7 @@ public class OI extends OutliersProxy {
 
 
         _preloadButton.whenPressed(new SetState(catapult, ZEROING));
-        _intakeButton.whenHeld(new AutoIntake(intake));
+        _intakeButton.whenHeld(new AutoIntake(intake, catapult));
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
         _stowClimber.whenPressed(new Stow(climber));

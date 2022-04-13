@@ -115,7 +115,7 @@ public class Constants {
         public static final double MAX_MPS_DURING_CLIMB = MAX_MPS / 4; // Max speed of robot (m/s) during climb
         public static final double MAX_ANG_VEL = Math.PI * 1.5; // Max rotation rate of robot (rads/s)
         public static final double MAX_ANG_VEL_AIM = 2 * Math.PI; // Max rotation rate of robot (rads/s)
-        public static final double MAX_MPSS = 2.1; // Max acceleration of robot (m/s^2)
+        public static final double MAX_MPSS = 2.5; // Max acceleration of robot (m/s^2)
 
         // PID controller settings
         public static final double ANGLE_kP = 2.3;
@@ -124,9 +124,9 @@ public class Constants {
         public static final double PROFILE_CONSTRAINT_VEL = MAX_ANG_VEL;
         public static final double PROFILE_CONSTRAINT_ACCEL = Math.PI * 3.0;
 
-        public static final double kP = 11.5;
+        public static final double kP = 3.5;
         public static final double kI = 0.0;
-        public static final double kD = 0.5;
+        public static final double kD = 0.1;
 
         // Vision PID controller
         public static final double VISION_TOLERANCE = 0.04; // rads
@@ -207,6 +207,7 @@ public class Constants {
         public static final int CTRE_FRAME_PERIOD = 10; // ms
 
         public static final long DELAY = 300; // ms
+        public static final long LOWERING_DELAY = 100; // ms
 
         public static final boolean SPRING_MOTOR_INVERTED = false;
         public static final boolean WINCH_MOTOR_INVERTED = false;
@@ -305,7 +306,7 @@ public class Constants {
     }
 
     public static class Indexer {
-        public static final long NO_BALL_DELAY = 1000; //ms
+        public static final long NO_BALL_DELAY = 500; //ms
     }
 
     public static class Climber{

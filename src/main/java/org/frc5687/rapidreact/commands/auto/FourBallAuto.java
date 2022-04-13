@@ -87,7 +87,7 @@ public class FourBallAuto extends SequentialCommandGroup {
                                 new DriveTrajectory(driveTrain, _trajectory, _rotation1),
                                 new WaitCommand(0.3)
                         ),
-                        new AutoIntake(intake)
+                        new AutoIntake(intake, catapult)
                 ),
                 new ParallelDeadlineGroup(
                         new SequentialCommandGroup(
@@ -96,18 +96,20 @@ public class FourBallAuto extends SequentialCommandGroup {
                                 new DriveTrajectory(driveTrain, _trajectory1, _rotation2),
                                 new WaitCommand(0.3)
                         ),
-                        new AutoIntake(intake)
+                        new AutoIntake(intake, catapult)
                 ),
 //                // wait a bit for the 2nd ball to roll in from human player station.
                 new ParallelDeadlineGroup(
-                        new WaitCommand(1),
-                        new AutoIntake(intake)
+                        new SequentialCommandGroup(
+                                new WaitCommand(1),
+                                new DriveTrajectory(driveTrain, _trajectory2, _rotation3),
+                                new AutoAim(driveTrain),
+                                new Shoot(catapult, indexer),
+                                new Shoot(catapult, indexer)
+                        ),
+                        new AutoIntake(intake, catapult)
                 ),
-                new DriveTrajectory(driveTrain, _trajectory2, _rotation3),
 //            new SetSetpoint(catapult, CatapultSetpoint.FAR),
-                new AutoAim(driveTrain),
-                new Shoot(catapult, indexer),
-                new Shoot(catapult, indexer),
                 new SetSetpoint(catapult, CatapultSetpoint.NONE)
         );
     }
