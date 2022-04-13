@@ -69,6 +69,14 @@ public class OI extends OutliersProxy {
         _buttonpad = new Gamepad(2);
 
         // debug gamepad
+//         _catapultDebugButton = new JoystickButton(_debug, Gamepad.Buttons.A.getNumber());
+//         _preloadButton = new JoystickButton(_debug, Gamepad.Buttons.B.getNumber());
+// //        _release = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
+//         _readyToClimb = new JoystickButton(_debug, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
+//         _stowClimber = new JoystickButton(_debug, Gamepad.Buttons.Y.getNumber());
+//         _rockerFlip = new JoystickButton(_debug, Gamepad.Buttons.X.getNumber());
+//         _manualIndexer = new JoystickButton(_debug, Gamepad.Buttons.LEFT_BUMPER.getNumber());
+
         _catapultDebugButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
         _preloadButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_STICK.getNumber());
 //        _release = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
@@ -76,7 +84,6 @@ public class OI extends OutliersProxy {
         _stowClimber = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _rockerFlip = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
         _manualIndexer = new JoystickButton(_buttonpad, Gamepad.Buttons.A.getNumber());
-
 
         // adding buttons while driving: Ben pls look
 
