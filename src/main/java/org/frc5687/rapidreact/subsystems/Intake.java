@@ -49,10 +49,17 @@ public class Intake extends OutliersSubsystem{
     }
 
     /**
+     * Spin up the intake at slower sleep
+     */
+    public void spinRollerSlow(){
+        _roller.set(TalonFXControlMode.PercentOutput, Constants.Intake.ROLLER_SLOW_SPEED);
+    }
+
+    /**
      * Check for ball in intake
      * @return is there a ball in the intake
      */
-    public boolean ballInCardle(){
+    public boolean isBallInCradle(){
         return _indexer.isBallDetected();
     }
     /**
