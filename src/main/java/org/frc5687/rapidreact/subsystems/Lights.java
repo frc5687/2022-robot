@@ -39,7 +39,7 @@ public class Lights extends OutliersSubsystem{
         _candle.animate(_rainbowAnim);
     }
 
-    public void pink(){
+    public void setPink(){
         _candle.setLEDs(255, 105, 18);
     }
 

@@ -155,12 +155,15 @@ public class Catapult extends OutliersSubsystem {
         }
     }
 
+    /**
+     * Set catapult status lights
+     */
     public void setAimingLights(){
         _lights.setGreen();
     }
 
     public void setErrorLights(){
-        _lights.setPurple();
+        _lights.setRed();
     }
 
     public void setBaseLights(){

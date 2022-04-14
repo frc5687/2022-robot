@@ -70,7 +70,7 @@ public class Intake extends OutliersSubsystem{
     public void deploy(){
         _solenoid.set(Value.kForward);
         _deployed = true;
-        _lights.pink();
+        _lights.setPink();
     }
 
     /**
