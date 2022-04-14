@@ -28,6 +28,7 @@ import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -64,6 +65,8 @@ public class OI extends OutliersProxy {
 
     private JoystickButton _autoShootToggle;
 
+    private Lights _lights;
+
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -82,7 +85,6 @@ public class OI extends OutliersProxy {
         _rockerFlip = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
         _manualIndexer = new JoystickButton(_buttonpad, Gamepad.Buttons.A.getNumber());
         _autoShootToggle = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
-
 
         // adding buttons while driving: Ben pls look
 

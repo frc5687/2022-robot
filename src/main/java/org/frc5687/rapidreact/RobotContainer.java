@@ -90,7 +90,7 @@ public class RobotContainer extends OutliersContainer {
 
         // then subsystems
         _driveTrain = new DriveTrain(this, _oi, _proxy,/*, _limelight, */_imu);
-        _intake = new Intake(this, _indexer);
+        _intake = new Intake(this, _indexer, _lights);
         _climber = new Climber(this, _driveTrain, _lights);
         _catapult = new Catapult(this, _lights);
 

@@ -61,6 +61,7 @@ public class Intake extends OutliersSubsystem{
     public void stowe(){
         _solenoid.set(Value.kReverse);
         _deployed = false;
+        _lights.setWhite();
     }
 
     /**
@@ -69,6 +70,7 @@ public class Intake extends OutliersSubsystem{
     public void deploy(){
         _solenoid.set(Value.kForward);
         _deployed = true;
+        _lights.pink();
     }
 
     /**
