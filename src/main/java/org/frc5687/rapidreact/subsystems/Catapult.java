@@ -40,7 +40,8 @@ public class Catapult extends OutliersSubsystem {
     private CatapultState _state;
     private double _springGoal;
     private double _winchGoal;
-    private boolean _autoShoot;
+    private boolean _autonomShoot;
+    private boolean _automatShoot;
     private boolean _initialized = false;
     private CatapultSetpoint _setpoint = CatapultSetpoint.NONE;
 
@@ -116,6 +117,8 @@ public class Catapult extends OutliersSubsystem {
         _state = CatapultState.DEBUG;
         _springGoal = 0;
         _winchGoal = 0;
+        _automatShoot = true;
+        _autonomShoot = false;
     }
 
 
@@ -393,16 +396,33 @@ public class Catapult extends OutliersSubsystem {
 //        metric("Arm Hall Effect", isArmLowered());
     }
 
+    public boolean getAutomatShoot() {
+        return _automatShoot;
+    }
+
+    public boolean getAutonomShoot() {
+        return _autonomShoot;
+    }
+
+    public void setAutomatShoot(boolean value) {
+        _automatShoot = value;
+    }
     /**
      * Pass true here to trigger a shot from autonomous.
      * @param value
      */
-    public void setAutoshoot(boolean value) {
-        _autoShoot = value;
+    public void setAutonomShoot(boolean value) {
+        _autonomShoot = value;
     }
 
-    public boolean isAutoShoot() {
-        return _autoShoot;
+    public void toggleAutomatShoot() {
+        if (getAutomatShoot() == true) {
+            setAutomatShoot(false);
+        } else if (getAutomatShoot() == false) {
+            setAutomatShoot(true);
+        } else {
+            setAutomatShoot(false);
+        }
     }
 
     public void setSetpoint(CatapultSetpoint setpoint) {
@@ -445,19 +465,18 @@ public class Catapult extends OutliersSubsystem {
         // If arm Hall effect is triggered, robot enters LOADING
         LOWERING_ARM(1),
 
+        WAIT_LOADING(2),
         // LOADING locks pin, check for which color ball we have.
         // Depending on the ball the robot enters the AIMING state or WRONG_BALL state.
-        LOADING(2),
+        LOADING(3),
 
         // AIMING waited for the OI aim button to change states.
         // Will constantly be changing the spring and winch when moving in this state.
         // to automatically get the ball in no mater the distance.
         // Also have an override button if vision is not working.
         // Change state to SHOOTING.
-        AIMING(3),
+        AIMING(4),
 
-        // We have the wrong ball, set the Winch and Spring goal to remove the ball.
-        WRONG_BALL(4),
 
         // Set the winch goal and spring goal.
         // SHOOTING waits for shoot button to be pressed and the goals to be in tolerance.

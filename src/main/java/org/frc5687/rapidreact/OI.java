@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.frc5687.rapidreact.commands.AutoIntake;
-import org.frc5687.rapidreact.commands.ChangeColor;
 import org.frc5687.rapidreact.commands.Climber.AutoClimb;
 import org.frc5687.rapidreact.commands.Climber.RockerFlip;
 import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
@@ -29,7 +28,6 @@ import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
-import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -64,8 +62,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootSetpointTwo;
     private JoystickButton _shootSetpointThree;
 
-    private JoystickButton _autoShootControl;
-
+    private JoystickButton _autoShootToggle;
 
     // "Raw" joystick values
     private double yIn = 0;
@@ -79,11 +76,12 @@ public class OI extends OutliersProxy {
         // debug gamepad
         _catapultDebugButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
         _preloadButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_STICK.getNumber());
-//        _release = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
+//        _release = new JoystickButton(_buttonpad, Gamepad.Buttons..getNumber());
         _readyToClimb = new JoystickButton(_buttonpad, Gamepad.Buttons.B.getNumber());
         _stowClimber = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _rockerFlip = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
         _manualIndexer = new JoystickButton(_buttonpad, Gamepad.Buttons.A.getNumber());
+        _autoShootToggle = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
 
 
         // adding buttons while driving: Ben pls look
@@ -96,9 +94,7 @@ public class OI extends OutliersProxy {
         _deployRetract = new JoystickButton(_rotation, 3);
         _aimBall = new JoystickButton(_rotation, 4);
 
-        _autoShootControl = new JoystickButton(_rotation, 10);
-
-        //translation joystick
+        // translation joystick
         _shootButton= new JoystickButton(_translation, 1);
         _release = new JoystickButton(_translation, 6);
         _dropArm = new JoystickButton(_translation, 3);
@@ -115,24 +111,24 @@ public class OI extends OutliersProxy {
         
     }
 
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber, Indexer indexer, Lights lights) {
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber, Indexer indexer) {
         // driving, Ben check pls.
-         _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
-         _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
-         _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
+        _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
+        _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
+        _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
 
-         _preloadButton.whenPressed(new SetState(catapult, ZEROING));
-         _intakeButton.whenHeld(new AutoIntake(intake));
-         _resetNavX.whenPressed(driveTrain::resetYaw);
-         _readyToClimb.whenPressed(new AutoClimb(climber));
-         _stowClimber.whenPressed(new Stow(climber));
-         _rockerFlip.whenPressed(new RockerFlip(climber));
-         _manualIndexer.whenPressed(indexer::up);
+
+        _preloadButton.whenPressed(new SetState(catapult, ZEROING));
+        _intakeButton.whenHeld(new AutoIntake(intake, catapult));
+        _resetNavX.whenPressed(driveTrain::resetYaw);
+        _readyToClimb.whenPressed(new AutoClimb(climber));
+        _stowClimber.whenPressed(new Stow(climber));
+        _rockerFlip.whenPressed(new RockerFlip(climber));
+        _manualIndexer.whenPressed(indexer::up);
+        _autoShootToggle.whenPressed(catapult::toggleAutomatShoot);
     }
 
-    public boolean autoShoot(){
-        return true;
-    }
+    public boolean hold = false;
 
     public boolean readyToClimb() { return _readyToClimb.get(); }
     public boolean isShootButtonPressed() { return _shootButton.get(); }

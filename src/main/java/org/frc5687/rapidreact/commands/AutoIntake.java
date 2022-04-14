@@ -1,13 +1,16 @@
 package org.frc5687.rapidreact.commands;
 
+import org.frc5687.rapidreact.subsystems.Catapult;
 import org.frc5687.rapidreact.subsystems.Intake;
 
 public class AutoIntake extends OutliersCommand {
 
     private Intake _intake;
+    private Catapult _catapult;
 
-    public AutoIntake(Intake intake){
+    public AutoIntake(Intake intake, Catapult catapult){
         _intake = intake;
+        _catapult = catapult;
         addRequirements(_intake);
     }
 
@@ -18,7 +21,11 @@ public class AutoIntake extends OutliersCommand {
 
     @Override
     public void execute(){
-        _intake.spinUpRoller();
+        if(_intake.isBallInItake() && _intake.ballInCardle()){
+            _intake.spinDownRoller();
+        }else if (_catapult.isArmLowered()) {
+            _intake.spinUpRoller();
+        }
     }
 
     @Override

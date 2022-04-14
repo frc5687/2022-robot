@@ -97,7 +97,7 @@ public class TwoBallAuto extends SequentialCommandGroup {
                         new DriveTrajectory(driveTrain, _trajectory, _rotation),
                         new WaitCommand(1)
                     ),
-                    new AutoIntake(intake)
+                    new AutoIntake(intake, catapult)
                 ),
                 new AutoAim(driveTrain),
                 new Shoot(catapult, indexer),

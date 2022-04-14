@@ -6,6 +6,8 @@ import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.HallEffect;
 import org.frc5687.rapidreact.util.OutliersContainer;
+import org.frc5687.rapidreact.util.ProximitySensor;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -17,15 +19,17 @@ public class Intake extends OutliersSubsystem{
     private DoubleSolenoid _solenoid;
     private boolean _deployed;
     private HallEffect _intakeHall;
-    private Lights _lights;
+    private Indexer _indexer;
+    private ProximitySensor _sensor;
     
-    public Intake(OutliersContainer container, Lights lights) {
+    public Intake(OutliersContainer container, Indexer indexer) {
         super(container);
         _deployed = false;
-        _lights = lights;
         _roller = new TalonFX(RobotMap.CAN.TALONFX.INTAKE_ROLLER);
         _solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.INTAKE_HIGH, RobotMap.PCH.INTAKE_LOW);
         _intakeHall = new HallEffect(RobotMap.DIO.INTAKE_HALL_EFFECT);
+        _indexer = indexer;
+        _sensor = new ProximitySensor(RobotMap.DIO.INTAKE_PROXIMITY_SENSOR);
     }
 
     /**
@@ -43,12 +47,18 @@ public class Intake extends OutliersSubsystem{
     }
 
     /**
+     * Check for ball in intake
+     * @return is there a ball in the intake
+     */
+    public boolean ballInCardle(){
+        return _indexer.isBallDetected();
+    }
+    /**
      * Stowe the intake
      */
     public void stowe(){
         _solenoid.set(Value.kReverse);
         _deployed = false;
-        _lights.setWhite();
     }
 
     /**
@@ -57,7 +67,14 @@ public class Intake extends OutliersSubsystem{
     public void deploy(){
         _solenoid.set(Value.kForward);
         _deployed = true;
-        _lights.setPurple();
+    }
+
+    /**
+     * Returns true if there is a ball in the intake
+     * @return returns boolean
+     */
+    public boolean isBallInItake(){
+        return _sensor.get();
     }
 
     /**
@@ -84,5 +101,7 @@ public class Intake extends OutliersSubsystem{
     public void updateDashboard() {
         metric("RPM", getRPM());
         metric("Intake deployed", _deployed);
+        metric("Ball in intake", isBallInItake());
+        metric("Ball in cradle", _indexer.isBallDetected());
     }
 }

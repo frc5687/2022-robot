@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.I2C.Port;
 public class Indexer extends OutliersSubsystem{
 
     private DoubleSolenoid _indexerArm;
-    private ColorSensor _colorSensor;
+//    private ColorSensor _colorSensor;
     private ProximitySensor _proximitySensor;
     
     public Indexer(OutliersContainer container){
         super(container);
         _indexerArm = new DoubleSolenoid(PneumaticsModuleType.REVPH, RobotMap.PCH.INDEXER_IN, RobotMap.PCH.INDEXER_OUT);
-        _colorSensor = new ColorSensor(Port.kMXP);
+//        _colorSensor = new ColorSensor(Port.kMXP);
         _proximitySensor = new ProximitySensor(RobotMap.DIO.PROXIMITY_SENSOR);
     }
 
@@ -57,11 +57,13 @@ public class Indexer extends OutliersSubsystem{
     }
 
     public boolean isBlueBallDetected() {
-        return _colorSensor.isBlue() && isBallDetected();
+//        return _colorSensor.isBlue() && isBallDetected();
+        return false;
     }
 
     public boolean isRedBallDetected() {
-        return _colorSensor.isRed() && isBallDetected();
+        return false;
+//        return _colorSensor.isRed() && isBallDetected();
     }
 
     @Override
