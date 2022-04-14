@@ -32,6 +32,7 @@ import org.frc5687.rapidreact.subsystems.Climber;
 import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
+import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
 
 import org.frc5687.rapidreact.util.*;
@@ -52,6 +53,8 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private Climber _climber;
     private Indexer _indexer;
+
+    private Lights _lights;
 
     private AutoChooser _autoChooser;
 
@@ -75,6 +78,8 @@ public class RobotContainer extends OutliersContainer {
         _autoPosition = AutoChooser.Position.Unknown;
         _autoMode = AutoChooser.Mode.Unknown;
 
+        _lights = new Lights(this);
+
         // initialize these peripherals first as subsystems require them.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
@@ -86,8 +91,8 @@ public class RobotContainer extends OutliersContainer {
         // then subsystems
         _driveTrain = new DriveTrain(this, _oi, _proxy,/*, _limelight, */_imu);
         _intake = new Intake(this, _indexer);
-        _climber = new Climber(this, _driveTrain);
-        _catapult = new Catapult(this);
+        _climber = new Climber(this, _driveTrain, _lights);
+        _catapult = new Catapult(this, _lights);
 
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));

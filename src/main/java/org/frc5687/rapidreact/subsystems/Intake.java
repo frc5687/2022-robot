@@ -21,8 +21,9 @@ public class Intake extends OutliersSubsystem{
     private HallEffect _intakeHall;
     private Indexer _indexer;
     private ProximitySensor _sensor;
+    private Lights _lights;
     
-    public Intake(OutliersContainer container, Indexer indexer) {
+    public Intake(OutliersContainer container, Indexer indexer, Lights lights) {
         super(container);
         _deployed = false;
         _roller = new TalonFX(RobotMap.CAN.TALONFX.INTAKE_ROLLER);
@@ -30,6 +31,7 @@ public class Intake extends OutliersSubsystem{
         _intakeHall = new HallEffect(RobotMap.DIO.INTAKE_HALL_EFFECT);
         _indexer = indexer;
         _sensor = new ProximitySensor(RobotMap.DIO.INTAKE_PROXIMITY_SENSOR);
+        _lights = lights;
     }
 
     /**
