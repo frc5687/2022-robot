@@ -1,16 +1,19 @@
 package org.frc5687.rapidreact.commands;
 
 import org.frc5687.rapidreact.subsystems.Catapult;
+import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 
 public class AutoIntake extends OutliersCommand {
 
     private Intake _intake;
     private Catapult _catapult;
+    private Indexer _indexer;
 
-    public AutoIntake(Intake intake, Catapult catapult){
+    public AutoIntake(Intake intake, Catapult catapult, Indexer indexer){
         _intake = intake;
         _catapult = catapult;
+        _indexer = indexer;
         addRequirements(_intake);
     }
 
@@ -28,7 +31,9 @@ public class AutoIntake extends OutliersCommand {
                 _intake.spinRollerSlow();
             }
         } else if (_catapult.isArmLowered()) {
-            _intake.spinUpRoller();
+            if (_indexer.isUp()) {
+                _intake.spinUpRoller();
+            }
         }
     }
 
