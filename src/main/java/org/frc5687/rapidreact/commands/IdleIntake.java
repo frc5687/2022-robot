@@ -25,7 +25,7 @@ public class IdleIntake extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-        if(_intake.isBallInItake() && _intake.ballInCardle()){
+        if(_intake.isBallInItake() && _intake.isBallInCradle()){
             _intake.deploy();
         } else {
 //            if (System.currentTimeMillis() > _waitTime) {
