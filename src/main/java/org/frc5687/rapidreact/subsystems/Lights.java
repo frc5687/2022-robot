@@ -43,6 +43,10 @@ public class Lights extends OutliersSubsystem{
         _candle.setLEDs(255, 105, 18);
     }
 
+    public void setYellow(){
+        _candle.setLEDs(255, 255, 0);
+    }
+
     public void setWhite(){
         _candle.setLEDs(0, 0, 0);
     }

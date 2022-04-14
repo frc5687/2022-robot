@@ -1,5 +1,7 @@
 package org.frc5687.rapidreact.subsystems;
 
+import javax.swing.text.DefaultStyledDocument.ElementSpec;
+
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.frc5687.rapidreact.Constants;
@@ -32,6 +34,21 @@ public class Intake extends OutliersSubsystem{
         _indexer = indexer;
         _sensor = new ProximitySensor(RobotMap.DIO.INTAKE_PROXIMITY_SENSOR);
         _lights = lights;
+    }
+
+    @Override
+    public void periodic(){
+        if(isBallInCradle()){
+            if(isBallInItake()){
+                _lights.setGreen();
+            }else{
+                _lights.setBlue();
+            }
+        }else if(isBallInItake()){
+            _lights.setYellow();
+        } else {
+            _lights.rainbow();
+        }
     }
 
     /**
@@ -77,7 +94,6 @@ public class Intake extends OutliersSubsystem{
     public void deploy(){
         _solenoid.set(Value.kForward);
         _deployed = true;
-        _lights.setPink();
     }
 
     /**
