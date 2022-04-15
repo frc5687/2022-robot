@@ -2,6 +2,10 @@ package org.frc5687.rapidreact.subsystems;
 
 
 import com.ctre.phoenix.led.*;
+import com.ctre.phoenix.led.CANdle;
+import com.ctre.phoenix.led.CANdleConfiguration;
+import com.ctre.phoenix.led.RainbowAnimation;
+import com.ctre.phoenix.led.StrobeAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
 import org.frc5687.rapidreact.Constants;
@@ -21,7 +25,6 @@ public class Lights extends OutliersSubsystem{
     private final Catapult _catapult;
     private final Climber _climber;
     private final Intake _intake;
-
 
     public Lights(OutliersContainer _container, Catapult catapult, Climber climber, Intake intake){
         super(_container);

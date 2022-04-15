@@ -57,6 +57,7 @@ public class OI extends OutliersProxy {
     private JoystickButton _shootButton;
     private JoystickButton _manualIndexer;
     private JoystickButton _turboDrive;
+    private JoystickButton _extraClimb;
 
 
     private JoystickButton _shootSetpointOne;
@@ -95,6 +96,7 @@ public class OI extends OutliersProxy {
         _autoAim = new JoystickButton(_rotation, 2);
         _deployRetract = new JoystickButton(_rotation, 3);
         _aimBall = new JoystickButton(_rotation, 4);
+        _extraClimb = new JoystickButton(_rotation, 7);
 
         // translation joystick
         _shootButton= new JoystickButton(_translation, 1);
@@ -124,6 +126,7 @@ public class OI extends OutliersProxy {
         _intakeButton.whenHeld(new AutoIntake(intake, catapult));
         _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
+        _extraClimb.whenPressed(new AutoClimb(climber));
         _stowClimber.whenPressed(new Stow(climber));
         _rockerFlip.whenPressed(new RockerFlip(climber));
         _manualIndexer.whenPressed(indexer::up);

@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "Lights/#147-CANdle";
-    public static final String REVISION = "f832687";
+    public static final String REVISION = "05c905e";
     public static final String MODIFIED = " *";
 }
