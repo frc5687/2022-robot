@@ -23,9 +23,7 @@ public class Intake extends OutliersSubsystem{
     private HallEffect _intakeHall;
     private Indexer _indexer;
     private ProximitySensor _sensor;
-    private Lights _lights;
-    
-    public Intake(OutliersContainer container, Indexer indexer, Lights lights) {
+    public Intake(OutliersContainer container, Indexer indexer) {
         super(container);
         _deployed = false;
         _roller = new TalonFX(RobotMap.CAN.TALONFX.INTAKE_ROLLER);
@@ -33,22 +31,11 @@ public class Intake extends OutliersSubsystem{
         _intakeHall = new HallEffect(RobotMap.DIO.INTAKE_HALL_EFFECT);
         _indexer = indexer;
         _sensor = new ProximitySensor(RobotMap.DIO.INTAKE_PROXIMITY_SENSOR);
-        _lights = lights;
     }
 
     @Override
     public void periodic(){
-        if(isBallInCradle()){
-            if(isBallInItake()){
-                _lights.setGreen();
-            }else{
-                _lights.setBlue();
-            }
-        }else if(isBallInItake()){
-            _lights.setYellow();
-        } else {
-            _lights.rainbow();
-        }
+
     }
 
     /**
@@ -85,7 +72,6 @@ public class Intake extends OutliersSubsystem{
     public void stowe(){
         _solenoid.set(Value.kReverse);
         _deployed = false;
-        _lights.setWhite();
     }
 
     /**

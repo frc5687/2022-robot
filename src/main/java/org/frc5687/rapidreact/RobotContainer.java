@@ -78,8 +78,7 @@ public class RobotContainer extends OutliersContainer {
         _autoPosition = AutoChooser.Position.Unknown;
         _autoMode = AutoChooser.Mode.Unknown;
 
-        _lights = new Lights(this);
-        
+
 
         // initialize these peripherals first as subsystems require them.
         _oi = new OI();
@@ -91,9 +90,10 @@ public class RobotContainer extends OutliersContainer {
 
         // then subsystems
         _driveTrain = new DriveTrain(this, _oi, _proxy,/*, _limelight, */_imu);
-        _intake = new Intake(this, _indexer, _lights);
-        _climber = new Climber(this, _driveTrain, _lights);
-        _catapult = new Catapult(this, _lights);
+        _intake = new Intake(this, _indexer);
+        _climber = new Climber(this, _driveTrain);
+        _catapult = new Catapult(this);
+        _lights = new Lights(this, _catapult, _climber, _intake);
 
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));

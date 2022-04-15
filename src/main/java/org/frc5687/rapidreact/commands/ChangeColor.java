@@ -1,5 +1,6 @@
 package org.frc5687.rapidreact.commands;
 
+import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
@@ -14,8 +15,7 @@ public class ChangeColor extends OutliersCommand{
     @Override
     public void execute(){
         super.execute();
-
-        _lights.setGreen();
+        _lights.setColor(Constants.CANdle.GREEN);
     }
 
     @Override

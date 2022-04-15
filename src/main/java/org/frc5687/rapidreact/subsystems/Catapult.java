@@ -49,7 +49,7 @@ public class Catapult extends OutliersSubsystem {
     }
 
     /** Catapult constructor */
-    public Catapult(OutliersContainer container, Lights lights) {
+    public Catapult(OutliersContainer container) {
         super(container);
         // Motor controllers (Spark Maxes)
         // Spring motor

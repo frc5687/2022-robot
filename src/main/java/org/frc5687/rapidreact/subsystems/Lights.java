@@ -1,23 +1,33 @@
 package org.frc5687.rapidreact.subsystems;
 
 
-import com.ctre.phoenix.led.CANdle;
-import com.ctre.phoenix.led.CANdleConfiguration;
-import com.ctre.phoenix.led.RainbowAnimation;
+import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
 import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.util.OutliersContainer;
 
+import static org.frc5687.rapidreact.Constants.CANdle.*;
+
 public class Lights extends OutliersSubsystem{
+    private final CANdle _candle;
+    private final CANdleConfiguration _config;
+    private Animation _animate;
+    private AnimationType _currentAnimation;
+    private int[] _color;
 
-    private CANdle _candle;
-    private CANdleConfiguration _config;
-    private RainbowAnimation _rainbowAnim;
+    // subsystems
+    private final Catapult _catapult;
+    private final Climber _climber;
+    private final Intake _intake;
 
-    public Lights(OutliersContainer _container){
+
+    public Lights(OutliersContainer _container, Catapult catapult, Climber climber, Intake intake){
         super(_container);
+        _catapult = catapult;
+        _climber = climber;
+        _intake = intake;
         _candle = new CANdle(RobotMap.CAN.CANDLE.PORT);
         _config = new CANdleConfiguration();
         //Set LED strip type
@@ -25,54 +35,122 @@ public class Lights extends OutliersSubsystem{
         //Sets LED brightness
         _config.brightnessScalar = Constants.CANdle.BRIGHTNESS;
         _candle.configAllSettings(_config);
-
-        _candle.setLEDs(255, 255, 255);
-        _rainbowAnim = new RainbowAnimation(1, 0.5, 64);
+        _color = GREEN;
     }
 
     //Set the color of the lights
 
+    public void setColor(int[] color) {
+        _color = color;
+    }
+
+    public int[] getColor() {
+        return _color;
+    }
+
     /**
-     * Set a rainbow animation
+     * Switch the current animation to the parameter.
+     * @param animation
      */
-    public void rainbow(){
-        _candle.animate(_rainbowAnim);
+    public void switchAnimation(AnimationType animation) {
+        _currentAnimation = animation;
+        switch (animation) {
+            case COLOR_FLOW:
+                _animate = new ColorFlowAnimation(
+                        _color[0],
+                        _color[1],
+                        _color[2],
+                        0,
+                        SPEED,
+                        NUM_LED,
+                        ColorFlowAnimation.Direction.Forward);
+                break;
+            case FIRE:
+                _animate = new FireAnimation(
+                        BRIGHTNESS,
+                        SPEED,
+                        NUM_LED,
+                        0.5,
+                        0.5
+                );
+                break;
+            case RAINBOW:
+                _animate = new RainbowAnimation();
+                break;
+            case STROBE:
+                _animate = new StrobeAnimation(
+                        _color[0],
+                        _color[1],
+                        _color[2],
+                        0,
+                        SPEED,
+                        NUM_LED
+                );
+                break;
+            case STATIC:
+                _animate = null;
+                break;
+        }
     }
 
-    public void setPink(){
-        _candle.setLEDs(255, 105, 18);
-    }
 
-    public void setYellow(){
-        _candle.setLEDs(255, 255, 0);
-    }
+    /**
+     * Has all the logic for the lights, and updates the CANdle with animations and static colors.
+     */
+    @Override
+    public void periodic() {
+        // check if we are climbing.
+        if (_climber.getStep().getValue() >= Climber.ClimberStep.PREP_TO_CLIMB.getValue()) {
+            setColor(PURPLE);
+        } else {
+            if (_catapult.getAutomatShoot()) {
+                switchAnimation(AnimationType.STATIC);
+            } else {
+                switchAnimation(AnimationType.STROBE);
+            }
+            if (_intake.isBallInCradle()) {
+                if (_intake.isBallInItake()) {
+                    setColor(GREEN);
+                } else {
+                    setColor(BLUE);
+                }
+            } else if (_intake.isBallInItake()) {
+                setColor(YELLOW);
+            } else {
+                setColor(MAROON);
+            }
+        }
 
-    public void setWhite(){
-        _candle.setLEDs(0, 0, 0);
-    }
-
-    public void setRed(){
-        _candle.setLEDs(255, 0, 0);
-    }
-
-    public void setGreen(){
-        _candle.setLEDs(0, 255, 0);
-    }
-
-    public void setBlue(){
-        _candle.setLEDs(0, 0, 255);
-    }
-
-    public void setGold(){
-        _candle.setLEDs(255, 215, 0);
-    }
-
-    public void setPurple(){
-        _candle.setLEDs(160, 32, 240);
+        if (_animate == null) {
+            _candle.setLEDs(_color[0], _color[1], _color[2]);
+        } else {
+            _candle.animate(_animate);
+        }
     }
 
     @Override
     public void updateDashboard() {
 
     }
+
+    /**
+     * Animation types
+     */
+    public enum AnimationType {
+        COLOR_FLOW(0),
+        FIRE(1),
+        RAINBOW(2),
+        STROBE(3),
+        STATIC(4);
+
+        private int _value;
+        AnimationType(int value) {
+            _value = value;
+        }
+
+        public int getValue() {
+            return _value;
+        }
+    }
+
 }

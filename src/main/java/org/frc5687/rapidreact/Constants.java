@@ -383,5 +383,23 @@ public class Constants {
 
     public static class CANdle{
         public static double BRIGHTNESS = 0.5;
+        public static int NUM_LED = 100;
+        public static double SPEED = 0.7;
+
+        // RGB Color Values
+        public static int[] YELLOW = {255, 255, 0};
+        public static int[] RED = {255, 0, 0};
+        public static int[] GREEN = {0, 255, 0};
+        public static int[] BLUE = {0, 0, 255};
+        public static int[] CYAN = {0, 255, 255};
+        public static int[] WHITE = {0, 0, 0};
+        public static int[] PINK = {255, 105, 18};
+        public static int[] GOLD = {212, 175, 55};
+        public static int[] PURPLE = {128, 0, 128};
+        public static int[] RUFOUS = {168, 28, 7};
+
+        public static int[] ORANGE_RED = {255, 69, 0};
+        public static int[] MAROON = {153, 26, 26};
     }
+
 }
