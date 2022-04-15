@@ -4,6 +4,7 @@ package org.frc5687.rapidreact.subsystems;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdleConfiguration;
 import com.ctre.phoenix.led.RainbowAnimation;
+import com.ctre.phoenix.led.StrobeAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
 import org.frc5687.rapidreact.Constants;
@@ -14,7 +15,8 @@ public class Lights extends OutliersSubsystem{
 
     private CANdle _candle;
     private CANdleConfiguration _config;
-    private RainbowAnimation _rainbowAnim;
+    private RainbowAnimation _rainbow;
+    private StrobeAnimation _strobe
 
     public Lights(OutliersContainer _container){
         super(_container);
@@ -27,16 +29,24 @@ public class Lights extends OutliersSubsystem{
         _candle.configAllSettings(_config);
 
         _candle.setLEDs(255, 255, 255);
-        _rainbowAnim = new RainbowAnimation(1, 0.5, 64);
+        _rainbow = new RainbowAnimation(1, 0.5, 64);
     }
 
     //Set the color of the lights
 
     /**
-     * Set a rainbow animation
+     * Sets a rainbow animation
      */
     public void rainbow(){
-        _candle.animate(_rainbowAnim);
+        _candle.animate(_rainbow);
+    }
+
+    /**
+     * Sets a strobe a animation
+     */
+    public void strobe(int[] color){
+        _strobe = new StrobeAnimation(color[0], color[1], color[2]);
+        _candle.animate(_strobe);
     }
 
     public void setPink(){
