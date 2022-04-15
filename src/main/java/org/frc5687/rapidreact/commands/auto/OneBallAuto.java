@@ -56,8 +56,8 @@ public class OneBallAuto extends SequentialCommandGroup {
             case Second:
                 driveTrain.resetOdometry(Auto.RobotPositions.SECOND);
                 _translation = new Translation2d (
-                    Auto.BallPositions.BALL_ONE.getX(),
-                    Auto.BallPositions.BALL_ONE.getY()
+                    Auto.FieldPositions.END_POSITION_TWO.getX(),
+                    Auto.FieldPositions.END_POSITION_TWO.getY()
                     );
                 _rotation = new Rotation2d();
                 break;

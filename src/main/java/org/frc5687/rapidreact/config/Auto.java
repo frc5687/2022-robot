@@ -14,6 +14,7 @@ public class Auto {
         public static Pose2d SAFE_BALL_FOUR = new Pose2d(1.42, 1.10, new Rotation2d(Math.PI));
         public static Pose2d ROBOT_POS_ONE_DEST = new Pose2d(6.505, 5.685, new Rotation2d());
         public static Pose2d ROBOT_POS_TWO_DEST = new Pose2d(4.63, 3.65, new Rotation2d());
+        public static Pose2d END_POSITION_TWO = new Pose2d(4.5, 3.93, new Rotation2d());
         public static Pose2d ROBOT_POS_THREE_DEST = new Pose2d(5.95, 1.42, new Rotation2d());
         public static Pose2d PARALLEL_PARK = new Pose2d(8.42, 0.4, new Rotation2d());
         public static Pose2d FAR_FIELD_SHOT = new Pose2d(2.9, 1.44, new Rotation2d(Units.degreesToRadians(10)));
