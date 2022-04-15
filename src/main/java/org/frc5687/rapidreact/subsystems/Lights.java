@@ -16,7 +16,7 @@ public class Lights extends OutliersSubsystem{
     private CANdle _candle;
     private CANdleConfiguration _config;
     private RainbowAnimation _rainbow;
-    private StrobeAnimation _strobe
+    private StrobeAnimation _strobe;
 
     public Lights(OutliersContainer _container){
         super(_container);
@@ -28,7 +28,7 @@ public class Lights extends OutliersSubsystem{
         _config.brightnessScalar = Constants.CANdle.BRIGHTNESS;
         _candle.configAllSettings(_config);
 
-        _candle.setLEDs(255, 255, 255);
+        //_candle.setLEDs(255, 255, 255);
         _rainbow = new RainbowAnimation(1, 0.5, 64);
     }
 

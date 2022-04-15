@@ -40,15 +40,15 @@ public class Intake extends OutliersSubsystem{
     public void periodic(){
         if(isBallInCradle()){
             if(isBallInItake()){
-                int[] green = {0, 255, 0};
-                _lights.strobe(green);
+                //int[] green = {0, 255, 0};
+                _lights.setGreen();
             }else{
-                int[] blue = {0, 0, 255};
-                _lights.strobe(blue);
+                //int[] blue = {0, 0, 255};
+                _lights.setBlue();
             }
         }else if(isBallInItake()){
-            int[] yellow = {255, 255, 0};
-            _lights.strobe(yellow);
+           // int[] yellow = {255, 255, 0};
+            _lights.setYellow();
         } else {
             _lights.rainbow();
         }
