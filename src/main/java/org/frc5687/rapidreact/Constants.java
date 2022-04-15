@@ -399,7 +399,7 @@ public class Constants {
         public static int[] RUFOUS = {168, 28, 7};
 
         public static int[] ORANGE_RED = {255, 69, 0};
-        public static int[] MAROON = {153, 26, 26};
+        public static int[] MAROON = {128, 0, 0};
     }
 
 }

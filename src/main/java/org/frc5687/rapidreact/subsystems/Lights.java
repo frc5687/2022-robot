@@ -78,7 +78,7 @@ public class Lights extends OutliersSubsystem{
                 );
                 break;
             case RAINBOW:
-                _animate = new RainbowAnimation();
+                _animate = new RainbowAnimation(BRIGHTNESS, SPEED, NUM_LED);
                 break;
             case STROBE:
                 _animate = new StrobeAnimation(
@@ -104,23 +104,21 @@ public class Lights extends OutliersSubsystem{
     public void periodic() {
         // check if we are climbing.
         if (_climber.getStep().getValue() >= Climber.ClimberStep.PREP_TO_CLIMB.getValue()) {
+            switchAnimation(AnimationType.STATIC);
             setColor(PURPLE);
         } else {
-            if (_catapult.getAutomatShoot()) {
-                switchAnimation(AnimationType.STATIC);
-            } else {
-                switchAnimation(AnimationType.STROBE);
-            }
             if (_intake.isBallInCradle()) {
+                switchAnimation(AnimationType.STATIC);
                 if (_intake.isBallInItake()) {
                     setColor(GREEN);
                 } else {
                     setColor(BLUE);
                 }
             } else if (_intake.isBallInItake()) {
+                switchAnimation(AnimationType.STATIC);
                 setColor(YELLOW);
             } else {
-                setColor(MAROON);
+                switchAnimation(AnimationType.RAINBOW);
             }
         }
 
