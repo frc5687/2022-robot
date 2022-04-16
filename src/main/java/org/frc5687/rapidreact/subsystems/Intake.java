@@ -1,5 +1,7 @@
 package org.frc5687.rapidreact.subsystems;
 
+import javax.swing.text.DefaultStyledDocument.ElementSpec;
+
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import org.frc5687.rapidreact.Constants;
@@ -21,7 +23,6 @@ public class Intake extends OutliersSubsystem{
     private HallEffect _intakeHall;
     private Indexer _indexer;
     private ProximitySensor _sensor;
-    
     public Intake(OutliersContainer container, Indexer indexer) {
         super(container);
         _deployed = false;
@@ -30,6 +31,11 @@ public class Intake extends OutliersSubsystem{
         _intakeHall = new HallEffect(RobotMap.DIO.INTAKE_HALL_EFFECT);
         _indexer = indexer;
         _sensor = new ProximitySensor(RobotMap.DIO.INTAKE_PROXIMITY_SENSOR);
+    }
+
+    @Override
+    public void periodic(){
+
     }
 
     /**
