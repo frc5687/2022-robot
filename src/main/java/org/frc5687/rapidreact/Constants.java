@@ -375,10 +375,10 @@ public class Constants {
     public static class Camera{
         public static final int BRIGHTNESS = 60;
         public static final int FPS_LIMIT = 15;
-        public static final boolean AUTO_EXPOSURE = true;
+        public static final boolean AUTO_EXPOSURE = false;
         public static final int EXPOSURE = 70;
-        public static final int HEIGHT = 320;
-        public static final int WIDTH = 240;
+        public static final int HEIGHT = 64;
+        public static final int WIDTH = 64; 
     }
 
     public static class CANdle{

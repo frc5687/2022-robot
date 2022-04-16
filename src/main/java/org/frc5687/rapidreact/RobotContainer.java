@@ -77,9 +77,7 @@ public class RobotContainer extends OutliersContainer {
         // In disabledPeriodic() we will poll Drive Station for values
         _autoPosition = AutoChooser.Position.Unknown;
         _autoMode = AutoChooser.Mode.Unknown;
-
-
-
+        initializeCamera();
         // initialize these peripherals first as subsystems require them.
         _oi = new OI();
         _imu = new AHRS(SPI.Port.kMXP, (byte) 200);
