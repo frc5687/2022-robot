@@ -1,6 +1,5 @@
 package org.frc5687.rapidreact.subsystems;
 
-
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -18,7 +17,7 @@ import org.frc5687.rapidreact.Constants;
 import org.frc5687.rapidreact.RobotMap;
 import org.frc5687.rapidreact.config.Auto;
 import org.frc5687.rapidreact.util.*;
-
+import org.frc5687.rapidreact.subsystems.Indexer;
 import static org.frc5687.rapidreact.Constants.Catapult.*;
 
 public class Catapult extends OutliersSubsystem {
@@ -30,6 +29,8 @@ public class Catapult extends OutliersSubsystem {
     private final RelativeEncoder _winchEncoder;
     private final HallEffect _springHall;
     private final HallEffect _armHall;
+
+    private Indexer _indexer;
 
     private final ProfiledPIDController _winchController;
 
@@ -50,7 +51,6 @@ public class Catapult extends OutliersSubsystem {
     /** Catapult constructor */
     public Catapult(OutliersContainer container) {
         super(container);
-
         // Motor controllers (Spark Maxes)
         // Spring motor
         _springMotor = new TalonFX(RobotMap.CAN.TALONFX.CATAPULT_SPRING);
