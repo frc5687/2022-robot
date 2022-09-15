@@ -38,6 +38,7 @@ public class OI extends OutliersProxy {
     private Joystick _translation;
     private Joystick _rotation;
     private Gamepad _buttonpad;
+    private Gamepad _drivepad;
 
     // Buttons
     private JoystickButton _autoAim;
@@ -68,6 +69,7 @@ public class OI extends OutliersProxy {
 
     private Lights _lights;
 
+    private boolean _useGamepad = true;
     // "Raw" joystick values
     private double yIn = 0;
     private double xIn = 0;
@@ -76,8 +78,9 @@ public class OI extends OutliersProxy {
         _translation = new Joystick(0);
         _rotation = new Joystick(1);
         _buttonpad = new Gamepad(2);
+        _drivepad = new Gamepad(3);
 
-        // debug gamepad
+        // buttonpad (fightstick)
         _catapultDebugButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
         _preloadButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_STICK.getNumber());
 //        _release = new JoystickButton(_buttonpad, Gamepad.Buttons..getNumber());
@@ -92,26 +95,70 @@ public class OI extends OutliersProxy {
 //        _shootButton = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
 
         // rotation joystick
-        _intakeButton = new JoystickButton(_rotation, 1);
-        _autoAim = new JoystickButton(_rotation, 2);
-        _deployRetract = new JoystickButton(_rotation, 3);
-        _aimBall = new JoystickButton(_rotation, 4);
-        _extraClimb = new JoystickButton(_rotation, 7);
+        if (_useGamepad == false) {
+            _intakeButton = new JoystickButton(_rotation, 1);
+            _autoAim = new JoystickButton(_rotation, 2);
+            _deployRetract = new JoystickButton(_rotation, 3);
+            _aimBall = new JoystickButton(_rotation, 4);
+            _extraClimb = new JoystickButton(_rotation, 7);
+        } else if (_useGamepad == true) {
+            _intakeButton = new JoystickButton(_drivepad, 1);
+            _autoAim = new JoystickButton(_drivepad, 2);
+            _deployRetract = new JoystickButton(_drivepad, 3);
+            _aimBall = new JoystickButton(_drivepad, 4);
+            _extraClimb = new JoystickButton(_drivepad, 7);
+        } else {
+            _intakeButton = new JoystickButton(_rotation, 1);
+            _autoAim = new JoystickButton(_rotation, 2);
+            _deployRetract = new JoystickButton(_rotation, 3);
+            _aimBall = new JoystickButton(_rotation, 4);
+            _extraClimb = new JoystickButton(_rotation, 7);
+        }
 
         // translation joystick
-        _shootButton= new JoystickButton(_translation, 1);
-        _release = new JoystickButton(_translation, 6);
-        _dropArm = new JoystickButton(_translation, 3);
-        _resetNavX = new JoystickButton(_translation, 5);
-        _turboDrive = new JoystickButton(_translation, 2);
+        if (_useGamepad == false) {
+            _shootButton= new JoystickButton(_translation, 1);
+            _release = new JoystickButton(_translation, 6);
+            _dropArm = new JoystickButton(_translation, 3);
+            _resetNavX = new JoystickButton(_translation, 5);
+            _turboDrive = new JoystickButton(_translation, 2);
+        } else if (_useGamepad == true) {
+            _shootButton= new JoystickButton(_drivepad, 1);
+            _release = new JoystickButton(_drivepad, 6);
+            _dropArm = new JoystickButton(_drivepad, 3);
+            _resetNavX = new JoystickButton(_drivepad, 5);
+            _turboDrive = new JoystickButton(_drivepad, 2);
+        } else {
+            _shootButton= new JoystickButton(_translation, 1);
+            _release = new JoystickButton(_translation, 6);
+            _dropArm = new JoystickButton(_translation, 3);
+            _resetNavX = new JoystickButton(_translation, 5);
+            _turboDrive = new JoystickButton(_translation, 2);
+        }
 
         // while driving, ben check.
-        _shootSetpointOne = new JoystickButton(_translation, 9);
-        _shootSetpointTwo = new JoystickButton(_translation, 10);
-        _shootSetpointThree = new JoystickButton(_translation, 11);
+        if (_useGamepad == true) {
+            _shootSetpointOne = new JoystickButton(_translation, 9);
+            _shootSetpointTwo = new JoystickButton(_translation, 10);
+            _shootSetpointThree = new JoystickButton(_translation, 11);
 
-        _exitKill = new JoystickButton(_translation, 8);
-        _kill = new JoystickButton(_translation, 7);
+            _exitKill = new JoystickButton(_translation, 8);
+            _kill = new JoystickButton(_translation, 7);
+        } else if (_useGamepad == true) {
+            _shootSetpointOne = new JoystickButton(_drivepad, 9);
+            _shootSetpointTwo = new JoystickButton(_drivepad, 10);
+            _shootSetpointThree = new JoystickButton(_drivepad, 11);
+    
+            _exitKill = new JoystickButton(_drivepad, 8);
+            _kill = new JoystickButton(_drivepad, 7);
+        } else {
+            _shootSetpointOne = new JoystickButton(_translation, 9);
+            _shootSetpointTwo = new JoystickButton(_translation, 10);
+            _shootSetpointThree = new JoystickButton(_translation, 11);
+    
+            _exitKill = new JoystickButton(_translation, 8);
+            _kill = new JoystickButton(_translation, 7);
+        }
         
     }
 
@@ -151,9 +198,11 @@ public class OI extends OutliersProxy {
     public boolean turbo() {return _turboDrive.get(); }
 
     public double getDriveY() {
-        //Comment for gamepad control
-        yIn = -getSpeedFromAxis(_translation, _translation.getYChannel());
-//         yIn = -getSpeedFromAxis(_buttonpad, Gamepad.Axes.LEFT_Y.getNumber());
+        if (_useGamepad == true) {
+            yIn = -getSpeedFromAxis(_drivepad, Gamepad.Axes.LEFT_Y.getNumber());
+        } else {
+            yIn = -getSpeedFromAxis(_translation, _translation.getYChannel());
+        }
         yIn = applyDeadband(yIn, Constants.DriveTrain.DEADBAND);
 
         double yOut = yIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
@@ -162,9 +211,11 @@ public class OI extends OutliersProxy {
     }
 
     public double getDriveX() {
-//        Comment for gamepad control
-        xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
-//        xIn = -getSpeedFromAxis(_buttonpad, Gamepad.Axes.LEFT_X.getNumber());
+        if (_useGamepad == true) {
+            xIn = -getSpeedFromAxis(_drivepad, Gamepad.Axes.LEFT_X.getNumber());   
+        } else {
+            xIn = -getSpeedFromAxis(_translation, _translation.getXChannel());
+        }
         xIn = applyDeadband(xIn, Constants.DriveTrain.DEADBAND);
         double xOut = xIn / (Math.sqrt(yIn * yIn + (xIn * xIn)) + Constants.EPSILON);
         xOut = (xOut + (xIn * 2)) / 3.0; // numbers from empirical testing.
@@ -172,17 +223,21 @@ public class OI extends OutliersProxy {
     }
 
     public double getRotationX() {
-        double speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
-//        double speed = getSpeedFromAxis(_buttonpad, Gamepad.Axes.RIGHT_X.getNumber());
+        double speed;
+        if (_useGamepad == true) {
+            speed = getSpeedFromAxis(_drivepad, Gamepad.Axes.RIGHT_X.getNumber());
+        } else {
+            speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
+        }
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;
     }
 
-    public double getSpringMotorSpeed() {
-        double speed = -getSpeedFromAxis(_buttonpad, Gamepad.Axes.LEFT_Y.getNumber());
-        speed = applyDeadband(speed, Constants.DEADBAND);
-        return speed;
-    }
+    // public double getSpringMotorSpeed() {
+    //     double speed = -getSpeedFromAxis(_buttonpad, Gamepad.Axes.LEFT_Y.getNumber());
+    //     speed = applyDeadband(speed, Constants.DEADBAND);
+    //     return speed;
+    // }
 
     protected double getSpeedFromAxis(Joystick gamepad, int axisNumber) {
         return gamepad.getRawAxis(axisNumber);
