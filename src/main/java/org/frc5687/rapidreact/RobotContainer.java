@@ -34,7 +34,7 @@ import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Lights;
 import org.frc5687.rapidreact.subsystems.OutliersSubsystem;
-
+import org.frc5687.rapidreact.subsystems.Slingshot;
 import org.frc5687.rapidreact.util.*;
 
 import java.util.Arrays;
@@ -53,6 +53,8 @@ public class RobotContainer extends OutliersContainer {
     private Intake _intake;
     private Climber _climber;
     private Indexer _indexer;
+
+    private Slingshot _slingshot;
 
     private Lights _lights;
 
@@ -94,6 +96,8 @@ public class RobotContainer extends OutliersContainer {
         _climber = new Climber(this, _driveTrain);
         _catapult = new Catapult(this);
         _lights = new Lights(this, _catapult, _climber, _intake);
+
+        _slingshot = new Slingshot(this);
 
         setDefaultCommand(_driveTrain, new Drive(_driveTrain, _oi));
         setDefaultCommand(_intake, new IdleIntake(_intake, _oi));
