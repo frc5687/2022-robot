@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "OI/#151b-NewDriveWithGamepad";
-    public static final String REVISION = "1e74ce8";
+    public static final String REVISION = "903d148";
     public static final String MODIFIED = " *";
 }
