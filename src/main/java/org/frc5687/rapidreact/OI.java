@@ -21,6 +21,7 @@ import org.frc5687.rapidreact.commands.Climber.RockerFlip;
 import org.frc5687.rapidreact.commands.Climber.SemiAutoClimb;
 import org.frc5687.rapidreact.commands.Climber.Stow;
 import org.frc5687.rapidreact.commands.DriveTrajectory;
+import org.frc5687.rapidreact.commands.ReleaseSlingshot;
 import org.frc5687.rapidreact.commands.catapult.SetSetpoint;
 import org.frc5687.rapidreact.commands.catapult.SetState;
 import org.frc5687.rapidreact.subsystems.Catapult;
@@ -29,6 +30,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Lights;
+import org.frc5687.rapidreact.subsystems.Slingshot;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -66,6 +68,8 @@ public class OI extends OutliersProxy {
 
     private JoystickButton _autoShootToggle;
 
+    private JoystickButton _slingshotTrigger;
+   
     private Lights _lights;
 
     // "Raw" joystick values
@@ -85,7 +89,9 @@ public class OI extends OutliersProxy {
         _stowClimber = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _rockerFlip = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
         _manualIndexer = new JoystickButton(_buttonpad, Gamepad.Buttons.A.getNumber());
-        _autoShootToggle = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
+        // _autoShootToggle = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
+
+        _slingshotTrigger = new JoystickButton(_buttonpad, Gamepad.Buttons.Y.getNumber());
 
         // adding buttons while driving: Ben pls look
 
@@ -115,7 +121,7 @@ public class OI extends OutliersProxy {
         
     }
 
-    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber, Indexer indexer) {
+    public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber, Indexer indexer, Slingshot slingshot) {
         // driving, Ben check pls.
         _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
         _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
@@ -131,6 +137,8 @@ public class OI extends OutliersProxy {
         _rockerFlip.whenPressed(new RockerFlip(climber));
         _manualIndexer.whenPressed(indexer::up);
         _autoShootToggle.whenPressed(catapult::toggleAutomatShoot);
+
+        _slingshotTrigger.whenPressed(new ReleaseSlingshot(slingshot));
     }
 
     public boolean hold = false;

@@ -290,6 +290,14 @@ public class Constants {
         public static final double WINCH_OFFSET_COEFF = 0.064979245;
 
     }
+    public static class Slingshot  {
+
+        public static final double TENSIONER_SPEED = 0.1;
+        public static final long RELEASE_DELAY = 100; // Millis
+        public static final double RELEASE_ANGLE = 90; // degrees
+        public static final double RESET_ANGLE = 0;
+
+    }
 
     public static class Intake{
         public static final boolean INVERTED = false;
