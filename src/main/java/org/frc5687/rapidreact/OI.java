@@ -100,7 +100,7 @@ public class OI extends OutliersProxy {
 
         if (_useGamepad == true) {
             _intakeButton = new JoystickButton(_operpad, 5); //right bumper
-            _autoAim = new JoystickButton(_operpad, 1); //left bumper
+            _autoAim = new JoystickButton(_operpad, 6); //left bumper
             // _deployRetract = new JoystickButton(_operpad, 8); // what is this? mapped arbitrarily
             // _aimBall = new JoystickButton(_operpad, 8); // what is this?
             // _extraClimb = new JoystickButton(_operpad, 3);
@@ -114,11 +114,11 @@ public class OI extends OutliersProxy {
 
         // translation joystick
         if (_useGamepad == true) {
-            _shootButton= new JoystickButton(_operpad, 4);
+            _shootButton= new JoystickButton(_operpad, 1);
             // _release = new JoystickButton(_operpad, 2);
             // _dropArm = new JoystickButton(_operpad, 7);
             // _resetNavX = new JoystickButton(_operpad, 9);
-            _turboDrive = new JoystickButton(_drivepad, 4);
+            _turboDrive = new JoystickButton(_drivepad, 5);
         } else {
             _shootButton= new JoystickButton(_translation, 1);
             _release = new JoystickButton(_translation, 6);
