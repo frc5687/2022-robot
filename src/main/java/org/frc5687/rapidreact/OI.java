@@ -107,9 +107,9 @@ public class OI extends OutliersProxy {
         } else {
             _intakeButton = new JoystickButton(_rotation, 1);
             _autoAim = new JoystickButton(_rotation, 2);
-            _deployRetract = new JoystickButton(_rotation, 3);
-            _aimBall = new JoystickButton(_rotation, 4);
-            _extraClimb = new JoystickButton(_rotation, 7);
+            // _deployRetract = new JoystickButton(_rotation, 3);
+            // _aimBall = new JoystickButton(_rotation, 4);
+            // _extraClimb = new JoystickButton(_rotation, 7);
         }
 
         // translation joystick
@@ -121,9 +121,9 @@ public class OI extends OutliersProxy {
             _turboDrive = new JoystickButton(_drivepad, 5);
         } else {
             _shootButton= new JoystickButton(_translation, 1);
-            _release = new JoystickButton(_translation, 6);
-            _dropArm = new JoystickButton(_translation, 3);
-            _resetNavX = new JoystickButton(_translation, 5);
+            // _release = new JoystickButton(_translation, 6);
+            // _dropArm = new JoystickButton(_translation, 3);
+            // _resetNavX = new JoystickButton(_translation, 5);
             _turboDrive = new JoystickButton(_translation, 2);
         }
 
@@ -133,8 +133,8 @@ public class OI extends OutliersProxy {
             // _shootSetpointTwo = new JoystickButton(_translation, 10);
             // _shootSetpointThree = new JoystickButton(_translation, 11);
 
-            _exitKill = new JoystickButton(_translation, 8);
-            _kill = new JoystickButton(_translation, 7);
+            // _exitKill = new JoystickButton(_translation, 8);
+            // _kill = new JoystickButton(_translation, 7);
         // } else if (_useGamepad == true) { uncomment later to add buttons
         //     _shootSetpointOne = new JoystickButton(_operpad, 9);
         //     _shootSetpointTwo = new JoystickButton(_operpad, 10);
@@ -143,28 +143,28 @@ public class OI extends OutliersProxy {
         //     _exitKill = new JoystickButton(_operpad, 8);
         //     _kill = new JoystickButton(_operpad, 7);
         } else {
-            _shootSetpointOne = new JoystickButton(_translation, 9);
-            _shootSetpointTwo = new JoystickButton(_translation, 10);
-            _shootSetpointThree = new JoystickButton(_translation, 11);
+            // _shootSetpointOne = new JoystickButton(_translation, 9);
+            // _shootSetpointTwo = new JoystickButton(_translation, 10);
+            // _shootSetpointThree = new JoystickButton(_translation, 11);
     
-            _exitKill = new JoystickButton(_translation, 8);
-            _kill = new JoystickButton(_translation, 7);
+            // _exitKill = new JoystickButton(_translation, 8);
+            // _kill = new JoystickButton(_translation, 7);
         }
         
     }
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber, Indexer indexer) {
         // driving, Ben check pls.
-        _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
-        _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
-        _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
+        // _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
+        // _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
+        // _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
 
 
         _preloadButton.whenPressed(new SetState(catapult, ZEROING));
         _intakeButton.whenHeld(new AutoIntake(intake, catapult));
-        _resetNavX.whenPressed(driveTrain::resetYaw);
+        // _resetNavX.whenPressed(driveTrain::resetYaw);
         _readyToClimb.whenPressed(new AutoClimb(climber));
-        _extraClimb.whenPressed(new AutoClimb(climber));
+        // _extraClimb.whenPressed(new AutoClimb(climber));
         _stowClimber.whenPressed(new Stow(climber));
         _rockerFlip.whenPressed(new RockerFlip(climber));
         _manualIndexer.whenPressed(indexer::up);
@@ -180,12 +180,12 @@ public class OI extends OutliersProxy {
         return false;
 //        return _preloadButton.get();
     }
-    public boolean releaseArm() { return _release.get(); }
-    public boolean intakeDeployRetract() { return _deployRetract.get(); }
-    public boolean exitKill() { return _exitKill.get(); }
-    public boolean kill() { return _kill.get(); }
+    // public boolean releaseArm() { return _release.get(); }
+    // public boolean intakeDeployRetract() { return _deployRetract.get(); }
+    // public boolean exitKill() { return _exitKill.get(); }
+    // public boolean kill() { return _kill.get(); }
     public boolean autoAim() { return _autoAim.get(); }
-    public boolean aimBall() { return _aimBall.get(); }
+    // public boolean aimBall() { return _aimBall.get(); }
     public boolean turbo() {return _turboDrive.get(); }
 
     public double getDriveY() {
