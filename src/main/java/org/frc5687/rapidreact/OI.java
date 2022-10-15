@@ -85,7 +85,7 @@ public class OI extends OutliersProxy {
         // buttonpad (fightstick)
         _catapultDebugButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
         _preloadButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_STICK.getNumber());
-//        _release = new JoystickButton(_buttonpad, Gamepad.Buttons..getNumber());
+        _release = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_STICK.getNumber());
         _readyToClimb = new JoystickButton(_buttonpad, Gamepad.Buttons.B.getNumber());
         _stowClimber = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _rockerFlip = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
@@ -180,12 +180,12 @@ public class OI extends OutliersProxy {
         return false;
 //        return _preloadButton.get();
     }
-    // public boolean releaseArm() { return _release.get(); }
-    // public boolean intakeDeployRetract() { return _deployRetract.get(); }
-    // public boolean exitKill() { return _exitKill.get(); }
-    // public boolean kill() { return _kill.get(); }
+    public boolean releaseArm() {return false;} //{ return _release.get(); }
+    public boolean intakeDeployRetract() {return false;} //{ return _deployRetract.get(); }
+    public boolean exitKill() {return false;} //{ return _exitKill.get(); }
+    public boolean kill() {return false;} //{ return _kill.get(); }
     public boolean autoAim() { return _autoAim.get(); }
-    // public boolean aimBall() { return _aimBall.get(); }
+    public boolean aimBall() {return false;} //{ return _aimBall.get(); }
     public boolean turbo() {return _turboDrive.get(); }
 
     public double getDriveY() {
