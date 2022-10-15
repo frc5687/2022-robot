@@ -39,7 +39,6 @@ public class OI extends OutliersProxy {
     private Joystick _rotation;
     private Gamepad _buttonpad;
     private Gamepad _drivepad;
-    private Gamepad _operpad;
 
     // Buttons
     private JoystickButton _autoAim;
@@ -80,7 +79,6 @@ public class OI extends OutliersProxy {
         _rotation = new Joystick(1);
         _buttonpad = new Gamepad(2);
         _drivepad = new Gamepad(3);
-        _operpad = new Gamepad(4);
 
         // buttonpad (fightstick)
         _catapultDebugButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
@@ -99,11 +97,11 @@ public class OI extends OutliersProxy {
         // rotation joystick
 
         if (_useGamepad == true) {
-            _intakeButton = new JoystickButton(_operpad, 5); //right bumper
-            _autoAim = new JoystickButton(_operpad, 6); //left bumper
-            // _deployRetract = new JoystickButton(_operpad, 8); // what is this? mapped arbitrarily
-            // _aimBall = new JoystickButton(_operpad, 8); // what is this?
-            // _extraClimb = new JoystickButton(_operpad, 3);
+            _intakeButton = new JoystickButton(_drivepad, 5); //right bumper
+            _autoAim = new JoystickButton(_drivepad, 6); //left bumper
+            // _deployRetract = new JoystickButton(_drivepad, 8); // what is this? mapped arbitrarily
+            // _aimBall = new JoystickButton(_drivepad, 8); // what is this?
+            // _extraClimb = new JoystickButton(_drivepad, 3);
         } else {
             _intakeButton = new JoystickButton(_rotation, 1);
             _autoAim = new JoystickButton(_rotation, 2);
@@ -114,10 +112,10 @@ public class OI extends OutliersProxy {
 
         // translation joystick
         if (_useGamepad == true) {
-            _shootButton= new JoystickButton(_operpad, 1);
-            // _release = new JoystickButton(_operpad, 2);
-            // _dropArm = new JoystickButton(_operpad, 7);
-            // _resetNavX = new JoystickButton(_operpad, 9);
+            _shootButton= new JoystickButton(_drivepad, 1);
+            // _release = new JoystickButton(_drivepad, 2);
+            // _dropArm = new JoystickButton(_drivepad, 7);
+            // _resetNavX = new JoystickButton(_drivepad, 9);
             _turboDrive = new JoystickButton(_drivepad, 5);
         } else {
             _shootButton= new JoystickButton(_translation, 1);
@@ -136,12 +134,12 @@ public class OI extends OutliersProxy {
             // _exitKill = new JoystickButton(_translation, 8);
             // _kill = new JoystickButton(_translation, 7);
         // } else if (_useGamepad == true) { uncomment later to add buttons
-        //     _shootSetpointOne = new JoystickButton(_operpad, 9);
-        //     _shootSetpointTwo = new JoystickButton(_operpad, 10);
-        //     _shootSetpointThree = new JoystickButton(_operpad, 11);
+        //     _shootSetpointOne = new JoystickButton(_drivepad, 9);
+        //     _shootSetpointTwo = new JoystickButton(_drivepad, 10);
+        //     _shootSetpointThree = new JoystickButton(_drivepad, 11);
     
-        //     _exitKill = new JoystickButton(_operpad, 8);
-        //     _kill = new JoystickButton(_operpad, 7);
+        //     _exitKill = new JoystickButton(_drivepad, 8);
+        //     _kill = new JoystickButton(_drivepad, 7);
         } else {
             // _shootSetpointOne = new JoystickButton(_translation, 9);
             // _shootSetpointTwo = new JoystickButton(_translation, 10);
