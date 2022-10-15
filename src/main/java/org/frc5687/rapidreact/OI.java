@@ -216,7 +216,7 @@ public class OI extends OutliersProxy {
     public double getRotationX() {
         double speed;
         if (_useGamepad == true) {
-            speed = Math.pow(getSpeedFromAxis(_drivepad, Gamepad.Axes.RIGHT_X.getNumber()), 3);
+            speed = Math.pow(-getSpeedFromAxis(_drivepad, Gamepad.Axes.RIGHT_X.getNumber()), 3);
         } else {
             speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
         }
