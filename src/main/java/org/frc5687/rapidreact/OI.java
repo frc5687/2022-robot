@@ -29,6 +29,7 @@ import org.frc5687.rapidreact.subsystems.DriveTrain;
 import org.frc5687.rapidreact.subsystems.Indexer;
 import org.frc5687.rapidreact.subsystems.Intake;
 import org.frc5687.rapidreact.subsystems.Lights;
+import org.frc5687.rapidreact.util.AxisButton;
 import org.frc5687.rapidreact.util.Gamepad;
 import org.frc5687.rapidreact.util.OutliersProxy;
 
@@ -50,11 +51,11 @@ public class OI extends OutliersProxy {
     private JoystickButton _exitKill;
     private JoystickButton _intakeButton;
     private JoystickButton _kill;
-    private JoystickButton _preloadButton;
+    private AxisButton _preloadButton;
     private JoystickButton _readyToClimb;
     private JoystickButton _stowClimber;
     private JoystickButton _rockerFlip;
-    private JoystickButton _release;
+    private AxisButton _release;
     private JoystickButton _resetNavX;
     private JoystickButton _shootButton;
     private JoystickButton _manualIndexer;
@@ -84,8 +85,8 @@ public class OI extends OutliersProxy {
 
         // buttonpad (fightstick)
         _catapultDebugButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_BUMPER.getNumber());
-        _preloadButton = new JoystickButton(_buttonpad, Gamepad.Buttons.LEFT_STICK.getNumber());
-        _release = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_STICK.getNumber());
+        _preloadButton = new AxisButton(_buttonpad, Gamepad.Axes.RIGHT_TRIGGER.getNumber(), 1);
+        _release = new AxisButton(_buttonpad, Gamepad.Axes.LEFT_TRIGGER.getNumber(), 1);
         _readyToClimb = new JoystickButton(_buttonpad, Gamepad.Buttons.B.getNumber());
         _stowClimber = new JoystickButton(_buttonpad, Gamepad.Buttons.RIGHT_BUMPER.getNumber());
         _rockerFlip = new JoystickButton(_buttonpad, Gamepad.Buttons.X.getNumber());
