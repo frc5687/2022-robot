@@ -116,7 +116,7 @@ public class OI extends OutliersProxy {
             // _release = new JoystickButton(_drivepad, 2);
             // _dropArm = new JoystickButton(_drivepad, 7);
             // _resetNavX = new JoystickButton(_drivepad, 9);
-            _turboDrive = new JoystickButton(_drivepad, 1);
+            _turboDrive = new JoystickButton(_drivepad, 2);
         } else {
             _shootButton= new JoystickButton(_translation, 1);
             // _release = new JoystickButton(_translation, 6);
