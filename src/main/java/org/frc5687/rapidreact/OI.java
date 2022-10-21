@@ -217,9 +217,9 @@ public class OI extends OutliersProxy {
     public double getRotationX() {
         double speed;
         if (_useGamepad == true) {
-            speed = Math.pow(-getSpeedFromAxis(_drivepad, Gamepad.Axes.RIGHT_X.getNumber()), 3);
+            speed = Math.pow(getSpeedFromAxis(_drivepad, Gamepad.Axes.RIGHT_X.getNumber()), 3); //rotation flipped for Anna
         } else {
-            speed = -getSpeedFromAxis(_rotation, _rotation.getXChannel());
+            speed = getSpeedFromAxis(_rotation, _rotation.getXChannel()); // rotation flipped for Anna
         }
         speed = applyDeadband(speed, Constants.DEADBAND);
         return speed;

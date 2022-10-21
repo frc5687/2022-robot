@@ -46,7 +46,7 @@ public class Constants {
     public static class DriveTrain {
 
         // Control
-        public static final double DEADBAND = 0.2; // Avoid unintentional joystick movement
+        public static final double DEADBAND = 0.4; // Avoid unintentional joystick movement. was 0.2
 
 
         // Size of the robot chassis in meters
