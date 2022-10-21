@@ -4,12 +4,10 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/externalAnnotations/com/fasterxml/jackson/core/jackson-databind/2.9.6-an1/jackson-databind-2.9.6-an1-annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-databind/2.12.4/jackson-databind-2.12.4.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-databind/2.12.4/jackson-databind-2.12.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-databind/2.12.4/jackson-databind-2.12.4-sources.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../../../Public/wpilib/2022/maven/com/fasterxml/jackson/core/jackson-databind/2.12.4/jackson-databind-2.12.4-sources.jar!/" />
     </SOURCES>
   </library>
