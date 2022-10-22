@@ -103,12 +103,12 @@ public class OI extends OutliersProxy {
 //        _dropArm = new JoystickButton(_translation, 3);
         _resetNavX = new JoystickButton(_driver, Gamepad.Buttons.X.getNumber());
         _turboDrive = new JoystickButton(_driver, Gamepad.Buttons.LEFT_STICK.getNumber());
-        _release = new JoystickButton(_operator, Gamepad.Buttons.X.getNumber());
+        _release = new JoystickButton(_operator, Gamepad.Buttons.BACK.getNumber());
 
         // while driving, ben check.
-//        _shootSetpointOne = new JoystickButton(_driver., 9);
-//        _shootSetpointTwo = new JoystickButton(_translation, 10);
-//        _shootSetpointThree = new JoystickButton(_translation, 11);
+       _shootSetpointOne = new JoystickButton(_operator, Gamepad.Buttons.A.getNumber());
+       _shootSetpointTwo = new JoystickButton(_operator, Gamepad.Buttons.X.getNumber());
+       _shootSetpointThree = new JoystickButton(_operator, Gamepad.Buttons.Y.getNumber());
 
         _exitKill = new JoystickButton(_driver, Gamepad.Buttons.START.getNumber());
         _kill = new JoystickButton(_driver, Gamepad.Buttons.BACK.getNumber());
@@ -117,9 +117,9 @@ public class OI extends OutliersProxy {
 
     public void initializeButtons(DriveTrain driveTrain, Catapult catapult, Intake intake, Climber climber, Indexer indexer) {
         // driving, Ben check pls.
-//        _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
-//        _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
-//        _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
+       _shootSetpointOne.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.FAR));
+       _shootSetpointTwo.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.MID));
+       _shootSetpointThree.whenPressed(new SetSetpoint(catapult, Catapult.CatapultSetpoint.NEAR));
 
 
         _preloadButton.whenPressed(new SetState(catapult, ZEROING));
