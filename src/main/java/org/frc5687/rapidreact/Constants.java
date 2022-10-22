@@ -46,7 +46,7 @@ public class Constants {
     public static class DriveTrain {
 
         // Control
-        public static final double DEADBAND = 0.2; // Avoid unintentional joystick movement
+        public static final double DEADBAND = 0.4; // Avoid unintentional joystick movement. was 0.2
 
 
         // Size of the robot chassis in meters
@@ -345,7 +345,7 @@ public class Constants {
 
         public static final double ROCKER_RETRACTED_METERS = 0.0;
         public static final double ROCKER_CLOSE_METERS = 0.4064;
-        public static final double ROCKER_MID_METERS = 0.51; // 0.4826
+        public static final double ROCKER_MID_METERS = 0.55; // 0.4826
         public static final double ROCKER_EXTENDED_METERS = 0.67; // TODO: Needs to be confirmed
 
         public static final double STATIONARY_ENCODER_CONVERSION_FACTOR = 0.05;
