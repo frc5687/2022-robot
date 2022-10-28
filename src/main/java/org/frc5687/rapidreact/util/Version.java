@@ -7,6 +7,6 @@ package org.frc5687.rapidreact.util;
 
 public class Version {
     public static final String BRANCH = "OI/#165-GamepadRemap";
-    public static final String REVISION = "571267d";
+    public static final String REVISION = "a0a3f44";
     public static final String MODIFIED = " *";
 }
